@@ -40,15 +40,16 @@
     		<a class="seg-item ${state eq 'date' ? 'is-active' : ''}" href="?state=date">날짜별</a>
     	</div>
     	<c:if test="${state eq 'date'}">
-    		<span class="date-stepper">
-    			<a href="?state=date&amp;date=${prevDate}">‹</a>
-    			${date}
-    			<a href="?state=date&amp;date=${nextDate}">›</a>
-    		</span>
+    		<form class="date-stepper" method="get" action="">
+    			<input type="hidden" name="state" value="date">
+    			<a href="?state=date&amp;date=${prevDate}"></a>
+    			<input type="date" name="date" value="${date}" onchange="this.form.submit()" class="date-input" required>
+    			<a href="?state=date&amp;date=${nextDate}"></a>
+    		</form>
     	</c:if>
   	</div>
-  	<h2 class="sub-title">${state eq 'completed' ? '지급 완료 경기' : '정산 대상 경기'}</h2>
-  	<p class="section-desc" style="margin-bottom:16px">날짜별 정산 내역</p>
+  	<h2 class="sub-title">${state eq 'completed' ? '지급 완료 경기' : state eq 'date' ? '날짜별 정산 목록' : '정산 대상 경기'}</h2>
+  	<p class="section-desc" style="margin-bottom:16px">경기 날짜 기준</p>
   	<c:choose>
     	<c:when test="${state eq 'completed'}">
         	<c:set var="displayList" value="${personfinish}" />
@@ -70,7 +71,7 @@
     	</div>
     	<span class="amt"><fmt:formatNumber value="${s.amount}"/>원</span>
     	<c:choose>
-      		<c:when test="${state eq 'completed'}">
+      		<c:when test="${s.settlement eq '지급완료'}">
         		<span class="pill pill-info">지급 완료</span>
       		</c:when>
       		<c:otherwise>

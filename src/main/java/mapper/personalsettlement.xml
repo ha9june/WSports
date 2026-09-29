@@ -38,7 +38,7 @@
 		order by match_date desc
 	</select>
 	
-	<!-- 최신 날짜순으로 보는 모든 개인 정산 리스트 -->
+	<!-- 날짜 선택해서 보는 모든 개인 정산 리스트 -->
 	<select id="selectPersonalSettlementDayList" resultType="map">
 		select m.personal_match_id as matchId, m.title, m.sport,
            m.match_date, s.amount,

@@ -38,7 +38,7 @@ public class AdminTeamSettlement extends HttpServlet {
 		try {
 			String dateParam = request.getParameter("date");
 			LocalDate date;
-			if(dateParam == null) {
+			if(dateParam == null || dateParam.isEmpty()) {
 				date = LocalDate.now();
 			}else {
 				date = LocalDate.parse(dateParam);
