@@ -2,5 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.team">
-
+	<insert id="insertTeam" parameterType="team">
+		insert into team ()
+	</insert>
+	
+	<insert id="insertTeamUser" parameterType="user">
+	
+	</insert>
 </mapper>
