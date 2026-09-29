@@ -19,7 +19,7 @@
     <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾아보기</a>
   </div>
 </section>
-
+  
 <main class="page">
   <div class="container">
     <section>
