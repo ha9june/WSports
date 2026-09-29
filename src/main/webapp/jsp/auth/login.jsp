@@ -20,14 +20,11 @@
       <p class="page-desc">매치온 계정으로 로그인하세요.</p>
     </div>
     <%-- TODO: action 을 로그인 서블릿으로 교체 (예: ${ctx}/login) --%>
-    <form class="auth-card" action="${ctx}/jsp/home/main.jsp" method="post">
+    <form class="auth-card" action="${ctx}/auth/login" method="post">
       <div class="field"><label class="field-label" for="loginId">아이디</label>
-        <input class="input ${state eq 'error' ? 'is-error' : ''}" id="loginId" name="loginId" placeholder="아이디를 입력하세요" autocomplete="username" required></div>
+        <input class="input" id="loginId" name="loginId" placeholder="아이디를 입력하세요" autocomplete="username" required></div>
       <div class="field"><label class="field-label" for="loginPw">비밀번호</label>
-        <input class="input ${state eq 'error' ? 'is-error' : ''}" type="password" id="loginPw" name="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password" required></div>
-      <c:if test="${state eq 'error' or not empty errorMsg}">
-        <p class="auth-error">${empty errorMsg ? '아이디 또는 비밀번호가 일치하지 않습니다.' : errorMsg}</p>
-      </c:if>
+        <input class="input" type="password" id="loginPw" name="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password" required></div>
       <button type="submit" class="btn btn-primary btn-block">로그인</button>
       <div class="auth-links"><a href="#" data-toast="아이디 찾기는 준비 중이에요.">아이디 찾기</a><a href="#" data-toast="비밀번호 찾기는 준비 중이에요.">비밀번호 찾기</a></div>
       <p class="auth-join">아직 계정이 없나요?<a href="${ctx}/jsp/auth/join.jsp">회원가입</a></p>
