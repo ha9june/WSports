@@ -24,30 +24,30 @@
 <body data-role="${role}">
 <header class="site-header">
   <div class="inner">
-    <a class="logo" href="${ctx}/jsp/home/main.jsp">매치온</a>
+    <a class="logo" href="${ctx}/home/main">매치온</a>
 
     <nav class="gnb" aria-label="주요 메뉴">
-      <a href="${ctx}/jsp/match/personalMatchList.jsp" class="${activeNav eq 'match' ? 'is-active' : ''}">경기 찾기</a>
-      <a href="${ctx}/jsp/team/teamMatchList.jsp" class="${activeNav eq 'teamMatch' ? 'is-active' : ''}">상대팀 찾기</a>
-      <a href="${ctx}/jsp/review/reviewList.jsp" class="${activeNav eq 'review' ? 'is-active' : ''}">후기</a>
-      <a href="${ctx}/jsp/team/teamList.jsp" class="${activeNav eq 'team' ? 'is-active' : ''}">팀 찾기</a>
-      <a href="${ctx}/jsp/support/noticeList.jsp" class="${activeNav eq 'notice' ? 'is-active' : ''}">공지사항</a>
+      <a href="${ctx}/match/list" class="${activeNav eq 'match' ? 'is-active' : ''}">경기 찾기</a>
+      <a href="${ctx}/team-match/list" class="${activeNav eq 'teamMatch' ? 'is-active' : ''}">상대팀 찾기</a>
+      <a href="${ctx}/review/list" class="${activeNav eq 'review' ? 'is-active' : ''}">후기</a>
+      <a href="${ctx}/team/list" class="${activeNav eq 'team' ? 'is-active' : ''}">팀 찾기</a>
+      <a href="${ctx}/support/notice/list" class="${activeNav eq 'notice' ? 'is-active' : ''}">공지사항</a>
       <c:if test="${role eq 'admin'}">
-        <a href="${ctx}/jsp/admin/adminRevenue.jsp" class="${activeNav eq 'admin' ? 'is-active' : ''}">관리자(사이트)</a>
+        <a href="${ctx}/admin/revenue/view" class="${activeNav eq 'admin' ? 'is-active' : ''}">관리자(사이트)</a>
       </c:if>
     </nav>
 
     <div class="header-util">
       <c:choose>
         <c:when test="${role eq 'guest'}">
-          <a class="btn-login" href="${ctx}/jsp/auth/login.jsp">로그인</a>
+          <a class="btn-login" href="${ctx}/auth/login">로그인</a>
         </c:when>
         <c:otherwise>
           <button type="button" class="noti-trigger" data-noti-toggle aria-label="알림 열기">
             <img class="bell" src="${ctx}/img/icon-bell.svg" alt="">
             <span class="badge">3</span>
           </button>
-          <a class="header-profile" href="${ctx}/jsp/mypage/myPageUser.jsp" title="마이페이지">
+          <a class="header-profile" href="${ctx}/member/mypage/view" title="마이페이지">
             <img src="${ctx}/img/profile-default.png" alt="내 프로필">
           </a>
         </c:otherwise>
@@ -66,7 +66,7 @@
           <li class="unread"><strong>경기 모집이 마감되었습니다.</strong><p class="brand">9/20 실내 농구</p><time>09:12</time></li>
           <li><strong>참가자 평가를 남겨주세요.</strong><p>지난 경기 참가자를 평가할 수 있어요.</p><time>9/11</time></li>
         </ul>
-        <div class="foot"><a class="btn btn-outline btn-sm" href="${ctx}/jsp/mypage/myPageAlarm.jsp">알림 전체보기</a></div>
+        <div class="foot"><a class="btn btn-outline btn-sm" href="${ctx}/mypage/notifications">알림 전체보기</a></div>
       </div>
     </c:if>
   </div>
