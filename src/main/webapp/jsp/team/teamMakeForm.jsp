@@ -48,13 +48,10 @@
 			
 			const maxRegion = document.getElementById("maxRegion");
 			
-			const regionBtn1 = document.getElementById("regionBtn1");
-			const regionBtn2 = document.getElementById("regionBtn2");
-			const regionBtn3 = document.getElementById("regionBtn3");
+			const regionInputs = document.getElementById("regionInputs");
 			
-			const region1 = document.getElementById("region1");
-			const region2 = document.getElementById("region2");
-			const region3 = document.getElementById("region3");
+			const picked = document.querySelector(".picked");
+			
 			
 			sido.addEventListener("change", function(){
 				sigungu.innerHTML = "";
@@ -122,6 +119,25 @@
 				}
 			})
 			
+			function renderRegions() {
+				picked.innerHTML = "";
+				regionInputs.innerHTML = "";
+				
+				selectedRegions.forEach(function(region, index) {
+
+				    picked.innerHTML +=
+				        '<span class="token-chip">'
+				            + '<span>' + region + '</span>'
+				            + '<button type="button" class="deleteRegion" data-index="' + index + '">✕</button>'
+				        + '</span>';
+				        
+				    regionInputs.innerHTML += 
+				    	'<input type="hidden" name="regions" value="'+ region +'">';
+
+				});
+						
+			}
+			
 			sigungu.addEventListener("change", function(){
 
 				const region = sido.value + " " + sigungu.value;
@@ -131,32 +147,23 @@
 					return;
 				}
 				selectedRegions.push(region);
-				console.log(selectedRegions[0])
-				regionBtn1.innerHTML = selectedRegions[0]
-				    ? '<span class="token-chip">'
-				        + '<span>' + selectedRegions[0] + '</span>'
-				        + '<button type="button" aria-label="삭제">✕</button>'
-				      + '</span>'
-				    : "";
-				regionBtn2.innerHTML = selectedRegions[1]
-					? '<span class="token-chip">'
-					    + '<span>' + selectedRegions[1] + '</span>'
-					    + '<button type="button" aria-label="삭제">✕</button>'
-					  + '</span>'
-					 : "";
-				regionBtn3.innerHTML = selectedRegions[2]
-					? '<span class="token-chip">'
-						+ '<span>' + selectedRegions[2] + '</span>'
-						+ '<button type="button" aria-label="삭제">✕</button>'
-						+ '</span>'
-					  : "";					    
-
-				region1.value = selectedRegions[0] || "";
-				region2.value = selectedRegions[1] || "";
-				region3.value = selectedRegions[2] || "";
-				
+				renderRegions();				    
 			})
 			
+			picked.addEventListener("click", function(e) {
+
+			    if (!e.target.classList.contains("deleteRegion")) {
+			        return;
+			    }
+
+			    const index = Number(e.target.dataset.index);
+
+			    selectedRegions.splice(index, 1);
+
+			    renderRegions();
+			    
+			    maxRegion.style.display="none";
+			});
 
 		}
 	</script>
@@ -190,7 +197,7 @@
 						alt=""
 						style="display: none; width: 100%; height: 100%; object-fit: cover;">
 
-						<input type="file" name="logoImg" accept="image/*" hidden
+						<input type="file" name="profileImage" accept="image/*" hidden
 						onchange="readURL(this)">
 					</label>
 
@@ -364,26 +371,8 @@
 						성남시</p>
 					<p id="maxRegion" class="field-help mt-8"
 						style="color: red; display: none;">최대 3개까지 선택 가능합니다.</p>
-					<div class="picked">
-						<span id="regionBtn1"></span> <span id="regionBtn2"></span> <span
-							id="regionBtn3"></span>
-						<!-- <span class="token-chip">
-							<span id="regionLabel1"></span>
-							<button type="button" aria-label="삭제">✕</button>
-							<input type="hidden" name="region1" id="region1">
-						</span><span class="token-chip">
-							<span id="regionLabel2"></span>
-							<button type="button" aria-label="삭제">✕</button>
-							<input type="hidden" name="region2" id="region2">
-						</span><span class="token-chip">
-							<span id="regionLabel2"></span>
-							<button type="button" aria-label="삭제">✕</button>
-							<input type="hidden" name="region3" id="region3">
-						</span> -->
-						<input type="hidden" name="region1" id="region1"> <input
-							type="hidden" name="region2" id="region2"> <input
-							type="hidden" name="region3" id="region3">
-					</div>
+					<div class="picked"></div>
+					<div id="regionInputs"></div>
 				</div>
 			</div>
 

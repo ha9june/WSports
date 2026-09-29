@@ -1,7 +1,9 @@
 package controller.team;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,6 +15,8 @@ import javax.servlet.http.Part;
 
 import dto.Team;
 import dto.User;
+import service.team.TeamService;
+import service.team.TeamServiceImpl;
 
 /**
  * Servlet implementation class TeamCreate
@@ -52,67 +56,75 @@ public class TeamCreate extends HttpServlet {
 		String uploadPath = (String)request.getServletContext().getAttribute("uploadPath");
 		String realPath = request.getServletContext().getRealPath(uploadPath);
 		
-		Part logoImg = request.getPart("logoImg");
+		Part profileImage = request.getPart("profileImage");
 		Part activityImg1 = request.getPart("activityImg1");
 		Part activityImg2 = request.getPart("activityImg2");
 		Part activityImg3 = request.getPart("activityImg3");
 		Part activityImg4 = request.getPart("activityImg4");
 		Part activityImg5 = request.getPart("activityImg5");
-		System.out.println(logoImg);
-		System.out.println(activityImg1);
-		System.out.println(activityImg2);
-		System.out.println(activityImg3);
-		System.out.println(activityImg4);
-		System.out.println(activityImg5);
 		
 		team.setTeamName(request.getParameter("teamName"));
 		team.setSport(request.getParameter("sportCode"));
 		
 		String days = request.getParameter("days");
-		boolean dayMon = days.contains("월");
-		boolean dayTue = days.contains("화");
-		boolean dayWed = days.contains("수");
-		boolean dayThu = days.contains("목");
-		boolean dayFri = days.contains("금");
-		boolean daySat = days.contains("토");
-		boolean daySun = days.contains("일");
-		team.setDayMon(dayMon);
-		team.setDayTue(dayTue);
-		team.setDayWed(dayWed);
-		team.setDayThu(dayThu);
-		team.setDayFri(dayFri);
-		team.setDaySat(daySat);
-		team.setDaySun(daySun);
-		
-		String times = request.getParameter("times");
-		boolean time0609 = times.contains("새벽 06~09시");
-		boolean time0912 = times.contains("오전 09~12시");
-		boolean time1218 = times.contains("오후 12~18시");
-		boolean time1822 = times.contains("저녁 18~22시");
-		boolean time2206 = times.contains("야간 22~06시");
-		team.setTime0609(time0609);
-		team.setTime0912(time0912);
-		team.setTime1218(time1218);
-		team.setTime1822(time1822);
-		team.setTime2206(time2206);
-		
-		String ages = request.getParameter("ages");
-		boolean age20s = ages.contains("20대");
-		boolean age30s = ages.contains("30대");
-		boolean age40s = ages.contains("40대");
-		boolean age50s = ages.contains("50대 이상");
-		boolean age60Plus = ages.contains("연령무관");
-		team.setAge20s(age20s);
-		team.setAge30s(age30s);
-		team.setAge40s(age40s);
-		team.setAge50s(age50s);
-		team.setAge60Plus(age60Plus);
-		
-		
-		
-		
-		
+		Set<String> daysSet = new HashSet<>();
 
+		if (days != null && !days.isBlank()) {
+		    daysSet.addAll(Arrays.asList(days.split(",")));
+		}
+
+		team.setDayMon(daysSet.contains("월"));
+		team.setDayTue(daysSet.contains("화"));
+		team.setDayWed(daysSet.contains("수"));
+		team.setDayThu(daysSet.contains("목"));
+		team.setDayFri(daysSet.contains("금"));
+		team.setDaySat(daysSet.contains("토"));
+		team.setDaySun(daysSet.contains("일"));
+		String times = request.getParameter("times");
+		Set<String> timesSet = new HashSet<>();
+
+		if (times != null && !times.isBlank()) {
+		    timesSet.addAll(Arrays.asList(times.split(",")));
+		}
+
+		team.setTime0609(timesSet.contains("새벽 06~09시"));
+		team.setTime0912(timesSet.contains("오전 09~12시"));
+		team.setTime1218(timesSet.contains("오후 12~18시"));
+		team.setTime1822(timesSet.contains("저녁 18~22시"));
+		team.setTime2206(timesSet.contains("야간 22~06시"));
+
+		String ages = request.getParameter("ages");
+		Set<String> agesSet = new HashSet<>();
+
+		if (ages != null && !ages.isBlank()) {
+		    agesSet.addAll(Arrays.asList(ages.split(",")));
+		}
+
+		team.setAge20s(agesSet.contains("20대"));
+		team.setAge30s(agesSet.contains("30대"));
+		team.setAge40s(agesSet.contains("40대"));
+		team.setAge50s(agesSet.contains("50대 이상"));
+		team.setAge60Plus(agesSet.contains("연령 무관"));
+
+		
+		String[] regions = request.getParameterValues("regions");
+		if(regions != null && regions.length>=1) team.setRegion1(regions[0]);
+		if(regions != null && regions.length>=2) team.setRegion2(regions[1]);
+		if(regions != null && regions.length>=3) team.setRegion3(regions[2]);
+
+		team.setGender(request.getParameter("gender"));			
+		team.setSkill(request.getParameter("skill"));
+		team.setDescription(request.getParameter("intro"));
+		
+		TeamService teamService = new TeamServiceImpl();
+		try {
+			teamService.makeTeam(team, realPath, profileImage, activityImg1, activityImg2, activityImg3, activityImg4, activityImg5);
+			request.getRequestDispatcher("/jsp/team/teamDetail.jsp").forward(request, response);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 }
