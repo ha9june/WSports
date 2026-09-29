@@ -1,5 +1,9 @@
 package service.admin;
 
-public interface AdminSettlementService {
+import java.util.List;
 
+import dto.PersonalSettlement;
+
+public interface AdminSettlementService {
+	List<PersonalSettlement> getPersonalSettlement() throws Exception;
 }

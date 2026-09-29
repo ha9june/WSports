@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
 <mapper namespace="mapper.personalsettlement">
-
+	<select id="selectPersonalSettlementWait" resultType="personalsettlement">
+		select count(settlement_status) 
+		from personal_settlement 
+		where settlement_status = '정산대기';
+	</select>
+	
+	<select id="selectPersonalSettlementWaitMoney" resultType="personalsettlement">
+		select sum(amount)
+		from personal_status = '정산대기';
+	</select>
+	
+	<select id="selectPersonalSettlementWaitList" resultType="personalsettlement">
+		select m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from personal_settlement s 
+		join personal_match m
+		on s.personal_match_id = m.personal_match_id
+		where m.match_data = #{targetDate} 
+		and s.settlement_status = '정산대기'
+		order by match_date 
+		desc;
+	</select>
+	
+	<select id="selectPersonalSettlementFinishList" resultType="personalsettlement">
+		select m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from personal_settlement s 
+		join personal_match m
+		on s.personal_match_id = m.personal_match_id
+		where m.match_data = #{targetDate} 
+		and s.settlement_status = '지급완료'
+		order by match_date 
+		desc;
+	</select>
+	
+	<select id="selectPersonalSettlementDayList" resultType="personalsettlement">
+		select settled_at
+		from personal_settlement
+		order by settled_at 
+		desc;
+	</select>
 </mapper>

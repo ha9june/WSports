@@ -34,7 +34,6 @@ public class CommonFilter implements Filter {
 		ServletContext context = filterConfig.getServletContext();
 		context.setAttribute("uploadPath", uploadPath);
 		context.setAttribute("profilePath", profilePath);
-
 	}
 
 	@Override

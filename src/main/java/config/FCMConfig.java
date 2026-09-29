@@ -14,5 +14,6 @@ public class FCMConfig {
 		
 		googleCredentials.refresh();
 		return googleCredentials.getAccessToken().getTokenValue();
+		
 	}
 }
