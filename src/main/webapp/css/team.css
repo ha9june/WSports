@@ -1,0 +1,118 @@
+@charset "UTF-8";
+/* 팀 찾기 / 팀 상세 / 팀 관리 / 팀 경기 */
+
+/* ---------- 팀 목록 ---------- */
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.team-card { display: block; padding: 16px 16px 14px; border: 1px solid var(--ds-border); border-radius: var(--r-12); background: #fff; transition: border-color .15s; }
+.team-card:hover { border-color: #c8ced3; }
+.team-card .top { display: flex; gap: 16px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--ds-border); }
+.team-card .top img { width: 64px; height: 64px; }
+.team-card strong { font-size: 16px; }
+.team-card .meta { font-size: 11px; color: var(--ds-text-2); margin-top: 2px; }
+.team-card .sub { display: flex; gap: 10px; font-size: 11px; color: var(--ds-text-2); margin-top: 6px; }
+.team-card .cond { font-size: 11px; line-height: 1.75; margin-top: 12px; }
+.list-meta { display: flex; justify-content: space-between; align-items: center; margin: 24px 0 16px; }
+.list-meta b { font-size: 14px; }
+.list-meta span { font-size: 11px; color: var(--ds-text-2); margin-left: 24px; }
+.list-meta .select { width: 76px; height: 36px; font-size: 11px; padding: 0 22px 0 10px; background-position: right 10px center; }
+
+/* ---------- 팀 상세 ---------- */
+.team-side { border: 1px solid var(--ds-border); border-radius: var(--r-12); padding: 20px; }
+.team-side .top { display: flex; gap: 14px; align-items: center; }
+.team-side .logo-ph { width: 70px; height: 70px; border-radius: 50%; background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--ds-text-2); flex: none; overflow: hidden; }
+.team-side .logo-ph img { width: 100%; height: 100%; }
+.team-side h1 { font-size: 24px; font-weight: 700; line-height: 1.2; }
+.team-side .top p { font-size: 11px; color: var(--ds-text-2); margin-top: 4px; }
+.team-side h2 { font-size: 15px; font-weight: 700; margin: 24px 0 14px; }
+.team-side .cond { display: grid; grid-template-columns: 76px 1fr; gap: 12px 0; font-size: 11px; }
+.team-side .cond dt { color: var(--ds-text-2); }
+.team-side .cond dd { font-weight: 700; }
+.team-side hr { border: 0; height: 1px; background: var(--ds-border); margin: 20px 0 12px; }
+.team-side .note { font-size: 11px; color: var(--ds-text-2); }
+.team-side .btn { margin-top: 20px; }
+.btn-join { background: var(--ds-brand-subtle); color: var(--ds-brand); height: 48px; font-size: 15px; }
+.btn-join:hover { background: #d9e6ff; }
+.team-tabs { margin-top: 24px; }
+.team-tabs .tab.locked::before { content: '🔒 '; }
+.team-section { margin-top: 32px; }
+.team-section h2 { font-size: 17px; font-weight: 700; }
+.team-section .intro { font-size: 13px; line-height: 1.6; margin-top: 18px; }
+.locked-wrap { position: relative; margin-top: 16px; min-height: 120px; }
+.locked-wrap .blur { filter: blur(5px); opacity: .5; pointer-events: none; user-select: none; }
+.locked-wrap .lock-msg { position: absolute; left: 20px; top: 12px; }
+.locked-wrap .lock-msg strong { font-size: 18px; }
+.locked-wrap .lock-msg p { font-size: 12px; color: var(--ds-text-2); margin-top: 4px; }
+.member-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 24px; }
+.member-card { position: relative; display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 16px; border: 1px solid var(--ds-border); border-radius: var(--r-8); background: #fff; }
+.member-card .avatar { width: 48px; height: 48px; }
+.member-card .info { flex: 1; min-width: 0; }
+.member-card strong { font-size: 13px; }
+.member-card .meta { font-size: 10px; color: var(--ds-text-2); margin-top: 4px; }
+.member-card .role { margin-left: 6px; height: 20px; padding: 0 8px; font-size: 10px; }
+.member-card .hover-card { display: none; position: absolute; left: 60px; top: 58px; z-index: 30; }
+.member-card .info:hover .hover-card { display: block; }
+.post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+.post-card { display: block; padding: 18px 20px; border: 1px solid var(--ds-border); border-radius: var(--r-8); background: #fff; }
+.post-card .ttl { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; }
+.post-card p { font-size: 11px; color: var(--ds-text-2); margin-top: 12px; }
+.post-card .acts { display: flex; gap: 8px; margin-top: 14px; }
+
+/* ---------- 가입 신청 ---------- */
+.apply-card { border-radius: var(--r-12); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); padding: 24px 28px; position: relative; }
+.apply-card h2 { font-size: 15px; font-weight: 700; margin-bottom: 20px; }
+.apply-card .avatar { position: absolute; right: 36px; top: 24px; }
+.apply-card dl { display: grid; grid-template-columns: 120px 1fr; gap: 14px 0; font-size: 12px; }
+.apply-card dt { font-size: 11px; color: var(--ds-text-2); }
+.apply-card dd { font-weight: 700; }
+.apply-card .field { margin-top: 28px; }
+.apply-card .textarea { background: #fff; min-height: 90px; }
+
+/* ---------- 팀 폼 ---------- */
+.photo-box { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--ds-border); border-radius: var(--r-8); }
+.photo-box .ph { width: 80px; height: 72px; border-radius: 6px; background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--ds-text-2); flex: none; }
+.photo-box .btn { flex: none; }
+.photo-box p { font-size: 11px; color: var(--ds-text-2); margin-top: 8px; }
+.region-box { padding: 16px; border-radius: var(--r-8); border: 1px solid var(--ds-border-subtle); background: var(--ds-bg-subtle); }
+.region-box .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.region-box .row2 .select { background-color: #fff; }
+.region-box .picked { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+/* ---------- 팀 관리 ---------- */
+.manage-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+.apply-row { display: flex; gap: 16px; align-items: center; padding: 16px 18px; border: 1px solid var(--ds-border); border-radius: var(--r-8); margin-bottom: 12px; background: #fff; }
+.apply-row .info { flex: 1; }
+.apply-row strong { font-size: 13px; }
+.apply-row p { font-size: 10px; color: var(--ds-text-2); margin-top: 3px; }
+.apply-row .btn { width: 72px; }
+.status-card { border-radius: var(--r-12); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); padding: 20px; }
+.status-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+.status-card .kv { display: flex; justify-content: space-between; font-size: 11px; color: var(--ds-text-2); margin-top: 14px; }
+.status-card .kv b { font-size: 14px; color: var(--ds-text); }
+.status-card .kv b.warn { color: #e0901a; }
+.status-card .btn { margin-top: 20px; margin-left: auto; display: flex; }
+
+/* ---------- 팀 경기 목록 ---------- */
+.tm-row { display: flex; align-items: center; gap: 30px; padding: 16px 20px 16px 18px; border: 1px solid var(--ds-border); border-radius: var(--r-12); background: #fff; margin-bottom: 12px; }
+.tm-row:hover { border-color: #c8ced3; }
+.tm-row .left { width: 76px; display: flex; flex-direction: column; align-items: center; gap: 10px; flex: none; }
+.tm-row .left .pill { width: 76px; }
+.tm-row .left img { width: 40px; height: 30px; object-fit: contain; }
+.tm-row .main { flex: 1; min-width: 0; }
+.tm-row strong { font-size: 18px; }
+.tm-row .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 11px; color: var(--ds-text-2); margin-top: 8px; }
+.tm-row .meta span { display: inline-flex; align-items: center; gap: 4px; }
+.tm-row .meta img { width: 12px; height: 12px; }
+.tm-row .aside { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+
+/* ---------- 참가 팀 확인 ---------- */
+.vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.vs-card { border: 1px solid var(--ds-border); border-radius: var(--r-12); padding: 20px 20px 28px; }
+.vs-card h2 { font-size: 16px; font-weight: 700; }
+.vs-card .who { font-size: 10px; color: var(--ds-brand); margin-top: 6px; }
+.vs-card .body { display: flex; gap: 36px; align-items: center; margin-top: 18px; }
+.vs-card .body img { width: 70px; height: 70px; }
+.vs-card dl { display: grid; grid-template-columns: 80px 1fr; gap: 14px 0; font-size: 12px; }
+.vs-card dt { font-size: 11px; color: var(--ds-text-2); }
+.vs-card dd { font-weight: 500; }
+.post-card[data-href] { cursor: pointer; } .post-card[data-href]:hover { border-color: #c8ced3; }
+.tm-row[data-href] { cursor: pointer; }

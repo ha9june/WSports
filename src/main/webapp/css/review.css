@@ -1,0 +1,28 @@
+@charset "UTF-8";
+/* 후기 목록 / 상세 / 작성 */
+.review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.review-card { display: block; border: 1px solid var(--ds-border); border-radius: var(--r-12); overflow: hidden; background: #fff; transition: border-color .15s; }
+.review-card:hover { border-color: #c8ced3; }
+.review-card .thumb { height: 100px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e3f3ec, #f5f9f7); color: var(--ds-brand); font-size: 11px; font-weight: 500; }
+.review-card .body { padding: 12px 14px 16px; }
+.review-card strong { font-size: 13px; display: block; }
+.review-card .by { font-size: 10px; color: var(--ds-text-2); margin-top: 4px; }
+.review-card .link { font-size: 10px; color: var(--ds-brand); margin-top: 4px; }
+.review-card .cnt { font-size: 10px; color: var(--ds-text-2); margin-top: 6px; }
+.review-toolbar { display: flex; align-items: flex-end; gap: 28px; margin-bottom: 28px; }
+.review-toolbar .field { width: 330px; }
+.group-title { margin: 20px 0 14px; }
+.group-title strong { font-size: 15px; display: block; }
+.group-title span { font-size: 11px; color: var(--ds-text-2); }
+.review-grid.two { grid-template-columns: repeat(3, 1fr); }
+.review-detail { border: 1px solid var(--ds-border); border-radius: var(--r-12); padding: 20px; }
+.review-detail .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.review-detail .photos span { height: 220px; border-radius: var(--r-8); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--ds-text-2); }
+.review-detail .text { font-size: 13px; line-height: 1.7; margin-top: 24px; }
+.review-detail .linked { display: flex; gap: 40px; font-size: 11px; border-top: 1px solid var(--ds-border); margin-top: 20px; padding-top: 18px; }
+.review-detail .linked a { color: var(--ds-brand); font-weight: 500; font-size: 12px; }
+.review-detail .acts { display: flex; gap: 10px; margin-top: 18px; align-items: center; }
+.comment { display: grid; grid-template-columns: 28px 70px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--ds-border); border-radius: var(--r-8); margin-bottom: 8px; font-size: 12px; }
+.comment b { font-size: 11px; }
+.comment-form { display: flex; gap: 8px; margin-top: 14px; }
+.comment-form .input { flex: 1; }

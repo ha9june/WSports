@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<properties resource="db.properties"/>
+
+    <!-- settings는 typeAliases보다 먼저 선언 -->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!-- DTO Alias -->
+    <typeAliases>
+        <typeAlias type="dto.Comment" alias="comment"/>
+        <typeAlias type="dto.Favorite" alias="favorite"/>
+        <typeAlias type="dto.Inquiry" alias="inquiry"/>
+        <typeAlias type="dto.Notice" alias="notice"/>
+        <typeAlias type="dto.Notification" alias="notification"/>
+
+        <typeAlias type="dto.PersonalMatch" alias="personalmatch"/>
+        <typeAlias type="dto.PersonalMatchParticipant" alias="personalmatchparticipant"/>
+        <typeAlias type="dto.PersonalPayment" alias="personalpayment"/>
+        <typeAlias type="dto.PersonalSettlement" alias="personalsettlement"/>
+
+        <typeAlias type="dto.Report" alias="report"/>
+        <typeAlias type="dto.Review" alias="review"/>
+        <typeAlias type="dto.ReviewLike" alias="reviewlike"/>
+
+        <typeAlias type="dto.Team" alias="team"/>
+        <typeAlias type="dto.TeamApplication" alias="teamapplication"/>
+        <typeAlias type="dto.TeamMatch" alias="teammatch"/>
+        <typeAlias type="dto.TeamMatchParticipant" alias="teammatchparticipant"/>
+        <typeAlias type="dto.TeamPayment" alias="teampayment"/>
+        <typeAlias type="dto.TeamPenalty" alias="teampenalty"/>
+        <typeAlias type="dto.TeamRating" alias="teamrating"/>
+        <typeAlias type="dto.TeamSettlement" alias="teamsettlement"/>
+        <typeAlias type="dto.TeamUser" alias="teamuser"/>
+
+        <typeAlias type="dto.User" alias="user"/>
+        <typeAlias type="dto.UserPenalty" alias="userpenalty"/>
+        <typeAlias type="dto.UserRating" alias="userrating"/>
+    </typeAliases>
+
+
+    <environments default="development">
+        <environment id="development">
+
+            <transactionManager type="JDBC"/>
+
+            <dataSource type="POOLED">
+
+                <property name="driver" value="${db.driver}"/>
+                <property name="url" value="${db.url}"/>
+                <property name="username" value="${db.username}"/>
+                <property name="password" value="${db.password}"/>
+
+                <property name="poolMaximumActiveConnections" value="500"/>
+                <property name="poolMaximumIdleConnections" value="500"/>
+
+            </dataSource>
+
+        </environment>
+    </environments>
+
+
+    <!-- Mapper XML 등록 -->
+    <mappers>
+
+        <mapper resource="mapper/comment.xml"/>
+        <mapper resource="mapper/favorite.xml"/>
+        <mapper resource="mapper/inquiry.xml"/>
+        <mapper resource="mapper/notice.xml"/>
+        <mapper resource="mapper/notification.xml"/>
+
+        <mapper resource="mapper/personalmatch.xml"/>
+        <mapper resource="mapper/personalmatchparticipant.xml"/>
+        <mapper resource="mapper/personalpayment.xml"/>
+        <mapper resource="mapper/personalsettlement.xml"/>
+
+        <mapper resource="mapper/report.xml"/>
+        <mapper resource="mapper/review.xml"/>
+        <mapper resource="mapper/reviewlike.xml"/>
+
+        <mapper resource="mapper/team.xml"/>
+        <mapper resource="mapper/teamapplication.xml"/>
+        <mapper resource="mapper/teammatch.xml"/>
+        <mapper resource="mapper/teammatchparticipant.xml"/>
+        <mapper resource="mapper/teampayment.xml"/>
+        <mapper resource="mapper/teampenalty.xml"/>
+        <mapper resource="mapper/teamrating.xml"/>
+        <mapper resource="mapper/teamsettlement.xml"/>
+        <mapper resource="mapper/teamuser.xml"/>
+
+        <mapper resource="mapper/user.xml"/>
+        <mapper resource="mapper/userpenalty.xml"/>
+        <mapper resource="mapper/userrating.xml"/>
+
+    </mappers>
+
+</configuration>

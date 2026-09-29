@@ -1,0 +1,30 @@
+@charset "UTF-8";
+/* 로그인 / 회원가입 / 공개 프로필 */
+.auth-wrap { width: 420px; max-width: calc(100% - 48px); margin: 56px auto 0; }
+.auth-wrap .page-head { margin-bottom: 16px; padding-left: 20px; }
+.auth-card { border: 1px solid var(--ds-border); border-radius: var(--r-16); padding: 20px 20px 24px; }
+.auth-card .field + .field { margin-top: 16px; }
+.auth-card .btn-primary { margin-top: 20px; }
+.auth-links { display: flex; justify-content: center; gap: 30px; margin-top: 24px; font-size: 12px; font-weight: 500; }
+.auth-join { text-align: center; margin-top: 16px; font-size: 12px; color: var(--ds-text-2); }
+.auth-join a { color: var(--ds-text); font-weight: 700; margin-left: 12px; }
+.auth-error { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: var(--ds-danger-bg); color: var(--ds-danger-fg); font-size: 12px; }
+.join-wrap { width: 756px; max-width: calc(100% - 48px); margin: 0 auto; }
+.join-wrap .form-grid { gap: 18px 20px; }
+.join-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; }
+.region-pop { margin-top: 8px; padding: 14px; border: 1px solid var(--ds-border); border-radius: var(--r-8); box-shadow: var(--shadow-pop); background: #fff; }
+
+/* 공개 프로필 */
+.profile-top { display: flex; gap: 22px; align-items: center; margin-bottom: 36px; }
+.profile-top h1 { font-size: 26px; font-weight: 700; }
+.profile-top .meta { font-size: 12px; color: var(--ds-text-2); margin-top: 6px; }
+.profile-top .score { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--ds-text-2); margin-top: 12px; }
+.profile-top .score b { color: var(--ds-text); }
+.profile-card { border: 1px solid var(--ds-border); border-radius: var(--r-12); padding: 20px 20px 28px; }
+.profile-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 24px; }
+.profile-card .info-row { grid-template-columns: 160px 1fr; }
+.profile-card .info-row + .info-row { margin-top: 28px; }
+.level-list { display: grid; grid-template-columns: 120px 1fr; gap: 8px 0; font-size: 12px; font-weight: 500; }
+.level-list b { color: var(--ds-brand); font-weight: 500; }
+.team-inline { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; }
+.team-inline img { width: 22px; height: 22px; }
