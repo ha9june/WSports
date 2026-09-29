@@ -60,11 +60,6 @@ public class AdminPersonSettlement extends HttpServlet {
 			//개인
 			request.setAttribute("personwait", personwait);	//정산대기 숫자
 			request.setAttribute("personwaitmoney", personwaitmoney==null? 0:personwaitmoney);	//지급 예정 금액
-			
-			request.setAttribute("date", date);
-			request.setAttribute("prevDate", date.minusDays(1));
-			request.setAttribute("nextDate", date.plusDays(1));
-			
 			request.setAttribute("personwaitlist", personwaitlist);	//정산 대기 리스트
 			request.setAttribute("personfinish", personfinish);	//지급 완료 리스트
 			request.setAttribute("personday", personday);	//날짜별 리스트
