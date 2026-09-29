@@ -35,7 +35,6 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 	@Override
 	public List<Map<String, Object>> selectPersonalSettlementWaitList() throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			System.out.println(sqlSession);
 			return sqlSession.selectList("mapper.personalsettlement.selectPersonalSettlementWaitList");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,7 +56,7 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 	@Override
 	public List<Map<String, Object>> selectPersonalSettlementDayList(LocalDate date) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalsettlement.selectPersonalSettlementDayList");
+			return sqlSession.selectList("mapper.personalsettlement.selectPersonalSettlementDayList", date);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

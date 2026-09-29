@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="role" value="admin" />
 <c:set var="pageTitle" value="정산 관리" />
 <c:set var="pageCss" value="admin" />
@@ -16,18 +19,18 @@
   		<p class="page-desc">정산할 금액을 확인하고 지급 완료 상태로 처리합니다.</p>
   	</div>
   	<nav class="tabs big">
-		<a class="tab" href="${ctx}/admin/settlement/person">개인 경기 정산 관리</a>
-  		<a class="tab is-active" href="${ctx}/admin/settlement/team">팀 경기 정산 관리</a>
+  		<a class="tab is-active" href="${ctx}/admin/settlement/person">개인 경기 정산 관리</a>
+  		<a class="tab" href="${ctx}/admin/settlement/team">팀 경기 정산 관리</a>
   	</nav>
   	<div class="kpi-grid two">
   		<div class="kpi">
   			<p>정산 대기</p>
-  			<b>${teamwait}건</b>
+  			<b>${personwait}건</b>
     	</div>
 
 		<div class="kpi">
 			<p>지급 예정 금액</p>
-			<b>${teamwaitmoney}원</b>
+			<b><fmt:formatNumber value="${personwaitmoney}" pattern="#,###" /></b>
 		</div>
 	</div>
   	<div class="list-toolbar" style="margin:24px 0 16px">
@@ -38,15 +41,15 @@
     	</div>
     	<c:if test="${state eq 'date'}">
     		<span class="date-stepper">
-    			<a href="?state=date&amp&date=${prevDate}">‹</a>
+    			<a href="?state=date&amp;date=${prevDate}">‹</a>
     			${date}
-    			<a href="?state=date&amp&date=${nextDate}">›</a>
+    			<a href="?state=date&amp;date=${nextDate}">›</a>
     		</span>
     	</c:if>
   	</div>
   	<h2 class="sub-title">${state eq 'completed' ? '지급 완료 경기' : '정산 대상 경기'}</h2>
-  	<p class="section-desc" style="margin-bottom:16px">정산이 필요한 경기를 경기 일시 기준 최신순으로 표시합니다.</p>
-	<c:choose>
+  	<p class="section-desc" style="margin-bottom:16px">날짜별 정산 내역</p>
+  	<c:choose>
     	<c:when test="${state eq 'completed'}">
         	<c:set var="displayList" value="${personfinish}" />
     	</c:when>
@@ -57,12 +60,13 @@
         	<c:set var="displayList" value="${personwaitlist}" />
     	</c:otherwise>
 	</c:choose>
-  	<c:forEach var="s" items="${displayList}">
+
+	<c:forEach var="s" items="${displayList}">
   		<div class="settle-row">
     		<span class="t-2"><fmt:formatDate value="${s.match_date}" pattern="M/d"/></span>
     		<div>
       		<strong>${s.title}</strong>
-      		<p>${s.sport} · 지급 ${s.payCount}건</p>
+      		<p>${s.sport}</p>
     	</div>
     	<span class="amt"><fmt:formatNumber value="${s.amount}"/>원</span>
     	<c:choose>
@@ -74,7 +78,7 @@
       		</c:otherwise>
     	</c:choose>
     	<a class="btn btn-outline btn-xs t-brand"
-       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.personal_match_id}&amp;matchType=personal">보기</a>
+       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.matchId}&amp;matchType=personal">보기</a>
   		</div>
 	</c:forEach>
 
@@ -82,5 +86,6 @@
   <p class="section-desc">표시할 경기가 없습니다.</p>
 </c:if>
 </div>
+	
 
 <%@ include file="/jsp/common/footer.jsp" %>

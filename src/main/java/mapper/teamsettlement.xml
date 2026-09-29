@@ -10,7 +10,7 @@
 	</select>
 	
 	<!-- 팀 정산 대기 총 금액 -->
-	<select id="selectTeamSettlementWaitMoney" resultType="Integer">
+	<select id="selectTeamSettlementWaitMoney" resultType="Long">
 		select sum(amount)
 		from team_settlement 
 		where settlement_status = '정산대기'
