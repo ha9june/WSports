@@ -71,7 +71,7 @@
     	</div>
     	<span class="amt"><fmt:formatNumber value="${s.amount}"/>원</span>
     	<c:choose>
-      		<c:when test="${s.settlement eq '지급완료'}">
+      		<c:when test="${s.settlement_status eq '지급완료'}">
         		<span class="pill pill-info">지급 완료</span>
       		</c:when>
       		<c:otherwise>
