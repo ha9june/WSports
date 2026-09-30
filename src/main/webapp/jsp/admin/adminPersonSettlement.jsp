@@ -71,7 +71,7 @@
     	</div>
     	<span class="amt"><fmt:formatNumber value="${s.amount}"/>원</span>
     	<c:choose>
-      		<c:when test="${s.settlement eq '지급완료'}">
+      		<c:when test="${s.settlement_status eq '지급완료'}">
         		<span class="pill pill-info">지급 완료</span>
       		</c:when>
       		<c:otherwise>
@@ -79,7 +79,7 @@
       		</c:otherwise>
     	</c:choose>
     	<a class="btn btn-outline btn-xs t-brand"
-       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.matchId}&amp;matchType=personal">보기</a>
+       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.person_match_id}&amp;matchType=personal">보기</a>
   		</div>
 	</c:forEach>
 
