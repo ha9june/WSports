@@ -1,11 +1,19 @@
 package controller.home;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import dto.PersonalMatch;
+import service.match.PersonalMatchService;
+import service.match.PersonalMatchServiceImpl;
 
 /**
  * Servlet implementation class HomeMain
@@ -26,7 +34,17 @@ public class HomeMain extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/home/main.jsp").forward(request, response);
+		PersonalMatchService service = new PersonalMatchServiceImpl();
+		try {
+			List<PersonalMatch> recomandMatchList = service.getRecomandMatch();
+			System.out.println(recomandMatchList);
+
+			request.setAttribute("rList", recomandMatchList);
+			request.getRequestDispatcher("/jsp/home/main.jsp").forward(request, response);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

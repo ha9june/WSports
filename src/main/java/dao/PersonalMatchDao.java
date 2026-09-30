@@ -1,5 +1,9 @@
 package dao;
 
-public interface PersonalMatchDao {
+import java.util.List;
 
+import dto.PersonalMatch;
+
+public interface PersonalMatchDao {
+	List<PersonalMatch> selectPersonalMatchList() throws Exception;
 }
