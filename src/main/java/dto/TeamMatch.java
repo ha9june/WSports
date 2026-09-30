@@ -45,6 +45,7 @@ public class TeamMatch {
     private String image5;              // 이미지 5
     private String status;              // 매치 상태
     private String region;              // 지역
+
 	public TeamMatch() {
 		super();
 		// TODO Auto-generated constructor stub

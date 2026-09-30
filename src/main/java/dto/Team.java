@@ -3,7 +3,6 @@ import java.time.LocalDateTime;
 
 /** 팀 */
 public class Team {
-
     private Long teamId;              // 팀 ID (PK)
     private String teamName;          // 팀 이름
     private String profileImage;      // 팀 프로필 이미지
@@ -38,4 +37,271 @@ public class Team {
     private String activityImage3;    // 활동 이미지 3
     private String activityImage4;    // 활동 이미지 4
     private String activityImage5;    // 활동 이미지 5
+
+	public Team() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Team(Long teamId, String teamName, String profileImage, String description, String skill, String sport,
+			String gender, LocalDateTime createdAt, Boolean deleted, String region1, String region2, String region3,
+			Boolean age20s, Boolean age30s, Boolean age40s, Boolean age50s, Boolean age60Plus, Boolean dayMon,
+			Boolean dayTue, Boolean dayWed, Boolean dayThu, Boolean dayFri, Boolean daySat, Boolean daySun,
+			Boolean time0609, Boolean time0912, Boolean time1218, Boolean time1822, Boolean time2206,
+			String activityImage1, String activityImage2, String activityImage3, String activityImage4,
+			String activityImage5) {
+		super();
+		this.teamId = teamId;
+		this.teamName = teamName;
+		this.profileImage = profileImage;
+		this.description = description;
+		this.skill = skill;
+		this.sport = sport;
+		this.gender = gender;
+		this.createdAt = createdAt;
+		this.deleted = deleted;
+		this.region1 = region1;
+		this.region2 = region2;
+		this.region3 = region3;
+		this.age20s = age20s;
+		this.age30s = age30s;
+		this.age40s = age40s;
+		this.age50s = age50s;
+		this.age60Plus = age60Plus;
+		this.dayMon = dayMon;
+		this.dayTue = dayTue;
+		this.dayWed = dayWed;
+		this.dayThu = dayThu;
+		this.dayFri = dayFri;
+		this.daySat = daySat;
+		this.daySun = daySun;
+		this.time0609 = time0609;
+		this.time0912 = time0912;
+		this.time1218 = time1218;
+		this.time1822 = time1822;
+		this.time2206 = time2206;
+		this.activityImage1 = activityImage1;
+		this.activityImage2 = activityImage2;
+		this.activityImage3 = activityImage3;
+		this.activityImage4 = activityImage4;
+		this.activityImage5 = activityImage5;
+	}
+	@Override
+	public String toString() {
+		return "Team [teamId=" + teamId + ", teamName=" + teamName + ", profileImage=" + profileImage + ", description="
+				+ description + ", skill=" + skill + ", sport=" + sport + ", gender=" + gender + ", createdAt="
+				+ createdAt + ", deleted=" + deleted + ", region1=" + region1 + ", region2=" + region2 + ", region3="
+				+ region3 + ", age20s=" + age20s + ", age30s=" + age30s + ", age40s=" + age40s + ", age50s=" + age50s
+				+ ", age60Plus=" + age60Plus + ", dayMon=" + dayMon + ", dayTue=" + dayTue + ", dayWed=" + dayWed
+				+ ", dayThu=" + dayThu + ", dayFri=" + dayFri + ", daySat=" + daySat + ", daySun=" + daySun
+				+ ", time0609=" + time0609 + ", time0912=" + time0912 + ", time1218=" + time1218 + ", time1822="
+				+ time1822 + ", time2206=" + time2206 + ", activityImage1=" + activityImage1 + ", activityImage2="
+				+ activityImage2 + ", activityImage3=" + activityImage3 + ", activityImage4=" + activityImage4
+				+ ", activityImage5=" + activityImage5 + "]";
+	}
+	public Long getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(Long teamId) {
+		this.teamId = teamId;
+	}
+	public String getTeamName() {
+		return teamName;
+	}
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+	public String getProfileImage() {
+		return profileImage;
+	}
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getSkill() {
+		return skill;
+	}
+	public void setSkill(String skill) {
+		this.skill = skill;
+	}
+	public String getSport() {
+		return sport;
+	}
+	public void setSport(String sport) {
+		this.sport = sport;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+	public String getRegion1() {
+		return region1;
+	}
+	public void setRegion1(String region1) {
+		this.region1 = region1;
+	}
+	public String getRegion2() {
+		return region2;
+	}
+	public void setRegion2(String region2) {
+		this.region2 = region2;
+	}
+	public String getRegion3() {
+		return region3;
+	}
+	public void setRegion3(String region3) {
+		this.region3 = region3;
+	}
+	public Boolean getAge20s() {
+		return age20s;
+	}
+	public void setAge20s(Boolean age20s) {
+		this.age20s = age20s;
+	}
+	public Boolean getAge30s() {
+		return age30s;
+	}
+	public void setAge30s(Boolean age30s) {
+		this.age30s = age30s;
+	}
+	public Boolean getAge40s() {
+		return age40s;
+	}
+	public void setAge40s(Boolean age40s) {
+		this.age40s = age40s;
+	}
+	public Boolean getAge50s() {
+		return age50s;
+	}
+	public void setAge50s(Boolean age50s) {
+		this.age50s = age50s;
+	}
+	public Boolean getAge60Plus() {
+		return age60Plus;
+	}
+	public void setAge60Plus(Boolean age60Plus) {
+		this.age60Plus = age60Plus;
+	}
+	public Boolean getDayMon() {
+		return dayMon;
+	}
+	public void setDayMon(Boolean dayMon) {
+		this.dayMon = dayMon;
+	}
+	public Boolean getDayTue() {
+		return dayTue;
+	}
+	public void setDayTue(Boolean dayTue) {
+		this.dayTue = dayTue;
+	}
+	public Boolean getDayWed() {
+		return dayWed;
+	}
+	public void setDayWed(Boolean dayWed) {
+		this.dayWed = dayWed;
+	}
+	public Boolean getDayThu() {
+		return dayThu;
+	}
+	public void setDayThu(Boolean dayThu) {
+		this.dayThu = dayThu;
+	}
+	public Boolean getDayFri() {
+		return dayFri;
+	}
+	public void setDayFri(Boolean dayFri) {
+		this.dayFri = dayFri;
+	}
+	public Boolean getDaySat() {
+		return daySat;
+	}
+	public void setDaySat(Boolean daySat) {
+		this.daySat = daySat;
+	}
+	public Boolean getDaySun() {
+		return daySun;
+	}
+	public void setDaySun(Boolean daySun) {
+		this.daySun = daySun;
+	}
+	public Boolean getTime0609() {
+		return time0609;
+	}
+	public void setTime0609(Boolean time0609) {
+		this.time0609 = time0609;
+	}
+	public Boolean getTime0912() {
+		return time0912;
+	}
+	public void setTime0912(Boolean time0912) {
+		this.time0912 = time0912;
+	}
+	public Boolean getTime1218() {
+		return time1218;
+	}
+	public void setTime1218(Boolean time1218) {
+		this.time1218 = time1218;
+	}
+	public Boolean getTime1822() {
+		return time1822;
+	}
+	public void setTime1822(Boolean time1822) {
+		this.time1822 = time1822;
+	}
+	public Boolean getTime2206() {
+		return time2206;
+	}
+	public void setTime2206(Boolean time2206) {
+		this.time2206 = time2206;
+	}
+	public String getActivityImage1() {
+		return activityImage1;
+	}
+	public void setActivityImage1(String activityImage1) {
+		this.activityImage1 = activityImage1;
+	}
+	public String getActivityImage2() {
+		return activityImage2;
+	}
+	public void setActivityImage2(String activityImage2) {
+		this.activityImage2 = activityImage2;
+	}
+	public String getActivityImage3() {
+		return activityImage3;
+	}
+	public void setActivityImage3(String activityImage3) {
+		this.activityImage3 = activityImage3;
+	}
+	public String getActivityImage4() {
+		return activityImage4;
+	}
+	public void setActivityImage4(String activityImage4) {
+		this.activityImage4 = activityImage4;
+	}
+	public String getActivityImage5() {
+		return activityImage5;
+	}
+	public void setActivityImage5(String activityImage5) {
+		this.activityImage5 = activityImage5;
+	}
+    
+    
 }

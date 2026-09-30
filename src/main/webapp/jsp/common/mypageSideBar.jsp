@@ -54,7 +54,7 @@
 
     <div class="bottom">
       <%-- TODO: 로그아웃 서블릿 URL 로 교체 (예: ${ctx}/logout) --%>
-      <a href="${ctx}/jsp/auth/login.jsp?role=guest">로그아웃</a>
+      <a href="${ctx}/auth/logout/submit">로그아웃</a>
     </div>
   </aside>
   <main class="work">

@@ -13,7 +13,7 @@ public class PersonalSettlement {
     private String settlementStatus;  // 정산 상태
     private LocalDateTime settledAt;  // 정산 일시
     private Long adminId;             // 처리 관리자 ID
-    
+
     public PersonalSettlement() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -111,7 +111,5 @@ public class PersonalSettlement {
 				+ personalMatchId + ", accountNumber=" + accountNumber + ", bankName=" + bankName + ", amount=" + amount
 				+ ", settlementStatus=" + settlementStatus + ", settledAt=" + settledAt + ", adminId=" + adminId + "]";
 	}
-	
-    
-    
+
 }

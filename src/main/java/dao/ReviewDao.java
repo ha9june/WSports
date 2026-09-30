@@ -1,5 +1,8 @@
 package dao;
 
-public interface ReviewDao {
+import dto.Review;
 
+public interface ReviewDao {
+	Long insertReview (Review review)throws Exception;
+	
 }

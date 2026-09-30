@@ -13,6 +13,7 @@ public class TeamSettlement {
     private String settlementStatus;  // 정산 상태
     private LocalDateTime settledAt;  // 정산 일시
     private Long adminId;             // 처리 관리자 ID
+
 	public TeamSettlement() {
 		super();
 		// TODO Auto-generated constructor stub
