@@ -20,7 +20,7 @@ $(function () {
 			return;
 		}
 		$.ajax({
-			url:'${ctx}/jsp/auth/join/id-check',
+			url:'${ctx}/auth/join/id-check',
 			type:'post',
 			dataType:'text',
 			data:{loginId:$('#loginId').val()},
@@ -43,7 +43,7 @@ $(function () {
 			return;
 		}
 		$.ajax({
-			url:'${ctx}/jsp/auth/join/nickname-check',
+			url:'${ctx}/auth/join/nickname-check',
 			type:'post',
 			dataType:'text',
 			data:{nickname:$('#nick').val()},
@@ -80,8 +80,8 @@ $(function () {
       <div class="field"><label class="field-label" for="nick">닉네임</label>
         <div class="field-row"><input class="input" id="nick" name="nickname" placeholder="2~12자 닉네임" required>
           <button type="button" name="nickname-check" id="nickname-check" class="btn btn-brand-outline">중복 확인</button></div></div>
-      <div class="field"><label class="field-label" for="birth">생년월일</label><input class="input" id="birth" name="birth" placeholder="YYYY.MM.DD"></div>
-      <div class="field"><label class="field-label" for="phone">전화번호</label><input class="input" id="phone" name="phone" placeholder="010-0000-0000"></div>
+      <div class="field"><label class="field-label" for="birth">생년월일</label><input class="input" id="birth" name="birth" placeholder="YYYY.MM.DD" required></div>
+      <div class="field"><label class="field-label" for="phone">전화번호</label><input class="input" id="phone" name="phone" placeholder="010-0000-0000" required></div>
       <div class="field full"><span class="field-label">성별</span>
         <div class="chip-group" data-select="single" data-name="gender"><button type="button" class="chip" data-value="M">남성</button><button type="button" class="chip" data-value="F">여성</button></div></div>
     </div>
