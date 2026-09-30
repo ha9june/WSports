@@ -12,11 +12,17 @@ public interface AdminSettlementService {
 	List<Map<String, Object>> getPersonalSettlementWaitList() throws Exception;
 	List<Map<String, Object>> getPersonalSettlementFinishList() throws Exception;
 	List<Map<String, Object>> getPersonalSettlementDayList(LocalDate date) throws Exception;
+	List<Map<String, Object>> getPersonalSettlementDetail(int personalMatchId) throws Exception;
+	List<Map<String, Object>> getPersonalSettlementList() throws Exception;
+	int updatePersonalSettlement(long settlementId, Long adminId) throws Exception;
 	
 	Integer getTeamSettlementWait() throws Exception;
 	Long getTeamSettlementWaitMoney() throws Exception;
 	List<Map<String, Object>> getTeamSettlementWaitList() throws Exception;
+	List<Map<String, Object>> getTeamSettlementList() throws Exception;
 	List<Map<String, Object>> getTeamSettlementFinishList() throws Exception;
 	List<Map<String, Object>> getTeamSettlementDayList(LocalDate date) throws Exception;
+	List<Map<String, Object>> getTeamSettlementDetail(int teamMatchId) throws Exception;
+	int updateTeamSettlement(long settlementId, Long adminId) throws Exception;
 	
 }

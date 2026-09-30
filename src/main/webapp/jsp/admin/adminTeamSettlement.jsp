@@ -77,7 +77,7 @@
       		</c:otherwise>
     	</c:choose>
     	<a class="btn btn-outline btn-xs t-brand"
-       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.team_match_id}&amp;matchType=team">보기</a>
+       href="${ctx}/admin/settlement/detail?matchId=${s.team_match_id}&amp;matchType=team">보기</a>
   		</div>
 	</c:forEach>
 

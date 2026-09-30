@@ -16,9 +16,17 @@
 		where settlement_status = '정산대기'
 	</select>
 	
+	<select id="selectTeamSettlementList" resultType="map">
+		select m.team_match_id, m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from team_settlement s 
+		join team_match m
+		on s.team_match_id = m.team_match_id
+		order by m.match_date desc
+	</select>
+	
 	<!-- 정산대기인 팀 정산 리스트 -->
 	<select id="selectTeamSettlementWaitList" resultType="map">
-		select m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		select m.team_match_id, m.title, m.sport, m.match_date, s.amount, s.settlement_status
 		from team_settlement s 
 		join team_match m
 		on s.team_match_id = m.team_match_id 
@@ -28,7 +36,7 @@
 	
 	<!-- 지급완료인 팀 정산 리스트 -->
 	<select id="selectTeamSettlementFinishList" resultType="map">
-		select m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		select m.team_match_id, m.title, m.sport, m.match_date, s.amount, s.settlement_status
 		from team_settlement s 
 		join team_match m
 		on s.team_match_id = m.team_match_id 
@@ -38,7 +46,7 @@
 	
 	<!-- 최신 날짜순으로 보는 모든 팀 정산 리스트 -->
 	<select id="selectTeamSettlementDayList" resultType="map">
-		select m.team_match_id as matchId, m.title, m.sport,
+		select m.team_match_id, m.title, m.sport,
            m.match_date, s.amount,
            s.settlement_status
     	from team_settlement s
@@ -46,4 +54,23 @@
     	where m.match_date = #{targetDate}
     	order by m.match_date desc
 	</select>
+	
+	<!-- 상세 페이지에서 사용할 정보 -->
+	<select id="selectTeamSettlementDetail" resultType="map">
+		select m.team_match_id, m.title, m.sport, m.match_date,
+			   u.nickname, u.account_holder, 
+			   s.settlement_id, s.bank_name, s.account_number, s.amount, s.settlement_status
+		from team_settlement s
+		left join team_match m on s.team_match_id = m.team_match_id
+		left join user u on s.user_id = u.user_id
+		where s.team_match_id = #{teamMatchId}
+	</select>
+	
+	<!-- 정산 대기를 지급완료로 -->
+	<update id="updateTeamSettlement" parameterType="map">
+		update team_settlement
+		set settlement_status = '지급완료', settled_at = now(), admin_id = #{adminId}
+		where settlement_id = #{settlementId}
+		and settlement_status = '정산대기'
+	</update>
 </mapper>
