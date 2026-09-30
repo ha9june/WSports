@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class ReviewDetail
+ * Servlet implementation class ReviewList
  */
-@WebServlet("/review/detail")
+@WebServlet("/review/list")
 public class ReviewList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -33,6 +33,8 @@ public class ReviewList extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }
