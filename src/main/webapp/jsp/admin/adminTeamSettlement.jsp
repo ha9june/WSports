@@ -29,7 +29,7 @@
 
 		<div class="kpi">
 			<p>지급 예정 금액</p>
-			<b><fmt:formatNumber value="${teamwaitmoney}" pattern="#,###" /></b>
+			<b><fmt:formatNumber value="${teamwaitmoney}" pattern="#,###"/>원</b>
 		</div>
 	</div>
   	<div class="list-toolbar" style="margin:24px 0 16px">
@@ -77,7 +77,7 @@
       		</c:otherwise>
     	</c:choose>
     	<a class="btn btn-outline btn-xs t-brand"
-       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.matchId}&amp;matchType=personal">보기</a>
+       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.matchId}&amp;matchType=team">보기</a>
   		</div>
 	</c:forEach>
 

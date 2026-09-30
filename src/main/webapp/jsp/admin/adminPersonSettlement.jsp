@@ -30,7 +30,7 @@
 
 		<div class="kpi">
 			<p>지급 예정 금액</p>
-			<b><fmt:formatNumber value="${personwaitmoney}" pattern="#,###" /></b>
+			<b><fmt:formatNumber value="${personwaitmoney}" pattern="#,###" />원</b>
 		</div>
 	</div>
   	<div class="list-toolbar" style="margin:24px 0 16px">
