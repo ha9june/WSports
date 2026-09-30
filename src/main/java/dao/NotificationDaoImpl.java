@@ -15,7 +15,6 @@ public class NotificationDaoImpl implements NotificationDao {
 		try {
 			sqlSession.insert("mapper.notification.insertNotification", notification);
 			sqlSession.commit();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			sqlSession.rollback();

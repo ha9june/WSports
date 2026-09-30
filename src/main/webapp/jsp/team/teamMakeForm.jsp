@@ -416,7 +416,7 @@
 			</div>
 
 			<div class="form-actions">
-				<a class="btn btn-outline" href="${ctx}/jsp/team/teamList.jsp">취소</a>
+				<a class="btn btn-outline" href="${ctx}/team/list">취소</a>
 				<button type="submit" class="btn btn-primary">저장</button>
 			</div>
 		</div>

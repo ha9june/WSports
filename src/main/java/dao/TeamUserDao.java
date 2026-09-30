@@ -1,5 +1,7 @@
 package dao;
 
-public interface TeamUserDao {
+import dto.TeamUser;
 
+public interface TeamUserDao {
+	void insertTeamUser(TeamUser teamUser) throws Exception;
 }

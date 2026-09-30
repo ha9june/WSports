@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import dto.Team;
@@ -50,8 +51,11 @@ public class TeamCreate extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		User user = new User();
 		Team team = new Team();
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute("user");
+		long userId = user.getUserId();
+		
 		
 		String uploadPath = (String)request.getServletContext().getAttribute("uploadPath");
 		String realPath = request.getServletContext().getRealPath(uploadPath);
@@ -118,7 +122,9 @@ public class TeamCreate extends HttpServlet {
 		
 		TeamService teamService = new TeamServiceImpl();
 		try {
-			teamService.makeTeam(team, realPath, profileImage, activityImg1, activityImg2, activityImg3, activityImg4, activityImg5);
+			Integer teamId = teamService.makeTeam(team, userId, realPath, profileImage, activityImg1, activityImg2, activityImg3,
+					activityImg4, activityImg5);
+			request.setAttribute("teamId", teamId);
 			request.getRequestDispatcher("/jsp/team/teamDetail.jsp").forward(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();

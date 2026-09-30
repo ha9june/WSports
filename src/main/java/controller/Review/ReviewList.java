@@ -1,4 +1,4 @@
-package controller.auth;
+package controller.Review;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class AuthLogin
+ * Servlet implementation class ReviewList
  */
-@WebServlet("/auth/login")
-public class AuthLogin extends HttpServlet {
+@WebServlet("/review/list")
+public class ReviewList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AuthLogin() {
+    public ReviewList() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,7 +26,7 @@ public class AuthLogin extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+		request.getRequestDispatcher("/jsp/review/reviewList.jsp").forward(request, response);
 	}
 
 	/**

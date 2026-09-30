@@ -74,7 +74,5 @@
 						)		
 	</insert>
 	
-	<insert id="insertTeamUser" parameterType="user">
-	
-	</insert>
+
 </mapper>
