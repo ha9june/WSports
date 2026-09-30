@@ -1,5 +1,8 @@
 package service.auth;
 
-public interface AuthService {
+import dto.User;
 
-}
+public interface AuthService {
+	
+	
+	}

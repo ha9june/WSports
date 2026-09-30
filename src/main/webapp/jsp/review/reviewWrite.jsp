@@ -5,6 +5,7 @@
   피그마: Review / Form / Desktop, Review / Form / From Past Match, Review / Form / From Club Match
    state : select(참여 경기 직접 선택) | pastMatch(개인 경기에서 진입 - 경기 고정) | clubMatch(팀 경기에서 진입 - 경기 고정)
 --%>
+
 <c:set var="state" value="${empty param.state ? 'select' : param.state}" />
 <c:if test="${state eq 'pastMatch'}"><c:set var="fixedMatch" value="9/19 토요일 저녁 풋살 한 판!" /></c:if>
 <c:if test="${state eq 'clubMatch'}"><c:set var="fixedMatch" value="9/13 서울 풋살 크루 vs 망원 FC" /></c:if>

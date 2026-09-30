@@ -10,7 +10,12 @@
 <c:set var="pageJs" value="" />
 <c:set var="showFooter" value="true" />
 <%@ include file="/jsp/common/header.jsp" %>
+<script>
+	$(function(){
+		
 
+	});
+</script>
 <section class="hero">
   <div class="container">
     <p class="eyebrow">혼자여도, 팀이어도, 매치온에서</p>
@@ -19,7 +24,6 @@
     <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾아보기</a>
   </div>
 </section>
-
 <main class="page">
   <div class="container">
     <section>

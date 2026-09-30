@@ -1,5 +1,6 @@
 package dao;
 
-public interface UserDao {
+import dto.User;
 
+public interface UserDao {
 }

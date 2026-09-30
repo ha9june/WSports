@@ -19,9 +19,11 @@ public class Review {
     
     
 
-	public Review() {
+	public Review(String title, String content, String image) {
 		super();
-		// TODO Auto-generated constructor stub
+		this.title=title;
+		this.content=content;
+		this.image=image;
 	}
 
 	public Review(Long reviewId, Long userId, String matchType, Long matchId, String title, String content,
@@ -38,6 +40,9 @@ public class Review {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
+	
+	
+	
 	
 	public Long getReviewId() {
 		return reviewId;

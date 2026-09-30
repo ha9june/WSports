@@ -1,6 +1,12 @@
 package dto;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import dao.UserDao;
 
 /** 회원 */
 public class User {
@@ -39,8 +45,7 @@ public class User {
     private LocalDateTime accountCreatedAt;  // 계좌 등록 일시
     private LocalDateTime accountUpdatedAt;  // 계좌 수정 일시
     
-    
-    
+
     
     
 	public User() {

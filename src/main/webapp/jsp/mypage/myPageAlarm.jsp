@@ -11,12 +11,15 @@
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
+    
+  
 <div class="work-inner" style="width:860px">
   <div class="page-head row" style="margin-bottom:0">
     <div><h1 class="page-title">알림</h1><p class="page-desc">중요한 활동 소식만 빠르게 확인하세요.</p></div>
     <button type="button" class="btn btn-outline btn-sm" data-toast="모든 알림을 읽음 처리했어요.">모두 읽음</button>
   </div>
   <%-- TODO: <c:forEach var="n" items="${alarmList}"> 읽음 여부(n.readYn)로 그룹 분리 --%>
+  
   <section class="noti-group">
     <h2>미확인</h2>
     <a class="noti-item unread" href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied"><strong>참가가 확정되었습니다.</strong><p>토요일 저녁 풋살 한 판! · 결제가 완료되어 참가가 확정됐어요.</p><time>10:24</time></a>
