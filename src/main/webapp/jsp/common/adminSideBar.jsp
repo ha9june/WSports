@@ -11,7 +11,7 @@
       <p class="group-title">관리자(사이트) 메뉴</p>
       <nav class="menu">
         <a href="${ctx}/jsp/admin/adminRevenue.jsp" class="${adminMenu eq 'revenue' ? 'is-active' : ''}">수익 관리</a>
-        <a href="${ctx}/jsp/admin/adminSettlement.jsp" class="${adminMenu eq 'settlement' ? 'is-active' : ''}">정산 관리 <span class="count-badge">5</span></a>
+        <a href="${ctx}/admin/settlement/person" class="${adminMenu eq 'settlement' ? 'is-active' : ''}">정산 관리 <span class="count-badge">5</span></a>
         <a href="${ctx}/jsp/admin/adminMember.jsp" class="${adminMenu eq 'member' ? 'is-active' : ''}">회원 관리 <span class="count-badge">3</span></a>
         <a href="${ctx}/jsp/admin/adminReport.jsp" class="${adminMenu eq 'report' ? 'is-active' : ''}">신고 관리 <span class="count-badge">7</span></a>
         <a href="${ctx}/jsp/admin/adminTeam.jsp" class="${adminMenu eq 'team' ? 'is-active' : ''}">팀 관리 <span class="count-badge">2</span></a>

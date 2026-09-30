@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
 <mapper namespace="mapper.personalsettlement">
+	<!-- 정산대기 중인 개인 정산 총 개수 -->
+	<select id="selectPersonalSettlementWait" resultType="int">
+		select count(settlement_status) 
+		from personal_settlement 
+		where settlement_status = '정산대기'
+	</select>
+	
+	<!-- 개인 정산 대기 총 금액 -->
+	<select id="selectPersonalSettlementWaitMoney" resultType="long">
+		select sum(amount)
+		from personal_settlement
+		where settlement_status = '정산대기'
 
+	</select>
+	
+	<!-- 정산대기인 개인 정산 리스트 -->
+	<select id="selectPersonalSettlementWaitList" resultType="map">
+		select m.personal_match_id, m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from personal_settlement s 
+		join personal_match m
+		on s.personal_match_id = m.personal_match_id
+		where s.settlement_status = '정산대기'
+		order by m.match_date desc
+	</select>
+	
+	<!-- 지급완료인 개인 정산 리스트 -->
+	<select id="selectPersonalSettlementFinishList" resultType="map">
+		select m.personal_match_id, m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from personal_settlement s 
+		join personal_match m
+		on s.personal_match_id = m.personal_match_id 
+		where s.settlement_status = '지급완료'
+		order by match_date desc
+	</select>
+	
+	<!-- 날짜 선택해서 보는 모든 개인 정산 리스트 -->
+	<select id="selectPersonalSettlementDayList" resultType="map">
+		select m.personal_match_id as matchId, m.title, m.sport,
+           m.match_date, s.amount,
+           s.settlement_status
+    	from personal_settlement s
+    	join personal_match m on s.personal_match_id = m.personal_match_id
+    	where m.match_date = #{targetDate}
+    	order by m.match_date desc
+	</select>
 </mapper>
