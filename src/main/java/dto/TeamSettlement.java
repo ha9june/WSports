@@ -13,4 +13,82 @@ public class TeamSettlement {
     private String settlementStatus;  // 정산 상태
     private LocalDateTime settledAt;  // 정산 일시
     private Long adminId;             // 처리 관리자 ID
+	public TeamSettlement() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public TeamSettlement(Long settlementId, Long userId, Long teamMatchId, String accountNumber, String bankName,
+			Integer amount, String settlementStatus, LocalDateTime settledAt, Long adminId) {
+		super();
+		this.settlementId = settlementId;
+		this.userId = userId;
+		this.teamMatchId = teamMatchId;
+		this.accountNumber = accountNumber;
+		this.bankName = bankName;
+		this.amount = amount;
+		this.settlementStatus = settlementStatus;
+		this.settledAt = settledAt;
+		this.adminId = adminId;
+	}
+	public Long getSettlementId() {
+		return settlementId;
+	}
+	public void setSettlementId(Long settlementId) {
+		this.settlementId = settlementId;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public Long getTeamMatchId() {
+		return teamMatchId;
+	}
+	public void setTeamMatchId(Long teamMatchId) {
+		this.teamMatchId = teamMatchId;
+	}
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public String getBankName() {
+		return bankName;
+	}
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+	public Integer getAmount() {
+		return amount;
+	}
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+	public String getSettlementStatus() {
+		return settlementStatus;
+	}
+	public void setSettlementStatus(String settlementStatus) {
+		this.settlementStatus = settlementStatus;
+	}
+	public LocalDateTime getSettledAt() {
+		return settledAt;
+	}
+	public void setSettledAt(LocalDateTime settledAt) {
+		this.settledAt = settledAt;
+	}
+	public Long getAdminId() {
+		return adminId;
+	}
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
+	}
+	@Override
+	public String toString() {
+		return "TeamSettlement [settlementId=" + settlementId + ", userId=" + userId + ", teamMatchId=" + teamMatchId
+				+ ", accountNumber=" + accountNumber + ", bankName=" + bankName + ", amount=" + amount
+				+ ", settlementStatus=" + settlementStatus + ", settledAt=" + settledAt + ", adminId=" + adminId + "]";
+	}
+    
 }
