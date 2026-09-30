@@ -20,6 +20,8 @@
 <c:forTokens items="${pageCss}" delims="," var="cssName">
 <link rel="stylesheet" href="${ctx}/css/${cssName}.css">
 </c:forTokens>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
 </head>
 <body data-role="${role}">
 <header class="site-header">
