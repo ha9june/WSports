@@ -13,18 +13,11 @@ public class TeamSettlement {
     private String settlementStatus;  // 정산 상태
     private LocalDateTime settledAt;  // 정산 일시
     private Long adminId;             // 처리 관리자 ID
-    
-    
-    
-    
-    
+
 	public TeamSettlement() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
 	public TeamSettlement(Long settlementId, Long userId, Long teamMatchId, String accountNumber, String bankName,
 			Integer amount, String settlementStatus, LocalDateTime settledAt, Long adminId) {
 		super();
@@ -38,9 +31,6 @@ public class TeamSettlement {
 		this.settledAt = settledAt;
 		this.adminId = adminId;
 	}
-
-
-
 	public Long getSettlementId() {
 		return settlementId;
 	}
@@ -95,13 +85,11 @@ public class TeamSettlement {
 	public void setAdminId(Long adminId) {
 		this.adminId = adminId;
 	}
-
 	@Override
 	public String toString() {
 		return "TeamSettlement [settlementId=" + settlementId + ", userId=" + userId + ", teamMatchId=" + teamMatchId
 				+ ", accountNumber=" + accountNumber + ", bankName=" + bankName + ", amount=" + amount
 				+ ", settlementStatus=" + settlementStatus + ", settledAt=" + settledAt + ", adminId=" + adminId + "]";
 	}
-    
     
 }

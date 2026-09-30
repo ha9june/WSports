@@ -45,13 +45,11 @@ public class TeamMatch {
     private String image5;              // 이미지 5
     private String status;              // 매치 상태
     private String region;              // 지역
-    
-    
+
 	public TeamMatch() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 	public TeamMatch(Long teamMatchId, String title, String content, Long userId, Long teamId, LocalDateTime createdAt,
 			LocalDate matchDate, String sport, LocalTime startTime, LocalTime endTime, String placeName, String address,
 			BigDecimal latitude, BigDecimal longitude, Integer participationFee, Integer fee, LocalDateTime deadline,
@@ -99,7 +97,6 @@ public class TeamMatch {
 		this.status = status;
 		this.region = region;
 	}
-	
 	public Long getTeamMatchId() {
 		return teamMatchId;
 	}
@@ -328,7 +325,6 @@ public class TeamMatch {
 	public void setRegion(String region) {
 		this.region = region;
 	}
-	
 	@Override
 	public String toString() {
 		return "TeamMatch [teamMatchId=" + teamMatchId + ", title=" + title + ", content=" + content + ", userId="
@@ -343,7 +339,6 @@ public class TeamMatch {
 				+ image1 + ", image2=" + image2 + ", image3=" + image3 + ", image4=" + image4 + ", image5=" + image5
 				+ ", status=" + status + ", region=" + region + "]";
 	}
-    
     
     
 }

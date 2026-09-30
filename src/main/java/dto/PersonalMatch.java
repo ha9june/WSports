@@ -46,15 +46,10 @@ public class PersonalMatch {
     private String placeName;           // 장소명
     private String address;             // 주소
     private String region;              // 지역
-    
- 
-    
-    
 	public PersonalMatch() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
 	public PersonalMatch(Long personalMatchId, String title, String content, String image, Long userId,
 			LocalDateTime createdAt, LocalDate matchDate, String sport, LocalTime startTime, LocalTime endTime,
 			BigDecimal latitude, BigDecimal longitude, Integer participationFee, Integer fee, LocalDateTime deadline,
@@ -103,6 +98,20 @@ public class PersonalMatch {
 		this.placeName = placeName;
 		this.address = address;
 		this.region = region;
+	}
+	@Override
+	public String toString() {
+		return "PersonalMatch [personalMatchId=" + personalMatchId + ", title=" + title + ", content=" + content
+				+ ", image=" + image + ", userId=" + userId + ", createdAt=" + createdAt + ", matchDate=" + matchDate
+				+ ", sport=" + sport + ", startTime=" + startTime + ", endTime=" + endTime + ", latitude=" + latitude
+				+ ", longitude=" + longitude + ", participationFee=" + participationFee + ", fee=" + fee + ", deadline="
+				+ deadline + ", skillIntro=" + skillIntro + ", skillBeginner=" + skillBeginner + ", skillIntermediate="
+				+ skillIntermediate + ", skillAdvanced=" + skillAdvanced + ", age20s=" + age20s + ", age30s=" + age30s
+				+ ", age40s=" + age40s + ", age50s=" + age50s + ", age60Plus=" + age60Plus + ", gender=" + gender
+				+ ", minPeople=" + minPeople + ", maxPeople=" + maxPeople + ", deleted=" + deleted + ", updatedAt="
+				+ updatedAt + ", deletedAt=" + deletedAt + ", image1=" + image1 + ", image2=" + image2 + ", image3="
+				+ image3 + ", image4=" + image4 + ", image5=" + image5 + ", status=" + status + ", placeName="
+				+ placeName + ", address=" + address + ", region=" + region + "]";
 	}
 	public Long getPersonalMatchId() {
 		return personalMatchId;
@@ -338,21 +347,5 @@ public class PersonalMatch {
 	public void setRegion(String region) {
 		this.region = region;
 	}
-	@Override
-	public String toString() {
-		return "PersonalMatch [personalMatchId=" + personalMatchId + ", title=" + title + ", content=" + content
-				+ ", image=" + image + ", userId=" + userId + ", createdAt=" + createdAt + ", matchDate=" + matchDate
-				+ ", sport=" + sport + ", startTime=" + startTime + ", endTime=" + endTime + ", latitude=" + latitude
-				+ ", longitude=" + longitude + ", participationFee=" + participationFee + ", fee=" + fee + ", deadline="
-				+ deadline + ", skillIntro=" + skillIntro + ", skillBeginner=" + skillBeginner + ", skillIntermediate="
-				+ skillIntermediate + ", skillAdvanced=" + skillAdvanced + ", age20s=" + age20s + ", age30s=" + age30s
-				+ ", age40s=" + age40s + ", age50s=" + age50s + ", age60Plus=" + age60Plus + ", gender=" + gender
-				+ ", minPeople=" + minPeople + ", maxPeople=" + maxPeople + ", deleted=" + deleted + ", updatedAt="
-				+ updatedAt + ", deletedAt=" + deletedAt + ", image1=" + image1 + ", image2=" + image2 + ", image3="
-				+ image3 + ", image4=" + image4 + ", image5=" + image5 + ", status=" + status + ", placeName="
-				+ placeName + ", address=" + address + ", region=" + region + "]";
-	}
-    
-    
-    
+
 }

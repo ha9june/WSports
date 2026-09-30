@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teamsettlement">
-
+	<!-- 정산대기 중인 팀 정산 총 개수 -->
+	<select id="selectTeamSettlementWait" resultType="Integer">
+		select count(settlement_status) 
+		from team_settlement 
+		where settlement_status = '정산대기'
+	</select>
+	
+	<!-- 팀 정산 대기 총 금액 -->
+	<select id="selectTeamSettlementWaitMoney" resultType="Long">
+		select sum(amount)
+		from team_settlement 
+		where settlement_status = '정산대기'
+	</select>
+	
+	<!-- 정산대기인 팀 정산 리스트 -->
+	<select id="selectTeamSettlementWaitList" resultType="map">
+		select m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from team_settlement s 
+		join team_match m
+		on s.team_match_id = m.team_match_id 
+		where s.settlement_status = '정산대기'
+		order by match_date desc
+	</select>
+	
+	<!-- 지급완료인 팀 정산 리스트 -->
+	<select id="selectTeamSettlementFinishList" resultType="map">
+		select m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from team_settlement s 
+		join team_match m
+		on s.team_match_id = m.team_match_id 
+		and s.settlement_status = '지급완료'
+		order by match_date desc
+	</select>
+	
+	<!-- 최신 날짜순으로 보는 모든 팀 정산 리스트 -->
+	<select id="selectTeamSettlementDayList" resultType="map">
+		select m.team_match_id as matchId, m.title, m.sport,
+           m.match_date, s.amount,
+           s.settlement_status
+    	from team_settlement s
+    	join team_match m on s.team_match_id = m.team_match_id
+    	where m.match_date = #{targetDate}
+    	order by m.match_date desc
+	</select>
 </mapper>

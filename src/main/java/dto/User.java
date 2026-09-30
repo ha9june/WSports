@@ -10,8 +10,7 @@ import dao.UserDao;
 
 /** 회원 */
 public class User {
-
-    private Long userId;                     // 회원 ID (PK)
+	private Long userId;                     // 회원 ID (PK)
     private String loginId;                  // 로그인 아이디
     private String password;                 // 비밀번호 (암호화)
     private String name;                     // 이름
@@ -44,9 +43,7 @@ public class User {
     private String accountHolder;            // 예금주
     private LocalDateTime accountCreatedAt;  // 계좌 등록 일시
     private LocalDateTime accountUpdatedAt;  // 계좌 수정 일시
-    
 
-    
     
 	public User() {
 		super();
@@ -314,8 +311,5 @@ public class User {
 				+ accountHolder + ", accountCreatedAt=" + accountCreatedAt + ", accountUpdatedAt=" + accountUpdatedAt
 				+ "]";
 	}
-    
-    
-    
-    
+
 }

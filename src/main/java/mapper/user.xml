@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.user">
+
+	<select id="selectLoginId" resultType="User" parameterType="String">
+		select * from user where login_id=#{loginId}
+	</select>
+	
+	<select id="selectNickname" resultType="User" parameterType="String">
+		select * from user where nickname=#{nickname}
+	</select>
+	
+	<insert id="insertUser" parameterType="user">
+	insert into user(login_id,name,password,email,nickname,birth_date,phone,gender,preferred_region1,preferred_region2,preferred_region3,preferred_sport1,preferred_sport2,preferred_sport3,created_at)
+	values(#{loginId},#{name},#{password},#{email},#{nickname},#{birthDate},#{phone},#{gender},#{preferredRegion1},#{preferredRegion2},#{preferredRegion3},#{preferredSport1},#{preferredSport2},#{preferredSport3},#{createdAt})
+	</insert>
+
 </mapper>

@@ -3,7 +3,6 @@ import java.time.LocalDateTime;
 
 /** 팀 */
 public class Team {
-
     private Long teamId;              // 팀 ID (PK)
     private String teamName;          // 팀 이름
     private String profileImage;      // 팀 프로필 이미지
@@ -38,17 +37,11 @@ public class Team {
     private String activityImage3;    // 활동 이미지 3
     private String activityImage4;    // 활동 이미지 4
     private String activityImage5;    // 활동 이미지 5
-    
-    
-    
-    
-    
+
 	public Team() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-
 	public Team(Long teamId, String teamName, String profileImage, String description, String skill, String sport,
 			String gender, LocalDateTime createdAt, Boolean deleted, String region1, String region2, String region3,
 			Boolean age20s, Boolean age30s, Boolean age40s, Boolean age50s, Boolean age60Plus, Boolean dayMon,
@@ -92,8 +85,19 @@ public class Team {
 		this.activityImage4 = activityImage4;
 		this.activityImage5 = activityImage5;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "Team [teamId=" + teamId + ", teamName=" + teamName + ", profileImage=" + profileImage + ", description="
+				+ description + ", skill=" + skill + ", sport=" + sport + ", gender=" + gender + ", createdAt="
+				+ createdAt + ", deleted=" + deleted + ", region1=" + region1 + ", region2=" + region2 + ", region3="
+				+ region3 + ", age20s=" + age20s + ", age30s=" + age30s + ", age40s=" + age40s + ", age50s=" + age50s
+				+ ", age60Plus=" + age60Plus + ", dayMon=" + dayMon + ", dayTue=" + dayTue + ", dayWed=" + dayWed
+				+ ", dayThu=" + dayThu + ", dayFri=" + dayFri + ", daySat=" + daySat + ", daySun=" + daySun
+				+ ", time0609=" + time0609 + ", time0912=" + time0912 + ", time1218=" + time1218 + ", time1822="
+				+ time1822 + ", time2206=" + time2206 + ", activityImage1=" + activityImage1 + ", activityImage2="
+				+ activityImage2 + ", activityImage3=" + activityImage3 + ", activityImage4=" + activityImage4
+				+ ", activityImage5=" + activityImage5 + "]";
+	}
 	public Long getTeamId() {
 		return teamId;
 	}
@@ -298,22 +302,6 @@ public class Team {
 	public void setActivityImage5(String activityImage5) {
 		this.activityImage5 = activityImage5;
 	}
-
-
-	@Override
-	public String toString() {
-		return "Team [teamId=" + teamId + ", teamName=" + teamName + ", profileImage=" + profileImage + ", description="
-				+ description + ", skill=" + skill + ", sport=" + sport + ", gender=" + gender + ", createdAt="
-				+ createdAt + ", deleted=" + deleted + ", region1=" + region1 + ", region2=" + region2 + ", region3="
-				+ region3 + ", age20s=" + age20s + ", age30s=" + age30s + ", age40s=" + age40s + ", age50s=" + age50s
-				+ ", age60Plus=" + age60Plus + ", dayMon=" + dayMon + ", dayTue=" + dayTue + ", dayWed=" + dayWed
-				+ ", dayThu=" + dayThu + ", dayFri=" + dayFri + ", daySat=" + daySat + ", daySun=" + daySun
-				+ ", time0609=" + time0609 + ", time0912=" + time0912 + ", time1218=" + time1218 + ", time1822="
-				+ time1822 + ", time2206=" + time2206 + ", activityImage1=" + activityImage1 + ", activityImage2="
-				+ activityImage2 + ", activityImage3=" + activityImage3 + ", activityImage4=" + activityImage4
-				+ ", activityImage5=" + activityImage5 + "]";
-	}
-    
     
     
 }

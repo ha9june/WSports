@@ -21,9 +21,10 @@
     <p class="eyebrow">혼자여도, 팀이어도, 매치온에서</p>
     <h1>경기를 찾고, 팀에 들어가고,<br>뛴 후엔 후기를 남겨보세요</h1>
     <p>경기 찾기, 팀, 후기까지 · 매치온 하나로 축구·농구·테니스·배드민턴을 즐겨보세요.</p>
-    <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾아보기</a>
+    <a class="btn btn-primary" href="${ctx}/match/list">경기 찾아보기</a>
   </div>
 </section>
+
 <main class="page">
   <div class="container">
     <section>
@@ -32,9 +33,28 @@
           <h2 class="section-title">경기 찾기</h2>
           <p class="section-desc">지금 열려있는 경기를 둘러보세요.</p>
         </div>
-        <a class="t-brand t-13" href="${ctx}/jsp/match/personalMatchList.jsp" style="font-weight:500">전체보기 →</a>
+        <a class="t-brand t-13" href="${ctx}/match/list" style="font-weight:500">전체보기 →</a>
       </div>
-      <%@ include file="/jsp/common/featuredMatchRow.jsp" %>
+      
+      
+	<div id="recomandMatchListDiv" class="feature-row">
+	
+	    <c:forEach var="match" items="${rList}">
+
+	        ${match.title}
+	        ${match.sport}
+	        ${match.startTime}
+	        ${match.endTime}
+	        ${match.region}
+	        ${match.participationFee}
+	        ${match.maxPeople}
+	        ${match.currentPeople}
+	        <br>
+
+	    </c:forEach>
+	
+	</div>
+      
     </section>
 
     <section class="landing-section">
@@ -46,7 +66,7 @@
         <a href="${ctx}/jsp/team/teamList.jsp">전체보기 →</a>
       </div>
       <%-- TODO: <c:forEach var="t" items="${teamList}"> --%>
-      <div class="team-mini-row">
+      <div id="recomandTeamListDiv" class="team-mini-row">
         <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
           <div class="top"><img src="${ctx}/img/team-football.png" alt="">
             <div><strong>서울 풋살 크루</strong><p class="meta">축구/풋살 · 마포</p>

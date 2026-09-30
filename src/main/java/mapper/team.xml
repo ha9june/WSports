@@ -2,5 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.team">
-
+	<insert id="insertTeam" parameterType="team" useGeneratedKeys="true" keyProperty="teamId">
+		insert into team (
+							team_name, 
+							profile_image, 
+							description, 
+							skill, 
+							sport, 
+							gender, 
+							created_at, 
+							deleted, 
+							region1, 
+							region2, 
+							region3, 
+							age_20s, 
+							age_30s, 
+							age_40s, 
+							age_50s, 
+							age_60_plus, 
+							day_mon, 
+							day_tue, 
+							day_wed, 
+							day_thu, 
+							day_fri, 
+							day_sat, 
+							day_sun, 
+							time_06_09, 
+							time_09_12, 
+							time_12_18, 
+							time_18_22, 
+							time_22_06, 
+							activity_image1,
+							activity_image2, 
+							activity_image3, 
+							activity_image4, 
+							activity_image5	
+						) values (
+							#{teamName}, 
+							#{profileImage}, 
+							#{description}, 
+							#{skill}, 
+							#{sport}, 
+							#{gender}, 
+							NOW(), 
+							#{deleted}, 
+							#{region1}, 
+							#{region2}, 
+							#{region3}, 
+							#{age20s}, 
+							#{age30s}, 
+							#{age40s}, 
+							#{age50s}, 
+							#{age60Plus}, 
+							#{dayMon}, 
+							#{dayTue}, 
+							#{dayWed}, 
+							#{dayThu}, 
+							#{dayFri}, 
+							#{daySat}, 
+							#{daySun}, 
+							#{time0609}, 
+							#{time0912}, 
+							#{time1218}, 
+							#{time1822}, 
+							#{time2206}, 
+							#{activityImage1},
+							#{activityImage2}, 
+							#{activityImage3}, 
+							#{activityImage4}, 
+							#{activityImage5}
+						)		
+	</insert>
+	
+	<insert id="insertTeamUser" parameterType="user">
+	
+	</insert>
 </mapper>

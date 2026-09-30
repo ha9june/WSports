@@ -3,7 +3,6 @@ package config;
 import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
-
 import com.google.auth.oauth2.GoogleCredentials;
 
 public class FCMConfig {

@@ -37,7 +37,6 @@
       <button type="button" class="btn btn-primary btn-xs" data-modal-open="settleModal">정산하기</button></div></div>
   </div>
 </div>
-</main></div>
 <div class="modal" id="settleModal" role="dialog" aria-modal="true"><div class="modal-card md">
   <h2 class="modal-title">정산을 완료 처리할까요?</h2><p class="modal-desc">등록 계좌로 지급한 뒤 완료 처리해주세요. 처리 후에는 되돌릴 수 없습니다.</p>
   <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>취소</button><button type="button" class="btn btn-primary" data-toast="정산을 완료 처리했어요.">지급 완료 처리</button></div></div></div>
