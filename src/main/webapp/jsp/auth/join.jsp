@@ -10,23 +10,76 @@
 <c:set var="demoRoles" value="guest" />
 <%@ include file="/jsp/common/header.jsp" %>
 
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+$(function () {
+	$("#id-check").click(function(e) {
+		e.preventDefault();
+		if($("#loginId").val().length==0) {
+			alert('아이디를 입력하세요.')
+			return;
+		}
+		$.ajax({
+			url:'${ctx}/jsp/auth/join/id-check',
+			type:'post',
+			dataType:'text',
+			data:{loginId:$('#loginId').val()},
+			success:function(result) {
+				if(result=='true') {
+					alert('사용중인 아이디입니다.')
+				} else if(result=='false') {
+					alert('사용 가능한 아이디 입니다.')
+				} else {
+					alert(result);
+				}
+			}
+		})
+	})
+	
+	$("#nickname-check").click(function(e) {
+		e.preventDefault();
+		if($("#nick").val().length==0) {
+			alert('닉네임을 입력하세요.')
+			return;
+		}
+		$.ajax({
+			url:'${ctx}/jsp/auth/join/nickname-check',
+			type:'post',
+			dataType:'text',
+			data:{nickname:$('#nick').val()},
+			success:function(result) {
+				if(result=='true') {
+					alert('사용중인 닉네임입니다.')
+				} else if(result=='false') {
+					alert('사용 가능한 닉네임 입니다.')
+				} else {
+					alert(result);
+				}
+			}
+		})
+	})
+})
+</script>
+
+
 <main class="page">
   <%-- TODO: action 을 회원가입 서블릿으로 교체 (예: ${ctx}/join) --%>
-  <form class="join-wrap" action="${ctx}/jsp/auth/login.jsp" method="post">
+  <form class="join-wrap" action="${ctx}/auth/join" method="post">
     <nav class="breadcrumb"><span>회원</span><span class="sep">›</span><span>회원가입</span></nav>
     <div class="page-head"><h1 class="page-title">회원가입</h1><p class="page-desc">가입에 필요한 기본 정보를 입력해주세요.</p></div>
 
     <div class="form-grid">
       <div class="field"><label class="field-label" for="loginId">아이디</label>
         <div class="field-row"><input class="input" id="loginId" name="loginId" placeholder="영문·숫자 4~20자" required>
-          <button type="button" class="btn btn-brand-outline" data-toast="사용 가능한 아이디예요.">중복 확인</button></div></div>
+          <!-- <button type="button" class="btn btn-brand-outline" data-toast="사용 가능한 아이디예요.">중복 확인</button></div></div> -->
+      <button type="button" name="id-check" id="id-check" class="btn btn-brand-outline">중복 확인</button></div></div>
       <div class="field"><label class="field-label" for="name">이름</label><input class="input" id="name" name="name" placeholder="이름" required></div>
       <div class="field"><label class="field-label" for="pw">비밀번호</label><input class="input" type="password" id="pw" name="password" placeholder="8자 이상 비밀번호" required></div>
       <div class="field"><label class="field-label" for="pw2">비밀번호 확인</label><input class="input" type="password" id="pw2" name="passwordConfirm" placeholder="비밀번호를 다시 입력" required></div>
       <div class="field"><label class="field-label" for="email">이메일</label><input class="input" type="email" id="email" name="email" placeholder="example@email.com" required></div>
       <div class="field"><label class="field-label" for="nick">닉네임</label>
         <div class="field-row"><input class="input" id="nick" name="nickname" placeholder="2~12자 닉네임" required>
-          <button type="button" class="btn btn-brand-outline" data-toast="사용 가능한 닉네임이에요.">중복 확인</button></div></div>
+          <button type="button" name="nickname-check" id="nickname-check" class="btn btn-brand-outline">중복 확인</button></div></div>
       <div class="field"><label class="field-label" for="birth">생년월일</label><input class="input" id="birth" name="birth" placeholder="YYYY.MM.DD"></div>
       <div class="field"><label class="field-label" for="phone">전화번호</label><input class="input" id="phone" name="phone" placeholder="010-0000-0000"></div>
       <div class="field full"><span class="field-label">성별</span>

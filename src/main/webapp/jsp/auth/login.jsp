@@ -38,7 +38,7 @@ $(function () {
         <input class="input" type="password" id="loginPw" name="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password" required></div>
       <button type="submit" id="submit" class="btn btn-primary btn-block">로그인</button>
       <div class="auth-links"><a href="#" data-toast="아이디 찾기는 준비 중이에요.">아이디 찾기</a><a href="#" data-toast="비밀번호 찾기는 준비 중이에요.">비밀번호 찾기</a></div>
-      <p class="auth-join">아직 계정이 없나요?<a href="${ctx}/jsp/auth/join.jsp">회원가입</a></p>
+      <p class="auth-join">아직 계정이 없나요?<a href="${ctx}/auth/join">회원가입</a></p>
     </form>
   </div>
 </main>

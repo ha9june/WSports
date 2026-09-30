@@ -39,7 +39,8 @@
 
     <div class="header-util">
       <c:choose>
-        <c:when test="${role eq 'guest'}">
+        <%-- <c:when test="${role eq 'guest'}"> 로그아웃을 해도 상단 헤더에 로그인상태 유지됨으로 수정 --%>
+          <c:when test="${empty user.loginId}">
           <a class="btn-login" href="${ctx}/auth/login">로그인</a>
         </c:when>
         <c:otherwise>
@@ -53,7 +54,7 @@
         </c:otherwise>
       </c:choose>
     </div>
-
+    
     <c:if test="${role ne 'guest'}">
       <%-- 알림 퀵 패널 : 벨 아이콘 클릭 시 열림 --%>
       <div class="noti-panel" id="notiPanel" role="dialog" aria-label="알림">
