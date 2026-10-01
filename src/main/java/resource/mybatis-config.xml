@@ -5,6 +5,9 @@
 
 <configuration>
 
+
+
+
 	<properties resource="resource/db.properties"/>
 
     <!-- settings는 typeAliases보다 먼저 선언 -->

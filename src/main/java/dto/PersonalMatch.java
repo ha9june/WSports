@@ -46,6 +46,7 @@ public class PersonalMatch {
     private String placeName;           // 장소명
     private String address;             // 주소
     private String region;              // 지역
+    private String currentPeople;		//현재인원
 	public PersonalMatch() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -347,5 +348,14 @@ public class PersonalMatch {
 	public void setRegion(String region) {
 		this.region = region;
 	}
+	public String getCurrentPeople() {
+		return currentPeople;
+	}
+	public void setCurrentPeople(String currentPeople) {
+		this.currentPeople = currentPeople;
+	}
+	
+	
+	
 
 }

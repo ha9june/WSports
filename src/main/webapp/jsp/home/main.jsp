@@ -38,21 +38,25 @@
       
       
 	<div id="recomandMatchListDiv" class="feature-row">
-	
 	    <c:forEach var="match" items="${rList}">
-
-	        ${match.title}
-	        ${match.sport}
-	        ${match.startTime}
-	        ${match.endTime}
-	        ${match.region}
-	        ${match.participationFee}
-	        ${match.maxPeople}
-	        ${match.currentPeople}
-	        <br>
-
+	  		<c:set var="sportClass" value="${match.sport eq '축구' ? 'football' :
+    		    match.sport eq '농구' ? 'basketball' :	
+                match.sport eq '테니스' ? 'tennis' :
+                match.sport eq '배드민턴' ? 'badminton' : ''}" />
+			<a class="match-card ${sportClass}" href="${ctx}/jsp/match/personalMatchDetail.jsp">
+			    <img class="art" src="${ctx}/img/art-${sportClass}.png" alt="">
+			    <span class="sport-tag ${sportClass}">${match.sport}</span>
+			    <button type="button" class="fav-btn bare" data-fav data-auth aria-label="관심 경기">${heart}</button>
+			    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">${role eq 'guest' ? '인기 경기' : '지역 · 실력 일치'}</span>
+			    <div class="body">
+			      <p class="title">${match.title}</p>
+			      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">${match.startTime} · ${match.region}</p>
+			      <p class="price">${match.participationFee}원</p>
+			    </div>
+			    <p class="count">${match.currentPeople}명<small>/ 정원 ${match.maxPeople}명</small></p>
+			    <div class="bar"><i style="width:${match.currentPeople * 100 / match.maxPeople}%"></i></div>
+			  </a>
 	    </c:forEach>
-	
 	</div>
       
     </section>

@@ -16,6 +16,177 @@
 <c:set var="showFooter" value="true" />
 <c:set var="demoStates" value="list:일반 검색|map:지도 검색|mapTyping:지도-입력 중|mapPin:지도-핀 선택" />
 <%@ include file="/jsp/common/header.jsp" %>
+<script>
+	let isMapp = false;
+
+
+	$(function(){
+		let data = {"userId":"test1","grade":"User"};
+		
+		
+		function NowList(searchType){
+			$.ajax({
+				url:"${ctx}/match/list/now",
+				type:"post",
+			    dataType: "json",
+			    data: {
+			    	requestType: "ajax",
+			    	searchType:searchType,
+			    	data:JSON.stringify(data),
+			    	},
+				success:function(result){
+					let html = "";
+					
+					result.forEach(function(item) {
+						
+					    let sportsType = "";
+					    if(item.sport == "축구/풋살" || item.sport == "축구"){
+					    	sportsType="football";
+					    }else if(item.sport == "농구"){
+					    	sportsType="basketball";
+					    }else if(item.sport == "배드민턴"){
+					    	sportsType="badminton";
+					    }else if(item.sport == "테니스"){
+					    	sportsType="tennis";
+					    }
+					    html += `
+					    	<a class="match-card `+sportsType+`" href="${ctx}/jsp/match/personalMatchDetail.jsp">
+						    <img class="art" src="${ctx}/img/art-`+sportsType+`.png" alt="">
+						    <span class="sport-tag football">
+						    `+item.sport+`
+						    </span>
+						    <button type="button" class="fav-btn bare" data-fav data-auth aria-label="관심 경기">${heart}</button>
+						    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">${role eq 'guest' ? '인기 경기' : '지역 · 실력 일치'}</span>
+						    <div class="body">
+						      <p class="title">
+						      	`+item.title+`
+						      </p>
+						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
+						      	`+item.startTime+` · 
+						      	`+item.region+`
+						      </p>
+						      <p class="price">
+						      	`+item.participationFee+`원
+						      </p>
+						    </div>
+						    <p class="count">
+						    	`+item.currentPeople+`명
+						    <small>/ 정원 
+						    `+item.maxPeople+`
+						    명</small></p>
+						    <div class="bar"><i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i></div>
+						  </a>
+			            `;
+					});
+					 $("#recomandMatchListDiv").html(html);		
+				},
+				error:function(err){
+					console.log("err");
+					console.log(err);
+				}
+			});
+		}
+		function NormalList(){
+			$.ajax({
+				url:"${ctx}/match/list/normal",
+				type:"post",
+			    dataType: "json",
+			    data: {
+			    	data:data,
+			    	requestType: "ajax"
+			    	},
+				success:function(result){
+					let html = "";
+					result.forEach(function(item) {
+						let sportsType = "";
+					    if(item.sport == "축구/풋살" || item.sport == "축구"){
+					    	sportsType="football";
+					    }else if(item.sport == "농구"){
+					    	sportsType="basketball";
+					    }else if(item.sport == "배드민턴"){
+					    	sportsType="badminton";
+					    }else if(item.sport == "테니스"){
+					    	sportsType="tennis";
+					    }
+						
+						
+						html+=`
+							<a class="match-row" href="${ctx}/jsp/match/personalMatchDetail.jsp">
+				            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
+				            <div class="main">
+				              <p class="title">
+				              `+item.title+`
+				              </p>
+				              <div class="meta">
+				                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">8/10 &nbsp; 최소 8명 <span class="cap"><i style="width:80%"></i></span></span>
+				                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">9/19 (토)</span>
+				                <span class="it"><img src="${ctx}/img/icon-clock-16.svg" alt="">19:00</span>
+				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 마포구</span>
+				                <span class="price">10,000원</span>
+				                <button type="button" class="fav-btn" data-fav data-auth aria-label="관심 경기">${heart}</button>
+				              </div>
+				            </div>
+				          </a>
+						`;
+					});
+					
+				 	$("#normalMatchListDiv").html(html);		
+
+				},
+				error:function(err){
+					console.log("err");
+					console.log(err);
+				}
+				
+			});
+		}
+		
+
+		$("#nowRecomandBtn").on("click", function() {
+			$(this).siblings("a").removeClass("is-active");
+			$(this).addClass("is-active");
+			NowList("RECOMAND");
+		});
+		$("#nowPopularBtn").on("click", function() {
+			$(this).siblings("a").removeClass("is-active");
+			$(this).addClass("is-active");
+			NowList("POPULAR");
+		});
+		$("#nowEndBtn").on("click", function() {
+			$(this).siblings("a").removeClass("is-active");
+			$(this).addClass("is-active");
+			NowList("END");
+		});
+		$("#nowNewBtn").on("click", function() {
+			$(this).siblings("a").removeClass("is-active");
+			$(this).addClass("is-active");
+			NowList("NEW");
+		});
+		
+		//일반검색 버튼
+		//지도기반검색 버튼
+		$("#normalBtn").on("click", function() {
+			$(this).siblings("a").removeClass("is-active");
+			$(this).addClass("is-active");
+			isMapp = false;
+			$("#normalDiv").show();
+			$("#maplDiv").hide();
+			NormalList();
+
+		});
+		$("#mapBtn").on("click", function() {
+			$(this).siblings("a").removeClass("is-active");
+			$(this).addClass("is-active");
+			isMapp = true;
+			$("#normalDiv").hide();
+			$("#maplDiv").show();
+
+		});
+		
+
+	});
+</script>
+
 
 <main class="page">
   <div class="container">
@@ -30,22 +201,37 @@
         </c:choose>
       </p>
       <div class="feature-tabs">
-        <c:if test="${role ne 'guest'}"><a href="#" class="is-active">추천 경기</a></c:if>
-        <a href="#" class="${role eq 'guest' ? 'is-active' : ''}">인기 경기</a>
-        <a href="#">마감 임박</a>
-        <a href="#">신규 모집</a>
+        <c:if test="${role ne 'guest'}"><a id="nowRecomandBtn" class="btnGroup1 is-active">추천 경기</a></c:if>
+        <a id="nowPopularBtn" class="btnGroup1 ${role eq 'guest' ? 'is-active' : ''}">인기 경기</a>
+        <a id="nowEndBtn" class="btnGroup1">마감 임박</a>
+        <a id="nowNewBtn" class="btnGroup1">신규 모집</a>
       </div>
-      <%@ include file="/jsp/common/featuredMatchRow.jsp" %>
+		<div id="recomandMatchListDiv" class="feature-row">
+		</div>
     </section>
+
+
+
+
+
 
     <%-- ===== 검색 ===== --%>
     <section class="search-intro">
       <h2>경기를 검색해보세요!</h2>
       <p>종목, 지역, 날짜, 실력과 키워드로 원하는 경기를 찾아보세요.</p>
       <div class="search-mode">
-        <a href="?state=list" class="${isMap ? '' : 'is-active'}">일반 검색</a>
-        <a href="?state=map" class="${isMap ? 'is-active' : ''}">지도기반 검색</a>
+        <a id="normalBtn" class="btnGroup2 ${isMap ? '' : 'is-active'}">일반 검색</a>
+        <a id="mapBtn" class=" btnGroup2 ${isMap ? 'is-active' : ''}">지도기반 검색</a>
       </div>
+      <%--         <a href="?state=list" class="${isMap ? '' : 'is-active'}">일반 검색</a>
+        <a href="?state=map" class="${isMap ? 'is-active' : ''}">지도기반 검색</a> --%>
+      
+      
+      
+      
+      
+      
+            
 
       <%-- TODO: action 을 검색 서블릿 URL 로 교체 (예: ${ctx}/match/list) --%>
       <form class="search-shell" action="${ctx}/jsp/match/personalMatchList.jsp" method="get">
@@ -90,6 +276,7 @@
           <button type="button" class="btn-reset" data-filter-reset>필터 초기화</button>
         </div>
 
+
         <div class="input-row">
           <c:choose>
             <c:when test="${isMap}">
@@ -117,135 +304,88 @@
               </div>
               <select class="select date" name="period" aria-label="기간"><option>기간 선택</option><option>오늘</option><option>이번 주</option><option>이번 달</option></select>
             </c:when>
+            
             <c:otherwise>
               <select class="select" name="region" aria-label="지역"><option value="">지역 검색</option><option>서울 마포구</option><option>서울 성동구</option><option>서울 송파구</option></select>
               <select class="select date" name="period" aria-label="기간"><option value="">기간 선택</option><option>오늘</option><option>이번 주</option><option>이번 달</option></select>
               <input class="input keyword" type="text" name="keyword" placeholder="키워드 검색" aria-label="키워드">
             </c:otherwise>
+            
+            
           </c:choose>
           <button type="submit" class="btn btn-primary btn-lg">검색</button>
         </div>
       </form>
     </section>
 
-    <c:choose>
-      <%-- ===== 지도 기반 검색 결과 ===== --%>
-      <c:when test="${isMap}">
-        <section class="list-head">
-          <h2 class="section-title">지도 기반 경기 찾기</h2>
-          <p class="section-desc">검색한 지역 주변 경기를 지도에서 확인하세요.</p>
-        </section>
-        <div class="map-result">
-          <%-- TODO: 카카오/네이버 지도 API 로 교체 (핀 좌표는 경기 장소의 위경도) --%>
-          <div class="map-canvas" id="map">
-            <a href="#" class="pin ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1" style="left:16%;top:26%"><span>풋살 · 1.2km</span></a>
-            <a href="#" class="pin" data-pin="m2" style="left:68%;top:22%"><span>테니스 · 2.4km</span></a>
-            <a href="#" class="pin ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3" style="left:54%;top:55%"><span>농구 · 3.1km</span></a>
-            <a href="#" class="pin" data-pin="m4" style="left:37%;top:78%"><span>배드민턴 · 4.0km</span></a>
-            <c:if test="${state eq 'mapPin'}">
-              <div class="map-popup" style="left:39%;top:9%">
-                <span class="sport-tag basketball">농구</span>
-                <strong>주말 실내 농구 같이 하실 분</strong>
-                <p>9/20 14:00 · 성동구 · 3.1km</p>
-                <p class="price">8,000원</p>
-                <a class="btn btn-primary btn-sm btn-block" href="${ctx}/jsp/match/personalMatchDetail.jsp">경기 자세히 보기</a>
-              </div>
-            </c:if>
-            <button type="button" class="ctrl" style="bottom:60px" aria-label="현재 위치">⌖</button>
-            <button type="button" class="ctrl" style="bottom:16px" aria-label="확대">+</button>
-          </div>
-          <div class="map-list">
-            <h3>지도 주변 경기 4개</h3>
-            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1"><small>축구/풋살</small><strong>토요일 저녁 풋살 한 판!</strong><span>9/19 19:00 · 망원동 · 1.2km</span></a>
-            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="tennis" data-pin="m2"><small>테니스</small><strong>초중급 테니스 복식 모집</strong><span>9/21 18:30 · 송파구 · 2.4km</span></a>
-            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="basketball ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3"><small>농구</small><strong>주말 실내 농구 같이 하실 분</strong><span>9/20 14:00 · 성동구 · 3.1km</span></a>
-            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="badminton" data-pin="m4"><small>배드민턴</small><strong>퇴근 후 배드민턴</strong><span>9/22 20:00 · 영등포구 · 4.0km</span></a>
-          </div>
-        </div>
-      </c:when>
+
+
+
+
+
+
+
+
+      	<div id="normalDiv">
+	        <section class="list-head">
+	          <h2 class="section-title">지도 기반 경기 찾기</h2>
+	          <p class="section-desc">검색한 지역 주변 경기를 지도에서 확인하세요.</p>
+	        </section>
+	        <div class="map-result">
+	          <%-- TODO: 카카오/네이버 지도 API 로 교체 (핀 좌표는 경기 장소의 위경도) --%>
+	          <div class="map-canvas" id="map">
+	            <a href="#" class="pin ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1" style="left:16%;top:26%"><span>풋살 · 1.2km</span></a>
+	            <a href="#" class="pin" data-pin="m2" style="left:68%;top:22%"><span>테니스 · 2.4km</span></a>
+	            <a href="#" class="pin ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3" style="left:54%;top:55%"><span>농구 · 3.1km</span></a>
+	            <a href="#" class="pin" data-pin="m4" style="left:37%;top:78%"><span>배드민턴 · 4.0km</span></a>
+	            <c:if test="${state eq 'mapPin'}">
+	              <div class="map-popup" style="left:39%;top:9%">
+	                <span class="sport-tag basketball">농구</span>
+	                <strong>주말 실내 농구 같이 하실 분</strong>
+	                <p>9/20 14:00 · 성동구 · 3.1km</p>
+	                <p class="price">8,000원</p>
+	                <a class="btn btn-primary btn-sm btn-block" href="${ctx}/jsp/match/personalMatchDetail.jsp">경기 자세히 보기</a>
+	              </div>
+	            </c:if>
+	            <button type="button" class="ctrl" style="bottom:60px" aria-label="현재 위치">⌖</button>
+	            <button type="button" class="ctrl" style="bottom:16px" aria-label="확대">+</button>
+	          </div>
+	          <div class="map-list">
+	            <h3>지도 주변 경기 4개</h3>
+	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1"><small>축구/풋살</small><strong>토요일 저녁 풋살 한 판!</strong><span>9/19 19:00 · 망원동 · 1.2km</span></a>
+	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="tennis" data-pin="m2"><small>테니스</small><strong>초중급 테니스 복식 모집</strong><span>9/21 18:30 · 송파구 · 2.4km</span></a>
+	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="basketball ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3"><small>농구</small><strong>주말 실내 농구 같이 하실 분</strong><span>9/20 14:00 · 성동구 · 3.1km</span></a>
+	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="badminton" data-pin="m4"><small>배드민턴</small><strong>퇴근 후 배드민턴</strong><span>9/22 20:00 · 영등포구 · 4.0km</span></a>
+	          </div>
+	        </div>
+		</div>
+
+
+
+
+
 
       <%-- ===== 일반 검색 결과 : 경기 리스트 ===== --%>
-      <c:otherwise>
+      <div id="mapDiv">
         <section class="list-head">
           <h2 class="section-title">경기 리스트</h2>
           <p class="section-desc">검색 조건에 맞는 경기를 한 줄씩 빠르게 비교해보세요.</p>
         </section>
         <%-- TODO: <c:forEach var="m" items="${matchList}"> 로 아래 행 하나를 반복 --%>
-        <div class="match-rows">
-          <a class="match-row" href="${ctx}/jsp/match/personalMatchDetail.jsp">
-            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-football.png" alt="축구/풋살"></div>
-            <div class="main">
-              <p class="title">토요일 저녁 풋살 한 판!</p>
-              <div class="meta">
-                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">8/10 &nbsp; 최소 8명 <span class="cap"><i style="width:80%"></i></span></span>
-                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">9/19 (토)</span>
-                <span class="it"><img src="${ctx}/img/icon-clock-16.svg" alt="">19:00</span>
-                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 마포구</span>
-                <span class="price">10,000원</span>
-                <button type="button" class="fav-btn" data-fav data-auth aria-label="관심 경기">${heart}</button>
-              </div>
-            </div>
-          </a>
-          <a class="match-row" href="${ctx}/jsp/match/personalMatchDetail.jsp">
-            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-basketball.png" alt="농구"></div>
-            <div class="main">
-              <p class="title">주말 실내 농구 같이 하실 분</p>
-              <div class="meta">
-                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">6/8 &nbsp; 최소 6명 <span class="cap"><i style="width:75%"></i></span></span>
-                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">9/20 (일)</span>
-                <span class="it"><img src="${ctx}/img/icon-clock-16.svg" alt="">14:00</span>
-                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 성동구</span>
-                <span class="price">8,000원</span>
-                <button type="button" class="fav-btn" data-fav data-auth aria-label="관심 경기">${heart}</button>
-              </div>
-            </div>
-          </a>
-          <a class="match-row" href="${ctx}/jsp/match/personalMatchDetail.jsp">
-            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-tennis.png" alt="테니스"></div>
-            <div class="main">
-              <p class="title">초중급 테니스 복식 모집</p>
-              <div class="meta">
-                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">3/4 &nbsp; 최소 4명 <span class="cap"><i style="width:75%"></i></span></span>
-                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">9/21 (월)</span>
-                <span class="it"><img src="${ctx}/img/icon-clock-16.svg" alt="">18:30</span>
-                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 송파구</span>
-                <span class="price">15,000원</span>
-                <button type="button" class="fav-btn" data-fav data-auth aria-label="관심 경기">${heart}</button>
-              </div>
-            </div>
-          </a>
-          <a class="match-row" href="${ctx}/jsp/match/personalMatchDetail.jsp">
-            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-badminton.png" alt="배드민턴"></div>
-            <div class="main">
-              <p class="title">퇴근 후 배드민턴</p>
-              <div class="meta">
-                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">4/6 &nbsp; 최소 4명 <span class="cap"><i style="width:67%"></i></span></span>
-                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">9/22 (화)</span>
-                <span class="it"><img src="${ctx}/img/icon-clock-16.svg" alt="">20:00</span>
-                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 영등포구</span>
-                <span class="price">6,000원</span>
-                <button type="button" class="fav-btn" data-fav data-auth aria-label="관심 경기">${heart}</button>
-              </div>
-            </div>
-          </a>
-          <a class="match-row" href="${ctx}/jsp/match/personalMatchDetail.jsp">
-            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-football.png" alt="축구/풋살"></div>
-            <div class="main">
-              <p class="title">일요일 아침 축구 경기</p>
-              <div class="meta">
-                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">10/14 &nbsp; 최소 10명 <span class="cap"><i style="width:71%"></i></span></span>
-                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">9/27 (일)</span>
-                <span class="it"><img src="${ctx}/img/icon-clock-16.svg" alt="">09:00</span>
-                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 강남구</span>
-                <span class="price">7,000원</span>
-                <button type="button" class="fav-btn" data-fav data-auth aria-label="관심 경기">${heart}</button>
-              </div>
-            </div>
-          </a>
+        <div id="normalMatchListDiv" class="match-rows">
+          
+
         </div>
         <div class="more-wrap"><button type="button" class="btn-more">↓ &nbsp;더보기</button></div>
-      </c:otherwise>
-    </c:choose>
+   	</div>
+    
+    
+    
+    
+    
+    
+    
+    
   </div>
 </main>
 
