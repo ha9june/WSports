@@ -15,11 +15,8 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public User login(String loginId, String password) throws Exception {
+	public User login(String loginId) throws Exception {
 		User user = userDao.selectLoginId(loginId);
-		if(user==null) throw new Exception("아이디를 다시 확인해주세요.");
-		if(!user.getPassword().equals(password)) throw new Exception("비밀번호를 다시 확인해주세요.");
-		user.setPassword("");
 		return user;
 	}
 

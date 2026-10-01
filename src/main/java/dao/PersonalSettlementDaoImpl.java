@@ -63,4 +63,33 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 		}
 	}
 
+	@Override
+	public List<Map<String, Object>> selectPersonalSettlementDetail(int personalMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalsettlement.selectPersonalSettlementDetail", personalMatchId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> selectPersonalSettlementList() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalsettlement.selectPersonalSettlementList");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public Integer updatePersonalSettlement(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			Integer result = sqlSession.update("mapper.personalsettlement.updatePersonalSettlement", param);
+			sqlSession.commit();
+			return result;
+		} 
+	}
+
 }

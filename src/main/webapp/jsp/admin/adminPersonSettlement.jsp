@@ -2,7 +2,6 @@
 <%@ include file="/jsp/common/init.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="role" value="admin" />
 <c:set var="pageTitle" value="정산 관리" />
 <c:set var="pageCss" value="admin" />
@@ -40,7 +39,7 @@
     		<a class="seg-item ${state eq 'date' ? 'is-active' : ''}" href="?state=date">날짜별</a>
     	</div>
     	<c:if test="${state eq 'date'}">
-    		<form class="date-stepper" method="get" action="">
+    		<form class="date-stepper" method="get">
     			<input type="hidden" name="state" value="date">
     			<a href="?state=date&amp;date=${prevDate}"></a>
     			<input type="date" name="date" value="${date}" onchange="this.form.submit()" class="date-input" required>
@@ -79,10 +78,10 @@
       		</c:otherwise>
     	</c:choose>
     	<a class="btn btn-outline btn-xs t-brand"
-       href="${ctx}/jsp/admin/adminSettlementDetail.jsp?matchId=${s.matchId}&amp;matchType=personal">보기</a>
+       href="${ctx}/admin/settlement/detail?matchId=${s.personal_match_id}&amp;matchType=personal">보기</a>
   		</div>
-	</c:forEach>
 
+	</c:forEach>
 <c:if test="${empty displayList}">
   <p class="section-desc">표시할 경기가 없습니다.</p>
 </c:if>
