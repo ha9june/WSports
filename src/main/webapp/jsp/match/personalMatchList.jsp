@@ -364,7 +364,6 @@
 
 
 
-
       <%-- ===== 일반 검색 결과 : 경기 리스트 ===== --%>
       <div id="mapDiv">
         <section class="list-head">
