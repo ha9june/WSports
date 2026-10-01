@@ -22,7 +22,7 @@
       <div class="chip-group" data-select="single" data-name="sport" style="margin-bottom:8px">
         <button type="button" class="chip neutral is-selected">전체</button><button type="button" class="chip">축구/풋살</button><button type="button" class="chip">농구</button><button type="button" class="chip">테니스</button><button type="button" class="chip">배드민턴</button></div>
     </form>
-
+				
     <c:choose>
       <c:when test="${state eq 'grouped'}">
         <div class="section-head"><h2 class="sub-title">경기별 후기</h2><a class="btn btn-outline btn-xs btn-pill" href="?state=recent">전체 후기 보기</a></div>

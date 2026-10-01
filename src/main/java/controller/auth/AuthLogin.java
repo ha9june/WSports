@@ -19,13 +19,13 @@ import service.notification.UserFcmTokenServiceImpl;
  * Servlet implementation class Login
  */
 @WebServlet("/auth/login")
-public class Login extends HttpServlet {
+public class AuthLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Login() {
+    public AuthLogin() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,13 +45,12 @@ public class Login extends HttpServlet {
 		UserFcmToken userFcmToken = new UserFcmToken();
 		userFcmToken.setFcmToken(fcmToken);
 		
-		
 		AuthService service = new AuthServiceImpl();
 		UserFcmTokenService userFcmTokenService = new UserFcmTokenServiceImpl();
 		try {
 			HttpSession session = request.getSession();
-			User user = service.login(loginId, password);
-			session.setAttribute("user", service.login(loginId, password));
+			User user = service.login(loginId);
+			session.setAttribute("user", service.login(loginId));
 			
 			userFcmToken.setUserId(user.getUserId());
 			userFcmTokenService.registerToken(userFcmToken);

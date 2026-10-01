@@ -55,6 +55,7 @@ public class AdminTeamSettlement extends HttpServlet {
 			List<Map<String, Object>> teamwaitlist = service.getTeamSettlementWaitList();
 			List<Map<String, Object>> teamfinish = service.getTeamSettlementFinishList();
 			List<Map<String, Object>> teamday = service.getTeamSettlementDayList(date);
+			List<Map<String, Object>> displayList = service.getTeamSettlementList();
 			
 			//팀
 			request.setAttribute("teamwait", teamwait);	//정산대기 숫자
@@ -62,7 +63,8 @@ public class AdminTeamSettlement extends HttpServlet {
 			request.setAttribute("teamwaitlist", teamwaitlist);	//정산 대기 리스트
 			request.setAttribute("teamfinish", teamfinish);	//지급 완료 리스트
 			request.setAttribute("teamday", teamday);	//날짜별 리스트
-			
+			request.setAttribute("displayList", displayList); //모든 리스트
+
 			request.getRequestDispatcher("/jsp/admin/adminTeamSettlement.jsp").forward(request, response);
 		}catch (Exception e) {
 			e.printStackTrace();

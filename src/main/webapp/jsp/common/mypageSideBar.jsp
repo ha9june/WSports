@@ -23,7 +23,7 @@
     <div class="group">
       <p class="group-title">경기</p>
       <nav class="menu">
-        <a href="${ctx}/jsp/mypage/myPagePersonalMatch.jsp" class="${sideMenu eq 'personalMatch' ? 'is-active' : ''}">참가 경기</a>
+        <a href="${ctx}/mypage/matches/participating" class="${sideMenu eq 'personalMatch' ? 'is-active' : ''}">참가 경기</a>
         <a href="${ctx}/jsp/mypage/myPageCreatedPersonalMatch.jsp" class="${sideMenu eq 'createdMatch' ? 'is-active' : ''}">내가 만든 경기</a>
         <a href="${ctx}/jsp/mypage/myPageHeartMatch.jsp" class="${sideMenu eq 'heartMatch' ? 'is-active' : ''}">관심경기</a>
       </nav>

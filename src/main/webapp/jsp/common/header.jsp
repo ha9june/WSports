@@ -47,6 +47,16 @@ li:not(.unread) .Alarm.link.btn img.bell {
     filter: grayscale(100%) brightness(140%) !important; 
 }
 
+/* 알림 0개일때 숨김처리 */
+.badge-count.hidden{
+	display:none;
+}
+
+/* 토글용 숨김 처리 */
+.acts.hidden{
+	display:none;
+}
+
 
 /* 4. 알림 내용(a태그) 내부 레이아웃 */
 .Alarm.link.btn {
@@ -132,7 +142,8 @@ time {
         <c:otherwise>
           <button type="button" class="noti-trigger" data-noti-toggle aria-label="알림 열기">
             <img class="bell" src="${ctx}/img/icon-bell.svg" alt="">
-            <span class="badge">3</span>
+            <!-- 알람 숫자 카운트 -->
+            <span id="bellBadge" class="badge">0</span>
           </button>
           <a class="header-profile" href="${ctx}/member/mypage/view" title="마이페이지">
             <img src="${ctx}/img/profile-default.png" alt="내 프로필">
@@ -140,13 +151,18 @@ time {
         </c:otherwise>
       </c:choose>
     </div>
-    
     <c:if test="${role ne 'guest'}">
       <%-- 알림 퀵 패널 : 벨 아이콘 클릭 시 열림 --%>
       <div class="noti-panel" id="notiPanel" role="dialog" aria-label="알림">
         <div class="head">
           <div><strong>알림</strong><small>최근 알림</small></div>
-          <div class="acts"><button type="button" data-toast="모든 알림을 읽음 처리했어요.">모두 읽음</button><button type="button" data-noti-toggle aria-label="닫기">✕</button></div>
+          
+          <div class="acts">         
+          <!-- 버튼을 눌럿을때 알람 기록 처리하는 버튼(기능) -->
+          <button type="noti-button" data-toast="모든 알림을 읽음 처리했어요.">모두 읽음</button>
+          
+          <button type="button" data-noti-toggle aria-label="닫기">✕</button>
+          </div>
         </div>
 <ul>
   <li class="unread">

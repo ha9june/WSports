@@ -1,4 +1,4 @@
-package controller.Review;
+package controller.review;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -26,7 +26,7 @@ public class ReviewList extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/review/reviewList.jsp").forward(request, response);
+		request.getRequestDispatcher("/jsp/review/reviewList.jsp").forward(request, response);;
 	}
 
 	/**
