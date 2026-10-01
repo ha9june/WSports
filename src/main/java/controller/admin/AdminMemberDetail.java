@@ -1,4 +1,4 @@
-package controller.Review;
+package controller.admin;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class ReviewModify
+ * Servlet implementation class AdminMemberDetail
  */
-@WebServlet("/review/edit")
-public class ReviewModify extends HttpServlet {
+@WebServlet("/admin/member/detail")
+public class AdminMemberDetail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReviewModify() {
+    public AdminMemberDetail() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,16 +26,16 @@ public class ReviewModify extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.getRequestDispatcher("/jsp/admin/adminMemberDetail.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+//		response.sendRedirect(request.getContextPath() + "/admin/member/detail?userId=" 
+//														+ userId);
+		request.getRequestDispatcher("/jsp/admin/adminMemberDetail.jsp").forward(request, response);
 	}
 
 }
