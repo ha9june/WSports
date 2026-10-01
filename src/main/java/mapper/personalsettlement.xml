@@ -15,7 +15,15 @@
 		select sum(amount)
 		from personal_settlement
 		where settlement_status = '정산대기'
-
+	</select>
+	
+	<!-- 개인경기 정산 리스트 -->
+	<select id="selectPersonalSettlementList" resultType="map">
+		select m.personal_match_id, m.title, m.sport, m.match_date, s.amount, s.settlement_status
+		from personal_settlement s 
+		join personal_match m
+		on s.personal_match_id = m.personal_match_id
+		order by m.match_date desc
 	</select>
 	
 	<!-- 정산대기인 개인 정산 리스트 -->
@@ -40,12 +48,29 @@
 	
 	<!-- 날짜 선택해서 보는 모든 개인 정산 리스트 -->
 	<select id="selectPersonalSettlementDayList" resultType="map">
-		select m.personal_match_id as matchId, m.title, m.sport,
-           m.match_date, s.amount,
-           s.settlement_status
+		select m.personal_match_id, m.title, m.sport, m.match_date, s.amount, s.settlement_status
     	from personal_settlement s
     	join personal_match m on s.personal_match_id = m.personal_match_id
     	where m.match_date = #{targetDate}
     	order by m.match_date desc
 	</select>
+	
+	<!-- 상세 페이지에서 사용할 정보 -->
+	<select id="selectPersonalSettlementDetail" resultType="map">
+		select m.personal_match_id, m.title, m.sport, m.match_date,
+			   u.nickname, u.account_holder, 
+			   s.settlement_id, s.bank_name, s.account_number, s.amount, s.settlement_status
+		from personal_settlement s
+		join personal_match m on s.personal_match_id = m.personal_match_id
+		join user u on s.user_id = u.user_id
+		where s.personal_match_id = #{personalMatchId}
+	</select>
+	
+	<!-- 정산대기를 지급 완료로 -->
+	<update id="updatePersonalSettlement" parameterType="map">
+		update personal_settlement
+		set settlement_status = '지급완료', settled_at = now(), admin_id = #{adminId}
+		where settlement_id = #{settlementId}
+		and settlement_status = '정산대기'
+	</update>
 </mapper>

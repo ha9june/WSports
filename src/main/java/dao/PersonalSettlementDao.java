@@ -10,4 +10,9 @@ public interface PersonalSettlementDao {
 	List<Map<String, Object>> selectPersonalSettlementWaitList() throws Exception;
 	List<Map<String, Object>> selectPersonalSettlementFinishList() throws Exception;
 	List<Map<String, Object>> selectPersonalSettlementDayList(LocalDate date) throws Exception;
+	List<Map<String, Object>> selectPersonalSettlementDetail(int personalMatchId) throws Exception;
+	List<Map<String, Object>> selectPersonalSettlementList() throws Exception;
+	Integer updatePersonalSettlement(Map<String, Object> param) throws Exception;
+	
+	
 }

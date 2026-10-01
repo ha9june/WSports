@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
-import dto.TeamSettlement;
 
 public class TeamSettlementDaoImpl implements TeamSettlementDao {
 
@@ -60,6 +59,35 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> selectTeamSettlementDetail(int teamMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teamsettlement.selectTeamSettlementDetail", teamMatchId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> selectTeamSettlementList() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teamsettlement.selectTeamSettlementList");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public Integer updateTeamSettlement(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			Integer result = sqlSession.update("mapper.teamsettlement.updateTeamSettlement", param);
+			sqlSession.commit();
+			return result;
 		}
 	}
 
