@@ -8,10 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dto.Notification;
 import dto.User;
 import dto.UserFcmToken;
 import service.auth.AuthService;
 import service.auth.AuthServiceImpl;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 import service.notification.UserFcmTokenService;
 import service.notification.UserFcmTokenServiceImpl;
 
@@ -44,9 +47,11 @@ public class AuthLogin extends HttpServlet {
 		
 		UserFcmToken userFcmToken = new UserFcmToken();
 		userFcmToken.setFcmToken(fcmToken);
+
 		
 		AuthService service = new AuthServiceImpl();
 		UserFcmTokenService userFcmTokenService = new UserFcmTokenServiceImpl();
+		
 		try {
 			HttpSession session = request.getSession();
 			User user = service.login(loginId);

@@ -15,25 +15,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-console.log("window.contextPath =", window.contextPath);
-
-console.log(
-    "sw path =",
-    window.contextPath + "/firebase-messaging-sw.js"
-);
 
 if ('serviceWorker' in navigator) {
 	//1. 서비스 워커를 프로젝트 경로에 맞게 수동 등록
 	navigator.serviceWorker.register(window.contextPath + '/firebase-messaging-sw.js')
 		.then((registration) => {
-			console.log("서비스 워커 등록 성공", registration)
+
 
 			getToken(messaging, {
 				vapidKey: 'BMmmJVPh4ow15t5OvoCbab1mi-wxRai0Rr5Xowr9XDwO2H8M-T_sEicA4tQivAykBA3xZa27Sqqp8_B2UrOU-Ho',
 				serviceWorkerRegistration: registration
 			}).then((token) => {
 				window.fcmToken = token;
-				console.log(token)
 				onMessageListener();
 			})
 		}).catch(error => {
@@ -41,16 +34,15 @@ if ('serviceWorker' in navigator) {
 		})
 }
 
+
 const onMessageListener = () => {
-	return new Promise((resolve) => {
-		onMessage(messaging, (payload) => {
-			console.log("onMessage")
-			console.log(payload);
 
-			const event = new CustomEvent("fcmMessageReceived", { detail: payload.data })
-			window.dispatchEvent(event);
+    onMessage(messaging, (payload) => {
 
-			resolve(payload);
-		})
-	})
-}
+        window.dispatchEvent(
+            new CustomEvent("fcmMessageReceived", {
+                detail: payload
+            })
+        );
+    });
+};

@@ -5,13 +5,47 @@
 	
 
 	<!-- 새로운 알림 추가 -->
-	<insert id="insertNotification" parameterType="notification" useGeneratedKeys="true" keyProperty="notification_id">
-	insert into notification (user_id, content, id_read, created_at, title, link) 
+	<insert id="insertNotification" parameterType="notification" useGeneratedKeys="true" keyProperty="notificationId"
+        keyColumn="notification_id">
+	insert into notification (user_id, content, is_read, created_at, title, link) 
 						values
 							(#{userId}, #{content}, #{isRead}, NOW(), #{title}, #{link})
 	</insert>
 
-
+	<select id="selectNotification" parameterType="Long" resultType="notification">
+	    SELECT
+	        notification_id AS notificationId,
+	        user_id AS userId,
+	        content,
+	        is_read AS isRead,
+	        created_at AS createdAt,
+	        title,
+	        link
+	    FROM notification
+	    WHERE notification_id = #{notificationId}
+	
+	</select>
+	
+	<update id="updateNotificationIdRead" parameterType="Long">
+		update notification set is_read = true where notification_id = #{notifiationId}
+	</update>
+	
+	<select id="selectNotificationList" parameterType="Long" resultType="notification">
+		select * from notification where user_id = #{userId}
+	</select>
+	
+	<select id="selectNotificationListNotConfirm3" parameterType="Long" resultType="notification">
+		select * from notification 
+		where user_id = #{userId} and is_read = false
+		order by created_at desc limit 3
+	</select>
+	
+	<select id="selectNotificationListNotConfirmCnt" parameterType="Long" resultType="int">
+	    select count(*)
+	    from notification
+	    where user_id = #{value}
+	      and is_read = false
+	</select>
 	
 	
 </mapper>
