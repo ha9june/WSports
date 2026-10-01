@@ -13,14 +13,14 @@ import service.auth.AuthServiceImpl;
 /**
  * Servlet implementation class CheckUserNickname
  */
-@WebServlet("/jsp/auth/join/nickname-check")
-public class NicknameCheck extends HttpServlet {
+@WebServlet("/auth/join/nickname-check")
+public class AuthJoinNicknameCheck extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NicknameCheck() {
+    public AuthJoinNicknameCheck() {
         super();
         // TODO Auto-generated constructor stub
     }

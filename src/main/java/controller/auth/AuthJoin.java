@@ -17,13 +17,13 @@ import service.auth.AuthServiceImpl;
  * Servlet implementation class Join
  */
 @WebServlet("/auth/join")
-public class Join extends HttpServlet {
+public class AuthJoin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Join() {
+    public AuthJoin() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -46,7 +46,7 @@ public class Join extends HttpServlet {
 		user.setEmail(request.getParameter("email"));
 		user.setNickname(request.getParameter("nickname"));
 		LocalDate birthDate = LocalDate.parse(request.getParameter("birth"));
-//		user.setBirthDate(request.getParameter("birth"));
+		user.setBirthDate(birthDate);
 		user.setPhone(request.getParameter("phone"));
 		user.setGender(request.getParameter("gender"));
 		

@@ -14,4 +14,5 @@ public interface PersonalMatchService {
 	List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month)throws Exception;
 
 
+
 }

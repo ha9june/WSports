@@ -1,35 +1,30 @@
 package controller.auth;
-import java.io.IOException;
 
+import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import dto.User;
 import service.auth.AuthService;
 import service.auth.AuthServiceImpl;
 
 /**
- * Servlet implementation class Login
+ * Servlet implementation class AuthLoginCheck
  */
-@WebServlet("/auth/login")
-public class Login extends HttpServlet {
+@WebServlet("/auth/login/check")
+public class AuthLoginCheck extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Login() {
+    public AuthLoginCheck() {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
-	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -37,16 +32,20 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String loginId = request.getParameter("loginId");
 		String password = request.getParameter("password");
-		
+
 		AuthService service = new AuthServiceImpl();
 		try {
-			HttpSession session = request.getSession();
-			User user = service.login(loginId, password);
-			session.setAttribute("user", service.login(loginId, password));
-			response.sendRedirect(request.getContextPath()+"/jsp/home/main.jsp"); // main suvlet으로 교체 필요 
+			User user = service.login(loginId);
+			//있으면 user 
+			//없으면 null
+			 if(user != null) {
+			 	response.getWriter().write("true");
+			 } else {
+			 	response.getWriter().write("false");
+			 }
 		} catch(Exception e) {
 			e.printStackTrace();
+			response.getWriter().write("로그인 체크 오류");
 		}
 	}
 }
-

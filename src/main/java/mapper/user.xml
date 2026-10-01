@@ -6,7 +6,7 @@
 	<select id="selectLoginId" resultType="User" parameterType="String">
 		select * from user where login_id=#{loginId}
 	</select>
-	
+
 	<select id="selectNickname" resultType="User" parameterType="String">
 		select * from user where nickname=#{nickname}
 	</select>

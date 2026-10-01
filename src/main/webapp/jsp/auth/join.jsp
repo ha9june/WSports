@@ -20,7 +20,7 @@ $(function () {
 			return;
 		}
 		$.ajax({
-			url:'${ctx}/jsp/auth/join/id-check',
+			url:'${ctx}/auth/join/id-check',
 			type:'post',
 			dataType:'text',
 			data:{loginId:$('#loginId').val()},
@@ -43,7 +43,7 @@ $(function () {
 			return;
 		}
 		$.ajax({
-			url:'${ctx}/jsp/auth/join/nickname-check',
+			url:'${ctx}/auth/join/nickname-check',
 			type:'post',
 			dataType:'text',
 			data:{nickname:$('#nick').val()},
@@ -59,12 +59,26 @@ $(function () {
 		})
 	})
 })
+
+$(function() {
+	var pw = $('#pw');
+	var pw2 = $('#pw2');
+
+	$('#join-wrap').submit(function() {
+		if (pw.val() != pw2.val()) {
+			alert('비밀번호를 확인해주세요.');
+			pw2.focus();
+			return false;
+		}	
+		return true;
+	});
+});
 </script>
 
 
 <main class="page">
   <%-- TODO: action 을 회원가입 서블릿으로 교체 (예: ${ctx}/join) --%>
-  <form class="join-wrap" action="${ctx}/auth/join" method="post">
+  <form class="join-wrap" id="join-wrap" action="${ctx}/auth/join" method="post">
     <nav class="breadcrumb"><span>회원</span><span class="sep">›</span><span>회원가입</span></nav>
     <div class="page-head"><h1 class="page-title">회원가입</h1><p class="page-desc">가입에 필요한 기본 정보를 입력해주세요.</p></div>
 
@@ -80,8 +94,8 @@ $(function () {
       <div class="field"><label class="field-label" for="nick">닉네임</label>
         <div class="field-row"><input class="input" id="nick" name="nickname" placeholder="2~12자 닉네임" required>
           <button type="button" name="nickname-check" id="nickname-check" class="btn btn-brand-outline">중복 확인</button></div></div>
-      <div class="field"><label class="field-label" for="birth">생년월일</label><input class="input" id="birth" name="birth" placeholder="YYYY.MM.DD"></div>
-      <div class="field"><label class="field-label" for="phone">전화번호</label><input class="input" id="phone" name="phone" placeholder="010-0000-0000"></div>
+      <div class="field"><label class="field-label" for="birth">생년월일</label><input class="input" id="birth" name="birth" placeholder="YYYY.MM.DD" required></div>
+      <div class="field"><label class="field-label" for="phone">전화번호</label><input class="input" id="phone" name="phone" placeholder="010-0000-0000" required></div>
       <div class="field full"><span class="field-label">성별</span>
         <div class="chip-group" data-select="single" data-name="gender"><button type="button" class="chip" data-value="M">남성</button><button type="button" class="chip" data-value="F">여성</button></div></div>
     </div>
@@ -109,7 +123,7 @@ $(function () {
 
     <div class="join-foot">
       <label class="check"><input type="checkbox" name="agree" required>필수 약관에 동의합니다.</label>
-      <button type="submit" class="btn btn-primary">가입하기</button>
+      <button type="submit" id="submit" class="btn btn-primary">가입하기</button>
     </div>
   </form>
 </main>
