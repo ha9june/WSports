@@ -35,5 +35,17 @@ public class AuthServiceImpl implements AuthService {
 	public boolean checkUserNickname(String nickname) throws Exception {
 		return userDao.selectNickname(nickname) != null;
 	}
+
+	@Override
+	public User loginCheck(String loginId, String password) throws Exception {
+		User user = userDao.selectLoginId(loginId);
+	    if (user == null) {
+	        return null;               // 아이디 없음
+	    }
+	    if (!user.getPassword().equals(password)) {
+	        return null;               // 비밀번호 불일치
+	    }
+	    return user;                   // 로그인 성공
+	}
 }
 
