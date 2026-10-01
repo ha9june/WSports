@@ -39,7 +39,7 @@
     		<a class="seg-item ${state eq 'date' ? 'is-active' : ''}" href="?state=date">날짜별</a>
     	</div>
     	<c:if test="${state eq 'date'}">
-    		<form class="date-stepper" method="get" action="">
+    		<form class="date-stepper" method="get">
     			<input type="hidden" name="state" value="date">
     			<a href="?state=date&amp;date=${prevDate}"></a>
     			<input type="date" name="date" value="${date}" onchange="this.form.submit()" class="date-input" required>

@@ -39,8 +39,6 @@ public class AdminSettlementDetail extends HttpServlet {
 		try {
 			int matchId = Integer.parseInt(request.getParameter("matchId"));
 			String matchType = request.getParameter("matchType");
-			System.out.println(matchId);
-			System.out.println(matchType);
 
 			List<Map<String, Object>> detail;
 			
@@ -72,8 +70,6 @@ public class AdminSettlementDetail extends HttpServlet {
 		String matchId = request.getParameter("matchId");
 		String matchType = request.getParameter("matchType");
 		
-		System.out.println(idParam + " / " + matchType+"/"+matchId);
-		
 		if(idParam == null || idParam.isEmpty() || matchId == null || matchId.isEmpty()) {
 			response.sendRedirect(request.getContextPath()+"/admin/settlement/person");
 			return;
@@ -84,11 +80,6 @@ public class AdminSettlementDetail extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		User loginUser = (session == null) ? null : (User) session.getAttribute("user");
 		Long adminId = (loginUser == null) ? null : loginUser.getUserId();
-		
-		System.out.println("session=" + session);
-		System.out.println("loginUser=" + loginUser);
-		System.out.println("adminId=" + adminId);
-
 		
 		try {
 			int result;
@@ -105,7 +96,7 @@ public class AdminSettlementDetail extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		// 새로고침 시 중복 처리 방지를 위해 redirect
+		// 새로고침 시 중복 처리 방지
 		response.sendRedirect(request.getContextPath() + "/admin/settlement/detail?matchId=" + matchId + "&matchType=" + matchType);
 	}
 
