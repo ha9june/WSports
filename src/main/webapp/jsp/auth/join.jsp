@@ -59,12 +59,26 @@ $(function () {
 		})
 	})
 })
+
+$(function() {
+	var pw = $('#pw');
+	var pw2 = $('#pw2');
+
+	$('#join-wrap').submit(function() {
+		if (pw.val() != pw2.val()) {
+			alert('비밀번호를 확인해주세요.');
+			pw2.focus();
+			return false;
+		}	
+		return true;
+	});
+});
 </script>
 
 
 <main class="page">
   <%-- TODO: action 을 회원가입 서블릿으로 교체 (예: ${ctx}/join) --%>
-  <form class="join-wrap" action="${ctx}/auth/join" method="post">
+  <form class="join-wrap" id="join-wrap" action="${ctx}/auth/join" method="post">
     <nav class="breadcrumb"><span>회원</span><span class="sep">›</span><span>회원가입</span></nav>
     <div class="page-head"><h1 class="page-title">회원가입</h1><p class="page-desc">가입에 필요한 기본 정보를 입력해주세요.</p></div>
 
@@ -109,7 +123,7 @@ $(function () {
 
     <div class="join-foot">
       <label class="check"><input type="checkbox" name="agree" required>필수 약관에 동의합니다.</label>
-      <button type="submit" class="btn btn-primary">가입하기</button>
+      <button type="submit" id="submit" class="btn btn-primary">가입하기</button>
     </div>
   </form>
 </main>
