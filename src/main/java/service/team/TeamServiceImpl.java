@@ -7,14 +7,19 @@ import javax.servlet.http.Part;
 
 import dao.TeamDao;
 import dao.TeamDaoImpl;
+import dao.TeamUserDao;
+import dao.TeamUserDaoImpl;
 import dto.Team;
+import dto.TeamUser;
 
 public class TeamServiceImpl implements TeamService {
 
 	TeamDao teamDao;
+	TeamUserDao teamUserDao;
 	
 	public TeamServiceImpl() {
 		teamDao = new TeamDaoImpl();
+		teamUserDao = new TeamUserDaoImpl();
 	}
 	
 	private String fileUpload(String uploadPath, Part file) throws Exception {
@@ -28,7 +33,7 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
-	public Integer makeTeam(Team team, String realPath, Part profileImage, Part activityImg1, Part activityImg2, Part activityImg3,
+	public Integer makeTeam(Team team, long userId, String realPath, Part profileImage, Part activityImg1, Part activityImg2, Part activityImg3,
 			Part activityImg4, Part activityImg5) throws Exception {
 		if(profileImage != null) team.setProfileImage(fileUpload(realPath, profileImage));
 		if(activityImg1 != null) team.setActivityImage1(fileUpload(realPath, activityImg1));
@@ -37,7 +42,15 @@ public class TeamServiceImpl implements TeamService {
 		if(activityImg4 != null) team.setActivityImage4(fileUpload(realPath, activityImg4));
 		if(activityImg5 != null) team.setActivityImage5(fileUpload(realPath, activityImg5));
 		
-		return teamDao.insertTeam(team);
+		Integer teamId = teamDao.insertTeam(team);
+		TeamUser teamUser = new TeamUser();
+		teamUser.setTeamId((long)teamId);
+		teamUser.setUserId(userId);
+		teamUser.setTeamRole("CAPTAIN");
+		teamUser.setWithdrawn(false);
+		teamUserDao.insertTeamUser(teamUser);
+
+		return teamId;
 		
 	}
 }

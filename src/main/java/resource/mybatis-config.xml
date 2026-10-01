@@ -5,6 +5,9 @@
 
 <configuration>
 
+
+
+
 	<properties resource="resource/db.properties"/>
 
     <!-- settings는 typeAliases보다 먼저 선언 -->
@@ -42,6 +45,7 @@
         <typeAlias type="dto.User" alias="user"/>
         <typeAlias type="dto.UserPenalty" alias="userpenalty"/>
         <typeAlias type="dto.UserRating" alias="userrating"/>
+        <typeAlias type="dto.UserFcmToken" alias="userfcmtoken"/>
     </typeAliases>
 
 
@@ -97,6 +101,7 @@
         <mapper resource="mapper/user.xml"/>
         <mapper resource="mapper/userpenalty.xml"/>
         <mapper resource="mapper/userrating.xml"/>
+        <mapper resource="mapper/userfcmtoken.xml"/>
 
     </mappers>
 

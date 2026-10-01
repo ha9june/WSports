@@ -23,9 +23,9 @@
       <p class="date-label">9월 19일 <span>토</span></p>
     <div class="act-card" data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
       <div class="left"><span class="pill pill-info">경기 예정</span><img src="${ctx}/img/sport-icon-football.png" alt=""></div>
-      <div class="main"><strong>토요일 저녁 풋살 한 판!</strong>
-        <p class="meta"><span><img src="${ctx}/img/icon-calendar-14.svg" alt="">9/19 (토)</span><span><img src="${ctx}/img/icon-clock-16.svg" alt="">19:00 ~ 21:00</span><span><img src="${ctx}/img/icon-pin-14.svg" alt="">서울 마포구 망원 풋살장</span><span><img src="${ctx}/img/icon-user-12.svg" alt="">8/10 · 최소 8명 <span class="cap"><i style="width:80%"></i></span></span></p></div>
-      <div class="aside"><div class="top">10,000원<button type="button" class="fav-btn " data-fav aria-label="관심 경기">${heart}</button></div><div class="btns"><a class="btn btn-primary btn-xs" href="${ctx}/jsp/match/personalMatchProfileList.jsp">참가자 확인</a></div></div>
+      <div class="main"><strong>${match.title}</strong>
+        <p class="meta"><span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${match_date}</span><span><img src="${ctx}/img/icon-clock-16.svg" alt="">${start_time} ~ ${end_time}</span><span><img src="${ctx}/img/icon-pin-14.svg" alt="">서울 마포구 망원 풋살장</span><span><img src="${ctx}/img/icon-user-12.svg" alt="">8/10 · 최소 8명 <span class="cap"><i style="width:80%"></i></span></span></p></div>
+      <div class="aside"><div class="top">${participation_fee}<button type="button" class="fav-btn " data-fav aria-label="관심 경기">${heart}</button></div><div class="btns"><a class="btn btn-primary btn-xs" href="${ctx}/jsp/match/personalMatchProfileList.jsp">참가자 확인</a></div></div>
     </div>
       <p class="date-label">9월 20일 <span>일</span></p>
     <div class="act-card" data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">

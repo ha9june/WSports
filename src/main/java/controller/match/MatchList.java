@@ -43,10 +43,6 @@ public class MatchList extends HttpServlet {
 //		
 		request.getRequestDispatcher("/jsp/match/personalMatchList.jsp").forward(request, response);;
 
-		
-		
-		
-		
 
 	}
 
