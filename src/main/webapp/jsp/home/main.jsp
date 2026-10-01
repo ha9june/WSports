@@ -41,14 +41,14 @@
 	
 	    <c:forEach var="match" items="${rList}">
 
-	        ${match.title}
+<%-- 	        ${match.title}
 	        ${match.sport}
 	        ${match.startTime}
 	        ${match.endTime}
 	        ${match.region}
 	        ${match.participationFee}
-	        ${match.maxPeople}
-	        ${match.currentPeople}
+	        ${match.maxPeople} --%>
+	        <%-- ${match.currentPeople} --%>
 	        <br>
 
 	    </c:forEach>
