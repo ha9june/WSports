@@ -1,7 +1,10 @@
 package dao;
 
+import java.util.List;
+
 import dto.UserFcmToken;
 
 public interface UserFcmTokenDao {
-	void upsertFcmToken(UserFcmToken userFcmToken) throws Exception;
+	void upsertUserFcmToken(UserFcmToken userFcmToken) throws Exception;
+	List<String> selectUserFcmToken(Long userId) throws Exception;
 }

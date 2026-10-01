@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.userfcmtoken">
-	<insert id="upsertFcmToken" parameterType="userfcmtoken">
+	<insert id="upsertUserFcmToken" parameterType="userfcmtoken">
 	    INSERT INTO user_fcm_token (
 	        user_id,
 	        fcm_token,
@@ -20,4 +20,8 @@
 	        active = TRUE,
 	        last_used_at = NOW()
 	</insert>
+	
+	<select id="selectUserFcmToken" parameterType="Long" resultType="String">
+		select fcm_token from user_fcm_token where user_id = #{userId} and active = true;
+	</select>
 </mapper>

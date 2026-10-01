@@ -6,7 +6,7 @@
 	<!-- 새로운 알림 추가 -->
 	<insert id="insertNotification" parameterType="notification" useGeneratedKeys="true" keyProperty="notification_id">
 	insert into notification (user_id, content, id_read, created_at, title, link) 
-		values
+						values
 							(#{userId}, #{content}, #{isRead}, NOW(), #{title}, #{link})
 	</insert>
 
