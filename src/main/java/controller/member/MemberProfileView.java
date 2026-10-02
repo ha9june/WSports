@@ -11,16 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import dto.User;
 
 /**
- * Servlet implementation class MemberMypageView
+ * Servlet implementation class MemberProfileView
  */
-@WebServlet("/member/mypage/view")
-public class MemberMypageView extends HttpServlet {
+@WebServlet("/member/profile/view")
+public class MemberProfileView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MemberMypageView() {
+    public MemberProfileView() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,7 +32,7 @@ public class MemberMypageView extends HttpServlet {
 		try {
 			User user = (User)request.getSession().getAttribute("user");
 			request.setAttribute("loginUser", user);
-			request.getRequestDispatcher("/jsp/mypage/myPageUser.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/mypage/myPageProfile.jsp").forward(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
