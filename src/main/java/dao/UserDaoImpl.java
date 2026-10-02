@@ -41,4 +41,19 @@ public class UserDaoImpl implements UserDao {
 			sqlSession.close();
 		}		
 	}
+	
+	@Override
+	public void updateLastLogin(String loginId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.update("mapper.user.updateLastLogin", loginId);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}	
+	}
 }

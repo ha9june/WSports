@@ -1,7 +1,6 @@
-package controller.match;
+package controller.member;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,24 +8,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
-import dto.PersonalMatch;
 import dto.User;
-import service.match.PersonalMatchService;
-import service.match.PersonalMatchServiceImpl;
 
 /**
- * Servlet implementation class MatchList
+ * Servlet implementation class MemberProfileView
  */
-@WebServlet("/match/list")
-public class MatchList extends HttpServlet {
+@WebServlet("/member/profile/view")
+public class MemberProfileView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MatchList() {
+    public MemberProfileView() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,16 +29,12 @@ public class MatchList extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		request.getRequestDispatcher("/jsp/match/personalMatchList.jsp").forward(request, response);;
-
+		try {
+			User user = (User)request.getSession().getAttribute("user");
+			request.setAttribute("loginUser", user);
+			request.getRequestDispatcher("/jsp/mypage/myPageProfile.jsp").forward(request, response);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	}
-
 }

@@ -1,10 +1,8 @@
 package service.auth;
 
 
-import dao.ReviewDao;
 import dao.UserDao;
 import dao.UserDaoImpl;
-import dto.Review;
 import dto.User;
 
 public class AuthServiceImpl implements AuthService {
@@ -34,6 +32,23 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public boolean checkUserNickname(String nickname) throws Exception {
 		return userDao.selectNickname(nickname) != null;
+	}
+
+	@Override
+	public User loginCheck(String loginId, String password) throws Exception {
+		User user = userDao.selectLoginId(loginId);
+	    if (user == null) {
+	        return null;               // 아이디 없음
+	    }
+	    if (user.getPassword() == null || !user.getPassword().equals(password)) {
+	        return null;               // 비밀번호 불일치
+	    }
+	    return user;                   // 로그인 성공
+	}
+	
+	@Override
+	public void updateLastLogin(String loginId) throws Exception {
+		userDao.updateLastLogin(loginId);		
 	}
 }
 

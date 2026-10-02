@@ -11,14 +11,15 @@
 <c:set var="pageCss" value="auth" />
 <c:set var="demoRoles" value="guest" />
 <c:set var="demoStates" value="default:기본|error:로그인 실패" />
+
 <%@ include file="/jsp/common/header.jsp"%>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
 	window.contextPath = "${ctx}";
 </script>
-
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
+<<<<<<< HEAD
 $(function() {
     $("#loginform").on("submit", function(e) {
         e.preventDefault();
@@ -57,6 +58,7 @@ $(function() {
 </script>
 
 <main class="page">
+<<<<<<< HEAD
 	<div class="auth-wrap">
 		<div class="page-head">
 			<h1 class="page-title md">로그인</h1>
@@ -87,6 +89,5 @@ $(function() {
 			</p>
 		</form>
 	</div>
-
 </main>
 <%@ include file="/jsp/common/footer.jsp"%>

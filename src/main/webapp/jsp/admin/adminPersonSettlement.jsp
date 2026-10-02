@@ -41,9 +41,7 @@
     	<c:if test="${state eq 'date'}">
     		<form class="date-stepper" method="get">
     			<input type="hidden" name="state" value="date">
-    			<a href="?state=date&amp;date=${prevDate}"></a>
     			<input type="date" name="date" value="${date}" onchange="this.form.submit()" class="date-input" required>
-    			<a href="?state=date&amp;date=${nextDate}"></a>
     		</form>
     	</c:if>
   	</div>
@@ -65,9 +63,9 @@
   		<div class="settle-row">
     		<span class="t-2"><fmt:formatDate value="${s.match_date}" pattern="M/d"/></span>
     		<div>
-      		<strong>${s.title}</strong>
-      		<p>${s.sport}</p>
-    	</div>
+      			<strong>${s.title}</strong>
+      			<p>${s.sport}</p>
+    		</div>
     	<span class="amt"><fmt:formatNumber value="${s.amount}"/>원</span>
     	<c:choose>
       		<c:when test="${s.settlement_status eq '지급완료'}">

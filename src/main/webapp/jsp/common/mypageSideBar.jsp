@@ -16,8 +16,8 @@
     <div class="group">
       <p class="group-title">계정</p>
       <nav class="menu">
-        <a href="${ctx}/jsp/mypage/myPageUser.jsp" class="${sideMenu eq 'user' ? 'is-active' : ''}">내 정보</a>
-        <a href="${ctx}/jsp/mypage/myPageProfile.jsp" class="${sideMenu eq 'profile' ? 'is-active' : ''}">내 프로필</a>
+        <a href="${ctx}/member/mypage/view" class="${sideMenu eq 'user' ? 'is-active' : ''}">내 정보</a>
+        <a href="${ctx}/member/profile/view" class="${sideMenu eq 'profile' ? 'is-active' : ''}">내 프로필</a>
       </nav>
     </div>
     <div class="group">

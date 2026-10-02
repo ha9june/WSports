@@ -16,9 +16,12 @@
 <c:set var="showFooter" value="true" />
 <c:set var="demoStates" value="list:일반 검색|map:지도 검색|mapTyping:지도-입력 중|mapPin:지도-핀 선택" />
 <%@ include file="/jsp/common/header.jsp" %>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
+<script src="${ctx}/js/common_header.js"></script>
 <script>
-	let isMapp = false;
 
+	let isMapp = false;
+	let page =1;
 
 	$(function(){
 		let data = {"userId":"test1","grade":"User"};
@@ -49,8 +52,10 @@
 					    }else if(item.sport == "테니스"){
 					    	sportsType="tennis";
 					    }
+					    
+
 					    html += `
-					    	<a class="match-card `+sportsType+`" href="${ctx}/jsp/match/personalMatchDetail.jsp">
+					    	<a class="match-card `+sportsType+`" href="${ctx}/match/detail/view?num=`+item.personalMatchId+`">
 						    <img class="art" src="${ctx}/img/art-`+sportsType+`.png" alt="">
 						    <span class="sport-tag football">
 						    `+item.sport+`
@@ -62,8 +67,8 @@
 						      	`+item.title+`
 						      </p>
 						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
-						      	`+item.startTime+` · 
-						      	`+item.region+`
+				                `+formatDate(item.matchDate, item.startTime)+`
+						      `+item.region+`
 						      </p>
 						      <p class="price">
 						      	`+item.participationFee+`원
@@ -78,7 +83,7 @@
 						  </a>
 			            `;
 					});
-					 $("#recomandMatchListDiv").html(html);		
+					 $("#nowMatchListDiv").html(html);		
 				},
 				error:function(err){
 					console.log("err");
@@ -86,16 +91,18 @@
 				}
 			});
 		}
-		function NormalList(){
+		function NormalList(page){
 			$.ajax({
 				url:"${ctx}/match/list/normal",
 				type:"post",
 			    dataType: "json",
 			    data: {
+			    	requestType: "ajax",
+			    	page:page,
 			    	data:data,
-			    	requestType: "ajax"
 			    	},
 				success:function(result){
+					console.log(result);
 					let html = "";
 					result.forEach(function(item) {
 						let sportsType = "";
@@ -130,7 +137,7 @@
 						`;
 					});
 					
-				 	$("#normalMatchListDiv").html(html);		
+				 	$("#normalMatchListDiv").append(html);		
 
 				},
 				error:function(err){
@@ -140,7 +147,29 @@
 				
 			});
 		}
-		
+		function MapList(page){
+			$.ajax({
+				url:"${ctx}/match/list/map",
+				type:"post",
+			    dataType: "json",
+			    data: {
+			    	requestType: "ajax",
+			    	page:page,
+			    	data:data,
+			    	},
+				success:function(result){
+					console.log(result);
+
+				},
+				error:function(err){
+					console.log("err");
+					console.log(err);
+				}
+				
+			});
+		}
+		NowList("RECOMAND");
+		NormalList(page);
 
 		$("#nowRecomandBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
@@ -170,8 +199,7 @@
 			$(this).addClass("is-active");
 			isMapp = false;
 			$("#normalDiv").show();
-			$("#maplDiv").hide();
-			NormalList();
+			$("#mapDiv").hide();
 
 		});
 		$("#mapBtn").on("click", function() {
@@ -179,10 +207,16 @@
 			$(this).addClass("is-active");
 			isMapp = true;
 			$("#normalDiv").hide();
-			$("#maplDiv").show();
+			$("#mapDiv").show();
+			map.relayout();
 
 		});
+		$("#moreBtn").on("click", function() {
+			
+			NormalList(++page);
+		});
 		
+			
 
 	});
 </script>
@@ -206,7 +240,7 @@
         <a id="nowEndBtn" class="btnGroup1">마감 임박</a>
         <a id="nowNewBtn" class="btnGroup1">신규 모집</a>
       </div>
-		<div id="recomandMatchListDiv" class="feature-row">
+		<div id="nowMatchListDiv" class="feature-row">
 		</div>
     </section>
 
@@ -277,11 +311,24 @@
         </div>
 
 
+
+
+
+
+
+
         <div class="input-row">
           <c:choose>
+          
+          
+          
+          
+          
             <c:when test="${isMap}">
               <div class="map-query ${state eq 'mapTyping' ? 'is-focus' : ''}">
                 <span class="t-3">⌕</span>
+                
+                
                 <c:choose>
                   <c:when test="${state eq 'mapTyping'}">
                     <input type="text" name="keyword" value="망원" autofocus aria-label="지역 또는 경기명">
@@ -291,6 +338,10 @@
                     <input type="text" name="keyword" placeholder="경기명·팀명도 검색할 수 있어요" aria-label="키워드">
                   </c:otherwise>
                 </c:choose>
+                
+                
+                
+                
                 <div class="search-dropdown" ${state eq 'mapTyping' ? '' : 'hidden'}>
                   <p class="grp-title">지역 · 장소 — 선택하면 지도가 이동해요</p>
                   <a href="?state=map" class="is-hover"><span class="ic">📍</span><span><b>망원</b> 동</span></a>
@@ -303,6 +354,7 @@
                 </div>
               </div>
               <select class="select date" name="period" aria-label="기간"><option>기간 선택</option><option>오늘</option><option>이번 주</option><option>이번 달</option></select>
+            
             </c:when>
             
             <c:otherwise>
@@ -313,6 +365,10 @@
             
             
           </c:choose>
+          
+          
+          
+          
           <button type="submit" class="btn btn-primary btn-lg">검색</button>
         </div>
       </form>
@@ -320,20 +376,37 @@
 
 
 
+	      <%-- ===== 일반 검색 결과 : 경기 리스트 ===== --%>
+	      <div id="normalDiv" class="normalDiv">
+	        <section class="list-head">
+	          <h2 class="section-title">경기 리스트</h2>
+	          <p class="section-desc">검색 조건에 맞는 경기를 한 줄씩 빠르게 비교해보세요.</p>
+	        </section>
+	        <%-- TODO: <c:forEach var="m" items="${matchList}"> 로 아래 행 하나를 반복 --%>
+	        <div id="normalMatchListDiv" class="match-rows">
+	          
+	
+	        </div>
+	        <div class="more-wrap">
+	        	<button id="moreBtn" type="button" class="btn-more">↓ &nbsp;더보기</button>
+	       	</div>
+	   	</div>
 
 
 
 
 
 
-      	<div id="normalDiv">
+      	<div id="mapDiv" class="mapDiv" style="display: none;">
 	        <section class="list-head">
 	          <h2 class="section-title">지도 기반 경기 찾기</h2>
 	          <p class="section-desc">검색한 지역 주변 경기를 지도에서 확인하세요.</p>
 	        </section>
+	        
+	        
 	        <div class="map-result">
 	          <%-- TODO: 카카오/네이버 지도 API 로 교체 (핀 좌표는 경기 장소의 위경도) --%>
-	          <div class="map-canvas" id="map">
+	          <%-- <div class="map-canvas" id="map">
 	            <a href="#" class="pin ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1" style="left:16%;top:26%"><span>풋살 · 1.2km</span></a>
 	            <a href="#" class="pin" data-pin="m2" style="left:68%;top:22%"><span>테니스 · 2.4km</span></a>
 	            <a href="#" class="pin ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3" style="left:54%;top:55%"><span>농구 · 3.1km</span></a>
@@ -349,34 +422,44 @@
 	            </c:if>
 	            <button type="button" class="ctrl" style="bottom:60px" aria-label="현재 위치">⌖</button>
 	            <button type="button" class="ctrl" style="bottom:16px" aria-label="확대">+</button>
-	          </div>
-	          <div class="map-list">
+	          </div> --%>
+	          
+   	          <div class="map-canvas" id="map">
+   
+   	          </div>
+          
+	          
+	          
+	          
+	          
+	          
+	          
+	          <div id="mapMatchListDiv" class="map-list">
 	            <h3>지도 주변 경기 4개</h3>
-	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1"><small>축구/풋살</small><strong>토요일 저녁 풋살 한 판!</strong><span>9/19 19:00 · 망원동 · 1.2km</span></a>
+	            <%-- <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1"><small>축구/풋살</small><strong>토요일 저녁 풋살 한 판!</strong><span>9/19 19:00 · 망원동 · 1.2km</span></a>
 	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="tennis" data-pin="m2"><small>테니스</small><strong>초중급 테니스 복식 모집</strong><span>9/21 18:30 · 송파구 · 2.4km</span></a>
 	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="basketball ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3"><small>농구</small><strong>주말 실내 농구 같이 하실 분</strong><span>9/20 14:00 · 성동구 · 3.1km</span></a>
 	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="badminton" data-pin="m4"><small>배드민턴</small><strong>퇴근 후 배드민턴</strong><span>9/22 20:00 · 영등포구 · 4.0km</span></a>
-	          </div>
+	           --%></div>
+	          
+	          
+	          
+
 	        </div>
+	        
+	        
+	        
+	        
+	        
+	        
+	        
 		</div>
 
 
 
 
 
-      <%-- ===== 일반 검색 결과 : 경기 리스트 ===== --%>
-      <div id="mapDiv">
-        <section class="list-head">
-          <h2 class="section-title">경기 리스트</h2>
-          <p class="section-desc">검색 조건에 맞는 경기를 한 줄씩 빠르게 비교해보세요.</p>
-        </section>
-        <%-- TODO: <c:forEach var="m" items="${matchList}"> 로 아래 행 하나를 반복 --%>
-        <div id="normalMatchListDiv" class="match-rows">
-          
 
-        </div>
-        <div class="more-wrap"><button type="button" class="btn-more">↓ &nbsp;더보기</button></div>
-   	</div>
     
     
     
@@ -388,8 +471,189 @@
   </div>
 </main>
 
-<a class="fab" href="${ctx}/jsp/match/personalMatchWriteForm.jsp" data-auth>
+<a class="fab" href="${ctx}/match/create" data-auth>
   <span class="fab-label">경기 만들기</span><span class="fab-btn" aria-hidden="true"></span>
 </a>
 
 <%@ include file="/jsp/common/footer.jsp" %>
+
+<script>
+	let markers = [];
+
+
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+	mapOption = {
+	    center: new kakao.maps.LatLng(37.5675000, 126.9790000), // 지도의 중심좌표
+	    level: 5 // 지도의 확대 레벨
+	};
+	
+	//지도를 미리 생성
+	var map = new kakao.maps.Map(mapContainer, mapOption);
+	
+	
+	kakao.maps.event.addListener(map, 'dragend', function() {
+	    searchMatch();
+	});
+	kakao.maps.event.addListener(map, 'zoom_changed', function() {
+	    searchMatch();
+	});
+	
+	
+	
+	//<a href="#" class="pin " data-pin="m3" style="left:54%;top:55%"><span>농구 · 3.1km</span></a>
+    //<a href="#" class="pin is-active" data-pin="m1" style="left:16%;top:26%"><span>풋살 · 1.2km</span></a>
+	
+	function createMarker(item) {
+    	 
+	    let sportsType = "";
+	    if(item.sport == "축구/풋살" || item.sport == "축구"){
+	    	sportsType="football";
+	    }else if(item.sport == "농구"){
+	    	sportsType="basketball";
+	    }else if(item.sport == "배드민턴"){
+	    	sportsType="badminton";
+	    }else if(item.sport == "테니스"){
+	    	sportsType="tennis";
+	    }
+		
+		 const position = new kakao.maps.LatLng(
+				 	item.latitude,
+				 	item.longitude
+			    );
+		 
+
+
+		//	 var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다    
+
+		var imageSrc = "${ctx}/img/art-"+sportsType+".png"; // 마커이미지의 주소입니다  
+	    var imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+	    var imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+		var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+
+	    const marker = new kakao.maps.Marker({
+	        map: map,
+	        position: position
+	       //image: markerImage
+
+	    });
+
+	    // 커스텀 오버레이
+	    const content = `
+	        <div class="map-list">
+	            <a href="${ctx}/match/detail/view?num="`+item.personalMatchId+`
+	               class="football ${state eq 'mapPin' ? '' : 'is-active'}"
+	               data-pin="m1">
+	                <small>`+item.sport+`</small>
+	                <strong>`+item.title+`</strong>
+	                <span>`+formatDate(item.matchDate, item.startTime)+`</span>
+
+	            </a>
+	        </div>
+	    `;
+
+	    const overlay = new kakao.maps.CustomOverlay({
+	        content: content,
+	        position: position,
+	        yAnchor: 1.35
+	    });
+
+	    // 마우스 오버
+	    kakao.maps.event.addListener(marker, "mouseover", function() {
+	        overlay.setMap(map);
+	    });
+
+	    // 마우스 아웃
+	    kakao.maps.event.addListener(marker, "mouseout", function() {
+	        overlay.setMap(null);
+	    });
+
+	    // 마커 클릭
+	    kakao.maps.event.addListener(marker, "click", function() {
+	        location.href =
+	            "${ctx}/match/detail/view?num="
+	            + item.personalMatchId;
+	    });
+
+	    return marker;
+	}
+	
+	
+	
+	
+	
+	function removeMarkers() {
+
+	    markers.forEach(function(marker) {
+	        marker.setMap(null);
+	    });
+
+	    markers = [];
+	}
+	
+	
+	
+	function searchMatch() {
+	    const bounds = map.getBounds();
+
+	    const sw = bounds.getSouthWest();
+	    const ne = bounds.getNorthEast();
+	    
+	    const minLat = sw.getLat();
+	    const maxLat = ne.getLat();
+
+	    const minLng = sw.getLng();
+	    const maxLng = ne.getLng();
+
+	     $.ajax({
+	        url: "${ctx}/match/list/map",
+	        type: "POST",
+		    dataType: "json",
+	        data: {
+	        	requestType:"ajax",
+	            minLat: sw.getLat(),
+	            maxLat: ne.getLat(),
+	            minLng: sw.getLng(),
+	            maxLng: ne.getLng()
+	        },
+	        success: function(data) {
+	            // 경기 목록 갱신
+	            console.log(data);
+	            removeMarkers();
+	            
+	            
+				let html = "";
+	            data.forEach(function(item) {	
+					html+= `
+			            <a href="${ctx}/match/detail/view?="`+item.personalMatchId+` 
+			            class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
+			            <small>`+item.sport+`</small>
+			            <strong>`+item.title+`</strong>
+		                <span>`+formatDate(item.matchDate, item.startTime)+`</span>
+			            </a>
+					`;
+	            	//마커찍기
+	                const marker = createMarker(item);
+	                markers.push(marker);
+
+	            });
+			 	$("#mapMatchListDiv").html(html);		
+
+	        }
+	    }); 
+	    
+	}
+	
+
+	//주소-좌표 변환 객체를 생성
+	var geocoder = new kakao.maps.services.Geocoder();
+	//마커를 미리 생성
+
+	
+	
+
+</script>
+
+
+
+
