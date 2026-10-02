@@ -1,7 +1,11 @@
 package dao;
 
+import java.util.List;
+import java.util.Map;
+
 import dto.Team;
 
 public interface TeamDao {
-	Integer insertTeam(Team team) throws Exception;
+	Long insertTeam(Team team) throws Exception;
+	List<Team> select12Team() throws Exception;
 }

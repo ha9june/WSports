@@ -37,18 +37,40 @@ public class Team {
     private String activityImage3;    // 활동 이미지 3
     private String activityImage4;    // 활동 이미지 4
     private String activityImage5;    // 활동 이미지 5
-
-	public Team() {
+    //dto에만 있는거 조인해서 가져오거나 문자열 합쳐서 저장할거.
+    private Integer currentPeople;		//현재인원
+    private String regions; 			//지역 합친거 영등포구 외 1
+    private String ages;				//나이대 20~30대
+    private String days;				//월 화 수 ... 평일 주말등등
+    private String times; 				//시간대 아침 오전 오후 저녁 심야
+    public Team() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+	
+	@Override
+	public String toString() {
+		return "Team [teamId=" + teamId + ", teamName=" + teamName + ", profileImage=" + profileImage + ", description="
+				+ description + ", skill=" + skill + ", sport=" + sport + ", gender=" + gender + ", createdAt="
+				+ createdAt + ", deleted=" + deleted + ", region1=" + region1 + ", region2=" + region2 + ", region3="
+				+ region3 + ", age20s=" + age20s + ", age30s=" + age30s + ", age40s=" + age40s + ", age50s=" + age50s
+				+ ", age60Plus=" + age60Plus + ", dayMon=" + dayMon + ", dayTue=" + dayTue + ", dayWed=" + dayWed
+				+ ", dayThu=" + dayThu + ", dayFri=" + dayFri + ", daySat=" + daySat + ", daySun=" + daySun
+				+ ", time0609=" + time0609 + ", time0912=" + time0912 + ", time1218=" + time1218 + ", time1822="
+				+ time1822 + ", time2206=" + time2206 + ", activityImage1=" + activityImage1 + ", activityImage2="
+				+ activityImage2 + ", activityImage3=" + activityImage3 + ", activityImage4=" + activityImage4
+				+ ", activityImage5=" + activityImage5 + ", currentPeople=" + currentPeople + ", regions=" + regions
+				+ ", ages=" + ages + ", days=" + days + ", times=" + times + "]";
+	}
+
 	public Team(Long teamId, String teamName, String profileImage, String description, String skill, String sport,
 			String gender, LocalDateTime createdAt, Boolean deleted, String region1, String region2, String region3,
 			Boolean age20s, Boolean age30s, Boolean age40s, Boolean age50s, Boolean age60Plus, Boolean dayMon,
 			Boolean dayTue, Boolean dayWed, Boolean dayThu, Boolean dayFri, Boolean daySat, Boolean daySun,
 			Boolean time0609, Boolean time0912, Boolean time1218, Boolean time1822, Boolean time2206,
 			String activityImage1, String activityImage2, String activityImage3, String activityImage4,
-			String activityImage5) {
+			String activityImage5, Integer currentPeople, String regions, String ages, String days, String times) {
 		super();
 		this.teamId = teamId;
 		this.teamName = teamName;
@@ -84,20 +106,31 @@ public class Team {
 		this.activityImage3 = activityImage3;
 		this.activityImage4 = activityImage4;
 		this.activityImage5 = activityImage5;
+		this.currentPeople = currentPeople;
+		this.regions = regions;
+		this.ages = ages;
+		this.days = days;
+		this.times = times;
 	}
-	@Override
-	public String toString() {
-		return "Team [teamId=" + teamId + ", teamName=" + teamName + ", profileImage=" + profileImage + ", description="
-				+ description + ", skill=" + skill + ", sport=" + sport + ", gender=" + gender + ", createdAt="
-				+ createdAt + ", deleted=" + deleted + ", region1=" + region1 + ", region2=" + region2 + ", region3="
-				+ region3 + ", age20s=" + age20s + ", age30s=" + age30s + ", age40s=" + age40s + ", age50s=" + age50s
-				+ ", age60Plus=" + age60Plus + ", dayMon=" + dayMon + ", dayTue=" + dayTue + ", dayWed=" + dayWed
-				+ ", dayThu=" + dayThu + ", dayFri=" + dayFri + ", daySat=" + daySat + ", daySun=" + daySun
-				+ ", time0609=" + time0609 + ", time0912=" + time0912 + ", time1218=" + time1218 + ", time1822="
-				+ time1822 + ", time2206=" + time2206 + ", activityImage1=" + activityImage1 + ", activityImage2="
-				+ activityImage2 + ", activityImage3=" + activityImage3 + ", activityImage4=" + activityImage4
-				+ ", activityImage5=" + activityImage5 + "]";
+
+
+
+	public String getDays() {
+		return days;
 	}
+
+	public void setDays(String days) {
+		this.days = days;
+	}
+
+	public String getTimes() {
+		return times;
+	}
+
+	public void setTimes(String times) {
+		this.times = times;
+	}
+
 	public Long getTeamId() {
 		return teamId;
 	}
@@ -302,6 +335,24 @@ public class Team {
 	public void setActivityImage5(String activityImage5) {
 		this.activityImage5 = activityImage5;
 	}
-    
+	public Integer getCurrentPeople() {
+		return currentPeople;
+	}
+	public void setCurrentPeople(Integer currentPeople) {
+		this.currentPeople = currentPeople;
+	}
+	public String getRegions() {
+		return regions;
+	}
+	public void setRegions(String regions) {
+		this.regions = regions;
+	}
+	public String getAges() {
+		return ages;
+	}
+	public void setAges(String ages) {
+		this.ages = ages;
+	}
+
     
 }

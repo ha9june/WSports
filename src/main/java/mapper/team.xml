@@ -74,18 +74,21 @@
 						)		
 	</insert>
 	
-	<select id="select12Team" parameterType="Map" resultType="Map">
+	<select id="select12Team" resultType="team">
 		select 
-		t.team_name , t.profile_image, t.sport, t.region1, t.region2, t.region3, 
+		t.team_name , t.profile_image, t.skill, t.sport, t.gender, t.region1, t.region2, t.region3, 
 		t.age_20s, t.age_30s, t.age_40s, t.age_50s, t.age_60_plus, 
 		t.day_mon, t.day_tue, t.day_wed, t.day_thu, t.day_fri, t.day_sat, t.day_sun,
-		t.time_06_09, t.time_09_12, t.time_12_18, t.time_18_22, t.time_22_06, 
-		count(*) u			
+		t.time_06_09, t.time_09_12, t.time_12_18, t.time_18_22, t.time_22_06,
+		(
+			select count(*)
+			from team_user tu
+			where tu.team_id = t.team_id and tu.withdrawn = false
+		) as current_people
 		from team t
-		join team_user u
-		using (team_id)
-		where t.deleted = false
-		order by t.created_at desc limit 12;
+		WHERE COALESCE(t.deleted, false) = false
+		order by t.created_at desc 
+		limit 12;
 	</select>
 
 </mapper>

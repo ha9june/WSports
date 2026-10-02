@@ -130,7 +130,7 @@ public class TeamCreate extends HttpServlet {
 		TeamService teamService = new TeamServiceImpl();
 
 		try {
-			Integer teamId = teamService.makeTeam(team, userId, realPath, profileImage, activityImg1, activityImg2,
+			Long teamId = teamService.makeTeam(team, userId, realPath, profileImage, activityImg1, activityImg2,
 					activityImg3, activityImg4, activityImg5);
 			request.setAttribute("teamId", teamId);
 

@@ -12,6 +12,9 @@
 <c:set var="showFooter" value="true" />
 <c:set var="demoRoles" value="guest,member" />
 <%@ include file="/jsp/common/header.jsp" %>
+<script type="text/javascript">
+	console.log("${teamMap}")
+</script>
 <main class="page">
   <div class="rail">
     <div class="page-head" style="margin-bottom:18px"><h1 class="page-title lg">팀</h1><p class="page-desc">가입할 팀을 찾거나 다른 팀과 매칭해보세요.</p></div>
@@ -50,20 +53,36 @@
       <div id="regionInputs"></div>
     </form>
 
-    <div class="list-meta"><p><b>팀 18개</b><span>1–12 / 18</span></p>
+    <div class="list-meta"><p><b>팀 18개</b>
       <select class="select" name="sort" aria-label="정렬"><option>최신순</option><option>인원순</option></select></div>
 
     <%-- TODO: <c:forEach var="t" items="${teamList}"> 로 교체. (아래는 시연용 더미 데이터) --%>
     <div class="team-grid">
-      <c:forTokens var="row" delims="|" items="서울 풋살 크루^football^축구/풋살 · 마포/서대문^34^마포구^토 · 일 · 저녁^20~30대 · 초급 · 성별 무관^2일 전|라켓메이트^tennis^테니스 · 송파/강동^18^송파구^화 · 목 · 야간^20~40대 · 중급 · 성별 무관^1일 전|셔틀콕 데이^badminton^배드민턴 · 영등포/구로^26^영등포구^토 · 오후^20~30대 · 초급 · 여자^3일 전|주말 바스켓^basketball^농구 · 성동/광진^22^성동구^일 · 오전^30~40대 · 중급 · 남자^오늘|강남 풋살렙^football^축구/풋살 · 강남/서초^41^강남구^수 · 금 · 저녁^20~30대 · 중급 · 성별 무관^오늘|성수 바스켓^basketball^농구 · 성동/광진^29^성동구^화 · 목 · 야간^20~30대 · 중급 · 성별 무관^1일 전|올림픽 테니스^tennis^테니스 · 송파/강동^16^송파구^토 · 일 · 오전^30~40대 · 초중급 · 성별 무관^2일 전|셔틀메이트^badminton^배드민턴 · 강서/양천^33^강서구^월 · 수 · 저녁^20~40대 · 중급 · 성별 무관^오늘|노원 풋살 클럽^football^축구/풋살 · 노원/도봉^27^노원구^토 · 오후^20~30대 · 초급 · 성별 무관^4일 전|북촌 라켓클럽^tennis^테니스 · 종로/성북^20^종로구^수 · 토 · 오전^30~40대 · 중급 · 성별 무관^1일 전|잠실 바스켓볼^basketball^농구 · 송파/강동^24^송파구^금 · 일 · 저녁^20~30대 · 초중급 · 성별 무관^오늘|강서 셔틀콕^badminton^배드민턴 · 강서/양천^19^강서구^화 · 금 · 야간^20~30대 · 중급 · 성별 무관^2일 전">
-        <c:set var="t" value="${fn:split(row, '^')}" />
+      <c:forEach var="team" items="${teamList }">
         <a class="team-card" href="${ctx}/jsp/team/teamDetail.jsp">
-          <div class="top"><img src="${ctx}/img/team-${t[1]}.png" alt="">
-            <div><strong>${t[0]}</strong><p class="meta">${t[2]}</p>
-              <p class="sub"><span><img src="${ctx}/img/icon-user-12.svg" alt="">${t[3]}명</span><span><img src="${ctx}/img/icon-pin-12.svg" alt="">${t[4]}</span></p></div></div>
-          <p class="cond">${t[5]}<br>${t[6]}<br><%-- 최근 활동 ${t[7]} --%></p>
+          <div class="top">
+          <c:choose>
+			  <c:when test="${not empty team.profileImage}">
+			    <img src="${ctx}/uploads/${team.profileImage}" alt="">
+			  </c:when>
+			  <c:when test="${team.sport eq '축구/풋살' }">
+			  	<img src="${ctx}/img/team-football.png" alt="">
+			  </c:when>
+			  <c:when test="${team.sport eq '농구' }">
+			  	<img src="${ctx}/img/team-basketball.png" alt="">
+			  </c:when>
+			  <c:when test="${team.sport eq '테니스' }">
+			  	<img src="${ctx}/img/team-tennis.png" alt="">
+			  </c:when>
+			 	<c:when test="${team.sport eq '배드민턴' }">
+			 		<img src="${ctx}/img/team-badminton.png" alt="">
+			  </c:when>
+		  </c:choose>
+            <div><strong>${team.teamName}</strong><p class="meta">${team.sport}</p>
+              <p class="sub"><span><img src="${ctx}/img/icon-user-12.svg" alt="">${team.currentPeople}명</span><span><img src="${ctx}/img/icon-pin-12.svg" alt="">${team.regions }</span></p></div></div>
+          <p class="cond">${team.days}<br>${team.ages }<br>${team.skill}·${team.gender }<br><%-- 최근 활동 ${t[7]} --%></p>
         </a>
-      </c:forTokens>
+      </c:forEach>
     </div>
     <div class="more-wrap"><button type="button" class="btn-more">↓ &nbsp;더보기</button></div>
   </div>
