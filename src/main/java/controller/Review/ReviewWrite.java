@@ -1,4 +1,4 @@
-package controller.review;
+package controller.Review;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

@@ -18,6 +18,8 @@
 <c:set var="activeNav" value="${isHost ? '' : 'match'}" />
 <c:set var="demoStates" value="recruiting:모집중|saved:찜함|applied:신청 완료|applyCancel:신청취소 모달|closed:모집 마감|completed:경기 종료|cancelledMin:자동 취소|host:주최자 관리|hostConfirmed:주최자-경기 예정|hostCancel:주최자-취소 모달|hostDelete:주최자-삭제 모달|completedHost:주최자-경기 종료|cancelledHost:주최자-취소됨" />
 <%@ include file="/jsp/common/header.jsp" %>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
+
 
 <%-- 상태별 제목 옆 배지 --%>
 <c:choose>
@@ -45,7 +47,9 @@
     <section class="detail-top">
       <span class="sport-chip">${state eq 'hostConfirmed' ? '농구' : '축구/풋살'}</span>
       <div class="title-row">
-        <h1>${state eq 'hostConfirmed' ? '주말 실내 농구 인원 모집' : '토요일 저녁 풋살 한 판!'}</h1>
+        <h1>
+        	${personalMatch.title }
+        </h1>
         <span class="pill pill-lg ${pillCls}">${pillText}</span>
         <c:if test="${role eq 'admin'}">
           <button type="button" class="btn btn-danger btn-sm admin-del" data-modal-open="adminDeleteModal">경기 삭제</button>
@@ -53,10 +57,18 @@
       </div>
       <div class="host-inline">
         <span class="avatar default"></span>
-        <div><a href="${ctx}/jsp/member/userProfileInfo.jsp"><strong>서울풋살러</strong></a><small>호스트 · 주 활동 지역 서울 · 매너 양호</small></div>
+        <div><a href="${ctx}/jsp/member/userProfileInfo.jsp"><strong>
+        ${personalMatch.nickname }
+        </strong></a><small>
+        호스트
+         · 주 활동 지역 
+         서울
+          · 매너 양호</small></div>
         <div class="hover-card">
           <div class="top"><span class="avatar md"><img src="${ctx}/img/avatar-01.jpg" alt=""></span>
-            <div><strong>서울풋살러</strong><p>서울 · 중급</p><p class="rating">4.8 · 21개 평가</p></div></div>
+            <div><strong>
+            ${personalMatch.nickname }
+            </strong><p>서울 · 중급</p><p class="rating">4.8 · 21개 평가</p></div></div>
           <dl><dt>주 활동 지역</dt><dd>서울 마포구</dd><dt>선호 시간</dt><dd>주말 저녁</dd></dl>
         </div>
       </div>
@@ -75,10 +87,12 @@
           <h2>경기 정보</h2>
           <dl class="info-list">
             <div class="info-row"><dt>일시</dt><dd>9월 19일 (토) 19:00 - 21:00</dd></div>
-            <div class="info-row"><dt>장소</dt><dd>서울 마포구 망원 풋살장</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd>10,000원</dd></div>
-            <div class="info-row"><dt>참가 인원</dt><dd>8 / 10명<small>최소 진행 8명 · 충족 ✓</small></dd></div>
-            <div class="info-row"><dt>마감</dt><dd>9월 19일 17:00</dd></div>
+            <div class="info-row"><dt>장소</dt><dd>${personalMatch.place_name}</dd></div>
+            <div class="info-row"><dt>참가비</dt><dd>${personalMatch.participation_fee }원</dd></div>
+            <div class="info-row"><dt>참가 인원</dt><dd>${personalMatch.min_people} / ${personalMatch.max_people}명
+            	<small>최소 진행 8명 · 충족 ✓</small></dd>
+           	</div>
+            <div class="info-row"><dt>마감</dt><dd>${personalMatch.deadline}</dd></div>
             <div class="info-row"><dt>성별</dt><dd>무관</dd></div>
             <div class="info-row"><dt>연령</dt><dd>20대 · 30대</dd></div>
             <div class="info-row"><dt>실력</dt><dd>초급 · 중급</dd></div>
@@ -91,8 +105,17 @@
 
         <section class="map-card">
           <div class="head"><strong>경기 위치</strong><span>서울 마포구 망원 풋살장</span></div>
-          <%-- TODO: 지도 API 로 실제 위치 표시 --%>
-          <div class="map-box"><div class="map-pin"><div><strong>망원 풋살장</strong><small>지도 API로 실제 위치 표시</small></div></div></div>
+          	${personalMatch.latitude}, ${personalMatch.longitude}
+          	
+          <div class="map-box">
+        	    <div id="map">
+          		</div>
+<!--           	<div class="map-pin">
+
+          		<div><strong>망원 풋살장</strong><small>지도 API로 실제 위치 표시</small>
+          		</div>
+          	</div> -->
+          </div>
         </section>
 
         <c:if test="${not isHost}">
@@ -184,7 +207,7 @@
           <c:otherwise>
             <div class="side-card">
               <h2>결제 안내</h2>
-              <div class="kv">참가비 <b class="lg">10,000원</b></div>
+              <div class="kv">참가비 <b class="lg">${personalMatch.participation_fee }원</b></div>
               <hr>
               <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
               <div class="actions">
@@ -247,3 +270,11 @@
 </c:if>
 
 <%@ include file="/jsp/common/footer.jsp" %>
+<script>
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+	mapOption = {
+	    center: new kakao.maps.LatLng(37.5675000, 126.9790000), // 지도의 중심좌표
+	    level: 5 // 지도의 확대 레벨
+	};
+	var map = new kakao.maps.Map(mapContainer, mapOption);
+</script>

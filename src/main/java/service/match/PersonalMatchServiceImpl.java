@@ -18,10 +18,23 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	public PersonalMatchServiceImpl() {
 		personalMatchDao = new PersonalMatchDaoImpl();
 	}
+	
+	
 
 	@Override
 	public List<PersonalMatch> getRecomandMatch() throws Exception {
 		return personalMatchDao.selectPersonalMatchList();
+	}
+	
+	@Override
+	public List<PersonalMatch> getNormalMatch(Integer page) throws Exception {
+		int startIndex = (page-1)*4;
+		return personalMatchDao.selectNormalPersonalMatchList(startIndex);
+	}
+	
+	@Override
+	public List<PersonalMatch> getMapMatch(Map<String, Object> latlong) throws Exception {
+		return personalMatchDao.selectMapPersonalMatchList(latlong);
 	}
 
 	@Override
@@ -49,5 +62,18 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 		return personalMatchDao.selectMyPagePersonalMatchList(param);
 	}
+
+	@Override
+	public Map<String,Object> getPersmalMatchDetail(Integer personalMatchId) throws Exception {
+		// TODO Auto-generated method stub
+		return personalMatchDao.selectPersonalMatch(personalMatchId);
+	}
+
+
+
+
+
+
+
 
 }

@@ -1,8 +1,10 @@
 package controller.match;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,16 +19,16 @@ import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 
 /**
- * Servlet implementation class MatchListNormal
+ * Servlet implementation class MatchListMap
  */
-@WebServlet("/match/list/normal")
-public class MatchListNormal extends HttpServlet {
+@WebServlet("/match/list/map")
+public class MatchListMap extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MatchListNormal() {
+    public MatchListMap() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,29 +38,38 @@ public class MatchListNormal extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		BigDecimal minLat = new BigDecimal(request.getParameter("minLat"));
+		BigDecimal maxLat = new BigDecimal(request.getParameter("maxLat"));
+		BigDecimal minLng = new BigDecimal(request.getParameter("minLng"));
+		BigDecimal maxLng = new BigDecimal(request.getParameter("maxLng"));
 		String requestType = request.getParameter("requestType");
-		Integer page = Integer.parseInt(request.getParameter("page"));
+
+		Map<String, Object> param = new HashMap<>();
+		param.put("minLat", minLat);
+		param.put("maxLat", maxLat);
+		param.put("minLng", minLng);
+		param.put("maxLng", maxLng);
 		
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		if(requestType!=null &&  requestType.equals("ajax")) {
 			try {
-				List<PersonalMatch> normalMatchList = service.getNormalMatch(page);
+				List<PersonalMatch> mapMatchList = service.getMapMatch(param);
 				
-				System.out.println(normalMatchList);
+				System.out.println(mapMatchList);
 				Gson gson = new Gson();
-				response.getWriter().write(gson.toJson(normalMatchList));
+				response.getWriter().write(gson.toJson(mapMatchList));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-	
+		
 	}
 
 }
