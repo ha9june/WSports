@@ -29,6 +29,7 @@ public class AdminSettlementServiceImpl implements AdminSettlementService {
 	
 	@Override
 	public Long getPersonalSettlementWaitMoney() throws Exception {
+		
 		return personalsettlementDao.selectPersonalSettlementWaitMoney();
 	}
 	
@@ -43,8 +44,11 @@ public class AdminSettlementServiceImpl implements AdminSettlementService {
 	}
 	
 	@Override
-	public List<Map<String, Object>> getPersonalSettlementDayList(LocalDate date) throws Exception {
-		return personalsettlementDao.selectPersonalSettlementDayList(date);
+	public List<Map<String, Object>> getPersonalSettlementDayList(LocalDate startDate, LocalDate endDate) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("startDate", startDate.toString());
+		param.put("endDate", endDate.toString());
+		return personalsettlementDao.selectPersonalSettlementDayList(param);
 	}
 
 	@Override
@@ -88,8 +92,11 @@ public class AdminSettlementServiceImpl implements AdminSettlementService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getTeamSettlementDayList(LocalDate date) throws Exception {
-		return teamsettlementDao.selectTeamSettlementDayList(date);
+	public List<Map<String, Object>> getTeamSettlementDayList(LocalDate startDate, LocalDate endDate) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("startDate", startDate.toString());
+		param.put("endDate", endDate.toString());
+		return teamsettlementDao.selectTeamSettlementDayList(param);
 	}
 
 	@Override

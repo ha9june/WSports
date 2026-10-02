@@ -60,7 +60,7 @@
 		<a href="${pageInfo.curPage > 1 ? ctx += '/admin/member?status=' += status += '&keyword=' += param.keyword += '&page=' += (pageInfo.curPage - 1) : '#'}">&lt;</a>
 
 		<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" var="page">
-			<a href="${ctx}/admin/member?status=${status}&amp;page=${page}"
+			<a href="${ctx}/admin/member?status=${status}&amp;keyword=${param.keyword}&amp;page=${page}"
 				class="${pageInfo.curPage eq page ? 'is-active' : ''}">${page}</a>
 		</c:forEach>
 		<a href="${pageInfo.curPage < pageInfo.allPage ? ctx += '/admin/member?status=' += status += '&keyword=' += param.keyword += '&page=' += (pageInfo.curPage + 1) : '#'}">&gt;</a>

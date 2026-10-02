@@ -40,8 +40,8 @@
 		)
 		and (
 			#{keyword} = ''
-			or u.login_id like concat('%', '#{keyword}', '%')
-			or u.nickname like concat('%', '#{keyword}', '%')
+			or u.login_id like concat('%', #{keyword}, '%')
+			or u.nickname like concat('%', #{keyword}, '%')
 		)
 	</select>
 		
@@ -83,10 +83,27 @@
 		order by p.penalty_id asc
 	</select>
 	
+	<!-- 회원의 가장 최근 패널티 점수 -->
+	<select id="selectLatestScore" parameterType="map" resultType="int">
+		select score
+		from user_penalty
+		where user_id = #{userId}
+		order by penalty_id desc
+		limit 1
+	</select>
+	
+	<!-- 관리자 페널티 주는 기능 -->
 	<insert id="insertUserPenalty" parameterType="map">
 		insert into user_penalty
 		(user_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
 		values
 		(#{userId}, now(), #{score}, #{reason}, now(), date_add(now(), interval #{days} day), 0)
 	</insert>
+	
+	<!-- 회원 상태를 정지로 -->
+	<update id="updateUserSuspended" parameterType="map">
+		update user
+		set suspended = 1
+		where user_id = #{userId}
+	</update>
 </mapper>

@@ -42,12 +42,18 @@ public class UserPenaltyDaoImpl implements UserPenaltyDao {
 	
 	//관리자 신고 조치
 	@Override
-	public Map<String, Object> insertUserPenalty() throws Exception {
+	public void insertUserPenalty(Map<String, Object> param) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return sqlSession.selectOne("mapper.user.insertUserPenalty");
+			// 현재 점수 이어받기 (기록 없으면 0)
+			Integer score = sqlSession.selectOne("mapper.user.selectLatestScore", param);
+			param.put("score", score == null ? 0 : score);
+
+			sqlSession.insert("mapper.user.insertUserPenalty", param);
+			sqlSession.update("mapper.user.updateUserSuspended", param);
+			sqlSession.commit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			sqlSession.rollback();
 			throw e;
 		}
 	}

@@ -37,34 +37,36 @@ public class AdminPersonSettlement extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		AdminSettlementService service = new AdminSettlementServiceImpl();
 		try {
-			String dateParam = request.getParameter("date");
-			LocalDate date;
-			if(dateParam == null) {
-				date = LocalDate.now();
-			}else {
-				date = LocalDate.parse(dateParam);
+			// 조회 기간 받기 (없으면 최근 7일)
+			String startParam = request.getParameter("startDate");
+			String endParam = request.getParameter("endDate");
+
+			LocalDate endDate = (endParam == null || endParam.isEmpty()) ? LocalDate.now() : LocalDate.parse(endParam);
+			LocalDate startDate = (startParam == null || startParam.isEmpty()) ? endDate.minusDays(6) : LocalDate.parse(startParam);
+
+			// 시작일이 종료일보다 늦으면 서로 바꿈
+			if (startDate.isAfter(endDate)) {
+				LocalDate temp = startDate;
+				startDate = endDate;
+				endDate = temp;
 			}
-			LocalDate prevDate = date.minusDays(1);
-			LocalDate nextDate = date.plusDays(1);
-			
-			request.setAttribute("date", date);
-			request.setAttribute("prevDate", prevDate);
-			request.setAttribute("nextDate", nextDate);
 			
 			Integer personwait = service.getPersonalSettlementWait();
 			Long personwaitmoney = service.getPersonalSettlementWaitMoney();
 			List<Map<String, Object>> personwaitlist = service.getPersonalSettlementWaitList();
 			List<Map<String, Object>> personfinish = service.getPersonalSettlementFinishList();
-			List<Map<String, Object>> personday = service.getPersonalSettlementDayList(date);
-			List<Map<String, Object>> displayList = service.getPersonalSettlementList();				
-			
+			List<Map<String, Object>> personday = service.getPersonalSettlementDayList(startDate, endDate);
+					
 			//개인
 			request.setAttribute("personwait", personwait);	//정산대기 숫자
 			request.setAttribute("personwaitmoney", personwaitmoney==null? 0:personwaitmoney);	//지급 예정 금액
 			request.setAttribute("personwaitlist", personwaitlist);	//정산 대기 리스트
 			request.setAttribute("personfinish", personfinish);	//지급 완료 리스트
 			request.setAttribute("personday", personday);	//날짜별 리스트
-			request.setAttribute("displayList", displayList); //모든 리스트			
+	
+			
+			request.setAttribute("startDate", startDate);  // 달력에 표시할 시작일
+			request.setAttribute("endDate", endDate);      // 달력에 표시할 종료일
 			
 			request.getRequestDispatcher("/jsp/admin/adminPersonSettlement.jsp").forward(request, response);
 		} catch (Exception e) {

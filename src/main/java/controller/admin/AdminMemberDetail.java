@@ -49,19 +49,26 @@ public class AdminMemberDetail extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		AdminMemberServiceImpl service = new AdminMemberServiceImpl();
-		UserPenalty userpenalty = new UserPenalty();
-		
-		
-		int days = Integer.parseInt(request.getParameter("days"));
-		String reason = request.getParameter("reason");
 		try {
+			Long userId = Long.parseLong(request.getParameter("userId"));
+
+			String reason = request.getParameter("reason");
+			String action = request.getParameter("action");
+
+			if ("permanent".equals(action)) {
+				// 영구 정지 (기간 없음)
+				service.AdminUserPermanentPenalty(userId, reason);
+			} else {
+				// 기간 정지
+				int days = Integer.parseInt(request.getParameter("days"));
+				service.AdminUserPenalty(userId, days, reason);
+			}
 			
-		}catch (Exception e) {
+			response.getWriter().print("true");
+		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "회원관리 상세 목록 조회 오류");
+			response.getWriter().print("false");
 		}
-		
-		request.getRequestDispatcher("/jsp/admin/adminMemberDetail.jsp").forward(request, response);
 	}
 
 }

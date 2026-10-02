@@ -11,5 +11,5 @@ public interface UserPenaltyDao {
 	List<Map<String, Object>> selectAdminMemberDetailList(Long userId) throws Exception;
 	
 	//관리자 신고 조치
-	Map<String, Object> insertUserPenalty() throws Exception;
+	void insertUserPenalty(Map<String, Object> param) throws Exception;
 }
