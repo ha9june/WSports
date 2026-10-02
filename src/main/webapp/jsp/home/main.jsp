@@ -40,14 +40,14 @@
 	<div id="recomandMatchListDiv" class="feature-row">
 	    <c:forEach var="match" items="${rList}">
 
-<%-- 	        ${match.title}
+<%--  	        ${match.title}
 	        ${match.sport}
 	        ${match.startTime}
 	        ${match.endTime}
 	        ${match.region}
 	        ${match.participationFee}
-	        ${match.maxPeople} --%>
-	        <%-- ${match.currentPeople} --%>
+	        ${match.maxPeople} 
+	        ${match.currentPeople} --%> 
 	        <br>
 
 	  		<c:set var="sportClass" value="${match.sport eq '축구' ? 'football' :

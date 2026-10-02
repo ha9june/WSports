@@ -23,12 +23,15 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	public List<PersonalMatch> getRecomandMatch() throws Exception {
 		return personalMatchDao.selectPersonalMatchList();
 	}
-
+	
+	// 마이페이지 참가 경기 목록 조회(페이징)
 	@Override
-	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month) throws Exception {
+	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month,String status,String sport) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		param.put("month", month);
+		param.put("status", status);
+		param.put("sport", sport);
 		
 		int cnt = personalMatchDao.selectMyPagePersonalMatchCnt(param);
 		Integer allPage = (int) Math.ceil(cnt / 10.0);
@@ -46,8 +49,41 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("offset",(pageInfo.getCurPage() - 1) * 10);
 		param.put("size", 10);
 		
-
+		
 		return personalMatchDao.selectMyPagePersonalMatchList(param);
 	}
 
+	// 마이페이지 내가 만든 경기 목록 조회(페이징)
+	@Override
+	public List<PersonalMatch> MyPageCreatedPersonalMatchList(PageInfo pageInfo, Long userId, String month,
+			String status, String sport) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("month", month);
+		param.put("status", status);
+		param.put("sport", sport);
+		
+		int cnt = personalMatchDao.selectMyPageCreatedPersonalMatchCnt(param);
+		Integer allPage = (int) Math.ceil(cnt / 10.0);
+		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
+		int endPage = Math.min(startPage + 9, allPage);
+
+		if (endPage < 1) endPage = 1;
+		if (pageInfo.getCurPage() > endPage) {
+			pageInfo.setCurPage(endPage);
+		}
+		pageInfo.setAllPage(allPage);
+		pageInfo.setStartPage(startPage);
+		pageInfo.setEndPage(endPage);
+		
+		param.put("offset",(pageInfo.getCurPage() - 1) * 10);
+		param.put("size", 10);
+		
+		System.out.println(personalMatchDao.selectMyPageCreatedPersonalMatchList(param).toString());
+		
+		return personalMatchDao.selectMyPageCreatedPersonalMatchList(param);
+	
+	
+	
+	}
 }

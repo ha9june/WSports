@@ -16,39 +16,39 @@
     <div class="group">
       <p class="group-title">계정</p>
       <nav class="menu">
-        <a href="${ctx}/jsp/mypage/myPageUser.jsp" class="${sideMenu eq 'user' ? 'is-active' : ''}">내 정보</a>
-        <a href="${ctx}/jsp/mypage/myPageProfile.jsp" class="${sideMenu eq 'profile' ? 'is-active' : ''}">내 프로필</a>
+        <a href="${ctx}/member/mypage/view" class="${sideMenu eq 'user' ? 'is-active' : ''}">내 정보</a>
+        <a href="${ctx}/member/profile/view" class="${sideMenu eq 'profile' ? 'is-active' : ''}">내 프로필</a>
       </nav>
     </div>
     <div class="group">
       <p class="group-title">경기</p>
       <nav class="menu">
         <a href="${ctx}/mypage/matches/participating" class="${sideMenu eq 'personalMatch' ? 'is-active' : ''}">참가 경기</a>
-        <a href="${ctx}/jsp/mypage/myPageCreatedPersonalMatch.jsp" class="${sideMenu eq 'createdMatch' ? 'is-active' : ''}">내가 만든 경기</a>
-        <a href="${ctx}/jsp/mypage/myPageHeartMatch.jsp" class="${sideMenu eq 'heartMatch' ? 'is-active' : ''}">관심경기</a>
+        <a href="${ctx}/mypage/matches/created" class="${sideMenu eq 'createdMatch' ? 'is-active' : ''}">내가 만든 경기</a>
+        <a href="${ctx}/mypage/matches/saved" class="${sideMenu eq 'heartMatch' ? 'is-active' : ''}">관심경기</a>
       </nav>
     </div>
     <div class="group">
       <p class="group-title">팀</p>
       <nav class="menu">
-        <a href="${ctx}/jsp/mypage/myPageMyTeam.jsp" class="${sideMenu eq 'myTeam' ? 'is-active' : ''}">내 팀</a>
-        <a href="${ctx}/jsp/mypage/myPageTeamMatch.jsp" class="${sideMenu eq 'teamMatch' ? 'is-active' : ''}">팀 경기</a>
+        <a href="${ctx}/mypage/clubs" class="${sideMenu eq 'myTeam' ? 'is-active' : ''}">내 팀</a>
+        <a href="${ctx}/mypage/team-matches" class="${sideMenu eq 'teamMatch' ? 'is-active' : ''}">팀 경기</a>
       </nav>
     </div>
     <div class="group">
       <p class="group-title">기타</p>
       <nav class="menu">
-        <a href="${ctx}/jsp/mypage/myPageReview.jsp" class="${sideMenu eq 'review' ? 'is-active' : ''}">내 후기</a>
-        <a href="${ctx}/jsp/mypage/myPageAlarm.jsp" class="${sideMenu eq 'alarm' ? 'is-active' : ''}">알림 <span class="count-badge">3</span></a>
-        <a href="${ctx}/jsp/support/reportList.jsp" class="${sideMenu eq 'support' ? 'is-active' : ''}">신고・문의사항</a>
+        <a href="${ctx}/mypage/reviews" class="${sideMenu eq 'review' ? 'is-active' : ''}">내 후기</a>
+        <a href="${ctx}/mypage/notifications" class="${sideMenu eq 'alarm' ? 'is-active' : ''}">알림 <span class="count-badge">3</span></a>
+        <a href="${ctx}/support/report/list" class="${sideMenu eq 'support' ? 'is-active' : ''}">신고・문의사항</a>
       </nav>
     </div>
     <div class="group">
       <p class="group-title">정산・결제</p>
       <nav class="menu">
-        <a href="${ctx}/jsp/settlement/personalSettlementList.jsp" class="${sideMenu eq 'personalSettlement' ? 'is-active' : ''}">개인 경기 정산</a>
-        <a href="${ctx}/jsp/settlement/teamSettlementList.jsp" class="${sideMenu eq 'teamSettlement' ? 'is-active' : ''}">팀 경기 정산</a>
-        <a href="${ctx}/jsp/payment/paymentList.jsp" class="${sideMenu eq 'payment' ? 'is-active' : ''}">결제 내역</a>
+        <a href="${ctx}/settlement/personal/list" class="${sideMenu eq 'personalSettlement' ? 'is-active' : ''}">개인 경기 정산</a>
+        <a href="${ctx}/settlement/team/list" class="${sideMenu eq 'teamSettlement' ? 'is-active' : ''}">팀 경기 정산</a>
+        <a href="${ctx}/payment/history/list" class="${sideMenu eq 'payment' ? 'is-active' : ''}">결제 내역</a>
       </nav>
     </div>
 

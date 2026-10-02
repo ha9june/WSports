@@ -52,7 +52,7 @@
 .cal .legend { font-size: 9px; margin-top: 8px; }
 .month-pop { position: absolute; left: 10px; top: 42px; z-index: 20; width: 300px; padding: 16px; border-radius: var(--r-12); background: #fff; box-shadow: var(--shadow-pop); border: 1px solid var(--ds-border-subtle); display: none; }
 .month-pop.is-open { display: block; }
-.month-pop .yr { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+.month-pop .yr { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 15px; }
 .month-pop .months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .month-pop .months a { height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
 .month-pop .months a.is-active { background: var(--ds-text); color: #fff; }
