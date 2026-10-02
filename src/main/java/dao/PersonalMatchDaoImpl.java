@@ -51,7 +51,6 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<PersonalMatch> selectMyPagePersonalMatchsportList(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.personalmatch.selectMyPagePersonalMatchsportList", param);
@@ -88,8 +87,6 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		
 	
 	}
-}
-=======
 	public Map<String,Object> selectPersonalMatch(Integer personaMatchId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personaMatchId);
@@ -101,4 +98,3 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 
 
 }
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git

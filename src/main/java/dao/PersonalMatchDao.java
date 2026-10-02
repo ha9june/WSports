@@ -17,16 +17,13 @@ public interface PersonalMatchDao {
 	//(페이징용) 전체 마이페이지 경기 목록 개수 조회
 	Integer selectMyPagePersonalMatchCnt(Map<String, Object> param)throws Exception;
 
-<<<<<<< HEAD
 	//마이페이지 내가만든 경기 목록 조회
 	List<PersonalMatch>selectMyPageCreatedPersonalMatchList(Map<String,Object> param)throws Exception;
 	//(페이징)마이페이지 내가만든 경기 목록 개수 조회
 	Integer selectMyPageCreatedPersonalMatchCnt(Map<String, Object> param)throws Exception;
 	//마이페이지 내가만든 경기 종목별 조회
 	List<PersonalMatch>selectMyPageCreatedPersonalMatchsportList(Map<String,Object> param)throws Exception;
-=======
 	Map<String,Object> selectPersonalMatch(Integer personaMatchId) throws Exception;
 
 
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 }
