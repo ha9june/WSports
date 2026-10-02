@@ -12,41 +12,40 @@
 <c:set var="demoRoles" value="guest" />
 <c:set var="demoStates" value="default:기본|error:로그인 실패" />
 <%@ include file="/jsp/common/header.jsp" %>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script>
-    window.contextPath = "${ctx}";
-    console.log("JSP contextPath =", window.contextPath);
-</script>
-<script type="module" src="${ctx}/js/fcm-message.js"></script>
 
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
 $(function () {
-	$("#submit").click(function(e) {
+	$("#loginForm").on("submit", function (e) {
 		e.preventDefault();
-		
-		let loginId = $("#loginId").val();
-		let password = $("#loginPw").val();
-				
+		const form = this;
+
+		const loginId = $("#loginId").val();
+		const password = $("#loginPw").val();
+
 		$.ajax({
-			url:'${ctx}/auth/login/check',
-			type:'post',
-			dataType:'text',
-			data:{
-				loginId:loginId,
-				password:password,
-				},
-			success:function(result) {
-				if(result=="true") {
-					/* 로그인 아이디만 넘겨서 (/auth/login) */
-					$.post('${ctx}/auth/login', { loginId: loginId })
-				} else if(result=="false") {
-					alert('아이디/비밀번호를 확인해주세요.')
-				}				
+			url: '${ctx}/auth/login/check',
+			type: 'post',
+			dataType: 'text',
+			data: { loginId: loginId, password: password },
+			success: function (result) {
+				if (result.trim() === "true") {
+					console.log("FCM 토큰 = ", fcmToken);
+					// 1. hidden input에 토큰 넣기
+					$("#fcmToken").val(fcmToken);
+					console.log("hidden FCM 토큰 = ", $("#fcmToken").val());
+					// 2. 실제 /auth/login으로 form 전송
+					form.submit();
+				} else {
+					alert('아이디/비밀번호를 확인해주세요.');
+				}
+			},
+			error: function () {
+				alert('로그인 처리 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
 			}
-		})		
-	})
-})
+		});
+	});
+});
 </script>
 
 <main class="page">
@@ -55,22 +54,15 @@ $(function () {
       <h1 class="page-title md">로그인</h1>
       <p class="page-desc">매치온 계정으로 로그인하세요.</p>
     </div>
-    <%-- TODO: action 을 로그인 서블릿으로 교체 (예: ${ctx}/login) --%>
-    <form class="auth-card" action="${ctx}/auth/login" method="post" id="loginform">
-      <input type="hidden" name="fcmToken" id="fcmToken">
+    <form id="loginForm" class="auth-card" action="${ctx}/auth/login" method="post">
       <div class="field"><label class="field-label" for="loginId">아이디</label>
         <input class="input" id="loginId" name="loginId" placeholder="아이디를 입력하세요" autocomplete="username" required></div>
       <div class="field"><label class="field-label" for="loginPw">비밀번호</label>
         <input class="input" type="password" id="loginPw" name="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password" required></div>
-      <button type="submit" id="submit" action="${ctx}/auth/login/check" class="btn btn-primary btn-block">로그인</button>
+      <button type="submit" id="loginBtn" class="btn btn-primary btn-block">로그인</button>
       <div class="auth-links"><a href="#" data-toast="아이디 찾기는 준비 중이에요.">아이디 찾기</a><a href="#" data-toast="비밀번호 찾기는 준비 중이에요.">비밀번호 찾기</a></div>
       <p class="auth-join">아직 계정이 없나요?<a href="${ctx}/auth/join">회원가입</a></p>
     </form>
   </div>
-  <script type="text/javascript">
-	$("#loginform").submit(function(e){
-		$("#fcmToken").val(fcmToken);
-	})
-</script>
 </main>
 <%@ include file="/jsp/common/footer.jsp" %>

@@ -52,6 +52,8 @@ public class AuthLogin extends HttpServlet {
 			User user = service.login(loginId);
 			session.setAttribute("user", service.login(loginId));
 			
+			service.updateLastLogin(user.getLoginId());
+			
 			userFcmToken.setUserId(user.getUserId());
 			userFcmTokenService.registerToken(userFcmToken);
 			
