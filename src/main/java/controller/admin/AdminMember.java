@@ -43,7 +43,6 @@ public class AdminMember extends HttpServlet {
 
 			// 주소의 ?status= 값 받기 (없으면 전체)
 			String status = request.getParameter("status");
-			System.out.println("status : [" + status + "]");
 			if (status == null || status.isEmpty()) status = "ALL";
 			
 			String keyword = request.getParameter("keyword");

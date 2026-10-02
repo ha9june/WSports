@@ -67,4 +67,22 @@
 		order by u.user_id desc
 		limit #{row}, 10
 	</select>
+	
+	<!-- 관리자 회원 상세 정보 -->
+	<select id="selectAdminMemberDetailList" resultType="map">
+		select u.user_id, u.login_id, u.nickname, u.suspended, u.withdrawal_at, u.email,
+			   p.score, p.permanent_suspension, p.received_at, p.suspension_start_at, p.suspension_end_at, p.reason, p.penalty_id
+		from user u
+		left join user_penalty p
+		on u.user_id = p.user_id
+		where u.user_id = #{userId}
+		order by p.penalty_id asc
+	</select>
+	
+	<insert id="insertUserPenalty" parameterType="map">
+		insert into user_penalty
+		(user_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
+		values
+		(#{userId}, now(), #{score}, #{reason}, now(), date_add(now(), interval #{days} day), 0)
+	</insert>
 </mapper>

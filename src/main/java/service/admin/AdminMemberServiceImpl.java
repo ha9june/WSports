@@ -43,9 +43,18 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		param.put("row",(pageInfo.getCurPage() - 1) * 10);
 		param.put("keyword", keyword);
 
-		System.out.println("서비스 param : " + param + " / 전체 " + memberCnt + "명 / allPage " + allPage);
-		
 		return userpenaltyDao.selectAdminMemberList(param);
+	}
+
+	@Override
+	public List<Map<String, Object>> getAdminMemberDetailList(Long userId) throws Exception {
+		return userpenaltyDao.selectAdminMemberDetailList(userId);
+	}
+
+	@Override
+	public Map<String, Object> getUserPenalty() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
