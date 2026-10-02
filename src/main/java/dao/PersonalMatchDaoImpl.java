@@ -17,6 +17,20 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			return sqlSession.selectList("mapper.personalmatch.selectPersonalMatchList");
 		}
 	}
+	
+	@Override
+	public List<PersonalMatch> selectNormalPersonalMatchList(Integer startIndex) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatch.selectNormalPersonalMatchList",startIndex);
+		}
+	}
+	
+	@Override
+	public List<PersonalMatch> selectMapPersonalMatchList(Map<String,Object> latlong) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatch.selectMapPersonalMatchList",latlong);
+		}
+	}
 
 	@Override
 	public List<PersonalMatch> selectMyPagePersonalMatchList(Map<String, Object> param) throws Exception {
@@ -37,6 +51,7 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public List<PersonalMatch> selectMyPagePersonalMatchsportList(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.personalmatch.selectMyPagePersonalMatchsportList", param);
@@ -74,3 +89,16 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	
 	}
 }
+=======
+	public Map<String,Object> selectPersonalMatch(Integer personaMatchId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personaMatchId);
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
+
+
+}
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git

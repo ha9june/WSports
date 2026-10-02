@@ -18,6 +18,8 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	public PersonalMatchServiceImpl() {
 		personalMatchDao = new PersonalMatchDaoImpl();
 	}
+	
+	
 
 	@Override
 	public List<PersonalMatch> getRecomandMatch() throws Exception {
@@ -25,6 +27,17 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	}
 	
 	// 마이페이지 참가 경기 목록 조회(페이징)
+	@Override
+	public List<PersonalMatch> getNormalMatch(Integer page) throws Exception {
+		int startIndex = (page-1)*4;
+		return personalMatchDao.selectNormalPersonalMatchList(startIndex);
+	}
+	
+	@Override
+	public List<PersonalMatch> getMapMatch(Map<String, Object> latlong) throws Exception {
+		return personalMatchDao.selectMapPersonalMatchList(latlong);
+	}
+
 	@Override
 	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month,String status,String sport) throws Exception {
 		Map<String, Object> param = new HashMap<>();
@@ -52,7 +65,6 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		
 		return personalMatchDao.selectMyPagePersonalMatchList(param);
 	}
-
 	// 마이페이지 내가 만든 경기 목록 조회(페이징)
 	@Override
 	public List<PersonalMatch> MyPageCreatedPersonalMatchList(PageInfo pageInfo, Long userId, String month,
@@ -79,11 +91,25 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("offset",(pageInfo.getCurPage() - 1) * 10);
 		param.put("size", 10);
 		
-		System.out.println(personalMatchDao.selectMyPageCreatedPersonalMatchList(param).toString());
 		
-		return personalMatchDao.selectMyPageCreatedPersonalMatchList(param);
+		return personalMatchDao.selectMyPageCreatedPersonalMatchsportList(param);
 	
 	
 	
 	}
+	@Override
+	public Map<String,Object> getPersmalMatchDetail(Integer personalMatchId) throws Exception {
+		// TODO Auto-generated method stub
+		return personalMatchDao.selectPersonalMatch(personalMatchId);
+	}
+
+
+
+	@Override
+	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

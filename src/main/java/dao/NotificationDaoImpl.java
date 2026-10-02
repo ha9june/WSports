@@ -10,11 +10,12 @@ import dto.Notification;
 public class NotificationDaoImpl implements NotificationDao {
 
 	@Override
-	public void insertNotification(Notification notification) throws Exception {
+	public Long insertNotification(Notification notification) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			sqlSession.insert("mapper.notification.insertNotification", notification);
 			sqlSession.commit();
+			return notification.getNotificationId();
 		} catch (Exception e) {
 			e.printStackTrace();
 			sqlSession.rollback();
@@ -25,10 +26,10 @@ public class NotificationDaoImpl implements NotificationDao {
 	}
 
 	@Override
-	public void updateNotificationConfirm(Notification notification) throws Exception {
+	public void updateNotificationIdRead(Long notificationId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			sqlSession.insert("mapper.notification.updateNotificationConfirm", notification);
+			sqlSession.insert("mapper.notification.updateNotificationIdRead", notificationId);
 			sqlSession.commit();
 
 		} catch (Exception e) {
@@ -37,6 +38,20 @@ public class NotificationDaoImpl implements NotificationDao {
 			throw e;
 		} finally {
 			sqlSession.close();
+		}
+	}
+
+	@Override
+	public Notification	selectNotification(Long notificationId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.notification.selectNotification", notificationId);
+		}
+	}
+
+	@Override
+	public List<Notification> selectNotificationListNotConfirm3(Long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.notification.selectNotificationListNotConfirm3", userId);
 		}
 	}
 
@@ -44,14 +59,13 @@ public class NotificationDaoImpl implements NotificationDao {
 	public List<Notification> selectNotificationList(Long userId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.notification.selectNotificationList", userId);
-
 		}
 	}
 
 	@Override
-	public List<Notification> selectNotificationListNotconfirm(Long userId) throws Exception {
+	public int selectNotificationListNotConfirmCnt(Long userId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.notification.selectNotificationListNotconfirm", userId);
+			return sqlSession.selectOne("mapper.notification.selectNotificationListNotConfirmCnt", userId);
 		}
 	}
 }

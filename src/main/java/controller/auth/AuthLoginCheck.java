@@ -35,7 +35,7 @@ public class AuthLoginCheck extends HttpServlet {
 
 		AuthService service = new AuthServiceImpl();
 		try {
-			User user = service.login(loginId);
+			User user = service.loginCheck(loginId, password);
 			//있으면 user 
 			//없으면 null
 			 if(user != null) {

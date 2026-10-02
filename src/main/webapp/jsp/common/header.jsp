@@ -100,11 +100,70 @@ time {
     color: #888888 !important;           
     font-size: 12px !important;          
     white-space: nowrap !important;      
+    
+}
+
+.fcm-toast {
+    position: fixed;
+    top: 80px;
+    right: 24px;
+
+    width: 340px;
+    padding: 16px 18px;
+
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.fcm-toast-dot {
+    width: 8px;
+    height: 8px;
+    margin-top: 7px;
+
+    background: #3388dd;
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+.fcm-toast-content {
+    flex: 1;
+}
+
+.fcm-toast-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.fcm-toast-top strong {
+    font-size: 15px;
+}
+
+.fcm-toast-top span {
+    font-size: 12px;
+    color: #999;
+}
+
+.fcm-toast-body {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #666;
 }
 </style>
 
 
-<html lang="ko">
+<html lang="ko"></html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -115,6 +174,163 @@ time {
 <link rel="stylesheet" href="${ctx}/css/${cssName}.css">
 </c:forTokens>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+window.contextPath = "${ctx}";
+</script>
+
+<script type="module" src="${ctx}/js/fcm-message.js"></script>
+
+<script type="text/javascript">
+function formatNotificationDate(createdAt) {
+
+    const date = new Date(createdAt.replace(" ", "T"));
+    const now = new Date();
+
+    const isToday =
+        date.getFullYear() === now.getFullYear() &&
+        date.getMonth() === now.getMonth() &&
+        date.getDate() === now.getDate();
+
+    if (isToday) {
+        return String(date.getHours()).padStart(2, "0")
+            + ":"
+            + String(date.getMinutes()).padStart(2, "0");
+    }
+
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+
+    const isYesterday =
+        date.getFullYear() === yesterday.getFullYear() &&
+        date.getMonth() === yesterday.getMonth() &&
+        date.getDate() === yesterday.getDate();
+
+    if (isYesterday) {
+        return "어제";
+    }
+
+    if (date.getFullYear() === now.getFullYear()) {
+        return (date.getMonth() + 1)
+            + "/"
+            + date.getDate();
+    }
+
+    return String(date.getFullYear()).slice(2)
+        + "."
+        + String(date.getMonth() + 1).padStart(2, "0")
+        + "."
+        + String(date.getDate()).padStart(2, "0");
+}
+
+
+window.addEventListener("fcmMessageReceived", function(e) {
+
+    const payload = e.detail;
+
+    const title = payload.notification?.title;
+    const body = payload.notification?.body;
+    const link = payload.data?.link;
+    const createdAt = payload.data?.createdAt;
+
+    const time = formatNotificationDate(createdAt);
+
+    $("#fcmToastTitle").text(title);
+    $("#fcmToastBody").text(body);
+    $("#fcmToastTime").text(time);
+
+    const toast = $("#fcmToast");
+
+    toast
+        .stop(true, true)
+        .fadeIn(200);
+
+    toast
+    .off("click")
+    .on("click", function() {
+
+        $.post(
+            window.contextPath + "/notification/confirm/alarm",
+            {
+                notificationId: notificationId
+            }
+        ).always(function() {
+
+            if (link) {
+                location.href = window.contextPath + link;
+            }
+        });
+
+    });
+
+    setTimeout(function() {
+        toast.fadeOut(300);
+    }, 5000);
+});
+
+
+</script>
+<c:if test="${not empty user}">
+    <script>
+        $.ajax({
+            url: window.contextPath + "/notification/list",
+            type: "get",
+            dataType: "json",
+
+            success: function(result) {
+
+                const alarmList = $("#alarmList");
+
+                alarmList.html("");
+
+                result.notificationList.forEach(function(notification) {
+
+                    alarmList.append(
+                        '<li class="unread">' +
+                            '<a class="Alarm link btn" ' +
+                                'href="' + window.contextPath + notification.link + '" ' +
+                                'data-notification-id="' + notification.notificationId + '">' +
+                                '<div>' +
+                                    '<strong>' + notification.title + '</strong>' +
+                                    '<p>' + notification.content + '</p>' +
+                                '</div>' +
+                                '<time>' + notification.displayDate + '</time>' +
+                            '</a>' +
+                        '</li>'
+                    );
+
+                });
+
+                $("#bellBadge").text(result.notConfirmCnt);
+            },
+            error: function() {
+                console.log("알림 목록 조회 실패");
+            }
+        });
+        
+        $(document).on("click", ".Alarm", function(e) {
+
+            e.preventDefault();
+
+            const href = $(this).attr("href");
+
+            $.ajax({
+                url: "${ctx}/notification/confirm/alarm",
+                type: "post",
+
+                data: {
+                    notificationId: $(this).data("notification-id")
+                },
+
+                success: function(result) {
+                    console.log(result);
+
+                    location.href = href;
+                }
+            });
+        });
+    </script>
+</c:if>
+
 
 </head>
 <body data-role="${role}">
@@ -159,43 +375,28 @@ time {
           
           <div class="acts">         
           <!-- 버튼을 눌럿을때 알람 기록 처리하는 버튼(기능) -->
-          <button type="noti-button" data-toast="모든 알림을 읽음 처리했어요.">모두 읽음</button>
+          <!-- <button type="noti-button" data-toast="모든 알림을 읽음 처리했어요.">모두 읽음</button> -->
           
           <button type="button" data-noti-toggle aria-label="닫기">✕</button>
           </div>
         </div>
-<ul>
-  <li class="unread">
-    <a class="Alarm link btn" href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
-      <div>
-        <strong>참가가 확정되었습니다.</strong>
-        <p>토요일 저녁 풋살 한 판!</p>
-      </div>
-      <time>10:24</time>
-    </a>
-  </li>
-  <li class="unread">
-    <a class="Alarm link btn" href="${ctx}/jsp/match/personalMatchDetail.jsp?state=closed">
-      <div>
-        <strong>경기 모집이 마감되었습니다.</strong>
-        <p class="brand">9/20 실내 농구</p>
-      </div>
-      <time>09:12</time>
-    </a>
-  </li>
-  
-  <li>
-    <a class="Alarm link btn" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=participant">
-      <div>
-        <strong>참가자 평가를 남겨주세요.</strong>
-        <p>지난 경기 참가자를 평가할 수 있어요.</p>
-      </div>
-      <time>9/11</time>
-    </a>
-  </li> 
+<ul id="alarmList">
+ 
 </ul>
         <div class="foot"><a class="btn btn-outline btn-sm" href="${ctx}/mypage/notifications">알림 전체보기</a></div>
       </div>
     </c:if>
   </div>
+  <div id="fcmToast" class="fcm-toast">
+    <div class="fcm-toast-dot"></div>
+
+    <div class="fcm-toast-content">
+        <div class="fcm-toast-top">
+            <strong id="fcmToastTitle"></strong>
+            <span id="fcmToastTime"></span>
+        </div>
+
+        <div id="fcmToastBody" class="fcm-toast-body"></div>
+    </div>
+</div>
 </header>

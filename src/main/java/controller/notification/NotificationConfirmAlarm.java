@@ -1,32 +1,26 @@
-package controller.match;
+package controller.notification;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
-import dto.PersonalMatch;
-import dto.User;
-import service.match.PersonalMatchService;
-import service.match.PersonalMatchServiceImpl;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 
 /**
- * Servlet implementation class MatchList
+ * Servlet implementation class NotificationConfirmAlarm
  */
-@WebServlet("/match/list")
-public class MatchList extends HttpServlet {
+@WebServlet("/notification/confirm/alarm")
+public class NotificationConfirmAlarm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MatchList() {
+    public NotificationConfirmAlarm() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,16 +29,21 @@ public class MatchList extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		request.getRequestDispatcher("/jsp/match/personalMatchList.jsp").forward(request, response);;
-
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		NotificationService notificationService = new NotificationServiceImpl();
+		Long notificationId = Long.parseLong(request.getParameter("notificationId"));
+		try {
+			notificationService.confirmNotification(notificationId);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

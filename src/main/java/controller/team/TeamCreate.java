@@ -14,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import dto.Notification;
 import dto.Team;
 import dto.User;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 import service.team.TeamService;
 import service.team.TeamServiceImpl;
 
@@ -23,58 +26,60 @@ import service.team.TeamServiceImpl;
  * Servlet implementation class TeamCreate
  */
 @WebServlet("/team/create")
-@MultipartConfig(
-		maxFileSize = 1024*1024*10, //개별 파일 최대 크키(10MB)
-		maxRequestSize = 1024*1024*10*5, //전체 요청 최대 크키(50MB)
-		fileSizeThreshold = 1024*1024*1 //1MB 초과시 임시 디스크 경로 사용
-	)
+@MultipartConfig(maxFileSize = 1024 * 1024 * 10, // 개별 파일 최대 크키(10MB)
+		maxRequestSize = 1024 * 1024 * 10 * 5, // 전체 요청 최대 크키(50MB)
+		fileSizeThreshold = 1024 * 1024 * 1 // 1MB 초과시 임시 디스크 경로 사용
+)
 public class TeamCreate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public TeamCreate() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public TeamCreate() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		Team team = new Team();
 		HttpSession session = request.getSession();
-		User user = (User)session.getAttribute("user");
+		User user = (User) session.getAttribute("user");
 		long userId = user.getUserId();
-		
-		
-		String uploadPath = (String)request.getServletContext().getAttribute("uploadPath");
+
+		String uploadPath = (String) request.getServletContext().getAttribute("uploadPath");
 		String realPath = request.getServletContext().getRealPath(uploadPath);
-		
+
 		Part profileImage = request.getPart("profileImage");
 		Part activityImg1 = request.getPart("activityImg1");
 		Part activityImg2 = request.getPart("activityImg2");
 		Part activityImg3 = request.getPart("activityImg3");
 		Part activityImg4 = request.getPart("activityImg4");
 		Part activityImg5 = request.getPart("activityImg5");
-		
+
 		team.setTeamName(request.getParameter("teamName"));
 		team.setSport(request.getParameter("sportCode"));
-		
+
 		String days = request.getParameter("days");
 		Set<String> daysSet = new HashSet<>();
 
 		if (days != null && !days.isBlank()) {
-		    daysSet.addAll(Arrays.asList(days.split(",")));
+			daysSet.addAll(Arrays.asList(days.split(",")));
 		}
 
 		team.setDayMon(daysSet.contains("월"));
@@ -88,7 +93,7 @@ public class TeamCreate extends HttpServlet {
 		Set<String> timesSet = new HashSet<>();
 
 		if (times != null && !times.isBlank()) {
-		    timesSet.addAll(Arrays.asList(times.split(",")));
+			timesSet.addAll(Arrays.asList(times.split(",")));
 		}
 
 		team.setTime0609(timesSet.contains("새벽 06~09시"));
@@ -101,7 +106,7 @@ public class TeamCreate extends HttpServlet {
 		Set<String> agesSet = new HashSet<>();
 
 		if (ages != null && !ages.isBlank()) {
-		    agesSet.addAll(Arrays.asList(ages.split(",")));
+			agesSet.addAll(Arrays.asList(ages.split(",")));
 		}
 
 		team.setAge20s(agesSet.contains("20대"));
@@ -110,27 +115,30 @@ public class TeamCreate extends HttpServlet {
 		team.setAge50s(agesSet.contains("50대 이상"));
 		team.setAge60Plus(agesSet.contains("연령 무관"));
 
-		
 		String[] regions = request.getParameterValues("regions");
-		if(regions != null && regions.length>=1) team.setRegion1(regions[0]);
-		if(regions != null && regions.length>=2) team.setRegion2(regions[1]);
-		if(regions != null && regions.length>=3) team.setRegion3(regions[2]);
+		if (regions != null && regions.length >= 1)
+			team.setRegion1(regions[0]);
+		if (regions != null && regions.length >= 2)
+			team.setRegion2(regions[1]);
+		if (regions != null && regions.length >= 3)
+			team.setRegion3(regions[2]);
 
-		team.setGender(request.getParameter("gender"));			
+		team.setGender(request.getParameter("gender"));
 		team.setSkill(request.getParameter("skill"));
 		team.setDescription(request.getParameter("intro"));
-		
+
 		TeamService teamService = new TeamServiceImpl();
+
 		try {
-			Integer teamId = teamService.makeTeam(team, userId, realPath, profileImage, activityImg1, activityImg2, activityImg3,
-					activityImg4, activityImg5);
+			Long teamId = teamService.makeTeam(team, userId, realPath, profileImage, activityImg1, activityImg2,
+					activityImg3, activityImg4, activityImg5);
 			request.setAttribute("teamId", teamId);
+
 			request.getRequestDispatcher("/jsp/team/teamDetail.jsp").forward(request, response);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 }

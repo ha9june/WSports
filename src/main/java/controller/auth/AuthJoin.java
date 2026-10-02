@@ -58,5 +58,4 @@ public class AuthJoin extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
 }

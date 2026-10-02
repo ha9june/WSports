@@ -1,5 +1,55 @@
 package dao;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+
+import config.MybatisSqlSessionFactory;
+
 public class UserPenaltyDaoImpl implements UserPenaltyDao {
+
+	@Override
+	public List<Map<String, Object>> selectAdminMemberList(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.user.selectAdminMemberList", param);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public Integer selectAdminMemberCnt(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectAdminMemberCnt", param);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	//관리자 회원 상세정보
+	@Override
+	public List<Map<String, Object>> selectAdminMemberDetailList(Long userId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.user.selectAdminMemberDetailList", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	//관리자 신고 조치
+	@Override
+	public Map<String, Object> insertUserPenalty() throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			return sqlSession.selectOne("mapper.user.insertUserPenalty");
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 }

@@ -54,7 +54,7 @@
     		    match.sport eq '농구' ? 'basketball' :	
                 match.sport eq '테니스' ? 'tennis' :
                 match.sport eq '배드민턴' ? 'badminton' : ''}" />
-			<a class="match-card ${sportClass}" href="${ctx}/jsp/match/personalMatchDetail.jsp">
+			<a class="match-card ${sportClass}" href="${ctx}/match/detail/view?num=${match.personalMatchId}">
 			    <img class="art" src="${ctx}/img/art-${sportClass}.png" alt="">
 			    <span class="sport-tag ${sportClass}">${match.sport}</span>
 			    <button type="button" class="fav-btn bare" data-fav data-auth aria-label="관심 경기">${heart}</button>
