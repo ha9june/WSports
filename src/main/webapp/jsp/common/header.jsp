@@ -344,7 +344,7 @@ window.addEventListener("fcmMessageReceived", function(e) {
       <a href="${ctx}/review/list" class="${activeNav eq 'review' ? 'is-active' : ''}">후기</a>
       <a href="${ctx}/team/list" class="${activeNav eq 'team' ? 'is-active' : ''}">팀 찾기</a>
       <a href="${ctx}/support/notice/list" class="${activeNav eq 'notice' ? 'is-active' : ''}">공지사항</a>
-      <c:if test="${role eq 'admin'}">
+      <c:if test="${sessionScope.user.grade eq 'Admin'}">
         <a href="${ctx}/admin/revenue/view" class="${activeNav eq 'admin' ? 'is-active' : ''}">관리자(사이트)</a>
       </c:if>
     </nav>

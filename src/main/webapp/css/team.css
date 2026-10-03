@@ -177,30 +177,10 @@
 }
 .search-shell .picked:empty { display: none; }
 
-.search-shell .token-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 10px 0 12px;
-  border: 1px solid #0f62fe;          /* 팀 만들기의 칩 색상에 맞춰 조정 */
-  background: #e8f0ff;
-  color: #0f62fe;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-}
-.search-shell .token-chip .deleteRegion {
-  border: 0;
-  background: none;
-  color: inherit;
-  cursor: pointer;
-  padding: 0;
-  font-size: 12px;
-  line-height: 1;
-}
 .search-shell .region-max {
   margin: 8px 0 0;
   font-size: 12px;
   color: #e5484d;
 }
+
+

@@ -41,6 +41,8 @@
         <typeAlias type="dto.TeamRating" alias="teamrating"/>
         <typeAlias type="dto.TeamSettlement" alias="teamsettlement"/>
         <typeAlias type="dto.TeamUser" alias="teamuser"/>
+        <typeAlias type="dto.TeamSearchCondition" alias="teamsearchcondition"/>
+        
 
         <typeAlias type="dto.User" alias="user"/>
         <typeAlias type="dto.UserPenalty" alias="userpenalty"/>
