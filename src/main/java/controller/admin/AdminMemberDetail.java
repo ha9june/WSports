@@ -48,6 +48,7 @@ public class AdminMemberDetail extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doPost 진입 action=[" + request.getParameter("action") + "] userId=[" + request.getParameter("userId") + "]");
 		AdminMemberServiceImpl service = new AdminMemberServiceImpl();
 		try {
 			Long userId = Long.parseLong(request.getParameter("userId"));

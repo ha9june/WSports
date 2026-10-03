@@ -64,7 +64,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		param.put("reason", reason);
-		userpenaltyDao.insertUserPenalty(param);
+		userpenaltyDao.insertUserPermanentPenalty(param);
 		
 	}
 

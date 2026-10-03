@@ -2,5 +2,109 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teampenalty">
+	<!-- 팀 정보 검색과 필터링에 맞는 팀 수 세기 / 페이지 번호도 몇개까지 보여줄것인가-->
+	<select id="selectAdminTeamCnt" parameterType="map" resultType="int">
+		select count(*)
+		from team t
+		left join team_penalty p
+		on t.team_id = p.team_id
+		and p.penalty_id = (
+			select max(p2.penalty_id)
+			from team_penalty p2
+			where p2.team_id = t.team_id
+		)
+		where (t.deleted = 0 or t.deleted is null)
+		and (
+			#{status} = 'ALL'
+			or (#{status} = 'PENALTY' and p.score != 0)
+			or (#{status} = 'LIMITED' and exists (
+				select 1 from team_penalty s
+				where s.team_id = t.team_id
+				and s.cancelled_admin_id is null
+				and (s.permanent_suspension = 1 or 
+				now() between s.suspension_start_at and s.suspension_end_at)
+			))
+		)
+		and (
+			#{keyword} = ''
+			or t.team_name like concat('%', #{keyword}, '%')
+		)
+	</select>
+	
+	<!-- 한 페이지 팀 목록 / 팀 번호, 팀명 -->
+	<select id="selectAdminTeamList" parameterType="map" resultType="map">
+		select t.team_id, t.team_name
+		from team t
+		where (t.deleted = 0 or t.deleted is null)
+		and (
+			#{keyword} = ''
+			or t.team_name like concat('%', #{keyword}, '%')
+		)
+		and (
+			#{status} = 'ALL'
+			or (#{status} = 'PENALTY' and exists (
+				select 1 from team_penalty p
+				where p.team_id = t.team_id and p.score != 0
+				and p.penalty_id = (select max(p2.penalty_id) 
+				from team_penalty p2 
+				where p2.team_id = t.team_id)
+			))
+			or (#{status} = 'LIMITED' and exists (
+				select 1 from team_penalty s
+				where s.team_id = t.team_id and s.cancelled_admin_id is null
+				and (s.permanent_suspension = 1 or 
+				now() between s.suspension_start_at and s.suspension_end_at)
+			))
+		)
+		order by t.team_id desc
+		limit #{row}, 10
+	</select>
+	
+	<!-- 팀 주장 닉네임 -->
+	<select id="selectTeamCaptain" resultType="string">
+		select u.nickname
+		from team_user tu
+		join user u on u.user_id = tu.user_id
+		where tu.team_id = #{teamId}
+		and tu.team_role = '주장'
+		and tu.withdrawn = 0
+		limit 1
+	</select>
 
+	<!-- 팀원 수 -->
+	<select id="selectTeamMemberCnt" resultType="int">
+		select count(*)
+		from team_user
+		where team_id = #{teamId}
+		and withdrawn = 0
+	</select>
+	
+	<!-- 현재 패널티 점수와 최근 사유 -->
+	<select id="selectTeamLatestPenalty" resultType="map">
+		select score, reason
+		from team_penalty
+		where team_id = #{teamId}
+		order by penalty_id desc
+		limit 1
+	</select>
+
+	<!--  지금 정지 중인 기록 수 / 1 이상이면 정지 -->
+	<select id="selectTeamSuspension" resultType="int">
+		select count(*)
+		from team_penalty
+		where team_id = #{teamId}
+		and cancelled_admin_id is null
+		and (permanent_suspension = 1 or now() between suspension_start_at and suspension_end_at)
+	</select>
+	
+	<!-- 팀 상세정보 / 주장 닉네임, 팀원 수, 정지상태는 위에걸 사용 -->
+	<select id="selectTeamDetailList" resultType="map">
+		select t.team_id, t.team_name, t.profile_image, t.region, 
+			   p.score, p.received_at, p.permanent_suspension
+		from team t
+		left join team_penalty p
+		on t.team_id = p.team_id
+		where t.team_id={teamId}
+		order by p.penalty_id desc
+	</select>
 </mapper>

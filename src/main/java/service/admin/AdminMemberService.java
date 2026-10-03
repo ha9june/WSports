@@ -12,9 +12,9 @@ public interface AdminMemberService {
 	//특정 회원 상세 정보
 	List<Map<String, Object>> getAdminMemberDetailList(Long userId) throws Exception;
 	
-	//특정회원 신고 조치
+	//회원 신고 조치 - 정지
 	void AdminUserPenalty(Long userId, int days, String reason) throws Exception;
 	
-	//영정
+	//영구정지
 	void AdminUserPermanentPenalty(Long userId, String reason) throws Exception;
 }

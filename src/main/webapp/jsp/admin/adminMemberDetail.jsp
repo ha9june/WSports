@@ -91,7 +91,7 @@
     	</div>
 
 		<div class="modal-actions">
-  			<button type="button" class="btn btn-danger" data-toast="제재를 적용했어요.">적용</button>
+  			<button type="button" class="btn btn-danger" id="applyPermanent">적용</button>
   			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
   		</div>
   	</div>
@@ -175,4 +175,5 @@ $(function(){
 	});
 });
 </script>
+</main></div>
 <%@ include file="/jsp/common/footer.jsp" %>
