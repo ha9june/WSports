@@ -131,36 +131,41 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 <div class="work-inner full" style="max-width: 1000px">
 	<h1 class="section-title">참가 경기</h1>
 	<p class="section-desc">내가 참가하는 경기를 종목, 상태와 월별 달력으로 확인하세요.</p>
-	
+
 	<!-- 선택하지않는 월/일 가리기 -->
 	<form class="act-filters" method="get">
 		<input type="hidden" name="ym" value="${ym}">
 		<c:if test="${not empty selectedDate}">
 			<input type="hidden" name="date" value="${selectedDate}">
 		</c:if>
-			<!-- 경기 종목별 리스트 검색 -->
- 		<select class="select" name="sport" onchange="this.form.submit()">
+		<!-- 경기 종목별 리스트 검색 -->
+		<select class="select" name="sport" onchange="this.form.submit()">
 			<option value="">전체</option>
 			<option value="축구/풋살" ${sport == '축구/풋살' ? 'selected' : ''}>축구/풋살</option>
 			<option value="농구" ${sport == '농구' ? 'selected' : ''}>농구</option>
 			<option value="테니스" ${sport == '테니스' ? 'selected' : ''}>테니스</option>
 			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
-		</select> 
-		<select class="select" name="status" onchange="this.form.submit()">
+		</select> <select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
-			<option value="모집중" ${status == '모집중' ? 'selected' : ''} style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
-			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집 마감</option>
-			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기 종료</option>
-			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기 취소</option>
-		</select> 
-    </form>
+			<option value="모집중" ${status == '모집중' ? 'selected' : ''}
+				style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
+			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
+				마감</option>
+			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
+				종료</option>
+			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기
+				취소</option>
+		</select>
+	</form>
 	<div class="act-layout">
 		<section>
 			<div class="act-head"></div>
-			<fmt:parseNumber var="mm" value="${fn:substring(ym, 5, 7)}" integerOnly="true" />
+			<fmt:parseNumber var="mm" value="${fn:substring(ym, 5, 7)}"
+				integerOnly="true" />
 			<div class="list-head">
 				<h2>${fn:substring(ym, 0, 4)}년${mm}월·${fn:length(calMatch)}건</h2>
-				<a class="btn-reset" href="?ym=${ym}&date=${selectedDate}">필터 초기화</a>
+				<a class="btn-reset" href="?ym=${ym}&date=${selectedDate}">필터
+					초기화</a>
 			</div>
 			<c:choose>
 				<c:when test="${not empty selectedDate and not empty match}">
@@ -202,10 +207,11 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 		      					pattern="#,###" 출력형식(5,000)-->
 					<div class="aside">
 						<div class="top">
-							<fmt:formatNumber value="${m.participationFee}" pattern="#,###" />
-							원
-							<button type="button" class="fav-btn " data-fav
-								aria-label="관심 경기">${heart}</button>
+							<span><fmt:formatNumber value="${m.participationFee}"
+									pattern="#,###" />원</span>
+							<!-- 관심경기 추가/제거 -->
+							<button type="button" class="fav-btn" data-match-id="${m.personalMatchId}"
+									aria-label="관심 경기">${heart}</button>
 						</div>
 						<div class="btns">
 							<a class="btn btn-primary btn-xs"
@@ -281,4 +287,33 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 				<span class="legend-dot"></span> 경기 있음
 			</p>
 		</aside>
+		<script>
+			$(function() {
+				$(".fav-btn").click(function(e) {
+					e.stopPropagation();
+					var $btn = $(this);
+					$.ajax({
+						url : '${ctx}/mypage/matches/saved',
+						type : 'post',
+						dataType : 'text',
+						data : {matchId : $btn.data("matchId"),
+							heart : $btn.hasClass("is-on")},
+						    success : function(result) {
+							result = result.trim();
+							if (result == 'insert') {
+								$btn.addClass("is-on");
+								showToast("관심경기에 추가!!!!!!!");
+							}
+							if (result == 'delete') {
+								$btn.removeClass("is-on");
+								showToast("관심경기에 제거!!!!!!!");
+							}
+							if (result == 'login') {
+								showToast("로그인이 필요합니다.");
+							}
+						}
+					});
+				});
+			});
+		</script>
 		<%@ include file="/jsp/common/footer.jsp"%>

@@ -199,8 +199,7 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 		      					pattern="#,###" 출력형식(5,000)-->
 					<div class="aside">
 						<div class="top">
-							<fmt:formatNumber value="${m.participationFee}" pattern="#,###" />
-							원
+							<span><fmt:formatNumber value="${m.participationFee}" pattern="#,###" />원</span>
 							<button type="button" class="fav-btn " data-fav
 								aria-label="관심 경기">${heart}</button>
 						</div>

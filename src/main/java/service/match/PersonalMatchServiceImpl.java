@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dao.FavoriteDao;
+import dao.FavoriteDaoImpl;
 import dao.PersonalMatchDao;
 import dao.PersonalMatchDaoImpl;
 import dto.PersonalMatch;
@@ -14,10 +16,12 @@ import util.PageInfo;
 
 public class PersonalMatchServiceImpl implements PersonalMatchService {
 
+	private FavoriteDao favoriteDao;
 	private PersonalMatchDao personalMatchDao;
 
 	public PersonalMatchServiceImpl() {
 		personalMatchDao = new PersonalMatchDaoImpl();
+		this.favoriteDao = new FavoriteDaoImpl();
 	}
 	
 	
@@ -103,13 +107,43 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		return personalMatchDao.selectPersonalMatch(personalMatchId);
 	}
 
-
+	@Override
+	public void insertMyPageHeartMatch(Map<String, Object> param) throws Exception {
+		favoriteDao.insertMyPageHeartMatch(param);
+	}
 
 	@Override
-	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void deleteMyPageHeartMatch(Map<String, Object> param) throws Exception {
+		favoriteDao.deleteMyPageHeartMatch(param);
 	}
 
 
+
+	@Override
+	public Boolean toggleMyPageHeartMatch(long userId, long matchId, String matchType) throws Exception {
+		Map<String,Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("matchId", matchId);
+		param.put("matchType", matchType);
+		
+		if(isHeart(userId, matchId, matchType)) {
+			favoriteDao.deleteMyPageHeartMatch(param);
+			return false;
+		}else {
+			favoriteDao.insertMyPageHeartMatch(param);
+			return true;
+		}
+	
+	}
+
+
+
+	@Override
+	public Boolean isHeart(long userId, long matchId, String matchType) throws Exception {
+		Map<String,Object>param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("matchId", matchId);
+		param.put("matchType", matchType);
+		return favoriteDao.selectMyPageHeartMatchExists(param) != null;
+	}
 }

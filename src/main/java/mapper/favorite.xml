@@ -3,4 +3,60 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.favorite">
 
+	<insert id="insertMyPageHeartMatch" parameterType="Map">
+		insert
+		into favorite (user_id,match_id,created_at,match_type)
+		values (#{userid},#{matchid},#{createdat},#{matchtype})
+	</insert>
+	
+	<delete id="deleteMyPageHeartMatch" parameterType="Map">
+	delete from favorite where match_id=#{matchid} and user_id=#{userid}
+	</delete>
+	
+	<select id="selectMyPageHeartMatchExists" parameterType="map" resultType="Long">
+	SELECT COUNT(*) FROM favorite
+	WHERE user_id = #{userId} AND match_id = #{matchId} AND match_type = #{matchType}
+</select>
+
+
+	<select id="selectMyPageFavoriteList" parameterType="map" resultType="personalmatch">
+	SELECT m.*
+	FROM favorite f
+	JOIN personal_match m ON m.personal_match_id = f.match_id
+	WHERE f.user_id = #{userId}
+	  AND m.deleted = 0
+	<if test="month != null and month != ''">
+		AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d')
+		AND m.match_date &lt; DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH)
+	</if>
+	<if test="sport != null and sport != ''">
+		AND m.sport = #{sport}
+	</if>
+	<if test="status != null and status != ''">
+		AND m.status = #{status}
+	</if>
+	ORDER BY m.match_date, m.personal_match_id
+	LIMIT #{size} OFFSET #{offset}
+</select>
+
+	<select id="selectMyPageFavoriteCnt" parameterType="map" resultType="int">
+	SELECT COUNT(*)
+	FROM favorite f
+	JOIN personal_match m ON m.personal_match_id = f.match_id
+	WHERE f.user_id = #{userId}
+	  AND m.deleted = 0
+	<if test="month != null and month != ''">
+		AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d')
+		AND m.match_date &lt; DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH)
+	</if>
+	<if test="sport != null and sport != ''">
+		AND m.sport = #{sport}
+	</if>
+	<if test="status != null and status != ''">
+		AND m.status = #{status}
+	</if>
+</select>
+
+
+
 </mapper>
