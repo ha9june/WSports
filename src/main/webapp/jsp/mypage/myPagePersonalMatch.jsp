@@ -154,56 +154,6 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기 취소</option>
 		</select> 
     </form>
-    </div>
-	<c:forEach var="match" items="${match}">
-    <div class="act-card" data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=saved">
-        <div class="left">
-            
-            <%-- 상태(status)별 배지 분기 --%>
-            <c:choose>
-                <c:when test="${match.status == '모집중'}">
-                    <span class="pill pill-success">모집중</span>
-                </c:when>
-                <c:when test="${match.status == '모집 마감'}">
-                    <span class="pill pill-danger">모집 마감</span>
-                </c:when>
-                <c:when test="${match.status == '경기 종료'}">
-                    <span class="pill pill-dark">경기 종료</span>
-                </c:when>
-                <c:when test="${match.status == '경기 취소'}">
-                    <span class="pill pill-warning">경기 취소</span>
-                </c:when>
-                <c:otherwise>
-                    <span class="pill pill-default">${match.status}</span>
-                </c:otherwise>
-            </c:choose>
-    
-            <%-- 종목(sport)별 이미지 분기 --%>
-            <c:choose>
-                <c:when test="${match.sport == '축구/풋살'}">
-                    <img src="${ctx}/img/sport-icon-soccer.png" alt="축구">
-                </c:when>
-                <c:when test="${match.sport == '농구'}">
-                    <img src="${ctx}/img/sport-icon-basketball.png" alt="농구">
-                </c:when>
-                <c:when test="${match.sport == '테니스'}">
-                    <img src="${ctx}/img/sport-icon-tennis.png" alt="테니스">
-                </c:when>
-                <c:when test="${match.sport == '배드민턴'}">
-                    <img src="${ctx}/img/sport-icon-badminton.png" alt="배드민턴">
-                </c:when>
-                <c:otherwise>
-                    <img src="${ctx}/img/sport-icon-default.png" alt="스포츠">
-                </c:otherwise>
-            </c:choose>
-        </div>
-        </div>
-</c:forEach>
-
-
-
-
-
 	<div class="act-layout">
 		<section>
 			<div class="act-head"></div>

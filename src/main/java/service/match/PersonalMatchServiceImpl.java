@@ -92,7 +92,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("size", 10);
 		
 		
-		return personalMatchDao.selectMyPageCreatedPersonalMatchsportList(param);
+		return personalMatchDao.selectMyPageCreatedPersonalMatchList(param);
 	
 	
 	

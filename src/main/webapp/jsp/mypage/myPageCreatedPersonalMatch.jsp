@@ -279,6 +279,4 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 		</aside>
 	</div>
 </div>
-</main>
-</div>
 <%@ include file="/jsp/common/footer.jsp"%>
