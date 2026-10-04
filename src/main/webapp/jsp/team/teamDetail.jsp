@@ -120,7 +120,7 @@
 				setActive(id);
 				window.scrollTo({
 					top: el.getBoundingClientRect().top + window.scrollY - barBottom() - 16,
-					behavior: 'smooth'
+					behavior: 'smooth' 
 				});
 			});
 			$(window).on('wheel touchmove keydown', function() { pinned = null; });
