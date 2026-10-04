@@ -1,5 +1,7 @@
 package service.member;
 
-public interface MemberService {
+import dto.User;
 
+public interface MemberService {
+	void mypageEdit (User user) throws Exception;
 }

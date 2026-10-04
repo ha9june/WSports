@@ -7,8 +7,7 @@
    role  : guest(인기 기준 추천, 로그인 버튼) / member·admin(맞춤 추천 탭 추가)
    state : list(일반 검색) | map(지도 검색) | mapTyping(지도 검색어 입력 중) | mapPin(지도 핀 선택)
 --%>
-<c:set var="state" value="${empty param.state ? 'list' : param.state}" />
-<c:set var="isMap" value="${fn:startsWith(state, 'map')}" />
+
 <c:set var="pageTitle" value="경기 찾기" />
 <c:set var="pageCss" value="home" />
 <c:set var="pageJs" value="home" />
@@ -16,11 +15,18 @@
 <c:set var="showFooter" value="true" />
 <c:set var="demoStates" value="list:일반 검색|map:지도 검색|mapTyping:지도-입력 중|mapPin:지도-핀 선택" />
 <%@ include file="/jsp/common/header.jsp" %>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
+<style>
+	.is-hidden { display: none !important; }
+</style>
 <script src="${ctx}/js/common_header.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+
+
 <script>
 
-	let isMapp = false;
 	let page =1;
 
 	$(function(){
@@ -91,16 +97,26 @@
 				}
 			});
 		}
-		function NormalList(page){
+		function NormalList(page,target){
+			
+	        var data = $('#matchSearchForm').serializeArray();
+	        data.push({
+	            name: 'page',
+	            value: page
+	        });
+
+	        data.push({
+	            name: 'requestType',
+	            value: 'ajax'
+	        });
+	        
+	        console.log(data);
+			
 			$.ajax({
 				url:"${ctx}/match/list/normal",
 				type:"post",
 			    dataType: "json",
-			    data: {
-			    	requestType: "ajax",
-			    	page:page,
-			    	data:data,
-			    	},
+			    data: data,
 				success:function(result){
 					console.log(result);
 					let html = "";
@@ -115,7 +131,6 @@
 					    }else if(item.sport == "테니스"){
 					    	sportsType="tennis";
 					    }
-						
 						
 						html+=`
 							<a class="match-row" href="${ctx}/jsp/match/personalMatchDetail.jsp">
@@ -136,12 +151,14 @@
 				          </a>
 						`;
 					});
-					
-				 	$("#normalMatchListDiv").append(html);		
-
+					if(target == null || target.id === "matchSearchForm")
+						$("#normalMatchListDiv").html(html);
+					else if (target.id === "moreBtn")
+				    	$("#normalMatchListDiv").append(html);	
+				    else 
+				    	$("#normalMatchListDiv").html(html);	
 				},
 				error:function(err){
-					console.log("err");
 					console.log(err);
 				}
 				
@@ -197,24 +214,40 @@
 		$("#normalBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
-			isMapp = false;
+		  	$("#normalInputs").removeClass("is-hidden");
 			$("#normalDiv").show();
+		  	$("#mapInputs").addClass("is-hidden");
 			$("#mapDiv").hide();
 
 		});
 		$("#mapBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
-			isMapp = true;
+			
+		  	$("#normalInputs").addClass("is-hidden");
 			$("#normalDiv").hide();
+		  	$("#mapInputs").removeClass("is-hidden");
 			$("#mapDiv").show();
 			map.relayout();
+			searchMatch(); 
 
 		});
-		$("#moreBtn").on("click", function() {
+		$("#moreBtn").on("click", function(e) {
 			
-			NormalList(++page);
+			NormalList(++page,this);
 		});
+		
+		
+	    $('#matchSearchForm').on('submit', function(e) {
+	    	
+	        e.preventDefault();
+	        page=1;
+	        NormalList(page,this)
+
+	    });
+
+		
+		
 		
 			
 
@@ -245,39 +278,26 @@
     </section>
 
 
-
-
-
-
     <%-- ===== 검색 ===== --%>
     <section class="search-intro">
       <h2>경기를 검색해보세요!</h2>
       <p>종목, 지역, 날짜, 실력과 키워드로 원하는 경기를 찾아보세요.</p>
       <div class="search-mode">
-        <a id="normalBtn" class="btnGroup2 ${isMap ? '' : 'is-active'}">일반 검색</a>
-        <a id="mapBtn" class=" btnGroup2 ${isMap ? 'is-active' : ''}">지도기반 검색</a>
+		<a id="normalBtn" class="btnGroup2 is-active">일반 검색</a>
+		<a id="mapBtn" class="btnGroup2">지도기반 검색</a>
       </div>
-      <%--         <a href="?state=list" class="${isMap ? '' : 'is-active'}">일반 검색</a>
-        <a href="?state=map" class="${isMap ? 'is-active' : ''}">지도기반 검색</a> --%>
-      
-      
-      
-      
-      
-      
-            
+
 
       <%-- TODO: action 을 검색 서블릿 URL 로 교체 (예: ${ctx}/match/list) --%>
-      <form class="search-shell" action="${ctx}/jsp/match/personalMatchList.jsp" method="get">
-        <input type="hidden" name="state" value="${state}">
+      <form class="search-shell" id="matchSearchForm" method="post">
         <div class="filter-row">
           <div class="filter-cluster">
-            <div class="chip-group" data-select="multi" data-name="sport">
+            <div class="chip-group" data-select="multi" data-name="sports">
               <span class="chip-label">종목</span>
-              <button type="button" class="chip" data-value="FOOTBALL">축구/풋살</button>
-              <button type="button" class="chip" data-value="BASKETBALL">농구</button>
-              <button type="button" class="chip" data-value="TENNIS">테니스</button>
-              <button type="button" class="chip" data-value="BADMINTON">배드민턴</button>
+              <button type="button" class="chip" data-value="축구/풋살">축구/풋살</button>
+              <button type="button" class="chip" data-value="농구">농구</button>
+              <button type="button" class="chip" data-value="테니스">테니스</button>
+              <button type="button" class="chip" data-value="배드민턴">배드민턴</button>
             </div>
             <div class="filter-more">
               <button type="button" class="btn btn-outline btn-sm" data-filter-toggle>필터 더보기 +</button>
@@ -285,24 +305,20 @@
               <div class="filter-panel">
                 <div class="chip-group" data-select="single" data-name="gender">
                   <span class="chip-label">성별</span>
-                  <button type="button" class="chip neutral is-selected" data-all data-value="ALL">전체</button>
-                  <button type="button" class="chip" data-value="M">남성</button>
-                  <button type="button" class="chip" data-value="F">여성</button>
-                  <button type="button" class="chip" data-value="MIX">혼성</button>
+                  <button type="button" class="chip" data-value="남성">남성</button>
+                  <button type="button" class="chip" data-value="여성">여성</button>
+                  <button type="button" class="chip" data-value="혼성">성별무관</button>
                 </div>
-                <div class="chip-group" data-select="multi" data-name="age">
+                <div class="chip-group" data-select="multi" data-name="ages">
                   <span class="chip-label">연령대</span>
                   <button type="button" class="chip">20대</button><button type="button" class="chip">30대</button>
-                  <button type="button" class="chip">40대</button><button type="button" class="chip">50대+</button>
+                  <button type="button" class="chip">40대</button><button type="button" class="chip">50대</button>
+                  <button type="button" class="chip" data-value="60대">60대+</button>
                 </div>
-                <div class="chip-group" data-select="multi" data-name="level">
+                <div class="chip-group" data-select="multi" data-name="skills">
                   <span class="chip-label">실력</span>
                   <button type="button" class="chip">입문</button><button type="button" class="chip">초급</button>
                   <button type="button" class="chip">중급</button><button type="button" class="chip">상급</button>
-                </div>
-                <div class="chip-group" data-select="multi" data-name="time">
-                  <span class="chip-label">시간대</span>
-                  <button type="button" class="chip">오전</button><button type="button" class="chip">오후</button><button type="button" class="chip">저녁</button>
                 </div>
               </div>
             </div>
@@ -313,17 +329,52 @@
 
 
 
+		<div class="input-row">
+		
+		
+		  <div id="normalInputs" style="display:contents">
+		    <select class="select" id="sido" name="sido" style="width: 140px"
+				aria-label="시·도">
+				<option value="">시 · 도</option>
+				<option value="서울시">서울시</option>
+				<option value="경기도">경기도</option>
+			</select>
+			 <select class="select" id="sigungu" name="sigungu" style="width: 140px" aria-label="시군구" disabled>
+					<option value="">시군구</option>
+			</select>
+		    <input type="text"
+		           id="periodPicker"
+		           class="input"
+		           placeholder="날짜 선택"
+		           style="width:220px">
+		    <input type="hidden" id="startDate" name="startDate">
+		    <input type="hidden" id="endDate" name="endDate">
+			<input class="input keyword" name="keyword" placeholder="제목 또는 내용 키워드 검색">			
+		  </div>
+ 		  
+		  
+		  
+		  
+		  <div id="mapInputs" class="is-hidden" style="display:contents">
+		  
+	          <div class="map-query">
+	          	<span class="token-chip">📍 마포구 망원동 <button type="button" aria-label="지역 삭제">✕</button></span>
+	            <input type="text" name="keyword" placeholder="경기명·팀명도 검색할 수 있어요" aria-label="키워드">
+			  </div>
+		  </div>
+		  
+		  
+		  <button type="submit" class="btn btn-primary btn-lg">검색</button>
+		</div>
+		<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
+	    <div class="picked" id="pickedRegions"></div>
+	    <div id="regionInputs"></div>
+		
 
-
-
-
-        <div class="input-row">
+        <%-- <div class="input-row">
           <c:choose>
           
-          
-          
-          
-          
+
             <c:when test="${isMap}">
               <div class="map-query ${state eq 'mapTyping' ? 'is-focus' : ''}">
                 <span class="t-3">⌕</span>
@@ -369,8 +420,10 @@
           
           
           
+          
+          
           <button type="submit" class="btn btn-primary btn-lg">검색</button>
-        </div>
+        </div> --%>
       </form>
     </section>
 
@@ -479,30 +532,20 @@
 
 <script>
 	let markers = [];
-
-
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	mapOption = {
 	    center: new kakao.maps.LatLng(37.5675000, 126.9790000), // 지도의 중심좌표
 	    level: 5 // 지도의 확대 레벨
 	};
-	
-	//지도를 미리 생성
-	var map = new kakao.maps.Map(mapContainer, mapOption);
-	
-	
+		var map = new kakao.maps.Map(mapContainer, mapOption);
+
 	kakao.maps.event.addListener(map, 'dragend', function() {
 	    searchMatch();
 	});
 	kakao.maps.event.addListener(map, 'zoom_changed', function() {
 	    searchMatch();
 	});
-	
-	
-	
-	//<a href="#" class="pin " data-pin="m3" style="left:54%;top:55%"><span>농구 · 3.1km</span></a>
-    //<a href="#" class="pin is-active" data-pin="m1" style="left:16%;top:26%"><span>풋살 · 1.2km</span></a>
-	
+
 	function createMarker(item) {
     	 
 	    let sportsType = "";
@@ -515,30 +558,22 @@
 	    }else if(item.sport == "테니스"){
 	    	sportsType="tennis";
 	    }
-		
 		 const position = new kakao.maps.LatLng(
-				 	item.latitude,
-				 	item.longitude
-			    );
-		 
-
-
-		//	 var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다    
+		 	item.latitude,
+		 	item.longitude
+	    );
 
 		var imageSrc = "${ctx}/img/art-"+sportsType+".png"; // 마커이미지의 주소입니다  
 	    var imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
 	    var imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 		var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
-
 	    const marker = new kakao.maps.Marker({
 	        map: map,
 	        position: position
 	       //image: markerImage
-
 	    });
 
-	    // 커스텀 오버레이
 	    const content = `
 	        <div class="map-list">
 	            <a href="${ctx}/match/detail/view?num="`+item.personalMatchId+`
@@ -551,24 +586,19 @@
 	            </a>
 	        </div>
 	    `;
-
 	    const overlay = new kakao.maps.CustomOverlay({
 	        content: content,
 	        position: position,
 	        yAnchor: 1.35
 	    });
 
-	    // 마우스 오버
 	    kakao.maps.event.addListener(marker, "mouseover", function() {
 	        overlay.setMap(map);
 	    });
 
-	    // 마우스 아웃
 	    kakao.maps.event.addListener(marker, "mouseout", function() {
 	        overlay.setMap(null);
 	    });
-
-	    // 마커 클릭
 	    kakao.maps.event.addListener(marker, "click", function() {
 	        location.href =
 	            "${ctx}/match/detail/view?num="
@@ -578,50 +608,53 @@
 	    return marker;
 	}
 	
-	
-	
-	
+
 	
 	function removeMarkers() {
-
 	    markers.forEach(function(marker) {
 	        marker.setMap(null);
 	    });
-
 	    markers = [];
 	}
 	
-	
-	
+
 	function searchMatch() {
 	    const bounds = map.getBounds();
-
 	    const sw = bounds.getSouthWest();
 	    const ne = bounds.getNorthEast();
-	    
 	    const minLat = sw.getLat();
 	    const maxLat = ne.getLat();
-
 	    const minLng = sw.getLng();
 	    const maxLng = ne.getLng();
+        var data = $('#matchSearchForm').serializeArray();
+        data.push({
+            name: 'minLat',
+            value: sw.getLat()
+        });
+        data.push({
+            name: 'maxLat',
+            value: ne.getLat()
+        });
+        data.push({
+            name: 'minLng',
+            value: sw.getLng()
+        });
+        data.push({
+            name: 'maxLng',
+            value: ne.getLng()
+        });
+        data.push({
+            name: 'requestType',
+            value: "ajax"
+        });
 
 	     $.ajax({
 	        url: "${ctx}/match/list/map",
 	        type: "POST",
 		    dataType: "json",
-	        data: {
-	        	requestType:"ajax",
-	            minLat: sw.getLat(),
-	            maxLat: ne.getLat(),
-	            minLng: sw.getLng(),
-	            maxLng: ne.getLng()
-	        },
+	        data:data,
 	        success: function(data) {
-	            // 경기 목록 갱신
-	            console.log(data);
 	            removeMarkers();
-	            
-	            
 				let html = "";
 	            data.forEach(function(item) {	
 					html+= `
@@ -653,7 +686,136 @@
 	
 
 </script>
-
+<script>
+	  (function () {
+	    var SEOUL = ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구",
+	                 "도봉구","동대문구","동작구","마포구","서대문구","서초구","성동구","성북구","송파구",
+	                 "양천구","영등포구","용산구","은평구","종로구","중구","중랑구"];
+	    var GYEONGGI = [
+	        "고양시", "과천시", "광명시", "광주시", "구리시",
+	        "군포시", "김포시", "남양주시", "동두천시", "부천시",
+	        "성남시", "수원시", "시흥시", "안산시", "안성시",
+	        "안양시", "양주시", "여주시", "오산시", "용인시",
+	        "의왕시", "의정부시", "이천시", "파주시", "평택시",
+	        "포천시", "하남시", "화성시"
+	    ];
+	    var MAX = 3;
+	
+	    var sido = document.getElementById("sido");
+	    var sigungu = document.getElementById("sigungu");
+	    var picked = document.getElementById("pickedRegions");
+	    var regionInputs = document.getElementById("regionInputs");
+	    var maxMsg = document.getElementById("maxRegion");
+	    var selected = [];
+	
+	    function resetSigungu(list) {
+	      sigungu.innerHTML = "";
+	      var ph = document.createElement("option");
+	      ph.value = "";
+	      ph.textContent = "시군구";
+	      sigungu.appendChild(ph);
+	      list.forEach(function (name) {
+	        var op = document.createElement("option");
+	        op.value = name;
+	        op.textContent = name;
+	        sigungu.appendChild(op);
+	      });
+	      sigungu.disabled = list.length === 0;
+	    }
+	
+	    function render() {
+	      picked.innerHTML = "";
+	      regionInputs.innerHTML = "";
+	      selected.forEach(function (region, index) {
+	        var chip = document.createElement("span");
+	        chip.className = "token-chip";
+	
+	        var label = document.createElement("span");
+	        label.textContent = region;
+	
+	        var del = document.createElement("button");
+	        del.type = "button";
+	        del.className = "deleteRegion";
+	        del.setAttribute("data-index", index);
+	        del.setAttribute("aria-label", region + " 삭제");
+	        del.textContent = "✕";
+	
+	        chip.appendChild(label);
+	        chip.appendChild(del);
+	        picked.appendChild(chip);
+	
+	        var hidden = document.createElement("input");
+	        hidden.type = "hidden";
+	        hidden.name = "regions";
+	        hidden.value = region;
+	        regionInputs.appendChild(hidden);
+	      });
+	    }
+	
+	    sido.addEventListener("change", function () {
+	      if (sido.value === "서울시") resetSigungu(SEOUL);
+	      else if (sido.value === "경기도") resetSigungu(GYEONGGI);
+	      else resetSigungu([]);
+	    });
+	
+	    sigungu.addEventListener("change", function () {
+	      if (!sigungu.value) return;
+	      var region = sido.value + " " + sigungu.value;
+	
+	      if (selected.indexOf(region) !== -1) {      // 중복 선택 방지
+	        sigungu.value = "";
+	        return;
+	      }
+	      if (selected.length >= MAX) {
+	        maxMsg.style.display = "";
+	        sigungu.value = "";
+	        return;
+	      }
+	      selected.push(region);
+	      render();
+	      sigungu.value = "";                          // 같은 지역을 다시 고를 수 있게 초기화
+	    });
+	
+	    picked.addEventListener("click", function (e) {
+	      if (!e.target.classList.contains("deleteRegion")) return;
+	      selected.splice(Number(e.target.getAttribute("data-index")), 1);
+	      render();
+	      maxMsg.style.display = "none";
+	    });
+	
+	    // 필터 초기화 버튼과 같이 지역도 비우기
+	    var resetBtn = document.querySelector("[data-filter-reset]");
+	    if (resetBtn) {
+	      resetBtn.addEventListener("click", function () {
+	        selected = [];
+	        render();
+	        sido.value = "";
+	        resetSigungu([]);
+	        maxMsg.style.display = "none";
+	      });
+	    }
+	  })();
+	</script>
+	<script>
+		const periodPicker = document.getElementById('periodPicker');
+		if (periodPicker) {
+			flatpickr(periodPicker, {
+				mode: 'range',                    // 기간 선택
+				locale: 'ko',
+				dateFormat: 'Y-m-d',
+				disableMobile: true,
+				defaultDate: ['${startDate}', '${endDate}'],   // 현재 조회 중인 기간 표시
+				onClose: function (selectedDates, dateStr, instance) {
+					// 시작일, 종료일 둘 다 골랐을 때만 조회
+					if (selectedDates.length === 2) {
+						document.getElementById('startDate').value = instance.formatDate(selectedDates[0], 'Y-m-d');
+						document.getElementById('endDate').value = instance.formatDate(selectedDates[1], 'Y-m-d');
+					}
+				}
+			});
+		}
+	</script>
+	
 
 
 

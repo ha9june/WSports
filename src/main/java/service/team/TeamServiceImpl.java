@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.Part;
 
@@ -13,6 +12,7 @@ import dao.TeamDaoImpl;
 import dao.TeamUserDao;
 import dao.TeamUserDaoImpl;
 import dto.Team;
+import dto.TeamSearchCondition;
 import dto.TeamUser;
 
 public class TeamServiceImpl implements TeamService {
@@ -69,8 +69,9 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
-	public List<Team> get12TeamList() throws Exception {
-		List<Team> teamList =  teamDao.select12Team();
+	public List<Team> getTeamList(TeamSearchCondition condition) throws Exception {
+		List<Team> teamList =  teamDao.selectTeamList(condition);
+		int teamCnt = teamDao.selectTeamlistCnt(condition);
 		for(int i=0; i<teamList.size(); i++) {
 			teamList.get(i).setAges(changeAges(teamList.get(i).getAge20s() , teamList.get(i).getAge30s(), teamList.get(i).getAge40s(), teamList.get(i).getAge50s(), teamList.get(i).getAge60Plus()));
 			teamList.get(i).setDays(changeDays(teamList.get(i).getDayMon(), teamList.get(i).getDayTue(), teamList.get(i).getDayWed(), teamList.get(i).getDayThu(), teamList.get(i).getDayFri(), teamList.get(i).getDaySat(), teamList.get(i).getDaySun()));
@@ -78,6 +79,11 @@ public class TeamServiceImpl implements TeamService {
 			teamList.get(i).setTimes(changeTimes(teamList.get(i).getTime0609(), teamList.get(i).getTime0912(), teamList.get(i).getTime1218(), teamList.get(i).getTime1822(), teamList.get(i).getTime2206()));
 		}
 		return teamList;
+	}
+	
+	@Override
+	public int getTemaListCnt(TeamSearchCondition condition) throws Exception {
+		return teamDao.selectTeamlistCnt(condition);
 	}
 
 	@Override
@@ -171,4 +177,6 @@ public class TeamServiceImpl implements TeamService {
 	    
 	    return String.join("·", parts);
 	}
+
+
 }
