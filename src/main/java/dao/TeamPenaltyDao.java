@@ -16,6 +16,14 @@ public interface TeamPenaltyDao {
 	Map<String, Object> selectTeamLatestPenalty(Long teamId) throws Exception;
 	//지금 정지중인 기록 수 / 1 이상이면 정지
 	Integer selectTeamSuspension(Long teamId) throws Exception;
-	//관리자 회원 상세정보
-	List<Map<String, Object>> selectTeamDetailList(Long teamId) throws Exception;
+	//팀 기본 정보
+	Map<String, Object> selectTeamInfo(Long teamId) throws Exception;
+	//팀 페널티 리스트
+	List<Map<String, Object>> selectTeamPenaltyList(Long teamId) throws Exception;
+	//관리자 신고 조치
+	void insertTeamPenalty(Map<String, Object> param) throws Exception;
+	//관리자 페널티 점수 부여
+	void insertTeamChangePenalty(Map<String, Object> param) throws Exception;
+	//관리자 영구 정지
+	void insertTeamPermanentPenalty(Map<String, Object> param) throws Exception;
 }

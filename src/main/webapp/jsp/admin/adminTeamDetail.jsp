@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   팀 상세 (adminTeamDetail.jsp) - 담당: 임태균
   피그마: Admin / Club Detail / Desktop, Admin / Club Delete / Modal
@@ -16,70 +17,240 @@
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/adminSideBar.jsp" %>
 <div class="admin-inner">
-  	<div style="width:800px;max-width:100%">
-    	<section class="admin-card">
-    		<c:set var="info" value="${detail[0]}" />	
+  	<div style="width:760px;max-width:100%">
+    	<section class="admin-card">	
     		<div style="display:flex; align-items:center; gap:12px; margin-bottom:20px">
-    			<span class="avatar default"></span>
-    			<strong style="font-size:18px">${info.team_name}</strong>
-    		</div>
-    		<h2>팀 정보</h2>
-      		<dl class="kv2">
-      			<c:choose>
-					<c:when test="${not empty t.profile_image}">
-						<img src="${ctx}${uploadPath}/${t.profile_image}" alt="${t.team_name}">
+    			<c:choose>
+					<c:when test="${not empty teaminfo.profile_image}">
+						<img src="${ctx}${uploadPath}/${teaminfo.profile_image}" alt="${teaminfo.team_name}"
+							style="width: 60px; height: 60px; object-fit: cover">
 					</c:when>
 					<c:otherwise>
 						<span class="avatar default"></span>
 					</c:otherwise>
-				</c:choose>
-      			<dt>주장</dt>	<dd></dd>
-      			<dt>팀원</dt>	<dd>34명</dd>
-      			<dt>패널티점수</dt>	<dd>2점</dd>
-      			<dt>주 활동 지역</dt><dd>마포구 · 서대문구</dd>
-      			<dt>상태</dt>	<dd>정상</dd>
+
+				</c:choose>	
+				<strong style="font-size:18px">${teaminfo.team_name}</strong>	
+    		</div>
+			<%-- 해제되지 않은 영구정지 기록이 있는지 확인 --%>
+			<c:set var="isPermanent" value="false" />
+			<c:forEach var="p" items="${penaltylist}">
+				<c:if test="${p.permanent_suspension and empty p.cancelled_admin_id}">
+					<c:set var="isPermanent" value="true" />
+				</c:if>
+			</c:forEach>
+      		<dl class="kv2">
+      			<dt>주장</dt>	<dd>${captain }</dd>
+      			<dt>팀원</dt>	<dd>${membercnt}명</dd>
+      			<dt>패널티점수</dt>	<dd>${empty penaltylist ? 0 : penaltylist[0].score}점</dd>
+      			<dt>주 활동 지역</dt>
+      			<dd>${teaminfo.region1} 
+      				${empty teaminfo.region2 ? '' : ', ' += teaminfo.region2}
+      				${empty teaminfo.region3 ? '' : ', ' += teaminfo.region3} </dd>
+      			<dt>상태</dt>	<dd class="${suspension eq '정지' ? 't-danger' : ''}">${suspension}</dd>
+      			<dt>영구정지 여부</dt><dd class="${isPermanent ? 't-danger' : ''}">${isPermanent ? 'O' : 'X'}</dd>
       		</dl>
       	</section>
-    	<section class="admin-card">
-    		<h2>패널티 점수 이력</h2>
-      		<div class="history-row">
-      			<span class="t-2">9/10</span>
-      			<b>경기 당일 취소</b>
-      			<b class="plus">+2점</b>
-      			<span class="t-2">관리자(사이트)</span>
-      		</div>
-      		<div class="history-row">
-      			<span class="t-2">8/03</span>
-      			<b>상대 팀 신고 인정</b>
-      			<b class="plus">+3점</b>
-      			<span class="t-2">신고 처리</span>
-      		</div>
-     		<div class="history-row">
-     			<span class="t-2">7/15</span>
-     			<b>소명 승인</b>
-     			<b class="minus">-3점</b>
-     			<span class="t-2">관리자(사이트)</span>
-     		</div>
-    	</section>
+		<section class="admin-card">
+			<h2>패널티 점수 이력</h2>
+			<c:forEach var="h" items="${penaltylist}" varStatus="st">
+				<c:set var="prevScore" value="${st.last ? 0 : penaltylist[st.index + 1].score}" />
+				<c:set var="diff" value="${h.score - prevScore}" />
+				<div class="history-row">
+					<span class="t-2">
+						<fmt:formatDate value="${h.received_at}" pattern="M/dd" />
+					</span>
+					<b>${h.reason}</b>
+					<b>${diff}점</b>
+				</div>
+			</c:forEach>
+			<c:if test="${empty penaltylist}">
+				<p class="t-12 t-2">패널티 점수 이력이 없습니다.</p>
+			</c:if>
+		</section>
     	<div class="btn-group mt-24">
-    		<button type="button" class="btn btn-danger btn-xs" data-modal-open="teamDeleteModal">팀 삭제</button>
-    		<button type="button" class="btn btn-danger-soft btn-sm" data-modal-open="penaltyModal">패널티 점수 부여</button>
-    		<button type="button" class="btn btn-text btn-sm t-bold" style="color:var(--ds-text);padding:0 16px" data-modal-open="penaltyModal">패널티 점수 차감</button>
+    		<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="penaltyModal">팀 정지</button>
+    		<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="scoreModal">패널티 점수 조정</button>
+    		<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="permanentStop">영구 정지</button>
     	</div>
-    	<p class="t-11 t-2 mt-16">누적 10점 이상이면 팀 매칭 신청이 제한됩니다.</p>
   	</div>
 </div>
-
-<div class="modal ${state eq 'penalty' ? 'is-open' : ''}" id="penaltyModal" role="dialog" aria-modal="true"><div class="modal-card md">
-  <h2 class="modal-title">패널티 점수 조정</h2><p class="modal-desc">점수와 사유를 입력하면 팀 이력에 기록됩니다.</p>
-  <div class="modal-body">
-    <div class="field"><span class="field-label">구분</span><div class="chip-group" data-select="single"><button type="button" class="chip is-selected">부여</button><button type="button" class="chip">차감</button></div></div>
-    <div class="field mt-16"><label class="field-label">점수</label><select class="select"><option>1점</option><option selected>2점</option><option>3점</option><option>5점</option></select></div>
-    <div class="field mt-16"><label class="field-label">사유</label><input class="input" placeholder="예: 경기 당일 취소"></div>
-  </div>
-  <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>취소</button><button type="button" class="btn btn-primary" data-toast="패널티 점수를 반영했어요.">반영</button></div></div></div>
-<div class="modal ${state eq 'delete' ? 'is-open' : ''}" id="teamDeleteModal" role="dialog" aria-modal="true"><div class="modal-card">
-  <h2 class="modal-title">팀을 삭제할까요?</h2><p class="modal-desc">팀과 팀 작성글, 예정된 팀 경기가 모두 삭제되며 복구할 수 없습니다. 팀원에게 삭제 알림이 발송됩니다.</p>
-  <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>취소</button><button type="button" class="btn btn-danger" data-toast="팀을 삭제했어요.">삭제</button></div></div></div>
+<div class="modal" id="penaltyModal" role="dialog" aria-modal="true">
+	<div class="modal-card md">
+		<h2 class="modal-title">팀 정지</h2>
+		<div class="modal-body">
+  			<label class="field-label">정지 기간 (일)</label>
+    		<input class="input" id="days">
+    		<div class="field mt-16">
+    			<label class="field-label">사유</label>
+    			<textarea id="penaltyreason" class="textarea soft" rows="3"></textarea>
+    		</div>
+		</div>
+		<div class="modal-actions">
+  			<button type="button" class="btn btn-danger" id="applySanction">적용</button>
+  			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+  		</div>
+	</div>
+</div>
+<div class="modal" id="scoreModal" role="dialog" aria-modal="true">
+	<div class="modal-card md">
+		<h2 class="modal-title">페널티점수</h2>
+		<div class="modal-body">
+    		<div class="field">
+    			<div class="chip-group" data-select="single">
+    				<button type="button" class="chip is-selected">부여</button>
+    				<button type="button" class="chip">차감</button>
+    			</div>
+    		</div>
+    		<div class="field mt-16">
+    			<label class="field-label">점수</label>
+    			<input class="input" id="score">
+    		</div>
+			<div class="field mt-16">
+				<label class="field-label">사유</label>
+				<textarea id="scorereason" class="textarea soft" rows="3"></textarea>
+			</div>
+		</div>
+		<div class="modal-actions">
+			<button type="button" class="btn btn-danger" id="applyScore">적용</button>
+			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+  		</div>
+	</div>
+</div>
+<div class="modal" id="permanentStop" role="dialog" aria-modal="true">
+	<div class="modal-card md">
+		<h2 class="modal-title">영구정지</h2>
+		<div class="modal-body">
+			<div class="field">
+				<label class="field-label">사유</label>
+				<textarea id="permanentreason" class="textarea soft" rows="3"></textarea>
+			</div>
+		</div>
+		<div class="modal-actions">
+			<button type="button" class="btn btn-danger" id="applyPermanent">적용</button>
+			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+  		</div>
+	</div>
+</div>
+<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function(){
+	//기간 정지
+	$("#applySanction").click(function(e){
+		e.preventDefault();
+		
+		let teamId = '${teaminfo.team_id}';
+		let days = $("#days").val();
+		let reason = $("#penaltyreason").val();
+		
+		if (!days || !/^[1-9][0-9]*$/.test(days)) {
+			alert('정지 기간은 1 이상의 숫자로 입력해주세요.');
+			return;
+		}
+		if (!reason.trim()) {
+			alert('사유를 입력해주세요.');
+			return;
+		}
+		
+		$.ajax({
+			url:'${ctx}/admin/team/detail',
+			type:'post',
+			dataType:'text',
+			data:{
+				action: 'suspend',
+				teamId: teamId,
+				days:days,
+				reason:reason
+			},
+			success:function(result) {
+				if ($.trim(result) === "true") {
+					alert('제재 적용');
+					location.reload();
+				} else {
+					alert('제재 적용 실패');
+				}
+			},
+			error: function () {
+				alert('처리 중 오류 발생');
+			}
+		});
+	});
+	//페널티 점수 조정
+	$("#applyScore").click(function(e){
+		e.preventDefault();
+		
+		let teamId = '${teaminfo.team_id}';
+		let type = $("#scoreModal .chip.is-selected").text().trim();
+		let score = $("#score").val();
+		let reason = $('#scorereason').val();
+		
+		if(!score || !/^[1-9][0-9]*$/.test(score)){
+			alert('페널티 점수는 1 이상의 숫자로 입력해주세요.');
+			return;
+		}
+		if(!reason.trim()) {
+			alert('사유를 입력하세요');
+			return;
+		}
+		let change = (type === '차감') ? -Number(score) : Number(score);
+		$.ajax({
+			url:'${ctx}/admin/team/detail',
+			type:'post',
+			dataType:'text',
+			data:{
+				action:'adjust',
+				teamId: teamId,
+				change:change,
+				reason: reason
+			},
+			success:function(result) {
+				if($.trim(result) === "true") {
+					alert('제제 적용');
+					location.reload();
+				}else {
+					alert('제제 적용 실패');
+				}
+			},
+			error: function(){
+				alert('처리 중 오류 발생');
+			}
+		});
+	});
+	
+	//영구정지
+	$("#applyPermanent").click(function(e){
+		e.preventDefault();
+		let teamId = '${teaminfo.team_id}';
+		let reason = $("#permanentreason").val();
+		
+		if (!reason.trim()) {
+			alert('사유를 입력해주세요.');
+			return;
+		}
+		if (!confirm('영구 정지는 되돌리기 어렵습니다. 진행할까요?')) return;
+		$.ajax({
+			url:'${ctx}/admin/team/detail',
+			type:'post',
+			dataType:'text',
+			data:{
+				action: 'permanent',
+				teamId: teamId,
+				reason: reason
+			},
+			success:function(result) {
+				if ($.trim(result) === "true") {
+					alert('영구 정지 적용');
+					location.reload();
+				} else {
+					alert('영구 정지 적용 실패');
+				}
+			},
+			error: function () {
+				alert('처리 중 오류 발생');
+			}
+		});
+	});
+});
+</script>
 </main></div>
 <%@ include file="/jsp/common/footer.jsp" %>

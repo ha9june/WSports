@@ -52,7 +52,6 @@ public class AdminTeam extends HttpServlet {
 			List<Map<String, Object>> teamlist = service.getAdminTeamList(pageInfo, status, keyword);
 
 			request.setAttribute("teamlist", teamlist); // 회원 목록
-			System.out.println(teamlist+"서블릿");
 			request.setAttribute("pageInfo", pageInfo); // 페이지 정보
 			
 			request.setAttribute("teamTotalCnt", service.getAdminTeamCnt("ALL"));         // 등록된 팀 수

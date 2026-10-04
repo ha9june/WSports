@@ -97,14 +97,42 @@
 		and (permanent_suspension = 1 or now() between suspension_start_at and suspension_end_at)
 	</select>
 	
-	<!-- 팀 상세정보 / 주장 닉네임, 팀원 수, 정지상태는 위에걸 사용 -->
-	<select id="selectTeamDetailList" resultType="map">
-		select t.team_id, t.team_name, t.profile_image, t.region, 
-			   p.score, p.received_at, p.permanent_suspension
-		from team t
-		left join team_penalty p
-		on t.team_id = p.team_id
-		where t.team_id={teamId}
-		order by p.penalty_id desc
+	<!-- 팀 기본정보 / 주장 닉네임, 팀원 수, 정지상태는 위에걸 사용 -->
+	<select id="selectTeamInfo" resultType="map">
+		select team_id, team_name, profile_image, region1, region2, region3
+		from team 
+		where team_id = #{teamId}
 	</select>
+	
+	<!-- 팀 페널티 이력 -->
+	<select id="selectTeamPenaltyList"  resultType="map">
+		select penalty_id, score, reason, received_at, report_id, 
+			   suspension_start_at, suspension_end_at, permanent_suspension, cancelled_admin_id
+		from team_penalty 
+		where team_id = #{teamId}
+		order by penalty_id desc
+	</select>
+	
+	<!-- 관리자 페널티 주는 기능 -->
+	<insert id="insertTeamPenalty" parameterType="map">
+		insert into team_penalty
+		(team_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
+		values
+		(#{teamId}, now(), #{score}, #{reason}, now(), date_add(now(), interval #{days} day), 0)
+	</insert>
+	
+	<!-- 팀 패널티 점수 조정 기록 -->
+	<insert id="insertChangeTeamPenalty" parameterType="map">
+		insert into team_penalty
+		(team_id, received_at, score, reason, permanent_suspension)
+		values
+		(#{teamId}, now(), #{score}, #{reason}, 0)
+	</insert>
+	<!-- 관리자 영구 정지 (종료일 없음) -->
+	<insert id="insertTeamPermanentPenalty" parameterType="map">
+		insert into team_penalty
+		(team_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
+		values
+		(#{teamId}, now(), #{score}, #{reason}, now(), null, 1)
+	</insert>
 </mapper>

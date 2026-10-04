@@ -63,10 +63,59 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		param.put("keyword", "");	//빈 문자열은 참
 		return teampenaltyDao.selectAdminTeamCnt(param);
 	}
-
+	//팀 정보
 	@Override
-	public List<Map<String, Object>> getTeamDetailList(Long teamId) throws Exception {
-		return teampenaltyDao.selectTeamDetailList(teamId);
+	public Map<String, Object> getTeamInfo(Long teamId) throws Exception {
+		return teampenaltyDao.selectTeamInfo(teamId);
 	}
-
+	//팀 페널티 리스트
+	@Override
+	public List<Map<String, Object>> getTeamPenaltyList(Long teamId) throws Exception {
+		return teampenaltyDao.selectTeamPenaltyList(teamId);
+	}
+	
+	//주장 닉네임
+	@Override
+	public String getTeamCaptain(Long teamId) throws Exception {
+		return teampenaltyDao.selectTeamCaptain(teamId);
+	}
+	
+	//팀원 수
+	@Override
+	public Integer getTeamMemberCnt(Long teamId) throws Exception {
+		return teampenaltyDao.selectTeamMemberCnt(teamId);
+	}
+	
+	//지금 정지중인가
+	@Override
+	public Integer getTeamSuspention(Long teamId) throws Exception {
+		return teampenaltyDao.selectTeamSuspension(teamId);
+	}
+	//팀 제제기간
+	@Override
+	public void AdminTeamPenalty(Long teamId, int days, String reason) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("teamId", teamId);
+		param.put("days", days);
+		param.put("reason", reason);
+		teampenaltyDao.insertTeamPenalty(param);
+		
+	}
+	//팀 영구정지
+	@Override
+	public void AdminTeamPermanentPenalty(Long teamId, String reason) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("teamId", teamId);
+		param.put("reason", reason);
+		teampenaltyDao.insertTeamPermanentPenalty(param);
+	}
+	// 팀 페널티 점수 조정
+	@Override
+	public void AdminChangeTeamPenalty(Long teamId, int change, String reason) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("teamId", teamId);
+		param.put("change", change);   // 부여면 +, 차감이면 -
+		param.put("reason", reason);
+		teampenaltyDao.insertTeamChangePenalty(param);
+	}
 }

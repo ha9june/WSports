@@ -69,7 +69,7 @@
 		<p class="modal-desc">기간, 사유를 입력하면 회원에게 알림이 발송됩니다.</p>
   		<div class="modal-body">
   			<label class="field-label">정지 기간 (일)</label>
-    		<input type="number" class="field mt-16" id="days" min="1">
+    		<input class="input" id="days">
     		<div class="field mt-16">
     			<label class="field-label">사유</label>
     			<textarea id="reason" class="textarea soft" rows="3"></textarea>
@@ -128,14 +128,14 @@ $(function(){
 			},
 			success:function(result) {
 				if ($.trim(result) === "true") {
-					alert('제재를 적용했어요.');
+					alert('제재 적용');
 					location.reload();
 				} else {
-					alert('제재 적용에 실패했습니다.');
+					alert('제재 적용 실패');
 				}
 			},
 			error: function () {
-				alert('처리 중 오류가 발생했습니다.');
+				alert('처리 중 오류 발생');
 			}
 		});
 	});

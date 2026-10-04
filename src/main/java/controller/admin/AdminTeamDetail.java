@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import service.admin.AdminMemberServiceImpl;
 import service.admin.AdminTeamServiceImpl;
 
 /**
@@ -32,10 +33,26 @@ public class AdminTeamDetail extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		AdminTeamServiceImpl service = new AdminTeamServiceImpl();
+		
 		try {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
-			List<Map<String, Object>> detail = service.getTeamDetailList(teamId);
-			request.setAttribute("detail", detail);
+			Map<String, Object> teaminfo= service.getTeamInfo(teamId);
+			List<Map<String, Object>> penaltylist = service.getTeamPenaltyList(teamId);
+			
+			String captain = service.getTeamCaptain(teamId);
+			Integer membercnt = service.getTeamMemberCnt(teamId);
+			String suspension = service.getTeamSuspention(teamId)> 0 ? "정지" : "정상";
+			
+			request.setAttribute("teaminfo", teaminfo);
+			System.out.println(teaminfo);
+			request.setAttribute("penaltylist", penaltylist);
+			System.out.println(penaltylist);
+			request.setAttribute("captain", captain);
+			System.out.println(captain);
+			request.setAttribute("membercnt", membercnt);
+			System.out.println(membercnt);
+			request.setAttribute("suspension", suspension);
+			System.out.println(suspension);
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "회원관리 상세 목록 조회 오류");
@@ -47,8 +64,33 @@ public class AdminTeamDetail extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		System.out.println("doPost 진입 action=[" + request.getParameter("action") + "] teamId=[" + request.getParameter("teamId") + "]");
+		AdminTeamServiceImpl service = new AdminTeamServiceImpl();
+		try {
+			Long teamId = Long.parseLong(request.getParameter("teamId"));
+			
+			String reason = request.getParameter("reason");
+			String action = request.getParameter("action");
+
+			if ("adjust".equals(action)){
+				// 패널티 점수 부여/차감
+				int change = Integer.parseInt(request.getParameter("change"));
+				service.AdminChangeTeamPenalty(teamId, change, reason);
+			}
+			else if ("permanent".equals(action)) {
+				// 영구 정지 (기간 없음)
+				service.AdminTeamPermanentPenalty(teamId, reason);
+			} else {
+				// 기간 정지
+				int days = Integer.parseInt(request.getParameter("days"));
+				service.AdminTeamPenalty(teamId, days, reason);
+			}
+			
+			response.getWriter().print("true");
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.getWriter().print("false");
+		}
 	}
 
 }
