@@ -21,6 +21,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		
 		Map<String, Object> param = new HashMap<>();
 		param.put("status", status);
+		param.put("keyword", keyword);
 		
 		// 전체 게시글 수
 		Integer memberCnt = userpenaltyDao.selectAdminMemberCnt(param);
@@ -41,8 +42,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		pageInfo.setEndPage(endPage);
 
 		param.put("row",(pageInfo.getCurPage() - 1) * 10);
-		param.put("keyword", keyword);
-
 		return userpenaltyDao.selectAdminMemberList(param);
 	}
 
@@ -52,9 +51,21 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	}
 
 	@Override
-	public Map<String, Object> getUserPenalty() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void AdminUserPenalty(Long userId, int days, String reason) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("days", days);
+		param.put("reason", reason);
+		userpenaltyDao.insertUserPenalty(param);
+	}
+
+	@Override
+	public void AdminUserPermanentPenalty(Long userId, String reason) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("reason", reason);
+		userpenaltyDao.insertUserPermanentPenalty(param);
+		
 	}
 
 }
