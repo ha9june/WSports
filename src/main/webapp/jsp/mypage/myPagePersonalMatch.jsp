@@ -4,6 +4,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.time.YearMonth, java.time.LocalDate"%>
+<link href="https://jsdelivr.net" rel="stylesheet" />
+<script src="https://jquery.com"></script>
+<script src="https://jsdelivr.net"></script>
 <%--
   참가 경기 (myPagePersonalMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Participating Matches / Desktop
@@ -136,20 +139,70 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 			<input type="hidden" name="date" value="${selectedDate}">
 		</c:if>
 			<!-- 경기 종목별 리스트 검색 -->
-		<select class="select" name="sport" onchange="this.form.submit()">
+ 		<select class="select" name="sport" onchange="this.form.submit()">
 			<option value="">전체</option>
 			<option value="축구/풋살" ${sport == '축구/풋살' ? 'selected' : ''}>축구/풋살</option>
 			<option value="농구" ${sport == '농구' ? 'selected' : ''}>농구</option>
 			<option value="테니스" ${sport == '테니스' ? 'selected' : ''}>테니스</option>
 			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
-		</select> <select class="select" name="status" onchange="this.form.submit()">
+		</select> 
+		<select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
-			<option value="모집중" ${status == '모집중' ? 'selected' : ''}>모집중</option>
+			<option value="모집중" ${status == '모집중' ? 'selected' : ''} style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
 			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집 마감</option>
 			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기 종료</option>
 			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기 취소</option>
-		</select>
-	</form>
+		</select> 
+    </form>
+    </div>
+	<c:forEach var="match" items="${match}">
+    <div class="act-card" data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=saved">
+        <div class="left">
+            
+            <%-- 상태(status)별 배지 분기 --%>
+            <c:choose>
+                <c:when test="${match.status == '모집중'}">
+                    <span class="pill pill-success">모집중</span>
+                </c:when>
+                <c:when test="${match.status == '모집 마감'}">
+                    <span class="pill pill-danger">모집 마감</span>
+                </c:when>
+                <c:when test="${match.status == '경기 종료'}">
+                    <span class="pill pill-dark">경기 종료</span>
+                </c:when>
+                <c:when test="${match.status == '경기 취소'}">
+                    <span class="pill pill-warning">경기 취소</span>
+                </c:when>
+                <c:otherwise>
+                    <span class="pill pill-default">${match.status}</span>
+                </c:otherwise>
+            </c:choose>
+    
+            <%-- 종목(sport)별 이미지 분기 --%>
+            <c:choose>
+                <c:when test="${match.sport == '축구/풋살'}">
+                    <img src="${ctx}/img/sport-icon-soccer.png" alt="축구">
+                </c:when>
+                <c:when test="${match.sport == '농구'}">
+                    <img src="${ctx}/img/sport-icon-basketball.png" alt="농구">
+                </c:when>
+                <c:when test="${match.sport == '테니스'}">
+                    <img src="${ctx}/img/sport-icon-tennis.png" alt="테니스">
+                </c:when>
+                <c:when test="${match.sport == '배드민턴'}">
+                    <img src="${ctx}/img/sport-icon-badminton.png" alt="배드민턴">
+                </c:when>
+                <c:otherwise>
+                    <img src="${ctx}/img/sport-icon-default.png" alt="스포츠">
+                </c:otherwise>
+            </c:choose>
+        </div>
+        </div>
+</c:forEach>
+
+
+
+
 
 	<div class="act-layout">
 		<section>

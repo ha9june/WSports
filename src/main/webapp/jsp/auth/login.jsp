@@ -58,7 +58,6 @@ $(function() {
 </script>
 
 <main class="page">
-<<<<<<< HEAD
 	<div class="auth-wrap">
 		<div class="page-head">
 			<h1 class="page-title md">로그인</h1>
