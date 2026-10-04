@@ -19,7 +19,7 @@
 </script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-<<<<<<< HEAD
+
 $(function() {
     $("#loginform").on("submit", function(e) {
         e.preventDefault();
@@ -58,6 +58,7 @@ $(function() {
 </script>
 
 <main class="page">
+
 	<div class="auth-wrap">
 		<div class="page-head">
 			<h1 class="page-title md">로그인</h1>

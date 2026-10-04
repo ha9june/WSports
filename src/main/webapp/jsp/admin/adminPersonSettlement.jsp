@@ -12,6 +12,19 @@
 <c:set var="demoStates" value="all:정산 대기|completed:지급 완료|date:날짜별|confirm:정산 확인 모달" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/adminSideBar.jsp" %>
+
+<!-- 달력 라이브러리 불러오기 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+
+<script>
+	//full calender 달력 api
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        // 속성, 이벤트 등 세팅
+    });
+</script>
 <div class="admin-inner">
 	<p class="eyebrow-path">관리자(사이트)</p>
 	<div class="page-head"><h1 class="page-title">정산 관리</h1>
@@ -39,10 +52,12 @@
     		<a class="seg-item ${state eq 'date' ? 'is-active' : ''}" href="?state=date">날짜별</a>
     	</div>
     	<c:if test="${state eq 'date'}">
-    		<form class="date-stepper" method="get">
-    			<input type="hidden" name="state" value="date">
-    			<input type="date" name="date" value="${date}" onchange="this.form.submit()" class="date-input" required>
-    		</form>
+    		<form class="date-stepper" method="get" id="periodForm">
+				<input type="hidden" name="state" value="date">
+				<input type="hidden" name="startDate" id="startDate" value="${startDate}">
+				<input type="hidden" name="endDate" id="endDate" value="${endDate}">
+				<input type="text" id="periodPicker" class="date-input" style="width:190px;text-align:center" readonly>
+			</form>
     	</c:if>
   	</div>
   	<h2 class="sub-title">${state eq 'completed' ? '지급 완료 경기' : state eq 'date' ? '날짜별 정산 목록' : '정산 대상 경기'}</h2>
@@ -84,6 +99,26 @@
   <p class="section-desc">표시할 경기가 없습니다.</p>
 </c:if>
 </div>
-	
 
+<script>
+	const periodPicker = document.getElementById('periodPicker');
+	if (periodPicker) {
+		flatpickr(periodPicker, {
+			mode: 'range',                    // 기간 선택
+			locale: 'ko',
+			dateFormat: 'Y-m-d',
+			disableMobile: true,
+			defaultDate: ['${startDate}', '${endDate}'],   // 현재 조회 중인 기간 표시
+			onClose: function (selectedDates, dateStr, instance) {
+				// 시작일, 종료일 둘 다 골랐을 때만 조회
+				if (selectedDates.length === 2) {
+					document.getElementById('startDate').value = instance.formatDate(selectedDates[0], 'Y-m-d');
+					document.getElementById('endDate').value = instance.formatDate(selectedDates[1], 'Y-m-d');
+					document.getElementById('periodForm').submit();
+				}
+			}
+		});
+	}
+</script>
+</main></div>
 <%@ include file="/jsp/common/footer.jsp" %>

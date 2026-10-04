@@ -74,7 +74,7 @@
 						)		
 	</insert>
 	
-	<select id="select12Team" resultType="team">
+	<select id="selectTeamList" parameterType="teamsearchcondition" resultType="team">
 		select 
 		t.team_name , t.profile_image, t.skill, t.sport, t.gender, t.region1, t.region2, t.region3, 
 		t.age_20s, t.age_30s, t.age_40s, t.age_50s, t.age_60_plus, 
@@ -87,8 +87,176 @@
 		) as current_people
 		from team t
 		WHERE COALESCE(t.deleted, false) = false
-		order by t.created_at desc 
-		limit 12;
+		<if test="sports != null and sports.length > 0">
+		    AND t.sport IN
+		    <foreach collection="sports" item="sport" open="(" separator="," close=")">
+		        #{sport}
+		    </foreach>
+		</if>
+		<if test="gender != null and gender != ''  and gender != '성별 무관'">
+			    AND (
+				        t.gender = #{gender}
+				        OR t.gender = '성별 무관'
+				    )
+		</if>
+		<if test="days != null and days.length > 0">
+		    <foreach collection="days"
+		             item="day"
+		             open="AND ("
+		             separator=" OR "
+		             close=")">
+		        <choose>
+		            <when test='day == "월"'>
+		                t.day_mon = true
+		            </when>
+		
+		            <when test='day == "화"'>
+		                t.day_tue = true
+		            </when>
+		
+		            <when test='day == "수"'>
+		                t.day_wed = true
+		            </when>
+		
+		            <when test='day == "목"'>
+		                t.day_thu = true
+		            </when>
+		
+		            <when test='day == "금"'>
+		                t.day_fri = true
+		            </when>
+		
+		            <when test='day == "토"'>
+		                t.day_sat = true
+		            </when>
+		
+		            <when test='day == "일"'>
+		                t.day_sun = true
+		            </when>
+		        </choose>
+		    </foreach>
+		</if>
+		<if test="skills != null and skills.length > 0">
+		    AND t.skill IN
+		    <foreach collection="skills"
+		             item="skill"
+		             open="("
+		             separator=","
+		             close=")">
+		        #{skill}
+		    </foreach>
+		</if>
+		<if test="regions != null and regions.length > 0">
+		    AND (
+		        <foreach collection="regions"
+		                 item="region"
+		                 separator=" OR ">
+		            (
+		                t.region1 = #{region}
+		                OR t.region2 = #{region}
+		                OR t.region3 = #{region}
+		            )
+		        </foreach>
+		    )
+		</if>
+		<if test="keyword != null and keyword != ''">
+		    AND (
+		        t.team_name LIKE CONCAT('%', #{keyword}, '%')
+		        OR t.description LIKE CONCAT('%', #{keyword}, '%')
+		    )
+		</if>
+		<choose>
+		    <when test="sort != null and sort == 'member'">
+		        ORDER BY current_people DESC
+		    </when>
+		    <otherwise>
+		        ORDER BY t.created_at DESC
+		    </otherwise>
+		</choose>
+		limit #{offset}, 12 
 	</select>
-
+	
+	<select id="selectTeamListCnt" parameterType="teamsearchcondition" resultType="int">
+		select count(*)
+		from team t
+		WHERE COALESCE(t.deleted, false) = false
+		<if test="sports != null and sports.length > 0">
+		    AND t.sport IN
+		    <foreach collection="sports" item="sport" open="(" separator="," close=")">
+		        #{sport}
+		    </foreach>
+		</if>
+		<if test="gender != null and gender != ''  and gender != '성별 무관'">
+			    AND (
+				        t.gender = #{gender}
+				        OR t.gender = '성별 무관'
+				    )
+		</if>
+		<if test="days != null and days.length > 0">
+		    <foreach collection="days"
+		             item="day"
+		             open="AND ("
+		             separator=" OR "
+		             close=")">
+		        <choose>
+		            <when test='day == "월"'>
+		                t.day_mon = true
+		            </when>
+		
+		            <when test='day == "화"'>
+		                t.day_tue = true
+		            </when>
+		
+		            <when test='day == "수"'>
+		                t.day_wed = true
+		            </when>
+		
+		            <when test='day == "목"'>
+		                t.day_thu = true
+		            </when>
+		
+		            <when test='day == "금"'>
+		                t.day_fri = true
+		            </when>
+		
+		            <when test='day == "토"'>
+		                t.day_sat = true
+		            </when>
+		
+		            <when test='day == "일"'>
+		                t.day_sun = true
+		            </when>
+		        </choose>
+		    </foreach>
+		</if>
+		<if test="skills != null and skills.length > 0">
+		    AND t.skill IN
+		    <foreach collection="skills"
+		             item="skill"
+		             open="("
+		             separator=","
+		             close=")">
+		        #{skill}
+		    </foreach>
+		</if>
+		<if test="regions != null and regions.length > 0">
+		    AND (
+		        <foreach collection="regions"
+		                 item="region"
+		                 separator=" OR ">
+		            (
+		                t.region1 = #{region}
+		                OR t.region2 = #{region}
+		                OR t.region3 = #{region}
+		            )
+		        </foreach>
+		    )
+		</if>
+		<if test="keyword != null and keyword != ''">
+		    AND (
+		        t.team_name LIKE CONCAT('%', #{keyword}, '%')
+		        OR t.description LIKE CONCAT('%', #{keyword}, '%')
+		    )
+		</if>
+	</select>
 </mapper>

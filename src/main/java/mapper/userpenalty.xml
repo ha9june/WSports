@@ -2,5 +2,98 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.userpenalty">
-
+	<!-- 회원 정보 검색과 필터링에 맞는 인원수 세기 / 페이지 번호도 몇개까지 보여줄것인가-->
+	<select id="selectAdminMemberCnt" parameterType="map" resultType="int">
+		select count(*)
+		from user u
+		left join user_penalty p
+		on p.user_id = u.user_id
+		and p.penalty_id = (
+			select max(p2.penalty_id)
+			from user_penalty p2
+			where p2.user_id = u.user_id
+		)
+		where u.grade = 'User'
+		and (
+			#{status} = 'ALL'
+			or (#{status} = 'NORMAL' and (u.suspended = 0 or u.suspended is null))
+			or (#{status} = 'SUSPENDED' and u.suspended = 1)
+			or (#{status} = 'PENALTY' and p.score != 0)
+		)
+		and (
+			#{keyword} = ''
+			or u.login_id like concat('%', #{keyword}, '%')
+			or u.nickname like concat('%', #{keyword}, '%')
+		)
+	</select>
+		
+	<!-- 화면에 실제로 보여줄 회원 목록을 한페이지 만큼 가져오는 놈 -->
+	<select id="selectAdminMemberList" resultType="map">
+		select u.user_id, u.login_id, u.nickname, u.suspended, p.score
+		from user u
+		left join user_penalty p
+		on p.user_id = u.user_id
+		and p.penalty_id = (
+			select max(p2.penalty_id)
+			from user_penalty p2
+			where p2.user_id = u.user_id
+		)
+		where u.grade = 'User'
+		and (
+			#{status} = 'ALL'
+			or (#{status} = 'NORMAL' and (u.suspended = 0 or u.suspended is null))
+			or (#{status} = 'SUSPENDED' and u.suspended = 1)
+			or (#{status} = 'PENALTY' and p.score != 0)
+		)
+		and (
+			#{keyword} = ''
+			or u.login_id like concat('%', #{keyword}, '%')
+			or u.nickname like concat('%', #{keyword}, '%')
+		)
+		order by u.user_id desc
+		limit #{row}, 10
+	</select>
+	
+	<!-- 관리자 회원 상세 정보 -->
+	<select id="selectAdminMemberDetailList" resultType="map">
+		select u.user_id, u.login_id, u.nickname, u.suspended, u.withdrawal_at, u.email,
+			   p.score, p.permanent_suspension, p.received_at, p.suspension_start_at, p.suspension_end_at, p.reason, p.penalty_id
+		from user u
+		left join user_penalty p
+		on u.user_id = p.user_id
+		where u.user_id = #{userId}
+		order by p.penalty_id desc
+	</select>
+	
+	<!-- 회원의 가장 최근 패널티 점수 -->
+	<select id="selectLatestScore" parameterType="map" resultType="int">
+		select score
+		from user_penalty
+		where user_id = #{userId}
+		order by penalty_id desc
+		limit 1
+	</select>
+	
+	<!-- 관리자 페널티 주는 기능 -->
+	<insert id="insertUserPenalty" parameterType="map">
+		insert into user_penalty
+		(user_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
+		values
+		(#{userId}, now(), #{score}, #{reason}, now(), date_add(now(), interval #{days} day), 0)
+	</insert>
+	
+	<!-- 회원 상태를 정지 상태를 1로 -->
+	<update id="updateUserPenalty" parameterType="map">
+		update user
+		set suspended = 1
+		where user_id = #{userId}
+	</update>
+	
+	<!-- 관리자 영구 정지 (종료일 없음) -->
+	<insert id="insertUserPermanentPenalty" parameterType="map">
+		insert into user_penalty
+		(user_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
+		values
+		(#{userId}, now(), #{score}, #{reason}, now(), null, 1)
+	</insert>
 </mapper>

@@ -53,9 +53,9 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectTeamSettlementDayList(LocalDate date) throws Exception {
+	public List<Map<String, Object>> selectTeamSettlementDayList(Map<String, Object> param) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.teamsettlement.selectTeamSettlementDayList", date);
+			return sqlSession.selectList("mapper.teamsettlement.selectTeamSettlementDayList", param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

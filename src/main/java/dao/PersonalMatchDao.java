@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import dto.PersonalMatch;
+import util.MatchSearchInfo;
 
 public interface PersonalMatchDao {
 	List<PersonalMatch> selectPersonalMatchList() throws Exception;
-	List<PersonalMatch> selectNormalPersonalMatchList(Integer startIndex) throws Exception;
-	List<PersonalMatch> selectMapPersonalMatchList(Map<String,Object> latlong) throws Exception;
+	List<PersonalMatch> selectNormalPersonalMatchList(MatchSearchInfo searchInfo) throws Exception;
+	List<PersonalMatch> selectMapPersonalMatchList(MatchSearchInfo searchInfo) throws Exception;
 	
 	//마이페이지 경기 종목별 조회
 	List<PersonalMatch>selectMyPagePersonalMatchsportList(Map<String,Object> param)throws Exception;

@@ -11,17 +11,17 @@
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
-<form class="work-inner" action="${ctx}/jsp/mypage/myPageUser.jsp" method="post" style="padding-left:24px">
+<form class="work-inner" action="${ctx}/member/mypage/view" method="post" style="padding-left:24px">
   <h1 class="section-title">회원정보</h1>
   <p class="section-desc">회원정보와 정산 계좌를 수정한 뒤 저장해주세요.</p>
   <div class="form-grid">
-    <div class="field full"><label class="field-label">아이디</label><input class="input" value="matchon01" readonly></div>
-    <div class="field"><label class="field-label">이름</label><input class="input" name="name" value="김매치" ></div>
-    <div class="field"><label class="field-label">닉네임</label><input class="input" name="nickname" value="매치온 회원" ></div>
-    <div class="field"><label class="field-label">이메일</label><input class="input" name="email" value="matchon01@example.com" ></div>
-    <div class="field"><label class="field-label">전화번호</label><input class="input" name="phone" value="010-1234-5678" ></div>
-    <div class="field"><label class="field-label">생년월일</label><input class="input" name="birth" value="1998.05.14" ></div>
-    <div class="field"><label class="field-label">성별</label><input class="input" value="남성" readonly></div>
+    <div class="field full"><label class="field-label">아이디</label><input class="input" value="${loginUser.loginId}" readonly></div>
+    <div class="field"><label class="field-label">이름</label><input class="input" name="name" value="${loginUser.name}" required></div>
+    <div class="field"><label class="field-label">닉네임</label><input class="input" name="nickname" value="${loginUser.nickname}" required></div>
+    <div class="field"><label class="field-label">이메일</label><input class="input" name="email" value="${loginUser.email}" required></div>
+    <div class="field"><label class="field-label">전화번호</label><input class="input" name="phone" value="${loginUser.phone}" required></div>
+    <div class="field"><label class="field-label">생년월일</label><input class="input" name="birth" value="${loginUser.birthDate}" required></div>
+    <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender}" readonly></div>
   </div>
 
   <h2 class="section-title mt-32">정산 계좌</h2>
@@ -29,12 +29,12 @@
   <div class="acct-row" style="grid-template-columns:167px 360px 167px">
     <div class="field"><label class="field-label">은행</label>
       <select class="select" name="bank"><option>은행 선택</option><option selected>카카오뱅크</option><option>국민은행</option><option>신한은행</option><option>토스뱅크</option></select></div>
-    <div class="field"><label class="field-label">계좌번호</label><input class="input" name="accountNo" value="3333-12-3456789" ></div>
-    <div class="field"><label class="field-label">예금주</label><input class="input" name="accountHolder" value="김매치" ></div>
+    <div class="field"><label class="field-label">계좌번호</label><input class="input" name="accountNo" value="${loginUser.accountNumber}" ></div>
+    <div class="field"><label class="field-label">예금주</label><input class="input" name="accountHolder" value="${loginUser.accountHolder}" ></div>
   </div>
   <p class="field-help mt-16">정산이 필요한 기능을 이용하기 전까지는 등록하지 않아도 됩니다.</p>
   <div class="form-actions" style="margin-top:16px">
-    <a class="btn btn-outline" href="${ctx}/jsp/mypage/myPageUser.jsp">취소</a><button type="submit" class="btn btn-primary" style="width:92px">저장</button>
+    <a class="btn btn-outline" href="${ctx}/member/mypage/view">취소</a><button type="submit" class="btn btn-primary" style="width:92px">저장</button>
   </div>
 
   <section class="security">

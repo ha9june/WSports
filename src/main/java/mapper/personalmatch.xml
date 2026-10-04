@@ -32,28 +32,168 @@
 		ORDER BY m.created_at DESC
 		LIMIT 4;
 	</select>
-	<select id="selectNormalPersonalMatchList" parameterType="Integer" resultType="personalmatch">
+	
+	<select id="selectNormalPersonalMatchList" parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
 		    m.*,
 		    COUNT(p.participant_id) AS current_people
 		FROM personal_match m
 		LEFT JOIN personal_match_participant p
 		    ON m.personal_match_id = p.personal_match_id
+		
+		WHERE 1=1
+		
+		<if test="sports != null and sports.length > 0">
+		    AND m.sport IN
+		    <foreach collection="sports" item="sport" open="(" separator="," close=")">
+		        #{sport}
+		    </foreach>
+		</if>
+		
+		<if test="ages != null and ages.length > 0">
+		    AND (
+		        <foreach collection="ages" item="age" separator=" OR ">
+		            <choose>
+		                <when test="age == '20대'">
+		                    m.age_20s = true
+		                </when>
+		                <when test="age == '30대'">
+		                    m.age_30s = true
+		                </when>
+		                <when test="age == '40대'">
+		                    m.age_40s = true
+		                </when>
+		                <when test="age == '50대'">
+		                    m.age_50s = true
+		                </when>
+		                <when test="age == '60대'">
+		                    m.age_60_plus = true
+		                </when>
+		            </choose>
+		        </foreach>
+		    )
+		</if>
+		
+		<if test="skills != null and skills.length > 0">
+		    AND (
+		        <foreach collection="skills" item="skill" separator=" OR ">
+		            <choose>
+		                <when test="skill == '입문'">
+		                    m.skill_intro = true
+		                </when>
+		                <when test="skill == '초급'">
+		                    m.skill_beginner = true
+		                </when>
+		                <when test="skill == '중급'">
+		                    m.skill_intermediate = true
+		                </when>
+		                <when test="skill == '상급'">
+		                    m.skill_advanced = true
+		                </when>
+		            </choose>
+		        </foreach>
+		    )
+		</if>
+		
+		<if test="gender != null and gender != ''">
+		    AND m.gender = #{gender}
+		</if>
+		
+		<if test="regions != null and regions.length > 0">
+		    AND m.region IN
+		    <foreach collection="regions" item="region" open="(" separator="," close=")">
+		        #{region}
+		    </foreach>
+		</if>
+		
+		<if test="startDate != null">
+		    AND m.match_date &gt;= #{startDate}
+		</if>
+		
+		<if test="endDate != null">
+		    AND m.match_date &lt;= #{endDate}
+		</if>
+		
+		<if test="keyword != null and keyword != ''">
+		    AND (
+		        m.title LIKE CONCAT('%', #{keyword}, '%')
+		        OR m.content LIKE CONCAT('%', #{keyword}, '%')
+		    )
+		</if>
+	
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at DESC
-		LIMIT #{startIndex},4;
+		LIMIT #{startIndex}, 4
 	</select>
-	<select id="selectMapPersonalMatchList" parameterType="map" resultType="personalmatch">
+	<select id="selectMapPersonalMatchList" parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
 		    m.*,
 		    COUNT(p.participant_id) AS current_people
 		FROM personal_match m
 		LEFT JOIN personal_match_participant p
 		    ON m.personal_match_id = p.personal_match_id
+		
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
 		  AND m.longitude BETWEEN #{minLng} AND #{maxLng}
+		
+		<if test="sports != null and sports.length > 0">
+		    AND m.sport IN
+		    <foreach collection="sports" item="sport" open="(" separator="," close=")">
+		        #{sport}
+		    </foreach>
+		</if>
+		
+		<if test="ages != null and ages.length > 0">
+		    AND (
+		        <foreach collection="ages" item="age" separator=" OR ">
+		            <choose>
+		                <when test="age == '20대'">
+		                    m.age_20s = true
+		                </when>
+		                <when test="age == '30대'">
+		                    m.age_30s = true
+		                </when>
+		                <when test="age == '40대'">
+		                    m.age_40s = true
+		                </when>
+		                <when test="age == '50대'">
+		                    m.age_50s = true
+		                </when>
+		                <when test="age == '60대'">
+		                    m.age_60_plus = true
+		                </when>
+		            </choose>
+		        </foreach>
+		    )
+		</if>
+		
+		<if test="skills != null and skills.length > 0">
+		    AND (
+		        <foreach collection="skills" item="skill" separator=" OR ">
+		            <choose>
+		                <when test="skill == '입문'">
+		                    m.skill_intro = true
+		                </when>
+		                <when test="skill == '초급'">
+		                    m.skill_beginner = true
+		                </when>
+		                <when test="skill == '중급'">
+		                    m.skill_intermediate = true
+		                </when>
+		                <when test="skill == '상급'">
+		                    m.skill_advanced = true
+		                </when>
+		            </choose>
+		        </foreach>
+		    )
+		</if>
+		
+		<if test="gender != null and gender != ''">
+		    AND m.gender = #{gender}
+		</if>
+		
 		GROUP BY m.personal_match_id
-		ORDER BY m.created_at DESC;
+		ORDER BY m.created_at DESC
 	</select>
 
 
@@ -214,7 +354,6 @@
 		LIMIT #{size} OFFSET #{offset}
 	</select>
 
-	
 
 	<select id="selectPersonalMatch" parameterType="Integer" resultType="map">
 		SELECT
