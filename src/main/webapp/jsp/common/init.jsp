@@ -15,18 +15,6 @@
            (DTO 에 getRole() 이 'ADMIN' / 'USER' 를 반환한다고 가정)
   ============================================================
 --%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
-<c:if test="${not empty param.role}">
-  <c:set var="demoRole" value="${param.role}" scope="session" />
-</c:if>
-<c:choose>
-  <c:when test="${not empty param.role}"><c:set var="role" value="${param.role}" /></c:when>
-  <c:when test="${not empty sessionScope.loginUser}">
-    <c:set var="role" value="${sessionScope.loginUser.role eq 'ADMIN' ? 'admin' : 'member'}" />
-  </c:when>
-  <c:when test="${not empty sessionScope.demoRole}"><c:set var="role" value="${sessionScope.demoRole}" /></c:when>
-  <c:otherwise><c:set var="role" value="member" /></c:otherwise>
-</c:choose>
-<c:set var="state" value="${param.state}" />
+<c:set var="ctx" value="${pageContext.request.contextPath}" />	
 <%-- 공통 하트 아이콘 (찜 버튼) : ${heart} 로 출력 --%>
 <c:set var="heart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.6-9C.9 8.3 2.8 4.5 6.5 4.5c2.3 0 3.8 1.3 5.5 3.2 1.7-1.9 3.2-3.2 5.5-3.2 3.7 0 5.6 3.8 4.1 7-2.1 4.4-9.6 9-9.6 9z"/></svg></c:set>

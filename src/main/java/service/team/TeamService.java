@@ -12,8 +12,13 @@ public interface TeamService {
 			Part activityImg4, Part activityImg5) throws Exception;
 	List<Team> getTeamList(TeamSearchCondition condition) throws Exception;
 	int getTemaListCnt(TeamSearchCondition condition) throws Exception;
+	Team getTeam(Long TeamId) throws Exception;
+	
+	
+	
 	String changeAges(Boolean age20s, Boolean age30s, Boolean age40s, Boolean age50s, Boolean age60Plus) throws Exception;
 	String changeDays(Boolean dayMon, Boolean dayTue, Boolean dayWed, Boolean dayThu, Boolean dayFri, Boolean daySat, Boolean daySun) throws Exception;
 	String changeRegions(String region1, String region2, String region3) throws Exception;
 	String changeTimes(Boolean time0609, Boolean time0912, Boolean time1218, Boolean time1822, Boolean time2206) throws Exception;
+	String teamDetailRegion(String region1, String region2, String region3) throws Exception;
 }	

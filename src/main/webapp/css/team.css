@@ -184,3 +184,43 @@
 }
 
 
+/* ===== 팀 프로필 이미지 (목록/상세 공통 70px 원형) ===== */
+
+/* 목록 */
+.team-card .top > img {
+	width: 70px;
+	height: 70px;
+	flex: none;
+	border-radius: 50%;
+	object-fit: cover;
+	box-sizing: border-box;
+}
+
+/* 상세 : 컨테이너의 배경/테두리 제거 */
+.team-side .logo-ph {
+	border: 0;
+	background: none;
+}
+
+.team-side .logo-ph img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+	box-sizing: border-box;
+}
+
+/* 기본 이모티콘 : 이미지 안의 투명 여백(10%)만큼 키워서 원을 꽉 채움 */
+.team-card .top > img[src*="/img/team-"],
+.team-side .logo-ph img[src*="/img/team-"] {
+	border: 0;
+	transform: scale(1.25);
+}
+
+/* 업로드한 사진만 연한 테두리 */
+.team-card .top > img[src*="/uploads/"],
+.team-side .logo-ph img[src*="/uploads/"] {
+	border: 1px solid var(--ds-border-subtle);
+}
+
+

@@ -45,10 +45,8 @@ public class TeamCreate extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+			request.getRequestDispatcher("/jsp/team/teamMakeForm.jsp").forward(request, response);
 	}
 
 	/**
@@ -134,7 +132,7 @@ public class TeamCreate extends HttpServlet {
 					activityImg3, activityImg4, activityImg5);
 			request.setAttribute("teamId", teamId);
 
-			request.getRequestDispatcher("/jsp/team/teamDetail.jsp").forward(request, response);
+		    response.sendRedirect(request.getContextPath()+"/team/detail/view?teamId="+ teamId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

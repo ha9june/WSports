@@ -19,4 +19,17 @@
 					)
 	</insert>
 	
+	<select id="selectTeamUserList" parameterType="Long" resultType="user">
+		select u.*, tu.team_role 
+		from team_user tu
+		JOIN user u
+		ON u.user_id = tu.user_id
+		where team_id = #{teamId} and COALESCE(withdrawn_at, false) = false
+	</select>
+	
+	<select id="selectRole" parameterType="Map" resultType="String">
+		select team_role
+		from team_user
+		where team_id = ${teamId} and user_id = #{userId}
+	</select>
 </mapper>

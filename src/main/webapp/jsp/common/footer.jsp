@@ -26,8 +26,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<%-- [시연용] 권한/상태 전환 바 : 실제 배포 시 아래 한 줄을 삭제하세요. --%>
-<%@ include file="/jsp/common/demoBar.jsp" %>
 
 <script src="${ctx}/js/common.js"></script>
 <c:forTokens items="${pageJs}" delims="," var="jsName">
