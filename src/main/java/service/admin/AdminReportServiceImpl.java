@@ -47,6 +47,7 @@ public class AdminReportServiceImpl implements AdminReportService {
 		
 		return reportDao.selectAdminReportList(param);
 	}
+	//관리자 신고 답변
 	@Override
 	public void AdminReportAnswer(Long reportId, String answer, Long adminId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
@@ -56,6 +57,7 @@ public class AdminReportServiceImpl implements AdminReportService {
 		
 		reportDao.updateAdminReportAnswer(param);
 	}
+	//신고 세부 정보
 	@Override
 	public Map<String, Object> getAdminReportDetail(Long reportId) throws Exception {
 		return reportDao.selectAdminReportDetail(reportId);

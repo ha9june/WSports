@@ -17,7 +17,7 @@
 	
 	<!-- 관리자 신고관리 리스트 10개씩 -->
 	<select id="selectAdminReportList" parameterType="map" resultType="map">
-		select r.report_id, r.created_at, r.type, u.name, r.title, r.status, r.content
+		select r.report_id, r.created_at, r.type, u.name, u.nickname, r.title, r.status, r.content
 		from report r
 		left join user u
 		on r.user_id = u.user_id
