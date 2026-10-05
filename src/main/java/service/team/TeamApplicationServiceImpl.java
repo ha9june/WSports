@@ -70,7 +70,7 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 		}
 
 	}
-
+ 
 	@Override
 	public TeamApplication getApplication(Long teamId, Long userId) throws Exception {
 		TeamApplication teamApplication = new TeamApplication();
