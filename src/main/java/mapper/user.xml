@@ -3,26 +3,48 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.user">
 
-	<select id="selectLoginId" resultType="User" parameterType="String">
+	<select id="selectLoginId" resultType="user" parameterType="String">
 		select * from user where login_id=#{loginId}
 	</select>
 
-	<select id="selectNickname" resultType="User" parameterType="String">
+	<select id="selectNickname" resultType="user" parameterType="String">
 		select * from user where nickname=#{nickname}
 	</select>
 	
 	<insert id="insertUser" parameterType="user">
-	insert into user(login_id,name,password,email,nickname,birth_date,phone,gender,preferred_region1,preferred_region2,preferred_region3,preferred_sport1,preferred_sport2,preferred_sport3,created_at)
-	values(#{loginId},#{name},#{password},#{email},#{nickname},#{birthDate},#{phone},#{gender},#{preferredRegion1},#{preferredRegion2},#{preferredRegion3},#{preferredSport1},#{preferredSport2},#{preferredSport3},#{createdAt})
+	insert into user(login_id,name,password,email,nickname,birth_date,phone,gender,preferred_region1,preferred_region2,preferred_region3, 
+					 preferred_sport1,preferred_sport2,preferred_sport3,grade,created_at)
+	values(#{loginId},#{name},#{password},#{email},#{nickname},#{birthDate},#{phone},#{gender},#{preferredRegion1},#{preferredRegion2},#{preferredRegion3}, 
+		   #{preferredSport1},#{preferredSport2},#{preferredSport3},'User',now())
 	</insert>
 
 	<update id="updateLastLogin" parameterType="String">
-		update user set last_login_at = now() where login_id=#{loginId}
+		update user set last_login_at=now() where login_id=#{loginId}
 	</update>
 	
 	<update id="updateMypage" parameterType="user">
 		update user 
-		set name=#{name},email=#{email},nickname=#{nickname},birth_date=#{birthDate},phone=#{phone},bank_name=#{bankName},account_number=#{accountNumber},account_holder=#{accountHolder} 
+		set name=#{name},email=#{email},nickname=#{nickname},birth_date=#{birthDate},phone=#{phone}, 
+		account_updated_at=case 
+			when account_created_at is not null and not (bank_name &lt;=&gt; #{bankName} and account_number &lt;=&gt; #{accountNumber} and account_holder &lt;=&gt; #{accountHolder}) 
+		    then now() 
+		    else account_updated_at 
+		end, 
+		account_created_at=case 
+			when account_created_at is null and #{accountNumber} is not null 
+			then now() 
+			else account_created_at 
+		end, 
+		bank_name=#{bankName},account_number=#{accountNumber},account_holder=#{accountHolder},updated_at=now()
+		where login_id=#{loginId}
+	</update>
+	
+	<update id="updateProfile" parameterType="user">
+		update user 
+		set <if test="profileImage != null">profile_image=nullif(#{profileImage},''),</if> 
+			preferred_region1=#{preferredRegion1},preferred_region2=#{preferredRegion2},preferred_region3=#{preferredRegion3}, 
+			preferred_sport1=#{preferredSport1},preferred_sport2=#{preferredSport2},preferred_sport3=#{preferredSport3}, 
+			soccer_skill=#{soccerSkill},basketball_skill=#{basketballSkill},tennis_skill=#{tennisSkill},badminton_skill=#{badmintonSkill},bio=#{bio},profile_updated_at=now() 
 		where login_id=#{loginId}
 	</update>
 	

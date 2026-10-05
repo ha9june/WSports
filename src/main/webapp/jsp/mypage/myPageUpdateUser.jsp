@@ -11,7 +11,7 @@
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
-<form class="work-inner" action="${ctx}/member/mypage/view" method="post" style="padding-left:24px">
+<form class="work-inner" action="${ctx}/member/mypage/edit" method="post" style="padding-left:24px">
   <h1 class="section-title">회원정보</h1>
   <p class="section-desc">회원정보와 정산 계좌를 수정한 뒤 저장해주세요.</p>
   <div class="form-grid">
@@ -20,15 +20,21 @@
     <div class="field"><label class="field-label">닉네임</label><input class="input" name="nickname" value="${loginUser.nickname}" required></div>
     <div class="field"><label class="field-label">이메일</label><input class="input" name="email" value="${loginUser.email}" required></div>
     <div class="field"><label class="field-label">전화번호</label><input class="input" name="phone" value="${loginUser.phone}" required></div>
-    <div class="field"><label class="field-label">생년월일</label><input class="input" name="birth" value="${loginUser.birthDate}" required></div>
-    <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender}" readonly></div>
+    <div class="field"><label class="field-label">생년월일</label><input class="input" name="birth" type="date" placeholder="YYYY.MM.DD" min="1900-01-01" max="9999-12-31" value="${loginUser.birthDate}" required></div>
+    <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender == 'M' ? '남성' : '여성'}" readonly></div>
   </div>
 
   <h2 class="section-title mt-32">정산 계좌</h2>
   <p class="section-desc">정산·환불 받을 본인 명의 계좌를 등록해주세요.</p>
   <div class="acct-row" style="grid-template-columns:167px 360px 167px">
     <div class="field"><label class="field-label">은행</label>
-      <select class="select" name="bank"><option>은행 선택</option><option selected>카카오뱅크</option><option>국민은행</option><option>신한은행</option><option>토스뱅크</option></select></div>
+      <select class="select" name="bank">
+      <option value="">은행 선택</option>
+      <option value="카카오뱅크" ${loginUser.bankName == '카카오뱅크' ? 'selected':''}>카카오뱅크</option>
+      <option value="국민은행" ${loginUser.bankName == '국민은행' ? 'selected':''}>국민은행</option>
+      <option value="신한은행" ${loginUser.bankName == '신한은행' ? 'selected':''}>신한은행</option>
+      <option value="토스뱅크" ${loginUser.bankName == '토스뱅크' ? 'selected':''}>토스뱅크</option></select>
+     </div>
     <div class="field"><label class="field-label">계좌번호</label><input class="input" name="accountNo" value="${loginUser.accountNumber}" ></div>
     <div class="field"><label class="field-label">예금주</label><input class="input" name="accountHolder" value="${loginUser.accountHolder}" ></div>
   </div>
