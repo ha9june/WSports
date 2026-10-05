@@ -144,6 +144,8 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("userId", userId);
 		param.put("matchId", matchId);
 		param.put("matchType", matchType);
-		return favoriteDao.selectMyPageHeartMatchExists(param) != null;
+		
+		Long count = favoriteDao.selectMyPageHeartMatchExists(param);
+		return count != null && count > 0;
 	}
 }

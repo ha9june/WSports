@@ -5,7 +5,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.time.YearMonth, java.time.LocalDate"%>
 <link href="https://jsdelivr.net" rel="stylesheet" />
-<script src="https://jquery.com"></script>
 <script src="https://jsdelivr.net"></script>
 <%--
   참가 경기 (myPagePersonalMatch.jsp) - 담당: 강신우
@@ -210,7 +209,9 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 							<span><fmt:formatNumber value="${m.participationFee}"
 									pattern="#,###" />원</span>
 							<!-- 관심경기 추가/제거 -->
-							<button type="button" class="fav-btn" data-match-id="${m.personalMatchId}"
+							<button type="button" class="fav-btn ${m.favorite ? 'is-on':''}" 
+									data-match-id="${m.personalMatchId}"
+									data-match-type="Personal"
 									aria-label="관심 경기">${heart}</button>
 						</div>
 						<div class="btns">
@@ -297,6 +298,7 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 						type : 'post',
 						dataType : 'text',
 						data : {matchId : $btn.data("matchId"),
+							matchType : $btn.data("matchType"),
 							heart : $btn.hasClass("is-on")},
 						    success : function(result) {
 							result = result.trim();

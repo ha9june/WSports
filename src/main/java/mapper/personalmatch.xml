@@ -38,10 +38,12 @@
 		SELECT
 		m.*,
 		COUNT(p.participant_id) AS current_people
-		FROM personal_match m
+		FROM personal_match
+		m
 		LEFT JOIN
 		personal_match_participant p
-		ON m.personal_match_id = p.personal_match_id
+		ON m.personal_match_id =
+		p.personal_match_id
 
 		WHERE 1=1
 
@@ -121,7 +123,8 @@
 		<if test="keyword != null and keyword != ''">
 			AND (
 			m.title LIKE CONCAT('%', #{keyword}, '%')
-			OR m.content LIKE CONCAT('%', #{keyword}, '%')
+			OR m.content
+			LIKE CONCAT('%', #{keyword}, '%')
 			)
 		</if>
 
@@ -135,10 +138,12 @@
 		SELECT
 		m.*,
 		COUNT(p.participant_id) AS current_people
-		FROM personal_match m
+		FROM personal_match
+		m
 		LEFT JOIN
 		personal_match_participant p
-		ON m.personal_match_id = p.personal_match_id
+		ON m.personal_match_id =
+		p.personal_match_id
 
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
 		AND m.longitude BETWEEN #{minLng} AND #{maxLng}
@@ -208,13 +213,20 @@
 	<!-- 마이페이지 참여 경기 목록 조회 -->
 	<select id="selectMyPagePersonalMatchList" parameterType="map"
 		resultType="personalmatch">
-		SELECT m.*, p.status AS participantStatus
-		FROM
-		personal_match_participant p
-		JOIN personal_match m ON
-		m.personal_match_id = p.personal_match_id
+		SELECT m.*,
+		p.status AS participantStatus,
+		CASE WHEN f.favorite_id IS
+		NULL THEN 0 ELSE 1 END AS favorite
+		FROM personal_match_participant p
+		JOIN personal_match m ON m.personal_match_id = p.personal_match_id
+		LEFT JOIN favorite f
+		ON f.match_id = m.personal_match_id
+		AND f.user_id =
+		#{userId}
+		AND f.match_type = 'Personal'
 		WHERE p.user_id = #{userId}
-		AND p.status IN ('결제완료')
+		AND
+		p.status IN ('결제완료')
 		<if test="month != null and month != ''">
 			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month},
 			'-01'), '%Y-%m-%d')
@@ -263,19 +275,19 @@
 	<!-- 내가만든 경기 목록 조회 -->
 	<select id="selectMyPageCreatedPersonalMatchList"
 		parameterType="map" resultType="personalmatch">
-		select m.*
-		from personal_match m
-		where m.user_id=#{userId}
-		and m.deleted
-		= '0'
-
+		SELECT m.*,
+		CASE WHEN f.favorite_id IS NULL THEN 0 ELSE 1 END AS favorite
+		FROM personal_match m
+		LEFT JOIN favorite f
+		ON f.match_id = m.personal_match_id
+		AND f.user_id = #{userId}
+		AND f.match_type = 'Personal'
+		WHERE m.user_id = #{userId}
+		AND m.deleted = '0'
 		<if test="month != null and month != ''">
-			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month},
-			'-01'), '%Y-%m-%d')
-			AND m.match_date &lt;
-			DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'),
-			'%Y-%m-%d'), INTERVAL 1
-			MONTH)
+			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d')
+			AND m.match_date &lt; DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'),
+			'%Y-%m-%d'), INTERVAL 1 MONTH)
 		</if>
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
@@ -316,14 +328,17 @@
 		SELECT
 		m.*,
 		u.nickname,
-		COUNT(p.participant_id) AS current_people
+		COUNT(p.participant_id) AS
+		current_people
 		FROM personal_match m
 		LEFT JOIN
 		personal_match_participant p
-		ON m.personal_match_id = p.personal_match_id
+		ON m.personal_match_id =
+		p.personal_match_id
 		LEFT JOIN user u
 		ON m.user_id = u.user_id
-		WHERE m.personal_match_id = #{personaMatchId}
+		WHERE
+		m.personal_match_id = #{personaMatchId}
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at DESC;
 	</select>

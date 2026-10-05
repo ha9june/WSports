@@ -47,6 +47,12 @@ public class PersonalMatch {
     private String address;             // 주소
     private String region;              // 지역
     private String currentPeople;		//현재인원
+    
+    private boolean Favorite;
+    public boolean isFavorite() {return Favorite;}
+    void setFavorite(boolean Favorite) {this.Favorite=Favorite;}
+    
+    
 	public PersonalMatch() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -6,16 +6,16 @@
 	<insert id="insertMyPageHeartMatch" parameterType="Map">
 		insert
 		into favorite (user_id,match_id,created_at,match_type)
-		values (#{userid},#{matchid},#{createdat},#{matchtype})
+		values (#{userId},#{matchId},Now(),#{matchType})
 	</insert>
 	
 	<delete id="deleteMyPageHeartMatch" parameterType="Map">
-	delete from favorite where match_id=#{matchid} and user_id=#{userid}
+	delete from favorite where match_id=#{matchId} and user_id=#{userId} and match_type=#{matchType}
 	</delete>
 	
 	<select id="selectMyPageHeartMatchExists" parameterType="map" resultType="Long">
 	SELECT COUNT(*) FROM favorite
-	WHERE user_id = #{userId} AND match_id = #{matchId} AND match_type = #{matchType}
+	WHERE user_id = #{userId} and match_id = #{matchId} and match_type=#{matchType}
 </select>
 
 

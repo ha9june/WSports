@@ -47,31 +47,28 @@ public class MypageMatchesSaved extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		User user = (session == null) ? null : (User) session.getAttribute("user");
 		if(user==null) {
-//			response.sendRedirect(request.getContextPath()+"/login");
 			response.getWriter().write("login");
 			return;// 로그인 경로 수정
 		}
 		long userId = user.getUserId();
 		long matchId = Long.parseLong(request.getParameter("matchId"));
-		String heart = request.getParameter("heart");
+//		String heart = request.getParameter("heart");
 		String matchType = request.getParameter("matchType");
 		PersonalMatchService service = new PersonalMatchServiceImpl();
+		
+		if (matchType == null || matchType.isEmpty()) {
+		    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    response.getWriter().write("error");
+		    return;
+		}
 		
 		Map<String ,Object> param = new HashMap<>();
 		param.put("matchId", matchId);
 		param.put("userId", userId);
 		param.put("matchType",matchType);
-		
 		try {
 			boolean toggle = service.toggleMyPageHeartMatch(userId, matchId, matchType);
 			response.getWriter().write(toggle ? "insert":"delete");
-			if(heart.equals("true")) {
-				service.deleteMyPageHeartMatch(param);
-				response.getWriter().write("delete");
-			}else {
-				service.insertMyPageHeartMatch(param);
-				response.getWriter().write("insert");
-			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			response.getWriter().write("오류가 생겼습니다.");
