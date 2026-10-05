@@ -25,8 +25,8 @@
 .team-side .top p { font-size: 11px; color: var(--ds-text-2); margin-top: 4px; }
 .team-side h2 { font-size: 15px; font-weight: 700; margin: 24px 0 14px; }
 .team-side .cond { display: grid; grid-template-columns: 76px 1fr; gap: 12px 0; font-size: 11px; }
-.team-side .cond dt { color: var(--ds-text-2); }
-.team-side .cond dd { font-weight: 700; }
+.team-side .cond dt { font-weight: 700; color: var(--ds-text-2); }
+.team-side .cond dd { font-weight: 400; }
 .team-side hr { border: 0; height: 1px; background: var(--ds-border); margin: 20px 0 12px; }
 .team-side .note { font-size: 11px; color: var(--ds-text-2); }
 .team-side .btn { margin-top: 20px; }
@@ -57,15 +57,33 @@
 .post-card p { font-size: 11px; color: var(--ds-text-2); margin-top: 12px; }
 .post-card .acts { display: flex; gap: 8px; margin-top: 14px; }
 
+.btn-join:disabled { background: var(--ds-border-subtle); color: var(--ds-text-3); cursor: not-allowed; }
+.btn-join:disabled:hover { background: var(--ds-border-subtle); }
+
 /* ---------- 가입 신청 ---------- */
 .apply-card { border-radius: var(--r-12); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); padding: 24px 28px; position: relative; }
 .apply-card h2 { font-size: 15px; font-weight: 700; margin-bottom: 20px; }
 .apply-card .avatar { position: absolute; right: 36px; top: 24px; }
 .apply-card dl { display: grid; grid-template-columns: 120px 1fr; gap: 14px 0; font-size: 12px; }
-.apply-card dt { font-size: 11px; color: var(--ds-text-2); }
-.apply-card dd { font-weight: 700; }
+.apply-card dt { font-size: 11px; font-weight: 700; color: var(--ds-text-2); }
+.apply-card dd { font-weight: 400; }
 .apply-card .field { margin-top: 28px; }
 .apply-card .textarea { background: #fff; min-height: 90px; }
+
+/* 가입 신청 버튼: 폼 오른쪽 아래 */
+.apply-card + .btn-group.apply-actions,
+.btn-group.apply-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 8px;
+  width: 100%;
+}
+.btn-group.apply-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
 /* ---------- 팀 폼 ---------- */
 .photo-box { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--ds-border); border-radius: var(--r-8); 

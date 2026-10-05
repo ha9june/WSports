@@ -62,7 +62,7 @@ public class AuthLogin extends HttpServlet {
 			userFcmToken.setUserId(user.getUserId());
 			userFcmTokenService.registerToken(userFcmToken);
 			
-			response.sendRedirect(request.getContextPath()+"/jsp/home/main.jsp"); // main suvlet으로 교체 필요 
+			response.sendRedirect(request.getContextPath()+"/home/main"); // main suvlet으로 교체 필요 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

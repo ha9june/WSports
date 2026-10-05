@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.User;
+import service.team.TeamApplicationService;
+import service.team.TeamApplicationServiceImpl;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
 import service.team.TeamService;
@@ -40,27 +42,27 @@ public class TeamDetailView extends HttpServlet {
 		TeamService teamService = new TeamServiceImpl();
 		TeamUserService teamUserService = new TeamUserServiceImpl();
 		TeamMatchService teamMatchService = new TeamMatchServiceImpl();
+		TeamApplicationService teamApplicationService = new TeamApplicationServiceImpl();
 		
 		
 		User user = (User) session.getAttribute("user");
 		
 		String state = "public"; // 비가입자, 비회원
 
-		
-
-		
 		try {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
 			if(user != null) {
 				String myRole = teamUserService.getRole(teamId, user.getUserId());
 			    if (myRole != null) {
 			        state = ("CAPTAIN".equals(myRole) || "VICE_CAPTAIN".equals(myRole)) ? "manager" : "member";
-			    }
+			    }else if(teamApplicationService.getApplication(teamId, user.getUserId()) != null) {
+					state = "applicater";
+				}
 			}
 			
 			request.setAttribute("team", teamService.getTeam(teamId));
-			request.setAttribute("state", state); //팀원인지 관리자인지 member // manager
-			if(!state.equals("public")) { //팀원이면
+			request.setAttribute("state", state); //팀원인지 관리자인지 신청자인지 member // manager //applicater	
+			if("member".equals(state) || "manager".equals(state)) { //팀원 혹은 팀 관리자면
 				request.setAttribute("teamUserList", teamUserService.getTeamUserList(teamId));
 				request.setAttribute("teamMatchList", teamMatchService.getTeamMatchList(teamId));
 			}

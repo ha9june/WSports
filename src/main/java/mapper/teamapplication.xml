@@ -2,5 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teamapplication">
-
+	<insert id="insertTeamApplication" parameterType="teamapplication">
+		insert into team_application
+		(user_id, team_id, message, status, applied_at) values (#{userId}, #{teamId}, #{message}, '대기', now())
+	</insert>
+	
+	<select id="selectTeamApplicaion" parameterType="teamapplication" resultType="teamapplication">
+		select * from team_application where user_id = #{userId} and team_id = #{teamId} and status = '대기'
+	</select>
 </mapper>
