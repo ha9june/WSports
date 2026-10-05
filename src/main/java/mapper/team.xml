@@ -275,4 +275,12 @@
 		from team t
 		where t.team_id = #{teamId} and COALESCE(t.deleted, false) = false
 	</select>
+
+	<select id="selectTeamCaptainUserId" parameterType="Long" resultType="Long">
+		select tu.user_id
+		from team t
+		join team_user tu
+		on t.team_id = tu.team_id
+		where tu.team_role = 'CAPTAIN' and tu.withdrawn = false and tu.team_id = #{teamId}
+	</select>
 </mapper>

@@ -11,8 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dto.Notification;
 import dto.Team;
 import dto.User;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 import service.team.TeamApplicationService;
 import service.team.TeamApplicationServiceImpl;
 import service.team.TeamService;
@@ -98,7 +101,7 @@ public class TeamApplication extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		TeamApplicationService teamApplicationService = new TeamApplicationServiceImpl();
 
 		//가입신청
 		try {
@@ -111,9 +114,9 @@ public class TeamApplication extends HttpServlet {
 		        response.sendRedirect(request.getContextPath() + "/auth/login");
 		        return;
 		    }
+
+		    teamApplicationService.application(teamId, user, message);
 		    
-		    TeamApplicationService teamApplicationService = new TeamApplicationServiceImpl();
-		    teamApplicationService.application(teamId, user.getUserId(), message);
 		    response.sendRedirect(request.getContextPath() + "/team/detail/view?teamId=" + teamId);
 		}catch(Exception e) {
 			e.printStackTrace();

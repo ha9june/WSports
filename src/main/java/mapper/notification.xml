@@ -9,7 +9,7 @@
         keyColumn="notification_id">
 	insert into notification (user_id, content, is_read, created_at, title, link) 
 						values
-							(#{userId}, #{content}, #{isRead}, NOW(), #{title}, #{link})
+							(#{userId}, #{content}, 0, NOW(), #{title}, #{link})
 	</insert>
 
 	<select id="selectNotification" parameterType="Long" resultType="notification">
@@ -31,20 +31,19 @@
 	</update>
 	
 	<select id="selectNotificationList" parameterType="Long" resultType="notification">
-		select * from notification where user_id = #{userId}
+		select * from notification where user_id = #{userId} and COALESCE(is_read, 0) = 0
 	</select>
 	
 	<select id="selectNotificationListNotConfirm3" parameterType="Long" resultType="notification">
 		select * from notification 
-		where user_id = #{userId} and is_read = false
+		where user_id = #{userId} and COALESCE(is_read, 0) = 0
 		order by created_at desc limit 3
 	</select>
 	
 	<select id="selectNotificationListNotConfirmCnt" parameterType="Long" resultType="int">
 	    select count(*)
 	    from notification
-	    where user_id = #{value}
-	      and is_read = false
+	    where user_id = #{userId} and COALESCE(is_read, 0) = 0
 	</select>
 	
 	

@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
@@ -23,9 +25,22 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 	}
 
 	@Override
-	public TeamApplication selectTeamApplicaion(TeamApplication teamApplication) throws Exception {
+	public TeamApplication selectTeamApplication(TeamApplication teamApplication) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
-			return sqlSession.selectOne("mapper.teamapplication.selectTeamApplicaion", teamApplication);
+			return sqlSession.selectOne("mapper.teamapplication.selectTeamApplication", teamApplication);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<dto.TeamApplication> selectTeamApplicationList(Long teamId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teamapplication.selectTeamApplicationList", teamId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 

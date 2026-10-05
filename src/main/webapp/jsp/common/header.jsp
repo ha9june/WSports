@@ -153,6 +153,26 @@ time {
 	font-size: 14px;
 	color: #666;
 }
+
+/* 알림 제목: 한 줄 + 말줄임 */
+.Alarm.link.btn > div {
+	width: 100%;
+	min-width: 0;
+}
+
+.Alarm.link.btn strong {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* 알림 내용: 길면 한 줄 말줄임 (선택) */
+.Alarm.link.btn p {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
