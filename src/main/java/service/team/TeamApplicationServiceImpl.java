@@ -13,6 +13,7 @@ import dao.TeamUserDaoImpl;
 import dto.Notification;
 import dto.Team;
 import dto.TeamApplication;
+import dto.TeamUser;
 import dto.User;
 import service.notification.NotificationService;
 import service.notification.NotificationServiceImpl;
@@ -48,7 +49,7 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 		if (teamUserDao.selectRole(param) != null) {
 		    throw new Exception("이미 가입된 팀 입니다.");
 		}
-		if(teamApplicationDao.selectTeamApplication(teamApplication) != null) {
+		if(teamApplicationDao.selectTeamApplication(teamId, user.getUserId()) != null) {
 			throw new Exception ("이미 신청중인 팀 입니다.");
 		}
 
@@ -73,10 +74,16 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
  
 	@Override
 	public TeamApplication getApplication(Long teamId, Long userId) throws Exception {
-		TeamApplication teamApplication = new TeamApplication();
-		teamApplication.setTeamId(teamId);
-		teamApplication.setUserId(userId);
-		return teamApplicationDao.selectTeamApplication(teamApplication);
+		if(teamDao.selectTeam(teamId) == null) {
+			throw new Exception ("존재하지 않는 팀 입니다.");
+		}
+
+		return teamApplicationDao.selectTeamApplication(teamId, userId);
+	}
+	
+	@Override
+	public TeamApplication getApplicationByApplicationId(Long applicationId) throws Exception {
+		return teamApplicationDao.selectTeamApplicationByApplicationId(applicationId);
 	}
 
 	@Override
@@ -85,6 +92,31 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 			throw new Exception ("존재하지 않는 팀 입니다.");
 		}
 		return teamApplicationDao.selectTeamApplicationList(teamId);
+	}
+
+	@Override
+	public void approve(Long teamId, Long applicationId) throws Exception {
+		TeamApplication teamApplication = getApplicationByApplicationId(applicationId);
+		//팀 유저 인서트
+		TeamUser teamUser = new TeamUser();
+		teamUser.setTeamId(teamId);
+		teamUser.setUserId(teamApplication.getUserId());
+		teamUser.setTeamRole("MEMBER");
+		teamUserDao.insertTeamUser(teamUser);
+		//지원디비 업데이트
+		teamApplicationDao.updateTeamApplicationApprove(teamId, applicationId);
+		
+		Team team = teamDao.selectTeam(teamId);
+		try {
+			Notification alarm = new Notification();
+			alarm.setUserId(teamApplication.getUserId());
+			alarm.setTitle("가입 신청 승인");
+			alarm.setContent("'"+team.getTeamName()+"'에 가입 신청이 승인되었어요.");
+			alarm.setLink("/team/detail/view?teamId=" + teamId);
+			notificationService.sendNotification(alarm);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

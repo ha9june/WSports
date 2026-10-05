@@ -14,7 +14,7 @@
 						#{teamId},
 						#{userId},
 						#{teamRole},
-						#{withdrawn},
+						0,
 						NOW()
 					)
 	</insert>

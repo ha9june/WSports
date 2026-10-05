@@ -150,4 +150,14 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 			}
 		}
 	}
+
+	@Override
+	public int selectsTeamPenaltyScore(Long teamId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teampenalty.selectsTeamPenaltyScore", teamId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

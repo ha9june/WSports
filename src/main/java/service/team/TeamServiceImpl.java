@@ -26,7 +26,6 @@ public class TeamServiceImpl implements TeamService {
 	}
 	
 	private String fileUpload(String uploadPath, Part file) throws Exception {
-		
 		String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();		
 		if(fileName != null && !fileName.isEmpty()) {
 			File uploadDir = new File(uploadPath);			

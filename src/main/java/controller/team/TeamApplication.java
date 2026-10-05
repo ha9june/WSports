@@ -11,13 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.Notification;
 import dto.Team;
 import dto.User;
-import service.notification.NotificationService;
-import service.notification.NotificationServiceImpl;
 import service.team.TeamApplicationService;
 import service.team.TeamApplicationServiceImpl;
+import service.team.TeamPenaltyService;
+import service.team.TeamPenaltyServiceImpl;
 import service.team.TeamService;
 import service.team.TeamServiceImpl;
 
@@ -42,8 +41,6 @@ public class TeamApplication extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		TeamService teamService = new TeamServiceImpl();
-		
-
 		
 		try {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
