@@ -1,0 +1,7 @@
+@charset "UTF-8";
+/* 공통 오류 화면 (jsp/common/error.jsp) */
+.error-box { width: 480px; max-width: calc(100% - 48px); margin: 96px auto 0; text-align: center; }
+.error-box .icon { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; background: var(--ds-danger-bg); color: var(--ds-danger-fg); }
+.error-box h1 { font-size: 24px; font-weight: 700; }
+.error-box .msg { font-size: 14px; color: var(--ds-text-2); margin-top: 12px; line-height: 1.6; }
+.error-box .btn-group { justify-content: center; margin-top: 32px; }

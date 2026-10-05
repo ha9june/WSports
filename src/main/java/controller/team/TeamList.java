@@ -83,8 +83,6 @@ public class TeamList extends HttpServlet {
 		condition.setKeyword(keyword);
 		condition.setSort(sort);
 		
-		System.out.println(condition.toString());
-		
 		TeamService teamService = new TeamServiceImpl();
 		String requestType = request.getParameter("requestType");
 		try {

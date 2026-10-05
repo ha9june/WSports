@@ -26,16 +26,6 @@ public class TeamServiceImpl implements TeamService {
 	}
 	
 	private String fileUpload(String uploadPath, Part file) throws Exception {
-//	    if (file == null || file.getSize() == 0) return null;
-//
-//	    String original = Paths.get(file.getSubmittedFileName()).getFileName().toString();
-//	    String fileName = UUID.randomUUID() + "_" + original;   // 이름 충돌 방지
-//
-//	    File dir = new File(uploadPath);
-//	    if (!dir.exists()) dir.mkdirs();
-//
-//	    file.write(uploadPath + File.separator + fileName);
-//	    return fileName;
 		
 		String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();		
 		if(fileName != null && !fileName.isEmpty()) {
@@ -115,7 +105,7 @@ public class TeamServiceImpl implements TeamService {
 	    // 3. 아무것도 선택 안 했거나 4개 전부 선택했으면 사실상 무관
 	    if (parts.isEmpty() || (f[0] && f[1] && f[2] && f[3])) return "연령 무관";
 
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 		
 		
 	}
@@ -145,7 +135,7 @@ public class TeamServiceImpl implements TeamService {
 	    for (int i = 0; i < f.length; i++) {
 	        if (f[i]) parts.add(label[i]);
 	    }
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 	}
 
 	@Override
@@ -175,7 +165,31 @@ public class TeamServiceImpl implements TeamService {
 
 	    if (parts.isEmpty() || (f[0] && f[1] && f[2] && f[3] && f[4])) return "시간 무관";
 	    
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
+	}
+
+	@Override
+	public Team getTeam(Long teamId) throws Exception {
+		Team team = teamDao.selectTeam(teamId);
+		
+		team.setAges(changeAges(team.getAge20s() , team.getAge30s(), team.getAge40s(), team.getAge50s(), team.getAge60Plus()));
+		team.setDays(changeDays(team.getDayMon(), team.getDayTue(), team.getDayWed(), team.getDayThu(), team.getDayFri(), team.getDaySat(), team.getDaySun()));
+		team.setRegions(teamDetailRegion(team.getRegion1(), team.getRegion2(), team.getRegion3()));
+		team.setTimes(changeTimes(team.getTime0609(), team.getTime0912(), team.getTime1218(), team.getTime1822(), team.getTime2206()));
+				
+		return team;
+	}
+
+	@Override
+	public String teamDetailRegion(String region1, String region2, String region3) throws Exception {
+		String[] regions = {region1, region2, region3};
+		List<String> parts = new ArrayList<>();
+		for(String r : regions) {
+			if(r != null && r.length() > 0) {
+				parts.add(r);
+			}
+		}
+		return String.join(" · ", parts);
 	}
 
 
