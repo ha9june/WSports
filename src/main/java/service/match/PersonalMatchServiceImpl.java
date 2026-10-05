@@ -148,4 +148,35 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		Long count = favoriteDao.selectMyPageHeartMatchExists(param);
 		return count != null && count > 0;
 	}
+
+
+
+	@Override
+	public List<PersonalMatch> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String month, String status,
+			String sport) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("month", month);
+		param.put("status", status);
+		param.put("sport", sport);
+		
+		int cnt = favoriteDao.selectMyPageFavoriteCnt(param);
+		Integer allPage = (int) Math.ceil(cnt / 10.0);
+		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
+		int endPage = Math.min(startPage + 9, allPage);
+
+		if (endPage < 1) endPage = 1;
+		if (pageInfo.getCurPage() > endPage) {
+			pageInfo.setCurPage(endPage);
+		}
+		pageInfo.setAllPage(allPage);
+		pageInfo.setStartPage(startPage);
+		pageInfo.setEndPage(endPage);
+		
+		param.put("offset",(pageInfo.getCurPage() - 1) * 10);
+		param.put("size", 10);
+		
+		
+		return favoriteDao.selectMyPageFavoriteList(param);
+	}
 }

@@ -1,10 +1,12 @@
 package dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.PersonalMatch;
 
 public class FavoriteDaoImpl implements FavoriteDao {
 
@@ -44,6 +46,22 @@ public class FavoriteDaoImpl implements FavoriteDao {
 			return Session.selectOne("mapper.favorite.selectMyPageHeartMatchExists",param);
 		}
 		
-	}	
+	}
+
+	@Override
+	public List<PersonalMatch> selectMyPageFavoriteList(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.favorite.selectMyPageFavoriteList", param);
+		}
+	}
+
+	@Override
+	public Integer selectMyPageFavoriteCnt(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.favorite.selectMyPageFavoriteCnt", param);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
 }

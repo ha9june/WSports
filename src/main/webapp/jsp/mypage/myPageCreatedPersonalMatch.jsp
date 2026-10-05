@@ -303,11 +303,11 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 								result = result.trim();
 								if (result == 'insert') {
 									$btn.addClass("is-on");
-									showToast("관심경기에 추가!!!!!!!");
+									showToast("관심경기에 추가되었습니다.");
 								}
 								if (result == 'delete') {
 									$btn.removeClass("is-on");
-									showToast("관심경기에 제거!!!!!!!");
+									showToast("관심경기에 제거되었습니다.");
 								}
 								if (result == 'login') {
 									showToast("로그인이 필요합니다.");
