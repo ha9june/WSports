@@ -73,7 +73,7 @@ public class MyPageCreatedPersonalMatch extends HttpServlet {
 			List<PersonalMatch> list = servie.MyPageCreatedPersonalMatchList(pageInfo,userId,status,sport,startDate,endDate);
 					
 			request.setAttribute("match", list);
-			request.setAttribute("favDates", servie.getMyPageCreatedPersonalMatchDates(userId, status, sport));
+			request.setAttribute("matchDates", servie.getMyPageCreatedPersonalMatchDates(userId, status, sport));
 			request.setAttribute("pageInfo", pageInfo);
 			request.setAttribute("status", status);
 			request.setAttribute("sport", sport);

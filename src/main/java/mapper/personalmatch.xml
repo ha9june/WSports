@@ -360,7 +360,7 @@
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
 		FROM personal_match_participant p
 		JOIN personal_match m
-		ON m.personal_match_id = p.personal_match_id
+		ONm.personal_match_id = p.personal_match_id
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료')
 		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
@@ -369,11 +369,14 @@
 	<select id="selectMyPageCreatedPersonalMatchDates"
 		parameterType="map" resultType="string">
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
-		FROM personal_match_participant p
-		JOIN personal_match m ON m.personal_match_id = p.personal_match_id
-		WHERE p.user_id = #{userId}
-		AND m.deleted = 0
-		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
-		<if test="status != null and status != ''"> AND m.status = #{status} </if>
+    	 FROM personal_match m
+   		 WHERE m.user_id = #{userId}
+     	 AND m.deleted = 0
+    <if test="sport != null and sport != ''">
+        AND m.sport = #{sport}
+    </if>
+    <if test="status != null and status != ''">
+        AND m.status = #{status}
+    </if>
 	</select>
 </mapper>
