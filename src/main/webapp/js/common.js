@@ -94,8 +94,11 @@
       var group = chip.closest('.chip-group');
       var mode = group.getAttribute('data-select');
       if (mode === 'single') {
+		  var wasSelected = chip.classList.contains('is-selected');
         group.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('is-selected'); });
+        if(!(wasSelected && group.hasAttribute('data-deselect'))) {
         chip.classList.add('is-selected');
+        }
       } else {
         var max = parseInt(group.getAttribute('data-max') || '0', 10);
         var selectedCount = group.querySelectorAll('.chip.is-selected').length;

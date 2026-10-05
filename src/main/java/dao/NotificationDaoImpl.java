@@ -45,6 +45,9 @@ public class NotificationDaoImpl implements NotificationDao {
 	public Notification	selectNotification(Long notificationId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.notification.selectNotification", notificationId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -52,6 +55,9 @@ public class NotificationDaoImpl implements NotificationDao {
 	public List<Notification> selectNotificationListNotConfirm3(Long userId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.notification.selectNotificationListNotConfirm3", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -59,6 +65,9 @@ public class NotificationDaoImpl implements NotificationDao {
 	public List<Notification> selectNotificationList(Long userId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.notification.selectNotificationList", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -66,6 +75,9 @@ public class NotificationDaoImpl implements NotificationDao {
 	public int selectNotificationListNotConfirmCnt(Long userId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.notification.selectNotificationListNotConfirmCnt", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 }

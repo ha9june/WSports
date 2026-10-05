@@ -87,34 +87,34 @@
 				} else if(sido.value === "경기도"){
 					sigungu.innerHTML = `
 						<option value="" selected disabled>세부 지역 선택</option>
-						<option value="수원시">수원시</option>
 						<option value="고양시">고양시</option>
-						<option value="용인시">용인시</option>
-						<option value="성남시">성남시</option>
-						<option value="화성시">화성시</option>
-						<option value="부천시">부천시</option>
-						<option value="남양주시">남양주시</option>
-						<option value="안산시">안산시</option>
-						<option value="평택시">평택시</option>
-						<option value="안양시">안양시</option>
-						<option value="시흥시">시흥시</option>
-						<option value="파주시">파주시</option>
-						<option value="김포시">김포시</option>
-						<option value="의정부시">의정부시</option>
-						<option value="광주시">광주시</option>
-						<option value="하남시">하남시</option>
-						<option value="광명시">광명시</option>
-						<option value="군포시">군포시</option>
-						<option value="양주시">양주시</option>
-						<option value="오산시">오산시</option>
-						<option value="이천시">이천시</option>
-						<option value="안성시">안성시</option>
-						<option value="구리시">구리시</option>
-						<option value="의왕시">의왕시</option>
-						<option value="포천시">포천시</option>
-						<option value="여주시">여주시</option>
-						<option value="동두천시">동두천시</option>
 						<option value="과천시">과천시</option>
+						<option value="광명시">광명시</option>
+						<option value="광주시">광주시</option>
+						<option value="구리시">구리시</option>
+						<option value="군포시">군포시</option>
+						<option value="김포시">김포시</option>
+						<option value="남양주시">남양주시</option>
+						<option value="동두천시">동두천시</option>
+						<option value="부천시">부천시</option>
+						<option value="성남시">성남시</option>
+						<option value="수원시">수원시</option>
+						<option value="시흥시">시흥시</option>
+						<option value="안산시">안산시</option>
+						<option value="안성시">안성시</option>
+						<option value="안양시">안양시</option>
+						<option value="양주시">양주시</option>
+						<option value="여주시">여주시</option>
+						<option value="오산시">오산시</option>
+						<option value="용인시">용인시</option>
+						<option value="의왕시">의왕시</option>
+						<option value="의정부시">의정부시</option>
+						<option value="이천시">이천시</option>
+						<option value="파주시">파주시</option>
+						<option value="평택시">평택시</option>
+						<option value="포천시">포천시</option>
+						<option value="하남시">하남시</option>
+						<option value="화성시">화성시</option>
 					`;
 				}
 			})
@@ -331,6 +331,7 @@
 						<div class="field">
 							<span class="field-label">1. 시 · 도</span><select class="select"
 								name="sido" id="sido">
+								<option value="" selected disabled>세부 지역 선택</option>
 								<option value="서울시">서울시</option>
 								<option value="경기도">경기도</option>
 							</select>
@@ -339,31 +340,6 @@
 							<span class="field-label">2. 세부 지역</span><select class="select"
 								name="sigungu" id="sigungu">
 								<option value="" selected disabled>세부 지역 선택</option>
-								<option value="강남구">강남구</option>
-								<option value="강동구">강동구</option>
-								<option value="강북구">강북구</option>
-								<option value="강서구">강서구</option>
-								<option value="관악구">관악구</option>
-								<option value="광진구">광진구</option>
-								<option value="구로구">구로구</option>
-								<option value="금천구">금천구</option>
-								<option value="노원구">노원구</option>
-								<option value="도봉구">도봉구</option>
-								<option value="동대문구">동대문구</option>
-								<option value="동작구">동작구</option>
-								<option value="마포구">마포구</option>
-								<option value="서대문구">서대문구</option>
-								<option value="서초구">서초구</option>
-								<option value="성동구">성동구</option>
-								<option value="성북구">성북구</option>
-								<option value="송파구">송파구</option>
-								<option value="양천구">양천구</option>
-								<option value="영등포구">영등포구</option>
-								<option value="용산구">용산구</option>
-								<option value="은평구">은평구</option>
-								<option value="종로구">종로구</option>
-								<option value="중구">중구</option>
-								<option value="중랑구">중랑구</option>
 							</select>
 						</div>
 					</div>

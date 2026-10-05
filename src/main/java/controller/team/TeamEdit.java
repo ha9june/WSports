@@ -1,4 +1,4 @@
-package controller.review;
+package controller.team;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class ReviewModify
+ * Servlet implementation class TeamEdit
  */
-@WebServlet("/review/edit")
-public class ReviewModify extends HttpServlet {
+@WebServlet("/team/edit")
+public class TeamEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReviewModify() {
+    public TeamEdit() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,8 +26,7 @@ public class ReviewModify extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.getRequestDispatcher("/jsp/team/teamEdit.jsp").forward(request, response);
 	}
 
 	/**

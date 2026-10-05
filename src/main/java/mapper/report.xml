@@ -2,5 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.report">
+	<insert id="insertReport" parameterType="report">
+	insert into report(user_id,type,title,content,post_type,post_id,created_at,status)
+	values(#{userId},#{type},#{title},#{content},#{postType},#{postId},now(),'처리대기')
+	</insert>
 
+	<!-- 관리자 신고관리 개수 / 상태 기준 필터 -->
+	<select id="selectAdminReportCnt" parameterType="map" resultType="int">
+		select count(*)
+		from report
+		where (deleted = 0 or deleted is null)
+		and (#{status} = 'ALL' or status =  #{status})
+	</select>
+	
+	<!-- 관리자 신고관리 리스트 10개씩 -->
+	<select id="selectAdminReportList" parameterType="map" resultType="map">
+		select r.report_id, r.created_at, r.type, u.name, u.nickname, r.title, r.status, r.content
+		from report r
+		left join user u
+		on r.user_id = u.user_id
+		where (r.deleted = 0 or r.deleted is null)
+		and (#{status} = 'ALL' or r.status =  #{status})
+		order by r.report_id desc
+		limit #{row}, 10
+	</select>
+	<!-- 특정 신고 상세 정보 -->
+	<select id="selectAdminReportDetail" resultType="map">
+		select r.report_id, r.type, r.title, r.content, r.post_type, r.post_id,
+	       	   r.created_at, r.status, r.answer, r.answered_at, u.name, u.nickname
+		from report r
+		left join user u
+		on r.user_id = u.user_id
+		where r.report_id = #{reportId}
+	</select>
+	<!-- 관리자 신고 답변 (처리완료 변경) -->
+	<update id="updateAdminReportAnswer" parameterType="map">
+		update report
+		set answer = #{answer},
+			answered_at = now(),
+			admin_id = #{adminId},
+			status = '처리완료'
+		where report_id = #{reportId}
+	</update>
 </mapper>

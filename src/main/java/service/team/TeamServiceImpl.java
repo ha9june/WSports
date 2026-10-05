@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.Part;
 
@@ -13,6 +12,7 @@ import dao.TeamDaoImpl;
 import dao.TeamUserDao;
 import dao.TeamUserDaoImpl;
 import dto.Team;
+import dto.TeamSearchCondition;
 import dto.TeamUser;
 
 public class TeamServiceImpl implements TeamService {
@@ -26,16 +26,6 @@ public class TeamServiceImpl implements TeamService {
 	}
 	
 	private String fileUpload(String uploadPath, Part file) throws Exception {
-//	    if (file == null || file.getSize() == 0) return null;
-//
-//	    String original = Paths.get(file.getSubmittedFileName()).getFileName().toString();
-//	    String fileName = UUID.randomUUID() + "_" + original;   // 이름 충돌 방지
-//
-//	    File dir = new File(uploadPath);
-//	    if (!dir.exists()) dir.mkdirs();
-//
-//	    file.write(uploadPath + File.separator + fileName);
-//	    return fileName;
 		
 		String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();		
 		if(fileName != null && !fileName.isEmpty()) {
@@ -69,8 +59,9 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
-	public List<Team> get12TeamList() throws Exception {
-		List<Team> teamList =  teamDao.select12Team();
+	public List<Team> getTeamList(TeamSearchCondition condition) throws Exception {
+		List<Team> teamList =  teamDao.selectTeamList(condition);
+		int teamCnt = teamDao.selectTeamlistCnt(condition);
 		for(int i=0; i<teamList.size(); i++) {
 			teamList.get(i).setAges(changeAges(teamList.get(i).getAge20s() , teamList.get(i).getAge30s(), teamList.get(i).getAge40s(), teamList.get(i).getAge50s(), teamList.get(i).getAge60Plus()));
 			teamList.get(i).setDays(changeDays(teamList.get(i).getDayMon(), teamList.get(i).getDayTue(), teamList.get(i).getDayWed(), teamList.get(i).getDayThu(), teamList.get(i).getDayFri(), teamList.get(i).getDaySat(), teamList.get(i).getDaySun()));
@@ -78,6 +69,11 @@ public class TeamServiceImpl implements TeamService {
 			teamList.get(i).setTimes(changeTimes(teamList.get(i).getTime0609(), teamList.get(i).getTime0912(), teamList.get(i).getTime1218(), teamList.get(i).getTime1822(), teamList.get(i).getTime2206()));
 		}
 		return teamList;
+	}
+	
+	@Override
+	public int getTemaListCnt(TeamSearchCondition condition) throws Exception {
+		return teamDao.selectTeamlistCnt(condition);
 	}
 
 	@Override
@@ -109,7 +105,7 @@ public class TeamServiceImpl implements TeamService {
 	    // 3. 아무것도 선택 안 했거나 4개 전부 선택했으면 사실상 무관
 	    if (parts.isEmpty() || (f[0] && f[1] && f[2] && f[3])) return "연령 무관";
 
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 		
 		
 	}
@@ -139,7 +135,7 @@ public class TeamServiceImpl implements TeamService {
 	    for (int i = 0; i < f.length; i++) {
 	        if (f[i]) parts.add(label[i]);
 	    }
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 	}
 
 	@Override
@@ -169,6 +165,32 @@ public class TeamServiceImpl implements TeamService {
 
 	    if (parts.isEmpty() || (f[0] && f[1] && f[2] && f[3] && f[4])) return "시간 무관";
 	    
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 	}
+
+	@Override
+	public Team getTeam(Long teamId) throws Exception {
+		Team team = teamDao.selectTeam(teamId);
+		
+		team.setAges(changeAges(team.getAge20s() , team.getAge30s(), team.getAge40s(), team.getAge50s(), team.getAge60Plus()));
+		team.setDays(changeDays(team.getDayMon(), team.getDayTue(), team.getDayWed(), team.getDayThu(), team.getDayFri(), team.getDaySat(), team.getDaySun()));
+		team.setRegions(teamDetailRegion(team.getRegion1(), team.getRegion2(), team.getRegion3()));
+		team.setTimes(changeTimes(team.getTime0609(), team.getTime0912(), team.getTime1218(), team.getTime1822(), team.getTime2206()));
+				
+		return team;
+	}
+
+	@Override
+	public String teamDetailRegion(String region1, String region2, String region3) throws Exception {
+		String[] regions = {region1, region2, region3};
+		List<String> parts = new ArrayList<>();
+		for(String r : regions) {
+			if(r != null && r.length() > 0) {
+				parts.add(r);
+			}
+		}
+		return String.join(" · ", parts);
+	}
+
+
 }

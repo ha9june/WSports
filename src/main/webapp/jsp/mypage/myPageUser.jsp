@@ -21,7 +21,7 @@
     <div class="field"><label class="field-label">이메일</label><input class="input" name="email" value="${loginUser.email}" readonly></div>
     <div class="field"><label class="field-label">전화번호</label><input class="input" name="phone" value="${loginUser.phone}" readonly></div>
     <div class="field"><label class="field-label">생년월일</label><input class="input" name="birth" value="${loginUser.birthDate}" readonly></div>
-    <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender}" readonly></div>
+    <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender == 'M' ? '남성' : '여성'}" readonly></div>
   </div>
 
   <h2 class="section-title mt-32">정산 계좌</h2>
@@ -34,7 +34,7 @@
   </div>
   <p class="field-help mt-16">정산이 필요한 기능을 이용하기 전까지는 등록하지 않아도 됩니다.</p>
   <div class="form-actions" style="margin-top:16px">
-    <a class="btn btn-primary" href="${ctx}/jsp/mypage/myPageUpdateUser.jsp" style="width:92px">수정</a>
+    <a class="btn btn-primary" href="${ctx}/member/mypage/edit" style="width:92px">수정</a>
   </div>
 
   <section class="security">
@@ -60,7 +60,12 @@
   <div class="modal-card">
     <h2 class="modal-title">정말 탈퇴할까요?</h2>
     <p class="modal-desc">탈퇴하면 참가·작성한 경기와 팀 정보를 더 이상 확인할 수 없습니다. 정산 대기 금액이 있으면 탈퇴할 수 없어요.</p>
-    <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>닫기</button><button type="button" class="btn btn-danger" data-toast="탈퇴 요청이 접수되었어요.">탈퇴</button></div>
+    <form action="${ctx}/member/withdraw" method="post">
+    	<div class="modal-actions">
+    		<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
+    		<button type="button" class="btn btn-danger">탈퇴</button>
+    	</div>
+    </form>
   </div>
 </div>
 <%@ include file="/jsp/common/footer.jsp" %>
