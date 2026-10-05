@@ -17,7 +17,7 @@
   	<c:choose>
   		<c:when test="${not empty loginUser.profileImage }">
   			<img class="avatar lg"
-  				src="${ctx}/upload/profile/${loginUser.profileImage }"
+  				src="${ctx}${profilePath}/${loginUser.profileImage}"
   				alt="프로필 사진">
 		</c:when>
 		<c:otherwise>
@@ -38,6 +38,6 @@
   </dl>
   <h2 class="sub-title mt-32">한 줄 소개</h2>
   <p class="t-12 mt-8">"${loginUser.bio}"</p>
-  <div class="form-actions"><a class="btn btn-primary" href="${ctx}/jsp/mypage/myPageUpdateProfile.jsp" style="width:92px">수정</a></div>
+  <div class="form-actions"><a class="btn btn-primary" href="${ctx}/member/profile/edit" style="width:92px">수정</a></div>
 </div>
 <%@ include file="/jsp/common/footer.jsp" %>
