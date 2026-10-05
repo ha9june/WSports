@@ -1,5 +1,16 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="/jsp/common/init.jsp" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/jsp/common/init.jsp"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath }" />
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page isELIgnored="false"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ko.js"></script>
 <%--
   관심경기 (myPageHeartMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Saved Matches / Desktop
@@ -9,63 +20,257 @@
 <c:set var="pageTitle" value="관심경기" />
 <c:set var="pageCss" value="mypage" />
 <c:set var="sideMenu" value="heartMatch" />
-<c:set var="calDays" value="21,22" />
 <c:set var="demoRoles" value="member" />
-<%@ include file="/jsp/common/header.jsp" %>
-<%@ include file="/jsp/common/mypageSideBar.jsp" %>
-<div class="work-inner full" style="max-width:1000px">
-  <h1 class="section-title">관심경기</h1>
-  <p class="section-desc">관심 표시한 경기를 종목, 상태와 월별 달력으로 확인하세요.</p>
-  <form class="act-filters" method="get"><select class="select" name="sport"><option>전체 종목</option><option>축구/풋살</option><option>농구</option><option>테니스</option><option>배드민턴</option></select><select class="select" name="status"><option>전체 상태</option><option>모집중</option><option>경기 예정</option><option>경기 종료</option><option>취소</option></select></form>
-  <div class="act-layout">
-    <section>
-      <div class="act-head"><b>2026년 9월 · 2건</b><a class="btn-reset" href="?">필터 초기화</a></div>
-      <p class="date-label">9월 21일 <span>월</span></p>
-    <div class="act-card" data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=saved">
-      <div class="left"><span class="pill pill-success">모집중</span><img src="${ctx}/img/sport-icon-tennis.png" alt=""></div>
-      <div class="main"><strong>초중급 테니스 복식 모집</strong>
-        <p class="meta"><span><img src="${ctx}/img/icon-calendar-14.svg" alt="">9/21 (월)</span><span><img src="${ctx}/img/icon-clock-16.svg" alt="">18:30 ~ 20:30</span><span><img src="${ctx}/img/icon-pin-14.svg" alt="">서울 송파구 테니스장</span><span><img src="${ctx}/img/icon-user-12.svg" alt="">8/10 · 최소 8명 <span class="cap"><i style="width:80%"></i></span></span></p></div>
-      <div class="aside"><div class="top">15,000원<button type="button" class="fav-btn is-on" data-fav aria-label="관심 경기">${heart}</button></div><div class="btns"></div></div>
-    </div>
-      <p class="date-label">9월 22일 <span>화</span></p>
-    <div class="act-card" data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=saved">
-      <div class="left"><span class="pill pill-success">모집중</span><img src="${ctx}/img/sport-icon-badminton.png" alt=""></div>
-      <div class="main"><strong>퇴근 후 배드민턴</strong>
-        <p class="meta"><span><img src="${ctx}/img/icon-calendar-14.svg" alt="">9/22 (화)</span><span><img src="${ctx}/img/icon-clock-16.svg" alt="">20:00 ~ 22:00</span><span><img src="${ctx}/img/icon-pin-14.svg" alt="">서울 영등포구 체육관</span><span><img src="${ctx}/img/icon-user-12.svg" alt="">6/8 · 최소 6명 <span class="cap"><i style="width:75%"></i></span></span></p></div>
-      <div class="aside"><div class="top">6,000원<button type="button" class="fav-btn is-on" data-fav aria-label="관심 경기">${heart}</button></div><div class="btns"></div></div>
-    </div>
-    </section>
-    <%--
+<%@ include file="/jsp/common/header.jsp"%>
+<%@ include file="/jsp/common/mypageSideBar.jsp"%>
+<style>
+.act-layout { display: flex; gap: 24px; align-items: flex-start; }
+.act-layout > section { flex: 1; min-width: 0; }
+
+.act-layout > aside.cal {
+  width: 340px; flex-shrink: 0;
+  padding: 16px; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 16px;
+}
+.cal .flatpickr-calendar.inline {
+  box-shadow: none; border: 0; width: 100%;
+}
+.cal .flatpickr-days, .cal .dayContainer {
+  width: 100%; min-width: 100%; max-width: 100%;
+}
+.cal .flatpickr-day { max-width: none; border-radius: 0%; }
+
+/* [선택 기간] 기본 배경 사각형 */
+.cal .flatpickr-day.inRange {
+  background: #e8f0ff !important; 
+  border-color: #e8f0ff !important; 
+  box-shadow: none; 
+  color: #1a6bff !important;
+}
+.cal .flatpickr-day.selected,
+.cal .flatpickr-day.startRange,
+.cal .flatpickr-day.endRange {
+  background: #1a6bff !important; 
+  border-color: #1a6bff !important; 
+  color: #fff !important;
+}
+
+/* [지렁이/캡슐 모양] 시작과 끝 라운딩 */
+.cal .flatpickr-day.startRange {
+  border-top-left-radius: 50% !important;
+  border-bottom-left-radius: 50% !important;
+}
+.cal .flatpickr-day.endRange {
+  border-top-right-radius: 50% !important;
+  border-bottom-right-radius: 50% !important;
+}
+.cal .flatpickr-day.startRange.endRange {
+  border-radius: 50% !important;
+}
+
+/* 주말 줄바꿈 처리 */
+.cal .dayContainer { display: flex; flex-wrap: wrap; }
+.cal .flatpickr-day.inRange:nth-child(7n+1) { border-top-left-radius: 50%; border-bottom-left-radius: 50%; }
+.cal .flatpickr-day.inRange:nth-child(7n) { border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
+
+
+/* 🔥 [핵심 수정] 경기 있는 날: 선택 여부 상관없이 365일 항상 표시 */
+.cal .flatpickr-day.has-match { 
+  font-weight: 700 !important; 
+  color: #1a6bff !important; /* 평소에도 무조건 글자를 파란색으로 */
+  position: relative !important; 
+}
+
+/* 점(•) 강제 표시 */
+.cal .flatpickr-day.has-match::after {
+  content: '' !important; 
+  position: absolute !important; 
+  bottom: 5px !important; 
+  left: 50% !important;
+  width: 5px !important; 
+  height: 5px !important; 
+  margin-left: -2.5px !important;
+  border-radius: 50% !important; 
+  background: #1a6bff !important; /* 기본 상태는 파란색 점 */
+  display: block !important; /* 강제 노출 */
+}
+
+/* 범위 선택 중(.startRange, .endRange)일 때는 가독성을 위해 흰색 점으로 변경 */
+.cal .flatpickr-day.startRange.has-match::after,
+.cal .flatpickr-day.endRange.has-match::after,
+.cal .flatpickr-day.selected.has-match::after { 
+  background: #ffffff !important; 
+}
+
+/* 연한 파란색 범위(.inRange) 안에 있을 때는 다시 파란색 점으로 */
+.cal .flatpickr-day.inRange.has-match::after {
+  background: #1a6bff !important;
+}
+
+
+/* 하단 범례 및 카드 */
+.cal .legend { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font-size: 12px; }
+.cal .legend-dot { width: 6px; height: 6px; border-radius: 50%; background: #1a6bff; }
+.act-card { margin-bottom: 16px; }
+.list-head { display: flex; align-items: center; margin-bottom: 12px; }
+.btn-reset { margin-left: auto; }
+</style>
+
+
+
+<div class="work-inner full" style="max-width: 1000px">
+	<h1 class="section-title">관심경기</h1>
+	<p class="section-desc">관심 표시한 경기를 종목, 상태와 월별 달력으로 확인하세요.</p>
+	<form class="act-filters" method="get" id="periodForm">
+  <input type="hidden" name="startDate" id="startDate" value="${startDate}">
+  <input type="hidden" name="endDate" id="endDate" value="${endDate}">
+
+		<!-- 경기 종목별 리스트 검색 -->
+		<select class="select" name="sport" onchange="this.form.submit()">
+			<option value="">전체</option>
+			<option value="축구/풋살" ${sport == '축구/풋살' ? 'selected' : ''}>축구/풋살</option>
+			<option value="농구" ${sport == '농구' ? 'selected' : ''}>농구</option>
+			<option value="테니스" ${sport == '테니스' ? 'selected' : ''}>테니스</option>
+			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
+		</select> <select class="select" name="status" onchange="this.form.submit()">
+			<option value="">전체 상태</option>
+			<option value="모집중" ${status == '모집중' ? 'selected' : ''}
+				style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
+			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
+				마감</option>
+			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
+				종료</option>
+			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기
+				취소</option>
+		</select>
+	</form>
+
+
+	<div class="act-layout">
+		<section>
+			<div class="act-head"></div>
+			<div class="list-head">
+				<h2>관심경기 ${fn:length(match)}건</h2>
+				<a class="btn-reset" href="?">필터 초기화</a>
+			</div>
+			<c:if test="${empty match}">
+				<p class="empty-msg">관심 경기가 없습니다.</p>
+			</c:if>
+			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
+			<c:forEach var="m" items="${match}">
+				<div class="act-card"
+					data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
+					<div class="left">
+						<span class="pill pill-info">${m.status}</span><img
+							src="${ctx}/img/sport-icon-football.png" alt="">
+					</div>
+					<!-- 경기 제목 -->
+					<div class="main">
+						<strong>${m.title}</strong>
+						<!-- 경기날짜 -->
+						<p class="meta">
+							<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${m.matchDate}</span>
+							<!-- 경기 날짜 / 시간 -->
+							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${m.startTime}
+								~ ${m.endTime}</span>
+							<!-- 경기 장소 -->
+							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
+							<!-- 경기 최소/최대 인원 -->
+							<span><img src="${ctx}/img/icon-user-12.svg" alt="">8/10
+								· 최소 8명 <span class="cap"><i style="width: 80%"> </i> </span> </span>
+						</p>
+					</div>
+					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그
+		      					pattern="#,###" 출력형식(5,000)-->
+					<div class="aside">
+						<div class="top">
+							<span><fmt:formatNumber value="${m.participationFee}"
+									pattern="#,###" />원</span>
+							<!-- 관심경기 제거 -->
+							<button type="button" class="fav-btn is-on"
+								data-match-id="${m.personalMatchId}" data-match-type="Personal"
+								aria-label="관심 경기">${heart}</button>
+						</div>
+						<div class="btns">
+							<a class="btn btn-primary btn-xs"
+								href="${ctx}/jsp/match/personalMatchProfileList.jsp">참가자 확인</a>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</section>
+				<aside class="cal">
+				<div id="periodPicker"></div>
+				<p class="legend"><span class="legend-dot"></span> 경기 있음</p>
+			</aside>
+
+		<%--
   마이페이지 활동 화면 공통 월 달력 (참가 경기 / 내가 만든 경기 / 관심경기 / 팀 경기)
    - calDays : 경기가 있는 날짜 (콤마 구분)  예) "19,20"
   피그마: MyPage / Month Picker / Overlay (연-월 선택)
   TODO: ?ym=2026-09 로 월 이동 → 서블릿에서 해당 월 목록 조회
 --%>
-<aside class="cal">
-  <div class="head">
-    <div class="dropdown">
-      <button type="button" data-dropdown-toggle>2026년 9월 ▾</button>
-      <div class="dropdown-menu month-pop">
-        <div class="yr"><button type="button">‹</button>2026<button type="button">›</button></div>
-        <div class="months">
-          <c:forEach var="m" begin="1" end="12"><a href="?ym=2026-${m lt 10 ? '0' : ''}${m}" class="${m eq 9 ? 'is-active' : ''}">${m}월</a></c:forEach>
-        </div>
-      </div>
-    </div>
-    <div class="nav"><a href="?ym=2026-08" aria-label="이전 달">‹</a><a href="?ym=2026-09" class="t-bold">오늘</a><a href="?ym=2026-10" aria-label="다음 달">›</a></div>
-  </div>
-  <div class="grid">
-    <span class="dow">일</span><span class="dow">월</span><span class="dow">화</span><span class="dow">수</span><span class="dow">목</span><span class="dow">금</span><span class="dow">토</span>
-    <span class="muted">31</span>
-    <c:set var="calList" value=",${calDays}," />
-  <c:forEach var="d" begin="1" end="30">
-      <c:set var="dStr" value=",${d}," />
-      <span class="${d eq 19 ? 'today' : ''} ${fn:contains(calList, dStr) ? 'has' : ''}">${d}</span>
-    </c:forEach>
-  </div>
-  <p class="legend">● 경기 있음</p>
-</aside>
-  </div>
+		<script>
+		$(function() {
+			  var favDates = [
+				  <c:forEach var="d" items="${favDates}" varStatus="st">'${d}'${st.last ? '' : ','}</c:forEach>
+				  ];
+
+			  flatpickr('#periodPicker', {
+			    inline : true,                 
+			    mode : 'range',               
+			    locale : 'ko',
+			    dateFormat : 'Y-m-d',
+			    defaultDate : '${startDate}' ? ['${startDate}', '${endDate}'] : null,
+			    onDayCreate : function(dObj, dStr, fp, dayElem) {
+				var currentFormattedDate = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+				if (favDates.indexOf(currentFormattedDate) !== -1) {
+				dayElem.classList.add('has-match');
+				}
+			},
+		    	  onChange : function(selectedDates, dateStr, instance) {
+			      if (selectedDates.length === 2) {
+			      var start = instance.formatDate(selectedDates[0], 'Y-m-d');
+			      var end = instance.formatDate(selectedDates[1], 'Y-m-d');
+			        $('#startDate').val(start);
+			        $('#endDate').val(end);
+			        $('#periodForm').submit();
+			      }
+			    }
+			  });
+			});
+		</script>
+		<script>
+			$(function() {
+				$(".fav-btn").click(
+						function(e) {
+							e.stopPropagation();
+							var $btn = $(this);
+							$.ajax({
+								url : '${ctx}/mypage/matches/saved',
+								type : 'post',
+								dataType : 'text',
+								data : {
+									matchId : $btn.data("matchId"),
+									matchType : $btn.data("matchType"),
+									heart : $btn.hasClass("is-on")},
+								success : function(result) {
+									result = result.trim();
+									if (result == 'delete') {
+										$btn.closest('.act-card').fadeOut(200,
+												function() {
+													$(this).remove();
+												});
+										showToast("관심경기에 제거되었습니다.");
+									}
+									if (result == 'login') {
+										showToast("로그인이 필요합니다.");
+									}
+								}
+							});
+						});
+			});
+		</script>
+	</div>
 </div>
-</main></div>
-<%@ include file="/jsp/common/footer.jsp" %>
+<%@ include file="/jsp/common/footer.jsp"%>

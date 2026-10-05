@@ -10,26 +10,25 @@ import dto.PersonalMatch;
 import util.MatchSearchInfo;
 
 public class PersonalMatchDaoImpl implements PersonalMatchDao {
-	SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 
 	@Override
-	public List<PersonalMatch> selectPersonalMatchList() throws Exception {
+	public List<PersonalMatch> selectNowPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectPersonalMatchList");
+			return sqlSession.selectList("mapper.personalmatch.selectNowPersonalMatchList",searchInfo);
 		}
 	}
-	
+
 	@Override
 	public List<PersonalMatch> selectNormalPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectNormalPersonalMatchList",searchInfo);
+			return sqlSession.selectList("mapper.personalmatch.selectNormalPersonalMatchList", searchInfo);
 		}
 	}
-	
+
 	@Override
 	public List<PersonalMatch> selectMapPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectMapPersonalMatchList",searchInfo);
+			return sqlSession.selectList("mapper.personalmatch.selectMapPersonalMatchList", searchInfo);
 		}
 	}
 
@@ -52,19 +51,10 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	}
 
 	@Override
-	public List<PersonalMatch> selectMyPagePersonalMatchsportList(Map<String, Object> param) throws Exception {
-		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectMyPagePersonalMatchsportList", param);
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-
-	@Override
 	public List<PersonalMatch> selectMyPageCreatedPersonalMatchList(Map<String, Object> param) throws Exception {
-	    try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-	        return sqlSession.selectList("mapper.personalmatch.selectMyPageCreatedPersonalMatchList", param);
-	    }
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatch.selectMyPageCreatedPersonalMatchList", param);
+		}
 	}
 
 	@Override
@@ -77,18 +67,7 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	}
 
 	@Override
-	public List<PersonalMatch> selectMyPageCreatedPersonalMatchsportList(Map<String, Object> param) throws Exception {
-		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			System.out.println("dao"+sqlSession.selectList("mapper.personalmatch.selectMyPageCreatedPersonalMatchsportList", param).toString());
-			return sqlSession.selectList("mapper.personalmatch.selectMyPageCreatedPersonalMatchsportList", param);
-			
-		} catch (Exception e) {
-			throw e;
-		}
-		
-	
-	}
-	public Map<String,Object> selectPersonalMatch(Integer personaMatchId) throws Exception {
+	public Map<String, Object> selectPersonalMatch(Integer personaMatchId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personaMatchId);
 		} catch (Exception e) {
@@ -96,6 +75,8 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		}
 
 	}
+
+	
 
 
 }

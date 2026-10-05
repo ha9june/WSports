@@ -32,7 +32,7 @@
             <a class="btn btn-outline btn-sm" href="${ctx}/jsp/review/reviewModify.jsp">수정</a>
             <button type="button" class="btn btn-danger-soft btn-sm" data-modal-open="deleteModal">삭제</button>
           </c:when>
-          <c:otherwise><a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?state=post" data-auth>신고</a></c:otherwise>
+          <c:otherwise><a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?targetType=review&targetNo=${review.reviewId}" data-auth>신고</a></c:otherwise>
         </c:choose>
         <span class="btn btn-outline btn-sm">댓글 4</span>
       </div>

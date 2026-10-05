@@ -93,11 +93,10 @@
     	<a class="btn btn-outline btn-xs t-brand"
        href="${ctx}/admin/settlement/detail?matchId=${s.personal_match_id}&amp;matchType=personal">보기</a>
   		</div>
-
 	</c:forEach>
-<c:if test="${empty displayList}">
-  <p class="section-desc">표시할 경기가 없습니다.</p>
-</c:if>
+	<c:if test="${empty displayList}">
+		<p class="section-desc">표시할 경기가 없습니다.</p>
+	</c:if>
 </div>
 
 <script>

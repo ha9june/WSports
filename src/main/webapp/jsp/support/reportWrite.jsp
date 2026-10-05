@@ -7,8 +7,11 @@
    state : member(일반/회원 신고 - 유형 직접 선택) | post(게시글 신고 - 대상 게시글 정보 자동 입력)
   게시글 신고는 경기/후기 상세의 [신고] 버튼에서 ?state=post&targetNo= 로 들어옵니다.
 --%>
-<c:set var="state" value="${empty param.state ? 'member' : param.state}" />
-<c:set var="isPost" value="${state eq 'post'}" />
+<c:set var="targetType" value="${param.targetType}" />
+<c:set var="targetNo" value="${param.targetNo}" />
+
+<c:set var="isPost"
+       value="${not empty targetType and not empty targetNo}" />
 <c:set var="pageTitle" value="${isPost ? '게시글 신고 접수' : '신고 접수'}" />
 <c:set var="pageCss" value="mypage" />
 <c:set var="sideMenu" value="support" />
@@ -17,10 +20,13 @@
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
 <%-- TODO: action 을 신고 등록 서블릿으로 교체 --%>
-<form class="work-inner" action="${ctx}/jsp/support/reportList.jsp" method="post" style="width:860px">
+<form class="work-inner" action="${ctx}/support/report/create" method="post" style="width:860px">
   <div class="page-head" style="margin-bottom:24px"><h1 class="page-title">${isPost ? '게시글 신고 접수' : '신고 접수'}</h1>
     <p class="page-desc">${isPost ? '신고 대상 게시글 정보는 자동으로 입력됩니다.' : '신고할 내용을 작성해주세요. 확인 후 처리해드릴게요.'}</p></div>
-  <c:if test="${isPost}"><input type="hidden" name="targetType" value="POST"><input type="hidden" name="targetNo" value="${param.targetNo}"></c:if>
+  <c:if test="${isPost}">
+    <input type="hidden" name="targetType" value="${targetType}">
+    <input type="hidden" name="targetNo" value="${targetNo}">
+  </c:if>
   <div class="form-card" style="margin-left:0;width:780px;max-width:100%">
     <div class="field"><label class="field-label" for="rType">신고 유형</label>
       <c:choose>

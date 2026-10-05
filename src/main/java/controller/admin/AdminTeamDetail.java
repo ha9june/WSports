@@ -36,7 +36,7 @@ public class AdminTeamDetail extends HttpServlet {
 		
 		try {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
-			Map<String, Object> teaminfo= service.getTeamInfo(teamId);
+			Map<String, Object> teaminfo = service.getTeamInfo(teamId);
 			List<Map<String, Object>> penaltylist = service.getTeamPenaltyList(teamId);
 			
 			String captain = service.getTeamCaptain(teamId);
@@ -44,15 +44,10 @@ public class AdminTeamDetail extends HttpServlet {
 			String suspension = service.getTeamSuspention(teamId)> 0 ? "정지" : "정상";
 			
 			request.setAttribute("teaminfo", teaminfo);
-			System.out.println(teaminfo);
 			request.setAttribute("penaltylist", penaltylist);
-			System.out.println(penaltylist);
 			request.setAttribute("captain", captain);
-			System.out.println(captain);
 			request.setAttribute("membercnt", membercnt);
-			System.out.println(membercnt);
 			request.setAttribute("suspension", suspension);
-			System.out.println(suspension);
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "회원관리 상세 목록 조회 오류");
@@ -64,7 +59,6 @@ public class AdminTeamDetail extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doPost 진입 action=[" + request.getParameter("action") + "] teamId=[" + request.getParameter("teamId") + "]");
 		AdminTeamServiceImpl service = new AdminTeamServiceImpl();
 		try {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));

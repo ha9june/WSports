@@ -9,4 +9,5 @@ public interface UserDao {
 	void insertUser (User user) throws Exception;
 	void updateLastLogin(String loginId) throws Exception;
 	void updateMypage(User user) throws Exception;
+	void updateProfile(User user) throws Exception;
 }

@@ -25,6 +25,8 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 
 
+testestset
+
 <script>
 
 	let page =1;
@@ -246,11 +248,6 @@
 
 	    });
 
-		
-		
-		
-			
-
 	});
 </script>
 
@@ -263,13 +260,13 @@
       <h2 class="section-title">지금 볼 만한 경기</h2>
       <p class="section-desc">
         <c:choose>
-          <c:when test="${role eq 'guest'}">인기 경기, 마감 임박, 신규 모집을 빠르게 확인해보세요.</c:when>
+          <c:when test="${sessionScope.user == null}">인기 경기, 마감 임박, 신규 모집을 빠르게 확인해보세요.</c:when>
           <c:otherwise>내 조건에 맞는 경기와 서비스에서 인기 있는 경기를 함께 보여드려요.</c:otherwise>
         </c:choose>
       </p>
       <div class="feature-tabs">
-        <c:if test="${role ne 'guest'}"><a id="nowRecomandBtn" class="btnGroup1 is-active">추천 경기</a></c:if>
-        <a id="nowPopularBtn" class="btnGroup1 ${role eq 'guest' ? 'is-active' : ''}">인기 경기</a>
+        <c:if test="${sessionScope.user != null}"><a id="nowRecomandBtn" class="btnGroup1 is-active">추천 경기</a></c:if>
+        <a id="nowPopularBtn" class="btnGroup1 ${sessionScope.user == null ? 'is-active' : ''}">인기 경기</a>
         <a id="nowEndBtn" class="btnGroup1">마감 임박</a>
         <a id="nowNewBtn" class="btnGroup1">신규 모집</a>
       </div>
