@@ -95,7 +95,7 @@ public class MatchListNormal extends HttpServlet {
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		if(requestType!=null &&  requestType.equals("ajax")) {
 			try {
-				List<PersonalMatch> normalMatchList = service.getNormalMatch(searchInfo);
+				List<PersonalMatch> normalMatchList = service.getNormalMatchList(searchInfo);
 				
 				System.out.println(normalMatchList);
 				Gson gson = new Gson();

@@ -5,11 +5,15 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 public class MatchSearchInfo {
+	//추천선택용
+	private String SearchType;
+	
 	//공통
 	private String[] sports;
 	private String[] ages;
 	private String[] skills;
 	private String gender;
+	
 	//노말
     private String[] regions;
 	private LocalDate startDate;
@@ -21,7 +25,16 @@ public class MatchSearchInfo {
 	private BigDecimal maxLat;
 	private BigDecimal minLng;
 	private BigDecimal maxLng;
+
 	
+	
+	
+	public String getSearchType() {
+		return SearchType;
+	}
+	public void setSearchType(String searchType) {
+		SearchType = searchType;
+	}
 	public String[] getSports() {
 		return sports;
 	}
@@ -102,21 +115,12 @@ public class MatchSearchInfo {
 	}
 	@Override
 	public String toString() {
-		return "NormalMatchSearchInfo [sports=" + Arrays.toString(sports) + ", ages=" + Arrays.toString(ages)
-				+ ", skills=" + Arrays.toString(skills) + ", gender=" + gender + ", regions=" + Arrays.toString(regions)
-				+ ", startDate=" + startDate + ", endDate=" + endDate + ", keyword=" + keyword + ", startIndex="
-				+ startIndex + ", minLat=" + minLat + ", maxLat=" + maxLat + ", minLng=" + minLng + ", maxLng=" + maxLng
-				+ "]";
+		return "MatchSearchInfo [SearchType=" + SearchType + ", sports=" + Arrays.toString(sports) + ", ages="
+				+ Arrays.toString(ages) + ", skills=" + Arrays.toString(skills) + ", gender=" + gender + ", regions="
+				+ Arrays.toString(regions) + ", startDate=" + startDate + ", endDate=" + endDate + ", keyword="
+				+ keyword + ", startIndex=" + startIndex + ", minLat=" + minLat + ", maxLat=" + maxLat + ", minLng="
+				+ minLng + ", maxLng=" + maxLng + "]";
 	}
-
-	
-	
-	
 	
 
-	
-	
-	
-	
-	
 }

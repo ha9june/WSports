@@ -30,6 +30,7 @@
     <section>
       <div class="section-head">
         <div>
+          <h3>${sessionScope.user.loginId }</h3>
           <h2 class="section-title">경기 찾기</h2>
           <p class="section-desc">지금 열려있는 경기를 둘러보세요.</p>
         </div>
@@ -38,7 +39,7 @@
       
       
 	<div id="recomandMatchListDiv" class="feature-row">
-	    <c:forEach var="match" items="${rList}">
+	    <c:forEach var="match" items="${nList}">
 	  		<c:set var="sportClass" value="${match.sport eq '축구' ? 'football' :
     		    match.sport eq '농구' ? 'basketball' :	
                 match.sport eq '테니스' ? 'tennis' :
@@ -47,7 +48,7 @@
 			    <img class="art" src="${ctx}/img/art-${sportClass}.png" alt="">
 			    <span class="sport-tag ${sportClass}">${match.sport}</span>
 			    <button type="button" class="fav-btn bare" data-fav data-auth aria-label="관심 경기">${heart}</button>
-			    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">${role eq 'guest' ? '인기 경기' : '지역 · 실력 일치'}</span>
+			    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">${sessionScope.user == null  ? '인기 경기' : '지역 · 실력 일치'}</span>
 			    <div class="body">
 			      <p class="title">${match.title}</p>
 			      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">${match.startTime} · ${match.region}</p>
