@@ -214,34 +214,6 @@
 		LIMIT #{size} OFFSET #{offset}
 	</select>
 
-	
-	<!-- 마이페이지 참여 경기 목록 조회 -->
-	<select id="selectMyPagePersonalMatchList" parameterType="map" resultType="personalMatch">
-	    select m.*, p.status as participantStatus
-	    from personal_match_participant p
-	    join personal_match m on m.personal_match_id = p.personal_match_id
-	    where p.user_id = #{userId}
-	      and p.status in ('PAID', 'HOST')
-	      <if test="month != null and month != ''">
-	        and m.match_date &gt;= STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d')
-	        and m.match_date &lt;  DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH)
-	      </if>
-	    order by m.match_date desc
-	    limit #{offset}, #{size}
-	</select>
-	<select id="selectMyPagePersonalMatchCnt" parameterType="map" resultType="int">
-	    select count(distinct m.personal_match_id)
-	    from personal_match m
-	    left join personal_match_participant p
-	           on p.personal_match_id = m.personal_match_id
-	          and p.user_id = #{userId}
-	          and p.status in ('PAID', 'HOST')
-	    where (m.user_id = #{userId} or p.user_id is not null)
-	      <if test="month != null and month != ''">
-	        and m.match_date &gt;= STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d')
-	        and m.match_date &lt;  DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH)
-	      </if>
-	</select>
 
 	<select id="selectPersonalMatch" parameterType="Integer" resultType="map">
 		SELECT
