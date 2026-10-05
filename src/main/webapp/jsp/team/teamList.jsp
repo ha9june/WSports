@@ -62,7 +62,7 @@
                     }
 
                     html +=
-                        '<a class="team-card" href="${ctx}/jsp/team/teamDetail.jsp">' +
+                    	   '<a class="team-card" href="${ctx}/team/detail/view?teamId=' + team.teamId + '">' +
                             '<div class="top">' +
                             	'<img src="' + imageSrc + '" alt="">'+
                                 '<div>' +
@@ -77,8 +77,9 @@
                             '<p class="cond">' +
 	                            team.days + '<br>' +
 	                            team.ages + '<br>' +
-	                            team.skill + '·' + team.gender +
+	                            team.skill + ' · ' + team.gender +
                             '</p>' +
+                            '<input type="hidden" name="teamId" value="' + team.teamId +'">' +
                         '</a>';
                 });
                 
@@ -204,12 +205,11 @@
 					style="width: 140px" aria-label="시군구" disabled>
 					<option value="">시군구</option>
 				</select> <input class="input keyword" name="keyword"
-					placeholder="팀명 또는 키워드 검색">
+					placeholder="팀명 또는 팀 소개 검색">
 				<button type="submit" class="btn btn-primary btn-lg"
 					style="width: 108px">검색</button>
 			</div>
-			<p id="maxRegion" class="region-max" style="display: none">최대
-				3개까지 선택 가능합니다.</p>
+			<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
 			<div class="picked" id="pickedRegions"></div>
 			<div id="regionInputs"></div>
 		</form>
@@ -228,7 +228,7 @@
 		<%-- TODO: <c:forEach var="t" items="${teamList}"> 로 교체. (아래는 시연용 더미 데이터) --%>
 		<div class="team-grid" id="team-grid">
 			<c:forEach var="team" items="${teamList }">
-				<a class="team-card" href="${ctx}/jsp/team/teamDetail.jsp">
+				<a class="team-card" href="${ctx}/team/detail/view?teamId=${team.teamId}">
 					<div class="top">
 						<c:choose>
 							<c:when test="${not empty team.profileImage}">
@@ -256,7 +256,7 @@
 							</p>
 						</div>
 					</div>
-					<p class="cond">${team.days}<br>${team.ages }<br>${team.skill}·${team.gender }
+					<p class="cond">${team.days}<br>${team.ages }<br>${team.skill} · ${team.gender }
 					</p>
 				</a>
 			</c:forEach>
@@ -270,7 +270,7 @@
 		</c:if>
 	</div>
 </main>
-<a class="fab" href="${ctx}/jsp/team/teamMakeForm.jsp" data-auth><span
+<a class="fab" href="${ctx}/team/create" data-auth><span
 	class="fab-label">팀 만들기</span><span class="fab-btn" aria-hidden="true"></span></a>
 
 <script>

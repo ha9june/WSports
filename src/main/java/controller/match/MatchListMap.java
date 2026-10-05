@@ -82,7 +82,7 @@ public class MatchListMap extends HttpServlet {
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		if(requestType!=null &&  requestType.equals("ajax")) {
 			try {
-				List<PersonalMatch> mapMatchList = service.getMapMatch(searchInfo);
+				List<PersonalMatch> mapMatchList = service.getMapMatchList(searchInfo);
 				
 				System.out.println(mapMatchList);
 				Gson gson = new Gson();

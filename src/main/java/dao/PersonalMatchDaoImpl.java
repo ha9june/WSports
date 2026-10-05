@@ -12,9 +12,9 @@ import util.MatchSearchInfo;
 public class PersonalMatchDaoImpl implements PersonalMatchDao {
 
 	@Override
-	public List<PersonalMatch> selectPersonalMatchList() throws Exception {
+	public List<PersonalMatch> selectNowPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectPersonalMatchList");
+			return sqlSession.selectList("mapper.personalmatch.selectNowPersonalMatchList",searchInfo);
 		}
 	}
 
@@ -75,4 +75,8 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		}
 
 	}
+
+	
+
+
 }

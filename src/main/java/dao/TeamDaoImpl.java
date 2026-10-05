@@ -40,4 +40,11 @@ public class TeamDaoImpl implements TeamDao {
 		}
 	}
 
+	@Override
+	public Team selectTeam(Long teamId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectOne("mapper.team.selectTeam", teamId);
+		}
+	}
+
 }

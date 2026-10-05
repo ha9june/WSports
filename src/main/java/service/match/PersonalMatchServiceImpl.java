@@ -25,20 +25,19 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	}
 	
 	
-
 	@Override
-	public List<PersonalMatch> getRecomandMatch() throws Exception {
-		return personalMatchDao.selectPersonalMatchList();
+	public List<PersonalMatch> getNowMatchList(MatchSearchInfo searchInfo) throws Exception {
+		return personalMatchDao.selectNowPersonalMatchList(searchInfo);
 	}
 	
 	// 마이페이지 참가 경기 목록 조회(페이징)
 	@Override
-	public List<PersonalMatch> getNormalMatch(MatchSearchInfo searchInfo) throws Exception {
+	public List<PersonalMatch> getNormalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		return personalMatchDao.selectNormalPersonalMatchList(searchInfo);
 	}
 	
 	@Override
-	public List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception {
+	public List<PersonalMatch> getMapMatchList(MatchSearchInfo searchInfo) throws Exception {
 		return personalMatchDao.selectMapPersonalMatchList(searchInfo);
 	}
 
@@ -180,4 +179,21 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		
 		return favoriteDao.selectMyPageFavoriteList(param);
 	}
+
+
+	@Override
+	public List<PersonalMatch> getNormalMatch(MatchSearchInfo searchInfo) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 }
