@@ -1,7 +1,6 @@
 package controller.admin;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -11,19 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.User;
-import service.admin.AdminReportServiceImpl;
+import service.admin.AdminInquiryService;
+import service.admin.AdminInquiryServiceImpl;
 
 /**
- * Servlet implementation class AdminReportDetail
+ * Servlet implementation class AdminInquiryDetail
  */
-@WebServlet("/admin/report/detail")
-public class AdminReportDetail extends HttpServlet {
+@WebServlet("/admin/inquiry/detail")
+public class AdminInquiryDetail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AdminReportDetail() {
+    public AdminInquiryDetail() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,32 +32,32 @@ public class AdminReportDetail extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		AdminReportServiceImpl service = new AdminReportServiceImpl();
+		AdminInquiryServiceImpl service = new AdminInquiryServiceImpl();
 		try {
-			Long reportId = Long.parseLong(request.getParameter("reportId"));
-			Map<String, Object> reportdetail = service.getAdminReportDetail(reportId);
-			request.setAttribute("reportdetail", reportdetail);
+			Long inquiryId = Long.parseLong(request.getParameter("inquiryId"));
+			Map<String, Object> inquirydetail = service.getAdminInquiryDetail(inquiryId);
+			request.setAttribute("inquirydetail", inquirydetail);
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "정산관리 목록 조회 오류");
 		}
-		request.getRequestDispatcher("/jsp/admin/adminReportDetail.jsp").forward(request, response);
+		request.getRequestDispatcher("/jsp/admin/adminInquiryDetail.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		AdminReportServiceImpl service = new AdminReportServiceImpl();
+		AdminInquiryServiceImpl service = new AdminInquiryServiceImpl();
 		try {
 			// 지금 로그인한 관리자 번호 (세션에서)
 			User user = (User) request.getSession().getAttribute("user");
 			Long adminId = user.getUserId();
 			
-			Long reportId = Long.parseLong(request.getParameter("reportId"));
+			Long inquiryId = Long.parseLong(request.getParameter("inquiryId"));
 			String answer = request.getParameter("answer");
 			
-			service.AdminReportAnswer(reportId, answer, adminId);
+			service.AdminInquiryAnswer(inquiryId, answer, adminId);
 			response.getWriter().print("true");
 		} catch (Exception e) {
 			e.printStackTrace();

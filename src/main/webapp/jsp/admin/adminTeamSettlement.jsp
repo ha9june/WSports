@@ -44,8 +44,8 @@
 			<b><fmt:formatNumber value="${teamwaitmoney}" pattern="#,###"/>원</b>
 		</div>
 	</div>
-  	<div class="list-toolbar" style="margin:24px 0 16px">
-    	<div class="seg pill success">
+  	<div class="list-toolbar" style="margin: 20px 0 20px; padding-left: 0" >
+    	<div class="seg pill success" style="padding-left: 0; margin-left: 0">
     		<a class="seg-item ${state ne 'completed' and state ne 'date' ? 'is-active' : ''}" href="?state=all">정산 대기</a>
     		<a class="seg-item ${state eq 'completed' ? 'is-active' : ''}" href="?state=completed">지급 완료</a>
     		<a class="seg-item ${state eq 'date' ? 'is-active' : ''}" href="?state=date">날짜별</a>

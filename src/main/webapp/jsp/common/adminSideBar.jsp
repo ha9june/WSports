@@ -15,7 +15,7 @@
         		<a href="${ctx}/admin/member" class="${adminMenu eq 'member' ? 'is-active' : ''}">회원 관리 <span class="count-badge">3</span></a>
         		<a href="${ctx}/admin/team" class="${adminMenu eq 'team' ? 'is-active' : ''}">팀 관리 <span class="count-badge">2</span></a>
         		<a href="${ctx}/admin/report" class="${adminMenu eq 'report' ? 'is-active' : ''}">신고 관리 <span class="count-badge">7</span></a>
-       			<a href="${ctx}/jsp/admin/adminInquiry.jsp" class="${adminMenu eq 'inquiry' ? 'is-active' : ''}">문의 관리 <span class="count-badge">5</span></a>
+       			<a href="${ctx}/admin/inquiry" class="${adminMenu eq 'inquiry' ? 'is-active' : ''}">문의 관리 <span class="count-badge">5</span></a>
         		<a href="${ctx}/jsp/admin/adminNotice.jsp" class="${adminMenu eq 'notice' ? 'is-active' : ''}">공지 관리 <span class="count-badge">0</span></a>
       		</nav>
     	</div>
