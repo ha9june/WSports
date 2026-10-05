@@ -24,16 +24,11 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 
-
-testestset
-
 <script>
-
 	let page =1;
 
 	$(function(){
 		let data = {"userId":"test1","grade":"User"};
-		
 		
 		function NowList(searchType){
 			$.ajax({
@@ -220,6 +215,8 @@ testestset
 			$("#normalDiv").show();
 		  	$("#mapInputs").addClass("is-hidden");
 			$("#mapDiv").hide();
+			page=1;
+			NormalList(page, this);
 
 		});
 		$("#mapBtn").on("click", function() {
@@ -235,17 +232,19 @@ testestset
 
 		});
 		$("#moreBtn").on("click", function(e) {
-			
 			NormalList(++page,this);
 		});
 		
 		
 	    $('#matchSearchForm').on('submit', function(e) {
-	    	
 	        e.preventDefault();
-	        page=1;
-	        NormalList(page,this)
-
+	        if ($("#mapInputs").hasClass("is-hidden")) {
+	        	
+			    NormalList(page, this);
+			} else {
+				searchPlaces();
+			    searchMatch();   
+			}
 	    });
 
 	});
@@ -355,8 +354,8 @@ testestset
 		  <div id="mapInputs" class="is-hidden" style="display:contents">
 		  
 	          <div class="map-query">
-	          	<span class="token-chip">📍 마포구 망원동 <button type="button" aria-label="지역 삭제">✕</button></span>
-	            <input type="text" name="keyword" placeholder="경기명·팀명도 검색할 수 있어요" aria-label="키워드">
+	          	<!-- <span class="token-chip">📍 마포구 망원동 <button type="button" aria-label="지역 삭제">✕</button></span> -->
+	            <input id="keyword" type="text" name="keyword" placeholder="지역을 검색해 주세요" aria-label="키워드" data-value="서울시청">
 			  </div>
 		  </div>
 		  
@@ -434,8 +433,7 @@ testestset
 	        </section>
 	        <%-- TODO: <c:forEach var="m" items="${matchList}"> 로 아래 행 하나를 반복 --%>
 	        <div id="normalMatchListDiv" class="match-rows">
-	          
-	
+
 	        </div>
 	        <div class="more-wrap">
 	        	<button id="moreBtn" type="button" class="btn-more">↓ &nbsp;더보기</button>
@@ -477,47 +475,16 @@ testestset
    	          <div class="map-canvas" id="map">
    
    	          </div>
-          
-	          
-	          
-	          
-	          
-	          
-	          
-	          <div id="mapMatchListDiv" class="map-list">
-	            <h3>지도 주변 경기 4개</h3>
-	            <%-- <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1"><small>축구/풋살</small><strong>토요일 저녁 풋살 한 판!</strong><span>9/19 19:00 · 망원동 · 1.2km</span></a>
-	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="tennis" data-pin="m2"><small>테니스</small><strong>초중급 테니스 복식 모집</strong><span>9/21 18:30 · 송파구 · 2.4km</span></a>
-	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="basketball ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3"><small>농구</small><strong>주말 실내 농구 같이 하실 분</strong><span>9/20 14:00 · 성동구 · 3.1km</span></a>
-	            <a href="${ctx}/jsp/match/personalMatchDetail.jsp" class="badminton" data-pin="m4"><small>배드민턴</small><strong>퇴근 후 배드민턴</strong><span>9/22 20:00 · 영등포구 · 4.0km</span></a>
-	           --%></div>
-	          
-	          
-	          
+
+	          <div id="mapMatchListDiv" class="map-list" style="max-height:420px;overflow-y: auto;">
+	           </div>
 
 	        </div>
-	        
-	        
-	        
-	        
-	        
-	        
+
 	        
 		</div>
 
 
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
   </div>
 </main>
 
@@ -534,14 +501,51 @@ testestset
 	    center: new kakao.maps.LatLng(37.5675000, 126.9790000), // 지도의 중심좌표
 	    level: 5 // 지도의 확대 레벨
 	};
-		var map = new kakao.maps.Map(mapContainer, mapOption);
+	var map = new kakao.maps.Map(mapContainer, mapOption);
 
+	var ps = new kakao.maps.services.Places();  
+	
 	kakao.maps.event.addListener(map, 'dragend', function() {
 	    searchMatch();
 	});
 	kakao.maps.event.addListener(map, 'zoom_changed', function() {
 	    searchMatch();
 	});
+	
+	
+	function searchPlaces() {
+
+	    var keyword = document.getElementById('keyword').value;
+	    if (!keyword.replace(/^\s+|\s+$/g, '')) {
+	        alert('키워드를 입력해주세요!');
+	        return false;
+	    }
+
+	    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+	    ps.keywordSearch( keyword, placesSearchCB); 
+	}
+	
+	function placesSearchCB(data, status, pagination) {
+	    if (status === kakao.maps.services.Status.OK) {
+	        movePlace(data);
+	    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+	        alert('검색 결과가 존재하지 않습니다.');
+	        return;
+	    } else if (status === kakao.maps.services.Status.ERROR) {
+	        alert('검색 결과 중 오류가 발생했습니다.');
+	        return;
+	    }
+	}
+	function movePlace(places) {
+	    var moveLatLon = new kakao.maps.LatLng(places[0].y, places[0].x);
+	    map.setCenter(moveLatLon);
+	    searchMatch();
+	    
+	}
+	
+	
+	
 
 	function createMarker(item) {
     	 
@@ -652,7 +656,7 @@ testestset
 	        data:data,
 	        success: function(data) {
 	            removeMarkers();
-				let html = "";
+				let html = "<h3>지도 주변 경기 4개</h3>";
 	            data.forEach(function(item) {	
 					html+= `
 			            <a href="${ctx}/match/detail/view?="`+item.personalMatchId+` 
@@ -675,12 +679,6 @@ testestset
 	}
 	
 
-	//주소-좌표 변환 객체를 생성
-	var geocoder = new kakao.maps.services.Geocoder();
-	//마커를 미리 생성
-
-	
-	
 
 </script>
 <script>
@@ -793,7 +791,7 @@ testestset
 	    }
 	  })();
 	</script>
-	<script>
+<script>
 		const periodPicker = document.getElementById('periodPicker');
 		if (periodPicker) {
 			flatpickr(periodPicker, {
