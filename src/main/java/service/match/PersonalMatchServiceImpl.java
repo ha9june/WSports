@@ -9,6 +9,7 @@ import java.util.Map;
 import dao.PersonalMatchDao;
 import dao.PersonalMatchDaoImpl;
 import dto.PersonalMatch;
+import util.MatchSearchInfo;
 import util.PageInfo;
 
 public class PersonalMatchServiceImpl implements PersonalMatchService {
@@ -20,22 +21,20 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	}
 	
 	
-
 	@Override
-	public List<PersonalMatch> getRecomandMatch() throws Exception {
-		return personalMatchDao.selectPersonalMatchList();
+	public List<PersonalMatch> getNowMatchList(MatchSearchInfo searchInfo) throws Exception {
+		return personalMatchDao.selectNowPersonalMatchList(searchInfo);
 	}
 	
 	// 마이페이지 참가 경기 목록 조회(페이징)
 	@Override
-	public List<PersonalMatch> getNormalMatch(Integer page) throws Exception {
-		int startIndex = (page-1)*4;
-		return personalMatchDao.selectNormalPersonalMatchList(startIndex);
+	public List<PersonalMatch> getNormalMatchList(MatchSearchInfo searchInfo) throws Exception {
+		return personalMatchDao.selectNormalPersonalMatchList(searchInfo);
 	}
 	
 	@Override
-	public List<PersonalMatch> getMapMatch(Map<String, Object> latlong) throws Exception {
-		return personalMatchDao.selectMapPersonalMatchList(latlong);
+	public List<PersonalMatch> getMapMatchList(MatchSearchInfo searchInfo) throws Exception {
+		return personalMatchDao.selectMapPersonalMatchList(searchInfo);
 	}
 
 	@Override
@@ -110,6 +109,10 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+
 
 
 }

@@ -6,17 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import dto.PersonalMatch;
+import util.MatchSearchInfo;
 import util.PageInfo;
 
 public interface PersonalMatchService {
 	//추천 매치 가져오기
-	List<PersonalMatch> getRecomandMatch() throws Exception;
+	List<PersonalMatch> getNowMatchList(MatchSearchInfo searchInfo) throws Exception;
+	//일반 매치 가져오기
+	List<PersonalMatch> getNormalMatchList(MatchSearchInfo searchInfo) throws Exception;
+	List<PersonalMatch> getMapMatchList(MatchSearchInfo searchInfo) throws Exception;
 	
 	//참가 경기 목록 페이징처리
 	List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month,String status,String sport)throws Exception;
-	//일반 매치 가져오기
-	List<PersonalMatch> getNormalMatch(Integer page) throws Exception;
-	List<PersonalMatch> getMapMatch(Map<String,Object> latlong) throws Exception;
+	
 	
 	
 	//페이징처리

@@ -1,7 +1,8 @@
 package controller.match;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.time.LocalDate;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import com.google.gson.Gson;
 import dto.PersonalMatch;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
+import util.MatchSearchInfo;
 
 /**
  * Servlet implementation class MatchListNormal
@@ -46,10 +48,54 @@ public class MatchListNormal extends HttpServlet {
 		String requestType = request.getParameter("requestType");
 		Integer page = Integer.parseInt(request.getParameter("page"));
 		
+		String sportsParam = request.getParameter("sports");
+		String gender = request.getParameter("gender");
+		String agesParam = request.getParameter("ages");
+		String skillsParam = request.getParameter("skills");
+		String startDataParam = request.getParameter("startDate");
+		String endDataParam = request.getParameter("endDate");
+		String keyword = request.getParameter("keyword");
+		String[] regions = request.getParameterValues("regions");
+		
+		String[] sports = sportsParam != null && !sportsParam.isBlank()
+		        ? sportsParam.split(",")
+		        : null;
+		String[] ages = agesParam != null && !agesParam.isBlank()
+		        ? agesParam.split(",")
+		        : null;
+		String[] skills = skillsParam != null && !skillsParam.isBlank()
+		        ? skillsParam.split(",")
+		        : null;
+		
+		LocalDate startDate = startDataParam == null || startDataParam.isBlank()
+		        ? null
+		        : LocalDate.parse(startDataParam);
+
+		LocalDate endDate = endDataParam == null || endDataParam.isBlank()
+		        ? null
+		        : LocalDate.parse(endDataParam);
+		
+		int startIndex = (page-1)*4;
+
+		MatchSearchInfo searchInfo = new MatchSearchInfo();
+		searchInfo.setStartIndex(startIndex);
+		searchInfo.setSports(sports);
+		searchInfo.setGender(gender);
+		searchInfo.setAges(ages);
+		searchInfo.setSkills(skills);
+		searchInfo.setStartDate(startDate);
+		searchInfo.setEndDate(endDate);
+		searchInfo.setKeyword(keyword);
+		searchInfo.setRegions(regions);
+		
+		System.out.println(searchInfo);
+		
+		
+
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		if(requestType!=null &&  requestType.equals("ajax")) {
 			try {
-				List<PersonalMatch> normalMatchList = service.getNormalMatch(page);
+				List<PersonalMatch> normalMatchList = service.getNormalMatchList(searchInfo);
 				
 				System.out.println(normalMatchList);
 				Gson gson = new Gson();

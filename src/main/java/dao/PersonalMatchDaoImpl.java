@@ -7,28 +7,29 @@ import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
 import dto.PersonalMatch;
+import util.MatchSearchInfo;
 
 public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 
 	@Override
-	public List<PersonalMatch> selectPersonalMatchList() throws Exception {
+	public List<PersonalMatch> selectNowPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectPersonalMatchList");
+			return sqlSession.selectList("mapper.personalmatch.selectNowPersonalMatchList",searchInfo);
 		}
 	}
 	
 	@Override
-	public List<PersonalMatch> selectNormalPersonalMatchList(Integer startIndex) throws Exception {
+	public List<PersonalMatch> selectNormalPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectNormalPersonalMatchList",startIndex);
+			return sqlSession.selectList("mapper.personalmatch.selectNormalPersonalMatchList",searchInfo);
 		}
 	}
 	
 	@Override
-	public List<PersonalMatch> selectMapPersonalMatchList(Map<String,Object> latlong) throws Exception {
+	public List<PersonalMatch> selectMapPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatch.selectMapPersonalMatchList",latlong);
+			return sqlSession.selectList("mapper.personalmatch.selectMapPersonalMatchList",searchInfo);
 		}
 	}
 
@@ -95,6 +96,8 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		}
 
 	}
+
+	
 
 
 }

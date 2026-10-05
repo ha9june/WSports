@@ -45,13 +45,13 @@
 	</select>
 	
 	<!-- 최신 날짜순으로 보는 모든 팀 정산 리스트 -->
-	<select id="selectTeamSettlementDayList" resultType="map">
+	<select id="selectTeamSettlementDayList" parameterType="map" resultType="map">
 		select m.team_match_id, m.title, m.sport,
            m.match_date, s.amount,
            s.settlement_status
     	from team_settlement s
     	join team_match m on s.team_match_id = m.team_match_id
-    	where m.match_date = #{targetDate}
+    	where m.match_date between #{startDate} and #{endDate}
     	order by m.match_date desc
 	</select>
 	
