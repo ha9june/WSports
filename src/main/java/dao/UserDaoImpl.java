@@ -71,4 +71,19 @@ public class UserDaoImpl implements UserDao {
 			sqlSession.close();
 		}
 	}
+
+	@Override
+	public void updateProfile(User user) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.update("mapper.user.updateProfile", user);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
 }

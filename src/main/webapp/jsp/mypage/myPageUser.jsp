@@ -21,7 +21,7 @@
     <div class="field"><label class="field-label">이메일</label><input class="input" name="email" value="${loginUser.email}" readonly></div>
     <div class="field"><label class="field-label">전화번호</label><input class="input" name="phone" value="${loginUser.phone}" readonly></div>
     <div class="field"><label class="field-label">생년월일</label><input class="input" name="birth" value="${loginUser.birthDate}" readonly></div>
-    <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender}" readonly></div>
+    <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender == 'M' ? '남성' : '여성'}" readonly></div>
   </div>
 
   <h2 class="section-title mt-32">정산 계좌</h2>

@@ -30,6 +30,6 @@
 	<select id="selectRole" parameterType="Map" resultType="String">
 		select team_role
 		from team_user
-		where team_id = ${teamId} and user_id = #{userId}
+		where team_id = #{teamId} and user_id = #{userId} and COALESCE(withdrawn, 0) = 0
 	</select>
 </mapper>

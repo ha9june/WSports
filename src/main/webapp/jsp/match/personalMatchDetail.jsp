@@ -121,7 +121,7 @@
         <c:if test="${not isHost}">
           <div class="detail-actions">
             <button type="button" class="fav-btn sq ${state eq 'saved' ? 'is-on' : ''}" data-fav data-auth aria-label="관심 경기">${heart}</button>
-            <a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?state=post" data-auth style="height:36px">신고</a>
+            <a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
           </div>
         </c:if>
       </div>

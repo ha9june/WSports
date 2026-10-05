@@ -4,6 +4,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.time.YearMonth, java.time.LocalDate"%>
+<link href="https://jsdelivr.net" rel="stylesheet" />
+<script src="https://jsdelivr.net"></script>
 <%--
   내가 만든 경기 (myPageCreatedPersonalMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Recruited Matches / Desktop
@@ -135,7 +137,7 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 		<c:if test="${not empty selectedDate}">
 			<input type="hidden" name="date" value="${selectedDate}">
 		</c:if>
-			<!-- 경기 종목별 리스트 검색 -->
+		<!-- 경기 종목별 리스트 검색 -->
 		<select class="select" name="sport" onchange="this.form.submit()">
 			<option value="">전체</option>
 			<option value="축구/풋살" ${sport == '축구/풋살' ? 'selected' : ''}>축구/풋살</option>
@@ -145,19 +147,24 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 		</select> <select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
 			<option value="모집중" ${status == '모집중' ? 'selected' : ''}>모집중</option>
-			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집 마감</option>
-			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기 종료</option>
-			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기 취소</option>
+			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
+				마감</option>
+			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
+				종료</option>
+			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기
+				취소</option>
 		</select>
 	</form>
-	
+
 	<div class="act-layout">
-				<section>
+		<section>
 			<div class="act-head"></div>
-			<fmt:parseNumber var="mm" value="${fn:substring(ym, 5, 7)}" integerOnly="true" />
+			<fmt:parseNumber var="mm" value="${fn:substring(ym, 5, 7)}"
+				integerOnly="true" />
 			<div class="list-head">
 				<h2>${fn:substring(ym, 0, 4)}년${mm}월·${fn:length(calMatch)}건</h2>
-				<a class="btn-reset" href="?ym=${ym}&date=${selectedDate}">필터 초기화</a>
+				<a class="btn-reset" href="?ym=${ym}&date=${selectedDate}">필터
+					초기화</a>
 			</div>
 			<c:choose>
 				<c:when test="${not empty selectedDate and not empty match}">
@@ -199,10 +206,13 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 		      					pattern="#,###" 출력형식(5,000)-->
 					<div class="aside">
 						<div class="top">
-							<fmt:formatNumber value="${m.participationFee}" pattern="#,###" />
-							원
-							<button type="button" class="fav-btn " data-fav
-								aria-label="관심 경기">${heart}</button>
+							<span><fmt:formatNumber value="${m.participationFee}"
+									pattern="#,###" />원</span>
+							<!-- 관심경기 추가/제거 -->
+							<button type="button" class="fav-btn ${m.favorite ? 'is-on':''}" 
+									data-match-id="${m.personalMatchId}"
+									data-match-type="Personal"
+									aria-label="관심 경기">${heart}</button>
 						</div>
 						<div class="btns">
 							<a class="btn btn-primary btn-xs"
@@ -277,8 +287,36 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 				<span class="legend-dot"></span> 경기 있음
 			</p>
 		</aside>
+				<script>
+				$(function() {
+					$(".fav-btn").click(function(e) {
+						e.stopPropagation();
+						var $btn = $(this);
+						$.ajax({
+							url : '${ctx}/mypage/matches/saved',
+							type : 'post',
+							dataType : 'text',
+							data : {matchId : $btn.data("matchId"),
+								matchType : $btn.data("matchType"),
+								heart : $btn.hasClass("is-on")},
+							    success : function(result) {
+								result = result.trim();
+								if (result == 'insert') {
+									$btn.addClass("is-on");
+									showToast("관심경기에 추가되었습니다.");
+								}
+								if (result == 'delete') {
+									$btn.removeClass("is-on");
+									showToast("관심경기에 제거되었습니다.");
+								}
+								if (result == 'login') {
+									showToast("로그인이 필요합니다.");
+								}
+							}
+						});
+					});
+				});
+		</script>
 	</div>
-</div>
-</main>
 </div>
 <%@ include file="/jsp/common/footer.jsp"%>

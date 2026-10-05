@@ -30,6 +30,9 @@ public class TeamDaoImpl implements TeamDao {
 	public List<Team> selectTeamList(TeamSearchCondition condition) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
 			return sqlSession.selectList("mapper.team.selectTeamList", condition);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -37,6 +40,9 @@ public class TeamDaoImpl implements TeamDao {
 	public int selectTeamlistCnt(TeamSearchCondition condition) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
 			return sqlSession.selectOne("mapper.team.selectTeamListCnt", condition);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -44,6 +50,19 @@ public class TeamDaoImpl implements TeamDao {
 	public Team selectTeam(Long teamId) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
 			return sqlSession.selectOne("mapper.team.selectTeam", teamId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public Long selectTeamCaptainUserId(Long teamId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectOne("mapper.team.selectTeamCaptainUserId", teamId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 

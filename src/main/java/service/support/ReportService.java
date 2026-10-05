@@ -1,5 +1,7 @@
 package service.support;
 
-public interface ReportService {
+import dto.Report;
 
+public interface ReportService {
+	void write(Report report) throws Exception;
 }

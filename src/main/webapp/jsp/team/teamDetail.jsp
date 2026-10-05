@@ -221,7 +221,7 @@
 					</span>
 					<div>
 						<h1>${team.teamName }</h1>
-						<p>${team.sport }·팀원 ${team.currentPeople }</p>
+						<p>${team.sport } · 팀원 ${team.currentPeople }</p>
 					</div>
 				</div>
 				<h2>모집 조건</h2>
@@ -238,8 +238,10 @@
 				<c:choose>
 					<c:when test="${state eq 'manager'}">
 						<hr style="margin-bottom: 0">
-						<a class="btn btn-primary btn-block"
-							href="${ctx}/jsp/team/teamManageApplication.jsp">팀 관리</a>
+						<c:url var="manageUrl" value="/team/manage/applications">
+						     <c:param name="teamId" value="${team.teamId}" />
+						</c:url>
+						<a class="btn btn-primary btn-block" href="${manageUrl}">팀 관리</a>
 					</c:when>
 					<c:when test="${state eq 'member'}">
 						<hr>
@@ -409,7 +411,7 @@
 						</div>
 						<div class="lock-msg">
 							<strong>🔒 가입 후 확인할 수 있어요</strong>
-							<p>가입 신청 후 주장 승인이 완료되면 볼 수 있어요.</p>
+							<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
 						</div>
 					</div>
 				</section>

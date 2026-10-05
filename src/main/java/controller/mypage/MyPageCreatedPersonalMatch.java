@@ -111,7 +111,6 @@ public class MyPageCreatedPersonalMatch extends HttpServlet {
 			request.setAttribute("selectedDate", date);
 			request.setAttribute("sport", sport);
 			
-			System.out.println(list);
 				
 			//월 이동용
 			request.setAttribute("prevMonth", current.minusMonths(1).toString());
