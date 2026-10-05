@@ -5,9 +5,12 @@
 <%@ page isELIgnored="false"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ko.js"></script>
 <%--
   관심경기 (myPageHeartMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Saved Matches / Desktop
@@ -21,28 +24,107 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-.act-card {
-	margin-bottom: 16px;
+.act-layout { display: flex; gap: 24px; align-items: flex-start; }
+.act-layout > section { flex: 1; min-width: 0; }
+
+.act-layout > aside.cal {
+  width: 340px; flex-shrink: 0;
+  padding: 16px; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 16px;
+}
+.cal .flatpickr-calendar.inline {
+  box-shadow: none; border: 0; width: 100%;
+}
+.cal .flatpickr-days, .cal .dayContainer {
+  width: 100%; min-width: 100%; max-width: 100%;
+}
+.cal .flatpickr-day { max-width: none; border-radius: 0%; }
+
+/* [선택 기간] 기본 배경 사각형 */
+.cal .flatpickr-day.inRange {
+  background: #e8f0ff !important; 
+  border-color: #e8f0ff !important; 
+  box-shadow: none; 
+  color: #1a6bff !important;
+}
+.cal .flatpickr-day.selected,
+.cal .flatpickr-day.startRange,
+.cal .flatpickr-day.endRange {
+  background: #1a6bff !important; 
+  border-color: #1a6bff !important; 
+  color: #fff !important;
 }
 
-.list-head {
-	display: flex;
-	align-items: center;
-	margin-bottom: 12px
+/* [지렁이/캡슐 모양] 시작과 끝 라운딩 */
+.cal .flatpickr-day.startRange {
+  border-top-left-radius: 50% !important;
+  border-bottom-left-radius: 50% !important;
+}
+.cal .flatpickr-day.endRange {
+  border-top-right-radius: 50% !important;
+  border-bottom-right-radius: 50% !important;
+}
+.cal .flatpickr-day.startRange.endRange {
+  border-radius: 50% !important;
 }
 
-.btn-reset {
-	margin-left: auto;
+/* 주말 줄바꿈 처리 */
+.cal .dayContainer { display: flex; flex-wrap: wrap; }
+.cal .flatpickr-day.inRange:nth-child(7n+1) { border-top-left-radius: 50%; border-bottom-left-radius: 50%; }
+.cal .flatpickr-day.inRange:nth-child(7n) { border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
+
+
+/* 🔥 [핵심 수정] 경기 있는 날: 선택 여부 상관없이 365일 항상 표시 */
+.cal .flatpickr-day.has-match { 
+  font-weight: 700 !important; 
+  color: #1a6bff !important; /* 평소에도 무조건 글자를 파란색으로 */
+  position: relative !important; 
 }
+
+/* 점(•) 강제 표시 */
+.cal .flatpickr-day.has-match::after {
+  content: '' !important; 
+  position: absolute !important; 
+  bottom: 5px !important; 
+  left: 50% !important;
+  width: 5px !important; 
+  height: 5px !important; 
+  margin-left: -2.5px !important;
+  border-radius: 50% !important; 
+  background: #1a6bff !important; /* 기본 상태는 파란색 점 */
+  display: block !important; /* 강제 노출 */
+}
+
+/* 범위 선택 중(.startRange, .endRange)일 때는 가독성을 위해 흰색 점으로 변경 */
+.cal .flatpickr-day.startRange.has-match::after,
+.cal .flatpickr-day.endRange.has-match::after,
+.cal .flatpickr-day.selected.has-match::after { 
+  background: #ffffff !important; 
+}
+
+/* 연한 파란색 범위(.inRange) 안에 있을 때는 다시 파란색 점으로 */
+.cal .flatpickr-day.inRange.has-match::after {
+  background: #1a6bff !important;
+}
+
+
+/* 하단 범례 및 카드 */
+.cal .legend { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font-size: 12px; }
+.cal .legend-dot { width: 6px; height: 6px; border-radius: 50%; background: #1a6bff; }
+.act-card { margin-bottom: 16px; }
+.list-head { display: flex; align-items: center; margin-bottom: 12px; }
+.btn-reset { margin-left: auto; }
 </style>
+
+
+
 <div class="work-inner full" style="max-width: 1000px">
 	<h1 class="section-title">관심경기</h1>
 	<p class="section-desc">관심 표시한 경기를 종목, 상태와 월별 달력으로 확인하세요.</p>
 	<form class="act-filters" method="get" id="periodForm">
-			<input type="text" id="periodPicker" class="input" placeholder="기간 선택" readonly> 
-			<input type="hidden" id="startDate" name="startDate" value="${startDate}">
-			<input type="hidden" id="endDate" name="endDate" value="${endDate}">
-		
+  <input type="hidden" name="startDate" id="startDate" value="${startDate}">
+  <input type="hidden" name="endDate" id="endDate" value="${endDate}">
+
 		<!-- 경기 종목별 리스트 검색 -->
 		<select class="select" name="sport" onchange="this.form.submit()">
 			<option value="">전체</option>
@@ -50,14 +132,16 @@
 			<option value="농구" ${sport == '농구' ? 'selected' : ''}>농구</option>
 			<option value="테니스" ${sport == '테니스' ? 'selected' : ''}>테니스</option>
 			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
-		</select>
-		<select class="select" name="status" onchange="this.form.submit()">
+		</select> <select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
 			<option value="모집중" ${status == '모집중' ? 'selected' : ''}
 				style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
-			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집 마감</option>
-			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기 종료</option>
-			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기 취소</option>
+			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
+				마감</option>
+			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
+				종료</option>
+			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기
+				취소</option>
 		</select>
 	</form>
 
@@ -115,6 +199,10 @@
 				</div>
 			</c:forEach>
 		</section>
+				<aside class="cal">
+				<div id="periodPicker"></div>
+				<p class="legend"><span class="legend-dot"></span> 경기 있음</p>
+			</aside>
 
 		<%--
   마이페이지 활동 화면 공통 월 달력 (참가 경기 / 내가 만든 경기 / 관심경기 / 팀 경기)
@@ -123,25 +211,33 @@
   TODO: ?ym=2026-09 로 월 이동 → 서블릿에서 해당 월 목록 조회
 --%>
 		<script>
-			$(function() {
-				flatpickr('#periodPicker', {
-					mode : 'range',
-					locale : 'ko',
-					dateFormat : 'Y-m-d',
-					disableMobile : true,
-					defaultDate : [ '${startDate}', ?['${startDate}':'${endDate}']:null,
-					onClose : function(selectedDates, dateStr, instance) {
-						if (selectedDates.length === 2) {
-							$('#startDate').val(
-									instance.formatDate(selectedDates[0],
-											'Y-m-d'));
-							$('#endDate').val(
-									instance.formatDate(selectedDates[1],
-											'Y-m-d'));
-							$('#periodForm').submit();
-						}
-					}
-				});
+		$(function() {
+			  var favDates = [
+				  <c:forEach var="d" items="${favDates}" varStatus="st">'${d}'${st.last ? '' : ','}</c:forEach>
+				  ];
+
+			  flatpickr('#periodPicker', {
+			    inline : true,                 
+			    mode : 'range',               
+			    locale : 'ko',
+			    dateFormat : 'Y-m-d',
+			    defaultDate : '${startDate}' ? ['${startDate}', '${endDate}'] : null,
+			    onDayCreate : function(dObj, dStr, fp, dayElem) {
+				var currentFormattedDate = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+				if (favDates.indexOf(currentFormattedDate) !== -1) {
+				dayElem.classList.add('has-match');
+				}
+			},
+		    	  onChange : function(selectedDates, dateStr, instance) {
+			      if (selectedDates.length === 2) {
+			      var start = instance.formatDate(selectedDates[0], 'Y-m-d');
+			      var end = instance.formatDate(selectedDates[1], 'Y-m-d');
+			        $('#startDate').val(start);
+			        $('#endDate').val(end);
+			        $('#periodForm').submit();
+			      }
+			    }
+			  });
 			});
 		</script>
 		<script>
@@ -157,8 +253,7 @@
 								data : {
 									matchId : $btn.data("matchId"),
 									matchType : $btn.data("matchType"),
-									heart : $btn.hasClass("is-on")
-								},
+									heart : $btn.hasClass("is-on")},
 								success : function(result) {
 									result = result.trim();
 									if (result == 'delete') {

@@ -64,4 +64,10 @@ public class FavoriteDaoImpl implements FavoriteDao {
 		}
 	}
 
+	@Override
+	public List<String> selectMyPageFavoriteDates(Map<String, Object> param) throws Exception {
+		   try (SqlSession Session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		        return Session.selectList("mapper.favorite.selectMyPageFavoriteDates", param);
+		    }
+		}
 }

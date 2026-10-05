@@ -25,7 +25,7 @@ public interface PersonalMatchService {
 	List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception;
 	
 	
-	
+	List<String>getMyPageFavoriteDates(Long userId, String status, String sport) throws Exception;
 	List<PersonalMatch>selectMyPageFavoriteList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
 	//마이페이지 관심경기 추가
 	void insertMyPageHeartMatch(Map<String,Object>param)throws Exception;

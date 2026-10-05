@@ -83,6 +83,7 @@ public class MypageMatchesSaved extends HttpServlet {
 			List<PersonalMatch> list = servie.selectMyPageFavoriteList(pageInfo,userId,status,sport,startDate,endDate);
 
 			request.setAttribute("match", list);
+			request.setAttribute("favDates",servie.getMyPageFavoriteDates(userId, status, sport));
 			request.setAttribute("pageInfo", pageInfo);
 			request.setAttribute("status", status);
 			request.setAttribute("sport", sport);
