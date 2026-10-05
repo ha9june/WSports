@@ -152,13 +152,14 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 
 	@Override
-	public List<PersonalMatch> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String month, String status,
-			String sport) throws Exception {
+	public List<PersonalMatch> selectMyPageFavoriteList(PageInfo pageInfo, Long userId,String status,
+			String sport, String startDate, String endDate) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
-		param.put("month", month);
 		param.put("status", status);
 		param.put("sport", sport);
+		param.put("startDate", startDate);
+		param.put("endDate", endDate);
 		
 		int cnt = favoriteDao.selectMyPageFavoriteCnt(param);
 		Integer allPage = (int) Math.ceil(cnt / 10.0);

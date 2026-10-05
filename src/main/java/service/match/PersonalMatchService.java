@@ -22,7 +22,7 @@ public interface PersonalMatchService {
 	List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception;
 	
 	
-	List<PersonalMatch>selectMyPageFavoriteList(PageInfo pageInfo,Long userId,String month,String status,String sport)throws Exception;
+	List<PersonalMatch>selectMyPageFavoriteList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
 	//마이페이지 관심경기 추가
 	void insertMyPageHeartMatch(Map<String,Object>param)throws Exception;
 	//마이페이지 관심경기 제거

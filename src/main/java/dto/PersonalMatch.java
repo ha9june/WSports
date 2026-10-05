@@ -48,9 +48,10 @@ public class PersonalMatch {
     private String region;              // 지역
     private String currentPeople;		//현재인원
     
-    private boolean Favorite;
-    public boolean isFavorite() {return Favorite;}
-    void setFavorite(boolean Favorite) {this.Favorite=Favorite;}
+    private boolean favorite;
+
+    public boolean isFavorite() { return favorite; }
+    public void setFavorite(boolean favorite) { this.favorite = favorite; }
     
     
 	public PersonalMatch() {
