@@ -63,25 +63,18 @@ public class MypageMatchesSaved extends HttpServlet {
 				page = 1;
 			}
 		}
-
-
 		String status = request.getParameter("status");
 		String sport = request.getParameter("sport");
-		
 		//달력
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		if (startDate != null && startDate.isEmpty()) startDate = null;
 		if (endDate != null && endDate.isEmpty()) endDate = null;
-		
-		
 		PageInfo pageInfo = new PageInfo(page);
 		PersonalMatchService servie = new PersonalMatchServiceImpl();
-
 		try {
 
 			List<PersonalMatch> list = servie.selectMyPageFavoriteList(pageInfo,userId,status,sport,startDate,endDate);
-
 			request.setAttribute("match", list);
 			request.setAttribute("favDates",servie.getMyPageFavoriteDates(userId, status, sport));
 			request.setAttribute("pageInfo", pageInfo);
@@ -89,15 +82,12 @@ public class MypageMatchesSaved extends HttpServlet {
 			request.setAttribute("sport", sport);
 			request.setAttribute("startDate", startDate);
 			request.setAttribute("endDate", endDate);
-			
-
 			request.getRequestDispatcher("/jsp/mypage/myPageHeartMatch.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "경기 목록 조회 오류");
 		}
 	}
-
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
@@ -115,7 +105,6 @@ public class MypageMatchesSaved extends HttpServlet {
 		}
 		long userId = user.getUserId();
 		long matchId = Long.parseLong(request.getParameter("matchId"));
-//		String heart = request.getParameter("heart");
 		String matchType = request.getParameter("matchType");
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 

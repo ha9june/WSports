@@ -41,13 +41,13 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	}
 
 	@Override
-	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month, String status,
-			String sport) throws Exception {
+	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
-		param.put("month", month);
 		param.put("status", status);
 		param.put("sport", sport);
+		param.put("startDate", startDate);
+		param.put("endDate", endDate);
 
 		int cnt = personalMatchDao.selectMyPagePersonalMatchCnt(param);
 		Integer allPage = (int) Math.ceil(cnt / 10.0);
@@ -71,13 +71,13 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 	// 마이페이지 내가 만든 경기 목록 조회(페이징)
 	@Override
-	public List<PersonalMatch> MyPageCreatedPersonalMatchList(PageInfo pageInfo, Long userId, String month,
-			String status, String sport) throws Exception {
+	public List<PersonalMatch> MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
-		param.put("month", month);
 		param.put("status", status);
 		param.put("sport", sport);
+		param.put("startDate", startDate);
+		param.put("endDate", endDate);
 
 		int cnt = personalMatchDao.selectMyPageCreatedPersonalMatchCnt(param);
 		Integer allPage = (int) Math.ceil(cnt / 10.0);
@@ -193,6 +193,24 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("status", status);
 		param.put("sport", sport);
 		return favoriteDao.selectMyPageFavoriteDates(param);
+	}
+
+	@Override
+	public List<String> getMyPagePersonalMatchDates(Long userId, String status, String sport) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("status", status);
+		param.put("sport", sport);
+		return personalMatchDao.selectMyPagePersonalMatchDates(param);
+	}
+
+	@Override
+	public List<String> getMyPageCreatedPersonalMatchDates(Long userId, String status, String sport) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("status", status);
+		param.put("sport", sport);
+		return personalMatchDao.selectMyPageCreatedPersonalMatchDates(param);
 	}
 
 }
