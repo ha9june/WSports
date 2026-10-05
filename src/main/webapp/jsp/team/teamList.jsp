@@ -77,7 +77,7 @@
                             '<p class="cond">' +
 	                            team.days + '<br>' +
 	                            team.ages + '<br>' +
-	                            team.skill + '·' + team.gender +
+	                            team.skill + ' · ' + team.gender +
                             '</p>' +
                             '<input type="hidden" name="teamId" value="' + team.teamId +'">' +
                         '</a>';
@@ -256,7 +256,7 @@
 							</p>
 						</div>
 					</div>
-					<p class="cond">${team.days}<br>${team.ages }<br>${team.skill}·${team.gender }
+					<p class="cond">${team.days}<br>${team.ages }<br>${team.skill} · ${team.gender }
 					</p>
 				</a>
 			</c:forEach>

@@ -105,7 +105,7 @@ public class TeamServiceImpl implements TeamService {
 	    // 3. 아무것도 선택 안 했거나 4개 전부 선택했으면 사실상 무관
 	    if (parts.isEmpty() || (f[0] && f[1] && f[2] && f[3])) return "연령 무관";
 
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 		
 		
 	}
@@ -135,7 +135,7 @@ public class TeamServiceImpl implements TeamService {
 	    for (int i = 0; i < f.length; i++) {
 	        if (f[i]) parts.add(label[i]);
 	    }
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class TeamServiceImpl implements TeamService {
 
 	    if (parts.isEmpty() || (f[0] && f[1] && f[2] && f[3] && f[4])) return "시간 무관";
 	    
-	    return String.join("·", parts);
+	    return String.join(" · ", parts);
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class TeamServiceImpl implements TeamService {
 				parts.add(r);
 			}
 		}
-		return String.join("·", parts);
+		return String.join(" · ", parts);
 	}
 
 

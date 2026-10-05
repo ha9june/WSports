@@ -245,14 +245,20 @@
 						<hr>
 						<p class="note">가입된 팀입니다. 팀원과 작성글을 확인할 수 있어요.</p>
 					</c:when>
+					<c:when test="${state eq 'applicater'}">
+						<hr>
+						<p class="note">가입 신청이 접수되었어요. 주장 승인을 기다리는 중이에요.</p>
+						<button type="button" class="btn btn-join btn-block" disabled>승인 대기 중</button>
+					</c:when>
 					<c:otherwise>
 						<hr>
-						<p class="note">가입 신청 후 주장 승인이 필요합니다.</p>
-						<a class="btn btn-join btn-block"
-							href="${ctx}/jsp/team/teamApplication.jsp" data-auth>가입 신청하기</a>
+						   <c:url var="applyUrl" value="/team/application">
+						     <c:param name="teamId" value="${team.teamId}" />
+						   </c:url>
+						   <a class="btn btn-join btn-block" href="${applyUrl}" data-auth>가입 신청하기</a>
 					</c:otherwise>
 				</c:choose>
-				<c:if test="${role eq 'admin'}">
+				<c:if test="${sessionScope.user.grade eq 'Admin'}">
 					<button type="button" class="btn btn-danger btn-block btn-sm"
 						data-modal-open="teamDeleteModal">팀 삭제</button>
 				</c:if>
@@ -411,7 +417,7 @@
 		</c:choose>
 	</div>
 </main>
-<c:if test="${role eq 'admin'}">
+  <c:if test="${sessionScope.user.grade eq 'Admin'}">
 	<div class="modal" id="teamDeleteModal" role="dialog" aria-modal="true">
 		<div class="modal-card sm">
 			<h2 class="modal-title">팀을 삭제할까요?</h2>
