@@ -264,7 +264,6 @@
 					<a href="?page=${pageInfo.curPage + 1}${qs}">&gt;</a>
 				</c:if>
 			</nav>
-
 		</section>
 		<aside class="cal">
 			<div id="periodPicker"></div>

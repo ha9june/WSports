@@ -49,7 +49,7 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 		pageInfo.setEndPage(endPage);
 		
 		param.put("size", size);
-		param.put("offset", (pageInfo.getCurPage() - 1) * 10);
+		param.put("offset", (pageInfo.getCurPage() - 1) * size);
 
 		return teamMatchDao.selectMypageTeamMatchList(param);
 	}
