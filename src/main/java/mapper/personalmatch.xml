@@ -236,15 +236,14 @@
 		CASE WHEN f.favorite_id IS
 		NULL THEN 0 ELSE 1 END AS favorite
 		FROM personal_match_participant p
-		JOIN personal_match m ON m.personal_match_id = p.personal_match_id
+		JOIN personal_match m 
+		ON m.personal_match_id = p.personal_match_id
 		LEFT JOIN favorite f
 		ON f.match_id = m.personal_match_id
-		AND f.user_id =
-		#{userId}
+		AND f.user_id = #{userId}
 		AND f.match_type = 'Personal'
 		WHERE p.user_id = #{userId}
-		AND
-		p.status IN ('결제완료')
+		AND p.status IN ('결제완료')
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -265,8 +264,7 @@
 		FROM personal_match_participant p
 		JOIN personal_match m
 		ON m.personal_match_id = p.personal_match_id
-		WHERE p.user_id =
-		#{userId}
+		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료')
 		<if test="month != null and month != ''">
 			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month},

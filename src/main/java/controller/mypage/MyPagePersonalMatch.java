@@ -77,21 +77,6 @@ public class MyPagePersonalMatch extends HttpServlet {
 		
 		try {
 			List<PersonalMatch> list = service.MyPagePersonalMatchList(pageInfo,userId,status,sport,startDate,endDate);
-
-			
-			
-			long t0 = System.currentTimeMillis();
-			long t1 = System.currentTimeMillis();
-			Object dates = service.getMyPagePersonalMatchDates(userId, status, sport);
-			long t2 = System.currentTimeMillis();
-			System.out.println("목록 " + (t1 - t0) + "ms / 날짜 " + (t2 - t1) + "ms");
-
-			
-			
-			
-			
-			
-			
 	        request.setAttribute("match", list);
 	        request.setAttribute("pageInfo", pageInfo);
 	        request.setAttribute("status", status);
@@ -103,7 +88,7 @@ public class MyPagePersonalMatch extends HttpServlet {
 			request.getRequestDispatcher("/jsp/mypage/myPagePersonalMatch.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "경기 목록 조회 오류");
+			request.setAttribute("err", "개인 경기 목록 조회 오류");
 		}
 	}
 }
