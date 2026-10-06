@@ -318,4 +318,13 @@
 			activity_image5 = #{activityImage5}	
 		where team_id=#{teamId}
 	</update>
+	
+	<select id="selectTeamInfoByUserManager" parameterType="Long" resultType="team">
+		select t.*
+		from team_user tu
+		join team t on t.team_id = tu.team_id
+		where tu.user_id = #{userId}
+		  and tu.team_role in ('CAPTAIN', 'VICE_CAPTAIN')
+		  and tu.withdrawn = 0;
+	</select>
 </mapper>

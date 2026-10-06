@@ -389,6 +389,10 @@ window.addEventListener("fcmMessageReceived", function(e) {
 							title="마이페이지"> <img src="${ctx}/img/profile-default.png"
 							alt="내 프로필">
 						</a>
+						<button type="button" class="logout-btn" data-modal-open="logoutModal"
+							title="로그아웃" aria-label="로그아웃">
+							<img src="${ctx}/img/icon-logout.svg" alt="">
+						</button>	
 					</c:otherwise>
 				</c:choose>
 			</div>

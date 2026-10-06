@@ -273,3 +273,19 @@
   margin-right: auto;
 }
 
+/* 상대 팀 모집 폼 : 줄 배치 + 간격(팀 만들기와 동일한 24px) */
+.form-rail .form-section > * + * { margin-top: 24px; }
+.form-rail .form-section > .sub-title + *,
+.form-rail .form-section > .section-desc + * { margin-top: 0; }
+.form-rail .form-section .section-desc { margin: -8px 0 16px; }
+
+.form-row { display: grid; gap: 24px; align-items: start; }
+.form-row.c-2 { grid-template-columns: 1fr 1fr; }
+.form-row.c-3 { grid-template-columns: repeat(3, 1fr); }
+.form-row > .field { margin-top: 0 !important; min-width: 0; }   /* common.css의 .field + .field 간격 제거 */
+
+.time-range { display: flex; align-items: center; gap: 8px; }
+.time-range .select { flex: 1; min-width: 0; }
+.form-rail .hint-gray { font-size: 11px; font-weight: 400; color: var(--ds-text-2); margin-left: 4px; }
+.form-row.c-wide { grid-template-columns: 2fr 1fr; }
+

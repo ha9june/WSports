@@ -90,7 +90,10 @@ public class TeamServiceImpl implements TeamService {
 		return teamDao.updateTeam(team);
 	}
 	
-	
+	@Override
+	public List<Team> getTeamInfoByUserManager(Long userId) throws Exception {
+		return teamDao.selectTeamInfoByUserManager(userId);
+	}
 	
 	
 	

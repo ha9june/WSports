@@ -82,4 +82,14 @@ public class TeamDaoImpl implements TeamDao {
 		}
 	}
 
+	@Override
+	public List<Team> selectTeamInfoByUserManager(Long userId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.team.selectTeamInfoByUserManager", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 }

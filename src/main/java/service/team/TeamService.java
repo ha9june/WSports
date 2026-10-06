@@ -15,6 +15,7 @@ public interface TeamService {
 	Team getTeam(Long TeamId) throws Exception;
 	int modifyTeam(Team team, String realPath, Part profileImage, Part activityImg1, Part activityImg2, Part activityImg3,
 			Part activityImg4, Part activityImg5) throws Exception;
+	List<Team> getTeamInfoByUserManager(Long userId) throws Exception;
 	
 	
 	

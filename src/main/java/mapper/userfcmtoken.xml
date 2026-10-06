@@ -24,4 +24,10 @@
 	<select id="selectUserFcmToken" parameterType="Long" resultType="String">
 		select fcm_token from user_fcm_token where user_id = #{userId} and active = true;
 	</select>
+
+	<update id="updateUserFcmToken" parameterType="Map">
+		update user_fcm_token set
+			active = false
+		where user_id = #{userId} and fcm_token = #{fcmToken}
+	</update>
 </mapper>

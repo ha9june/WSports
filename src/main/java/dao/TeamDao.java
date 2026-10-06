@@ -12,4 +12,5 @@ public interface TeamDao {
 	Team selectTeam (Long teamId) throws Exception;
 	Long selectTeamCaptainUserId(Long teamId) throws Exception;
 	int updateTeam(Team team) throws Exception;
+	List<Team> selectTeamInfoByUserManager(Long userId) throws Exception;
 }

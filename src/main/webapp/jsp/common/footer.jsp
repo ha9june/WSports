@@ -24,6 +24,19 @@
 		</div>
 	</div>
 </c:if>
+<c:if test="${not empty sessionScope.user}">
+<div class="modal" id="logoutModal" role="dialog" aria-modal="true">
+	<div class="modal-card sm" style="text-align:center">
+		<h2 class="modal-title">로그아웃할까요?</h2>
+		<form action="${ctx}/auth/logout/submit" method="get">
+			<div class="modal-actions" style="justify-content:center">
+				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+				<button type="submit" class="btn btn-primary">로그아웃</button>
+			</div>
+		</form>
+	</div>
+</div>
+</c:if>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
