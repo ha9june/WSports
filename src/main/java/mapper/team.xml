@@ -45,7 +45,7 @@
 							#{sport}, 
 							#{gender}, 
 							NOW(), 
-							#{deleted}, 
+							false, 
 							#{region1}, 
 							#{region2}, 
 							#{region3}, 
@@ -283,4 +283,39 @@
 		on t.team_id = tu.team_id
 		where tu.team_role = 'CAPTAIN' and tu.withdrawn = false and tu.team_id = #{teamId}
 	</select>
+
+	<update id="updateTeam" parameterType="team">
+		update team set
+			team_name = #{teamName},
+			profile_image = #{profileImage},
+			description = #{description},
+			skill = #{skill}, 
+			gender = #{gender}, 
+			region1 = #{region1}, 
+			region2 = #{region2}, 
+			region3 = #{region3}, 
+			age_20s = #{age20s}, 
+			age_30s = #{age30s}, 
+			age_40s = #{age40s}, 
+			age_50s = #{age50s}, 
+			age_60_plus = #{age60Plus}, 
+			day_mon = #{dayMon}, 
+			day_tue = #{dayTue}, 
+			day_wed = #{dayWed}, 
+			day_thu = #{dayThu}, 
+			day_fri = #{dayFri}, 
+			day_sat = #{daySat}, 
+			day_sun = #{daySun}, 
+			time_06_09 = #{time0609}, 
+			time_09_12 = #{time0912}, 
+			time_12_18 = #{time1218}, 
+			time_18_22 = #{time1822}, 
+			time_22_06 = #{time2206}, 
+			activity_image1 = #{activityImage1},
+			activity_image2 = #{activityImage2}, 
+			activity_image3 = #{activityImage3}, 
+			activity_image4 = #{activityImage4}, 
+			activity_image5 = #{activityImage5}	
+		where team_id=#{teamId}
+	</update>
 </mapper>

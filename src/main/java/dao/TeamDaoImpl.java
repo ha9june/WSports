@@ -66,4 +66,20 @@ public class TeamDaoImpl implements TeamDao {
 		}
 	}
 
+	@Override
+	public int updateTeam(Team team) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int number = sqlSession.update("mapper.team.updateTeam", team);
+			sqlSession.commit();
+			return number;
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+
 }

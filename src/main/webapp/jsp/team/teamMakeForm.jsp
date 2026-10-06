@@ -260,8 +260,7 @@
 			</div>
 
 			<div class="field mt-24">
-				<span class="field-label strong"> 활동 요일 <span class="hint"
-					style="color: var(- -ds-text-2)"> 복수 선택 가능 </span>
+				<span class="field-label strong"> 활동 요일 <span class="hint"> 복수 선택 가능 </span>
 				</span>
 
 				<div class="chip-group" data-select="multi" data-hidden="days">
@@ -275,13 +274,12 @@
 				<input type="hidden" name="days" id="days">
 			</div>
 			<div class="field mt-24">
-				<span class="field-label strong"> 활동 시간대 <span class="hint"
-					style="color: var(- -ds-text-2)"> 복수 선택 가능 </span>
+				<span class="field-label strong"> 활동 시간대 <span class="hint"> 복수 선택 가능 </span>
 				</span>
 
 				<div class="chip-group" data-select="multi" data-hidden="times">
 
-					<button type="button" class="chip" data-value="새벽 06~09시">새벽
+					<button type="button" class="chip" data-value="아침 06~09시">아침
 						06~09시</button>
 
 					<button type="button" class="chip" data-value="오전 09~12시">오전
@@ -300,8 +298,7 @@
 				<input type="hidden" name="times" id="times">
 			</div>
 			<div class="field mt-24">
-				<span class="field-label strong"> 연령대 <span class="hint"
-					style="color: var(- -ds-text-2)"> 복수 선택 가능 </span>
+				<span class="field-label strong"> 연령대 <span class="hint"> 복수 선택 가능 </span>
 				</span>
 
 				<div class="chip-group" data-select="multi" data-hidden="ages">
@@ -323,8 +320,7 @@
 			</div>
 
 			<div class="field mt-24">
-				<span class="field-label strong">활동 지역 <span class="hint"
-					style="color: var(- -ds-text-2)">복수 선택 가능 · 최대 3개</span></span>
+				<span class="field-label strong">활동 지역 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
 				<div class="region-box">
 					<div class="row2">
 						<div class="field">

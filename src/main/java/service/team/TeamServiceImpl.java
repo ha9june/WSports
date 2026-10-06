@@ -76,6 +76,28 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
+	public int modifyTeam(Team team, String realPath, Part profileImage, Part activityImg1, Part activityImg2, Part activityImg3,
+			Part activityImg4, Part activityImg5) throws Exception {
+		if(teamDao.selectTeam(team.getTeamId()) == null) {
+			throw new Exception("존재하지 않는 팀 입니다.");
+		}
+		if(profileImage != null) team.setProfileImage(fileUpload(realPath, profileImage));
+		if(activityImg1 != null) team.setActivityImage1(fileUpload(realPath, activityImg1));
+		if(activityImg2 != null) team.setActivityImage2(fileUpload(realPath, activityImg2));
+		if(activityImg3 != null) team.setActivityImage3(fileUpload(realPath, activityImg3));
+		if(activityImg4 != null) team.setActivityImage4(fileUpload(realPath, activityImg4));
+		if(activityImg5 != null) team.setActivityImage5(fileUpload(realPath, activityImg5));
+		return teamDao.updateTeam(team);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
 	public String changeAges(Boolean age20s, Boolean age30s, Boolean age40s, Boolean age50s, Boolean age60Plus)
 			throws Exception {
 
@@ -155,7 +177,7 @@ public class TeamServiceImpl implements TeamService {
 				Boolean.TRUE.equals(time0609), Boolean.TRUE.equals(time0912), Boolean.TRUE.equals(time1218), Boolean.TRUE.equals(time1822), Boolean.TRUE.equals(time2206)
 		};
 		
-		String[] label = {"아침", "오전", "오후", "저녁", "심야"};
+		String[] label = {"아침", "오전", "오후", "저녁", "야간"};
 		List<String> parts = new ArrayList<>();
 
 		for (int i = 0; i < f.length; i++) {
@@ -190,6 +212,8 @@ public class TeamServiceImpl implements TeamService {
 		}
 		return String.join(" · ", parts);
 	}
+
+
 
 
 }

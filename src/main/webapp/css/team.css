@@ -254,4 +254,22 @@
 	border: 1px solid var(--ds-border-subtle);
 }
 
+/* 팀 만들기 / 팀 정보 수정 공통 틀: 메인(.container)과 같은 기준선 */
+.form-rail {
+  width: var(--container);
+  max-width: calc(100% - 48px);
+  margin: 0 auto;
+}
+.form-rail .team-form-inner {
+  width: 744px;
+  max-width: 100%;
+  margin: 0 auto;      /* 폼 본문을 가운데로 */
+}
+.form-rail .breadcrumb,
+.form-rail .page-head {
+  width: 744px;        /* 브레드크럼·제목을 폼 왼쪽선에 맞춤 */
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
