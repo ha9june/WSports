@@ -478,4 +478,10 @@
         AND m.status = #{status}
     </if>
 	</select>
+	
+	<!-- 관리자 사이드 바 진행된 경기수 세기 개인 -->
+	<select id="selectMatchCntPersonal" resultType="Long">
+		select count(*) from personal_match
+		where status = '종료'
+	</select>
 </mapper>

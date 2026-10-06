@@ -10,4 +10,7 @@ public interface UserDao {
 	void updateLastLogin(String loginId) throws Exception;
 	void updateMypage(User user) throws Exception;
 	void updateProfile(User user) throws Exception;
+	
+	//관리자 인원수 세기
+	Long selectUserCnt() throws Exception;
 }

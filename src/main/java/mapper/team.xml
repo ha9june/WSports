@@ -318,4 +318,9 @@
 			activity_image5 = #{activityImage5}	
 		where team_id=#{teamId}
 	</update>
+	
+	<!-- 관리자 사이드 바 팀 개수 세기 -->
+	<select id="selectTeamCnt" resultType="Long">
+		select count(*) from team
+	</select>
 </mapper>

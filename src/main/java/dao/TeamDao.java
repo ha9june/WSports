@@ -12,4 +12,6 @@ public interface TeamDao {
 	Team selectTeam (Long teamId) throws Exception;
 	Long selectTeamCaptainUserId(Long teamId) throws Exception;
 	int updateTeam(Team team) throws Exception;
+	//관리자 팀수 세기
+	Long selectTeamCnt() throws Exception;
 }
