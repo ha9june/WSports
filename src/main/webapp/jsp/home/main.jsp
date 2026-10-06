@@ -39,6 +39,7 @@
       
       
 	<div id="recomandMatchListDiv" class="feature-row">
+	        <br>
 	    <c:forEach var="match" items="${nList}">
 	  		<c:set var="sportClass" value="${match.sport eq '축구' ? 'football' :
     		    match.sport eq '농구' ? 'basketball' :	

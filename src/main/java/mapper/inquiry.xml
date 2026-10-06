@@ -2,5 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.inquiry">
-
+	<!-- 관리자 문의관리 개수 / 상태 기준 필터 -->
+	<select id="selectAdminInquiryCnt" parameterType="map" resultType="int">
+		select count(*)
+		from inquiry
+		where (deleted = 0 or deleted is null)
+		and (#{status} = 'ALL' or answer_status = #{status})
+	</select>
+	
+	<!-- 관리자 문의관리 리스트 10개씩 -->
+	<select id="selectAdminInquiryList" parameterType="map" resultType="map">
+		select i.inquiry_id, i.created_at, i.type, u.name, u.nickname, 
+			   i.title, i.answer_status, i.content
+		from inquiry i
+		left join user u
+		on i.user_id = u.user_id
+		where (i.deleted = 0 or i.deleted is null)
+		and (#{status} = 'ALL' or i.answer_status = #{status})
+		order by i.inquiry_id desc
+		limit #{row}, 10
+	</select>
+	<!-- 특정 문의 상세 정보 -->
+	<select id="selectAdminInquiryDetail" resultType="map">
+		select i.inquiry_id, i.type, i.title, i.content, i.user_id,
+	       	   i.created_at, i.answer_status, i.answer, i.answered_at, u.name, u.nickname
+		from inquiry i
+		left join user u
+		on i.user_id = u.user_id
+		where i.inquiry_id = #{inquiryId}
+	</select>
+	<!-- 관리자 문의 답변 (답변완료 변경) -->
+	<update id="updateAdminInquiryAnswer" parameterType="map">
+		update inquiry
+		set answer = #{answer},
+			answered_at = now(),
+			admin_id = #{adminId},
+			answer_status = '답변완료'
+		where inquiry_id = #{inquiryId}
+	</update>
 </mapper>

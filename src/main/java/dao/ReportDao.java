@@ -1,9 +1,11 @@
 package dao;
 
+import dto.Report;
 import java.util.List;
 import java.util.Map;
 
 public interface ReportDao {
+	void insertReport(Report report) throws Exception;
 	//관리자 신고관리 개수 
 	Integer selectAdminReportCnt(Map<String, Object> param) throws Exception;
 	//관리자 신고관리 리스트

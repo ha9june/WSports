@@ -48,15 +48,18 @@ public class AdminMemberDetail extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doPost 진입 action=[" + request.getParameter("action") + "] userId=[" + request.getParameter("userId") + "]");
 		AdminMemberServiceImpl service = new AdminMemberServiceImpl();
 		try {
 			Long userId = Long.parseLong(request.getParameter("userId"));
-
 			String reason = request.getParameter("reason");
 			String action = request.getParameter("action");
-
-			if ("permanent".equals(action)) {
+			
+			if("adjust".equals(action)) {
+				// 패널티 점수 부여/차감
+				int change = Integer.parseInt(request.getParameter("change"));
+				service.AdminChangeUserPenalty(userId, change, reason);
+			}
+			else if ("permanent".equals(action)) {
 				// 영구 정지 (기간 없음)
 				service.AdminUserPermanentPenalty(userId, reason);
 			} else {

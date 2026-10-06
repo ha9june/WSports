@@ -50,6 +50,32 @@ public class AuthJoin extends HttpServlet {
 		user.setPhone(request.getParameter("phone"));
 		user.setGender(request.getParameter("gender"));
 		
+		String preferredRegion1 = request.getParameter("preferredRegion1");
+		String preferredRegion2 = request.getParameter("preferredRegion2");
+		String preferredRegion3 = request.getParameter("preferredRegion3");
+		String preferredSport1 = request.getParameter("preferredSport1");
+		String preferredSport2 = request.getParameter("preferredSport2");
+		String preferredSport3 = request.getParameter("preferredSport3");
+
+		if (preferredRegion1 != null && !preferredRegion1.isEmpty()) {
+		    user.setPreferredRegion1(preferredRegion1);
+		}
+		if (preferredRegion2 != null && !preferredRegion2.isEmpty()) {
+		    user.setPreferredRegion2(preferredRegion2);
+		}
+		if (preferredRegion3 != null && !preferredRegion3.isEmpty()) {
+		    user.setPreferredRegion3(preferredRegion3);
+		}
+		if (preferredSport1 != null && !preferredSport1.isEmpty()) {
+		    user.setPreferredSport1(preferredSport1);
+		}
+		if (preferredSport2 != null && !preferredSport2.isEmpty()) {
+		    user.setPreferredSport2(preferredSport2);
+		}
+		if (preferredSport3 != null && !preferredSport3.isEmpty()) {
+		    user.setPreferredSport3(preferredSport3);
+		}
+		
 		AuthService service = new AuthServiceImpl();
 		try {
 			service.join(user);

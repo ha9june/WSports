@@ -48,7 +48,6 @@ public class AdminReportDetail extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("세션 user : " + request.getSession().getAttribute("user"));
 		AdminReportServiceImpl service = new AdminReportServiceImpl();
 		try {
 			// 지금 로그인한 관리자 번호 (세션에서)

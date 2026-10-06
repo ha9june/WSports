@@ -43,18 +43,19 @@ public class UserPenaltyDaoImpl implements UserPenaltyDao {
 	//관리자 신고 조치
 	@Override
 	public void insertUserPenalty(Map<String, Object> param) throws Exception {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			// 현재 점수 이어받기 (기록 없으면 0)
-			Integer score = sqlSession.selectOne("mapper.userpenalty.selectLatestScore", param);
-			param.put("score", score == null ? 0 : score);
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			try {
+				// 현재 점수 이어받기 (기록 없으면 0)
+				Integer score = sqlSession.selectOne("mapper.userpenalty.selectLatestScore", param);
+				param.put("score", score == null ? 0 : score);
 
-			sqlSession.insert("mapper.userpenalty.insertUserPenalty", param);
-			sqlSession.update("mapper.userpenalty.updateUserPenalty", param);
-			sqlSession.commit();
-		} catch(Exception e) {
-			sqlSession.rollback();
-			throw e;
+				sqlSession.insert("mapper.userpenalty.insertUserPenalty", param);
+				sqlSession.update("mapper.userpenalty.updateUserPenalty", param);
+				sqlSession.commit();
+			} catch(Exception e) {
+				sqlSession.rollback();
+				throw e;
+			}
 		}
 	}
 	
@@ -78,6 +79,28 @@ public class UserPenaltyDaoImpl implements UserPenaltyDao {
 				throw e;
 			}
 		}
+	}
+	//관리자 페널티 점수 조정
+	@Override
+	public void insertChangeUserPenalty(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			try {
+				// 현재 점수 (기록 없으면 0) - 기존 쿼리 재사용
+				Integer latest = sqlSession.selectOne("mapper.userpenalty.selectLatestScore", param);
+				int current = (latest == null) ? 0 : latest;
+
+				// 조정 후 점수 (0 아래로는 안 내려가게)
+				int change = (int) param.get("change");
+				param.put("score", Math.max(0, current + change)); //0아래로는 안 내려가게
+
+				sqlSession.insert("mapper.userpenalty.insertChangeUserPenalty", param);
+				sqlSession.commit();
+			} catch (Exception e) {
+				sqlSession.rollback();
+				throw e;
+			}
+		}
+		
 	}
 
 }

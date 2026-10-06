@@ -15,6 +15,8 @@ import dto.Team;
 import dto.User;
 import service.team.TeamApplicationService;
 import service.team.TeamApplicationServiceImpl;
+import service.team.TeamPenaltyService;
+import service.team.TeamPenaltyServiceImpl;
 import service.team.TeamService;
 import service.team.TeamServiceImpl;
 
@@ -39,8 +41,6 @@ public class TeamApplication extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		TeamService teamService = new TeamServiceImpl();
-		
-
 		
 		try {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
@@ -98,7 +98,7 @@ public class TeamApplication extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		TeamApplicationService teamApplicationService = new TeamApplicationServiceImpl();
 
 		//가입신청
 		try {
@@ -111,9 +111,9 @@ public class TeamApplication extends HttpServlet {
 		        response.sendRedirect(request.getContextPath() + "/auth/login");
 		        return;
 		    }
+
+		    teamApplicationService.application(teamId, user, message);
 		    
-		    TeamApplicationService teamApplicationService = new TeamApplicationServiceImpl();
-		    teamApplicationService.application(teamId, user.getUserId(), message);
 		    response.sendRedirect(request.getContextPath() + "/team/detail/view?teamId=" + teamId);
 		}catch(Exception e) {
 			e.printStackTrace();

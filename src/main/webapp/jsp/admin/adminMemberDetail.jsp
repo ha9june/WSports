@@ -58,6 +58,7 @@
 		</section>
 		<div class="mt-8" style="display:flex;gap:8px;flex-shrink:0">
 			<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="sanctionModal">제재 변경</button>
+			<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="scoreModal">패널티 점수 조정</button>
 			<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="permanentStop">영구 정지</button>
 		</div>
   </div>
@@ -80,6 +81,31 @@
   			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
   		</div>
   	</div>
+</div>
+<div class="modal" id="scoreModal" role="dialog" aria-modal="true">
+	<div class="modal-card md">
+		<h2 class="modal-title">페널티점수</h2>
+		<div class="modal-body">
+    		<div class="field">
+    			<div class="chip-group" data-select="single">
+    				<button type="button" class="chip is-selected">부여</button>
+    				<button type="button" class="chip">차감</button>
+    			</div>
+    		</div>
+    		<div class="field mt-16">
+    			<label class="field-label">점수</label>
+    			<input class="input" id="score">
+    		</div>
+			<div class="field mt-16">
+				<label class="field-label">사유</label>
+				<textarea id="scorereason" class="textarea soft" rows="3"></textarea>
+			</div>
+		</div>
+		<div class="modal-actions">
+			<button type="button" class="btn btn-danger" id="applyScore">적용</button>
+			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+  		</div>
+	</div>
 </div>
 <div class="modal" id="permanentStop" role="dialog" aria-modal="true">
 	<div class="modal-card md">
@@ -135,6 +161,47 @@ $(function(){
 				}
 			},
 			error: function () {
+				alert('처리 중 오류 발생');
+			}
+		});
+	});
+	//페널티 점수 조정
+	$("#applyScore").click(function(e){
+		e.preventDefault();
+		
+		let userId = '${info.user_id}';
+		let type = $("#scoreModal .chip.is-selected").text().trim();
+		let score = $("#score").val();
+		let reason = $('#scorereason').val();
+		
+		if(!score || !/^[1-9][0-9]*$/.test(score)){
+			alert('페널티 점수는 1 이상의 숫자로 입력해주세요.');
+			return;
+		}
+		if(!reason.trim()) {
+			alert('사유를 입력하세요');
+			return;
+		}
+		let change = (type === '차감') ? -Number(score) : Number(score);
+		$.ajax({
+			url:'${ctx}/admin/member/detail',
+			type:'post',
+			dataType:'text',
+			data:{
+				action:'adjust',
+				userId: userId,
+				change:change,
+				reason: reason
+			},
+			success:function(result) {
+				if($.trim(result) === "true") {
+					alert('제제 적용');
+					location.reload();
+				}else {
+					alert('제제 적용 실패');
+				}
+			},
+			error: function(){
 				alert('처리 중 오류 발생');
 			}
 		});

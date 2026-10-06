@@ -10,6 +10,7 @@
   권한(role)에 따라 헤더가 3종(Guest / 로그인 / Admin)으로 바뀝니다.
 --%>
 <!DOCTYPE html>
+<html lang="ko">
 <head>
 <style>
 /* 1. [공통] 알림 목록 li 태그: 기존 스타일과 위치를 완벽하게 유지합니다 */
@@ -120,13 +121,27 @@ time {
 	cursor: pointer;
 }
 
+.fcm-toast-top strong {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 15px;
+	min-width: 0;
+}
 .fcm-toast-dot {
 	width: 8px;
 	height: 8px;
-	margin-top: 7px;
 	background: #3388dd;
 	border-radius: 50%;
 	flex-shrink: 0;
+}
+#fcmToastTitle {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.fcm-toast-body {
+	padding-left: 16px;   /* 점(8px) + 간격(8px)만큼 들여써 본문을 제목 글자와 맞춤 */
 }
 
 .fcm-toast-content {
@@ -139,19 +154,32 @@ time {
 	gap: 10px;
 }
 
-.fcm-toast-top strong {
-	font-size: 15px;
-}
-
-.fcm-toast-top span {
-	font-size: 12px;
-	color: #999;
-}
+#fcmToastTime { font-size: 12px; color: #999; white-space: nowrap; }
 
 .fcm-toast-body {
 	margin-top: 5px;
 	font-size: 14px;
 	color: #666;
+}
+
+/* 알림 제목: 한 줄 + 말줄임 */
+.Alarm.link.btn > div {
+	width: 100%;
+	min-width: 0;
+}
+
+.Alarm.link.btn strong {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* 알림 내용: 길면 한 줄 말줄임 (선택) */
+.Alarm.link.btn p {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 </style>
 <meta charset="UTF-8">
@@ -213,9 +241,9 @@ function formatNotificationDate(createdAt) {
 
 
 window.addEventListener("fcmMessageReceived", function(e) {
-
+	
     const payload = e.detail;
-
+    const notificationId = payload.data?.notificationId;
     const title = payload.notification?.title;
     const body = payload.notification?.body;
     const link = payload.data?.link;
@@ -250,6 +278,10 @@ window.addEventListener("fcmMessageReceived", function(e) {
         });
 
     });
+    
+	if (typeof loadNotifications === "function") {
+		loadNotifications();      // 종 숫자와 목록 즉시 갱신
+	}
 
     setTimeout(function() {
         toast.fadeOut(300);
@@ -260,41 +292,37 @@ window.addEventListener("fcmMessageReceived", function(e) {
 </script>
 <c:if test="${not empty user}">
 	<script>
-        $.ajax({
-            url: window.contextPath + "/notification/list",
-            type: "get",
-            dataType: "json",
-
-            success: function(result) {
-
-                const alarmList = $("#alarmList");
-
-                alarmList.html("");
-
-                result.notificationList.forEach(function(notification) {
-
-                    alarmList.append(
-                        '<li class="unread">' +
-                            '<a class="Alarm link btn" ' +
-                                'href="' + window.contextPath + notification.link + '" ' +
-                                'data-notification-id="' + notification.notificationId + '">' +
-                                '<div>' +
-                                    '<strong>' + notification.title + '</strong>' +
-                                    '<p>' + notification.content + '</p>' +
-                                '</div>' +
-                                '<time>' + notification.displayDate + '</time>' +
-                            '</a>' +
-                        '</li>'
-                    );
-
-                });
-
-                $("#bellBadge").text(result.notConfirmCnt);
-            },
-            error: function() {
-                console.log("알림 목록 조회 실패");
-            }
-        });
+	function loadNotifications() {
+		$.ajax({
+			url: window.contextPath + "/notification/list",
+			type: "get",
+			dataType: "json",
+			success: function (result) {
+				const alarmList = $("#alarmList");
+				alarmList.html("");
+				result.notificationList.forEach(function (notification) {
+					alarmList.append(
+						'<li class="unread">' +
+							'<a class="Alarm link btn" ' +
+								'href="' + window.contextPath + notification.link + '" ' +
+								'data-notification-id="' + notification.notificationId + '">' +
+								'<div>' +
+									'<strong>' + notification.title + '</strong>' +
+									'<p>' + notification.content + '</p>' +
+								'</div>' +
+								'<time>' + notification.displayDate + '</time>' +
+							'</a>' +
+						'</li>'
+					);
+				});
+				$("#bellBadge").text(result.notConfirmCnt);
+			},
+			error: function () {
+				console.log("알림 목록 조회 실패");
+			}
+		});
+	}
+	loadNotifications();   // 페이지 로드 시 1회
         
         $(document).on("click", ".Alarm", function(e) {
 
@@ -390,13 +418,11 @@ window.addEventListener("fcmMessageReceived", function(e) {
 			</c:if>
 		</div>
 		<div id="fcmToast" class="fcm-toast">
-			<div class="fcm-toast-dot"></div>
-
 			<div class="fcm-toast-content">
 				<div class="fcm-toast-top">
-					<strong id="fcmToastTitle"></strong> <span id="fcmToastTime"></span>
+					<strong><span class="fcm-toast-dot"></span><span id="fcmToastTitle"></span></strong>
+					<span id="fcmToastTime"></span>
 				</div>
-
 				<div id="fcmToastBody" class="fcm-toast-body"></div>
 			</div>
 		</div>

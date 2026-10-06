@@ -36,7 +36,7 @@ public class MyPagePersonalMatch extends HttpServlet {
 	 */
 	public MyPagePersonalMatch() {
 		super();
-		// TODO Auto-generated constructor stub
+		// TODO Auto-generated constructora stub
 	}
 
 	/**
@@ -65,70 +65,30 @@ public class MyPagePersonalMatch extends HttpServlet {
 				page = 1;
 			}
 		}
-		// 선택 날짜 (yyyy-MM-dd)
-		String date = request.getParameter("date");
-		try {
-			if (date != null && !date.isEmpty())
-				LocalDate.parse(date);
-			else
-				date = null;
-		} catch (Exception e) {
-			date = null;
-		}
-		
-	    // 조회 월: ym 우선 → month → date의 월 → 이번 달
-	    YearMonth current;
-	    try {
-	        String ymParam = request.getParameter("ym");
-	        if (ymParam == null || ymParam.isEmpty()) ymParam = request.getParameter("month");
-	        if (ymParam != null && !ymParam.isEmpty()) {
-	            current = YearMonth.parse(ymParam);           // 잘못된 값이면 예외
-	        } else if (date != null) {
-	            current = YearMonth.from(LocalDate.parse(date));
-	        } else {
-	            current = YearMonth.now();
-	        }
-	    } catch (Exception e) {
-	        current = YearMonth.now();
-	    }
-		
-	    String month = current.toString();             // yyyy-MM
 	    String status = request.getParameter("status");
 	    String sport = request.getParameter("sport");
-	    
+	    //달력
+	    String startDate = request.getParameter("startDate");
+	    String endDate = request.getParameter("endDate");
+	    if (startDate != null && startDate.isEmpty()) startDate = null;
+	    if (endDate != null && endDate.isEmpty()) endDate = null;
 		PageInfo pageInfo = new PageInfo(page);
 		PersonalMatchService service = new PersonalMatchServiceImpl();
+		
 		try {
-			List<PersonalMatch> list = service.MyPagePersonalMatchList(pageInfo, userId, month, status,sport);
-
+			List<PersonalMatch> list = service.MyPagePersonalMatchList(pageInfo,userId,status,sport,startDate,endDate);
 	        request.setAttribute("match", list);
-	        request.setAttribute("calMatch", list);           // 달력 강조용
 	        request.setAttribute("pageInfo", pageInfo);
-	        request.setAttribute("month", month);
-	        request.setAttribute("ym", month);
 	        request.setAttribute("status", status);
-	        request.setAttribute("selectedDate", date);
 	        request.setAttribute("sport", sport);
-	        
-	        
-	        // 월 이동용
-	        request.setAttribute("prevMonth", current.minusMonths(1).toString());
-	        request.setAttribute("nextMonth", current.plusMonths(1).toString());
-	        request.setAttribute("todayDate", LocalDate.now().toString());
-	        
-	        // 날짜를 눌렀을 때만 해당 날짜 경기로 필터
-	        if (date != null) {
-	            List<PersonalMatch> filtered = new ArrayList<>();
-	            for (PersonalMatch pm : list) {
-	                if (date.equals(String.valueOf(pm.getMatchDate()))) filtered.add(pm);
-	            }
-	            request.setAttribute("match", filtered);
-	        }
-			
+	        request.setAttribute("startDate", startDate);
+			request.setAttribute("endDate", endDate);
+			request.setAttribute("matchDates", service.getMyPagePersonalMatchDates(userId, status, sport));
+				
 			request.getRequestDispatcher("/jsp/mypage/myPagePersonalMatch.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "경기 목록 조회 오류");
+			request.setAttribute("err", "개인 경기 목록 조회 오류");
 		}
 	}
 }

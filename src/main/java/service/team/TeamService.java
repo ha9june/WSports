@@ -13,6 +13,8 @@ public interface TeamService {
 	List<Team> getTeamList(TeamSearchCondition condition) throws Exception;
 	int getTemaListCnt(TeamSearchCondition condition) throws Exception;
 	Team getTeam(Long TeamId) throws Exception;
+	int modifyTeam(Team team, String realPath, Part profileImage, Part activityImg1, Part activityImg2, Part activityImg3,
+			Part activityImg4, Part activityImg5) throws Exception;
 	
 	
 	

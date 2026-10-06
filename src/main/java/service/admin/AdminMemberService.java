@@ -17,4 +17,7 @@ public interface AdminMemberService {
 	
 	//영구정지
 	void AdminUserPermanentPenalty(Long userId, String reason) throws Exception;
+	
+	//팀 페널티 점수 조정
+	void AdminChangeUserPenalty(Long userId, int change, String reason) throws Exception;
 }

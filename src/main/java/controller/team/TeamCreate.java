@@ -100,7 +100,7 @@ public class TeamCreate extends HttpServlet {
 			timesSet.addAll(Arrays.asList(times.split(",")));
 		}
 
-		team.setTime0609(timesSet.contains("새벽 06~09시"));
+		team.setTime0609(timesSet.contains("아침 06~09시"));
 		team.setTime0912(timesSet.contains("오전 09~12시"));
 		team.setTime1218(timesSet.contains("오후 12~18시"));
 		team.setTime1822(timesSet.contains("저녁 18~22시"));

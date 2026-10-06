@@ -45,7 +45,7 @@
   		<div class="modal-body">
 			<div class="field mt-16">
 				<label class="field-label">처리 메모</label>
-				<textarea class="textarea soft" id="answer" rows="3" placeholder="처리 내용을 기록해주세요."></textarea>
+				<textarea class="textarea soft" id="answer" rows="3"></textarea>
 			</div>
 		</div>
   		<div class="modal-actions split">

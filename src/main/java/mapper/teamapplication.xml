@@ -7,7 +7,49 @@
 		(user_id, team_id, message, status, applied_at) values (#{userId}, #{teamId}, #{message}, '대기', now())
 	</insert>
 	
-	<select id="selectTeamApplicaion" parameterType="teamapplication" resultType="teamapplication">
-		select * from team_application where user_id = #{userId} and team_id = #{teamId} and status = '대기'
+	<select id="selectTeamApplication" parameterType="Map" resultType="teamapplication">
+		select * 
+		from team_application 
+		where user_id = #{userId} and team_id = #{teamId} and status = '대기'
+		order by applied_at desc
+    	limit 1
 	</select>
+	
+	<select id="selectTeamApplicationByApplicationId" parameterType="Long" resultType="teamapplication">
+		select * 
+		from team_application 
+		where application_id = #{applicationId}
+	</select>
+	
+	<select id="selectTeamApplicationList" parameterType="Long" resultType="teamapplication">
+		 select a.application_id, a.user_id, a.team_id, a.message, a.applied_at,
+		           u.nickname, u.profile_image, u.preferred_region1,
+		           case t.sport
+		               when '축구/풋살' then u.soccer_skill
+		               when '농구'      then u.basketball_skill
+		               when '테니스'    then u.tennis_skill
+		               when '배드민턴'  then u.badminton_skill
+		           end as skill
+		    from team_application a
+		    join user u on u.user_id = a.user_id
+		    join team t on t.team_id = a.team_id
+		    where a.team_id = #{teamId} and a.status = '대기'
+		    order by a.applied_at
+	</select>
+	
+	<update id="updateTeamApplicationApprove" parameterType="Map">
+	    update team_application
+	    set status = '승인', processed_at = now()
+	    where application_id = #{applicationId}
+	      and team_id = #{teamId}
+	      and status = '대기'
+	</update>
+	
+	<update id="updateTeamApplicationReject" parameterType="Map">
+	    update team_application
+	    set status = '거절', processed_at = now(), rejection_reason = #{reason}
+	    where application_id = #{applicationId}
+	      and team_id = #{teamId}
+	      and status = '대기'
+	</update>
 </mapper>

@@ -10,7 +10,7 @@
 <c:set var="activeNav" value="team" />
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
-	<form class="rail" action="${ctx}/team/application" method="post">
+	<form class="rail" id="applyForm" action="${ctx}/team/application" method="post">
 		<input type="hidden" name="teamId" value="${team.teamId}">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><a
@@ -52,10 +52,43 @@
 			<div class="form-actions">
 				<a class="btn btn-outline btn-sm"
 					href="${ctx}/team/detail/view?teamId=${team.teamId}" style="width: 84px">취소</a>
-				<button type="submit" class="btn btn-primary btn-sm"
+				<button type="submit" class="btn btn-primary btn-sm" id="applyBtn"
 					style="width: 90px">가입 신청</button>
 			</div>
 		</div>
 	</form>
-</main>
+	</main>
+<script>
+$(function () {
+  var submitted = false;
+
+  $('#applyForm').on('submit', function (e) {
+    var msg = $.trim($('#joinMsg').val());
+
+    // 공백만 입력한 경우 차단 (required는 공백을 통과시킴)
+    if (!msg) {
+      e.preventDefault();
+      $('#joinMsg').val('').focus();
+      showToast('가입 멘트를 입력해 주세요.');
+      return;
+    }
+
+    // 중복 제출 방지
+    if (submitted) {
+      e.preventDefault();
+      return;
+    }
+    submitted = true;
+    $('#applyBtn').prop('disabled', true).text('신청 중...');
+  });
+
+  // 뒤로가기로 돌아왔을 때 버튼이 잠긴 채 남는 것 방지
+  $(window).on('pageshow', function (e) {
+    if (e.originalEvent.persisted) {
+      submitted = false;
+      $('#applyBtn').prop('disabled', false).text('가입 신청');
+    }
+  });
+});
+</script>
 <%@ include file="/jsp/common/footer.jsp"%>

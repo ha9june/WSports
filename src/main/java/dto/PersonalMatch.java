@@ -50,7 +50,16 @@ public class PersonalMatch {
     private String region;              // 지역
     
     private String currentPeople;		//현재인원
+
     private String nickname;
+
+    
+    private boolean favorite;
+
+    public boolean isFavorite() { return favorite; }
+    public void setFavorite(boolean favorite) { this.favorite = favorite; }
+    
+    
 	public PersonalMatch() {
 		super();
 		// TODO Auto-generated constructor stub
