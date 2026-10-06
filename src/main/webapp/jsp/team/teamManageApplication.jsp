@@ -100,7 +100,10 @@
 				<div class="kv">
 					예정 매칭 <b><c:out value="${expectedTeamMatchCnt }"></c:out>건</b>
 				</div>
-				<a class="btn btn-outline btn-sm" href="${ctx}/team/edit">팀 정보
+				<c:url var="editUrl" value="/team/edit">
+					<c:param name="teamId" value="${team.teamId }"></c:param>
+				</c:url>
+				<a class="btn btn-outline btn-sm" href="${editUrl }">팀 정보
 					수정</a>
 			</aside>
 		</div>
