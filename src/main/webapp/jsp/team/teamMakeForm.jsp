@@ -7,7 +7,6 @@
 <c:set var="pageTitle" value="팀 만들기" />
 <c:set var="pageCss" value="match,team" />
 <c:set var="activeNav" value="team" />
-<c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
 	<script type="text/javascript">

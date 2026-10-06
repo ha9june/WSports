@@ -10,10 +10,10 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
 	<form class="form-rail"
-		action="${ctx}/jsp/team/teamDetail.jsp?state=manager" method="post"
+		action="${ctx}/team/edit" method="post"
 		enctype="multipart/form-data">
 		<nav class="breadcrumb">
-			<a href="${ctx}/jsp/team/teamList.jsp">팀</a><span class="sep">›</span><span>팀
+			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><span>팀
 				정보 수정</span>
 		</nav>
 		<div class="page-head">
@@ -23,7 +23,7 @@
 		<div style="width: 744px; max-width: 100%">
 			<div class="field">
 				<label class="field-label" for="teamName">팀명</label><input
-					class="input" id="teamName" name="teamName" value="서울 풋살 크루"
+					class="input" id="teamName" name="teamName" value="${team.teamName }"
 					placeholder="팀 이름을 입력하세요" required>
 			</div>
 

@@ -12,8 +12,6 @@
 <c:set var="pageCss" value="match,team" />
 <c:set var="pageJs" value="team" />
 <c:set var="activeNav" value="team" />
-<%-- <c:set var="demoRoles" value="member" />
-<c:set var="demoStates" value="default:기본|reject:거절 모달|rejectFilled:거절 사유 작성" /> --%>
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
 	<div class="container">
@@ -23,31 +21,21 @@
    - infoMode  : true 면 팀원용 조회 화면(팀원 보기 / 팀 작성글 보기) 탭으로 표시
 --%>
 		<nav class="breadcrumb">
-			<a href="${ctx}/jsp/team/teamList.jsp">팀</a><span class="sep">›</span><a
-				href="${ctx}/jsp/team/teamDetail.jsp?state=${infoMode ? 'member' : 'manager'}">서울
-				풋살 크루</a><span class="sep">›</span><span>${infoMode ? '팀 정보' : '관리'}</span>
+			<a href="${ctx}/team/list">팀</a><span class="sep">›</span>
+			<a href="${ctx}/team/detail/view?teamId=${team.teamId}"><c:out value="${team.teamName}" /></a><span class="sep">›</span>
+			<span>관리</span>
 		</nav>
 		<div class="page-head" style="margin-bottom: 24px">
-			<h1 class="page-title">${infoMode ? '서울 풋살 크루' : '팀 관리'}</h1>
-			<p class="page-desc">${infoMode ? '팀원과 팀 작성글을 확인할 수 있어요.' : '가입 신청, 팀원, 팀 작성글 관리를 한 화면에서 전환합니다.'}</p>
+			<h1 class="page-title">팀 관리</h1>
+			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리를 한 화면에서 전환합니다.</p>
 		</div>
 		<nav class="tabs">
-			<c:choose>
-				<c:when test="${infoMode}">
-					<a class="tab ${manageTab eq 'members' ? 'is-active' : ''}"
-						href="${ctx}/jsp/team/teamInfoMembers.jsp">팀원</a>
-					<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
-						href="${ctx}/jsp/team/teamInfoPosts.jsp">팀 작성글</a>
-				</c:when>
-				<c:otherwise>
-					<a class="tab ${manageTab eq 'application' ? 'is-active' : ''}"
-						href="${ctx}/jsp/team/teamManageApplication.jsp">가입 신청</a>
-					<a class="tab ${manageTab eq 'members' ? 'is-active' : ''}"
-						href="${ctx}/jsp/team/teamManageMembers.jsp">팀원 관리</a>
-					<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
-						href="${ctx}/jsp/team/teamManagePosts.jsp">팀 작성글 관리</a>
-				</c:otherwise>
-			</c:choose>
+			<a class="tab ${manageTab eq 'application' ? 'is-active' : ''}"
+				href="${ctx}/team/manage/applications?teamId=${team.teamId}">가입 신청</a>
+			<a class="tab ${manageTab eq 'members' ? 'is-active' : ''}"
+				href="${ctx}/team/manage/members?teamId=${team.teamId}">팀원 관리</a>
+			<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
+				href="${ctx}/team/manage/posts?teamId=${team.teamId}">팀 작성글 관리</a>
 		</nav>
 		<h2 class="sub-title" style="margin-bottom: 16px">가입 신청
 			${applicationCnt }건</h2>
