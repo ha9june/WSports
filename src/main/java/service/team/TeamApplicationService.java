@@ -1,6 +1,7 @@
 package service.team;
 
 import java.util.List;
+import java.util.Map;
 
 import dto.PersonalMatch;
 import dto.TeamApplication;
@@ -15,6 +16,6 @@ public interface TeamApplicationService {
 	void approve(Long teamId, Long applicationId) throws Exception;
 	void reject(Long teamId, Long applicationId, String reason) throws Exception;
 	
-	
-	List<TeamApplication>MypageMyTeamList(PageInfo pageInfo,Long userId,String status,String sport)throws Exception;
+	List<Map<String, Object>> MypageMyTeamList(PageInfo pageInfo, Long userId, String status, String sport) throws Exception;
+	List<Map<String, Object>> MypageJoinedTeamList(PageInfo pageInfo, Long userId, String status, String sport) throws Exception;
 }

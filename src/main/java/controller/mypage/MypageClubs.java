@@ -2,6 +2,7 @@ package controller.mypage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -61,19 +62,25 @@ public class MypageClubs extends HttpServlet {
 						page = 1;
 					}
 				}
-				
+				String state = request.getParameter("state");
+				if (state == null || state.isEmpty()) state = "joined";
 				String status = request.getParameter("status");
 			    String sport = request.getParameter("sport");
 				PageInfo pageInfo = new PageInfo(page);
 				TeamApplicationService service = new TeamApplicationServiceImpl();
 				
 				try {
-					List<TeamApplication> list = service.MypageMyTeamList(pageInfo,userId,status,sport);
-			        request.setAttribute("match", list);
+					List<Map<String, Object>> list;
+					if ("applications".equals(state)) {
+						list = service.MypageMyTeamList(pageInfo, userId, status, sport);   // 가입 신청 (승인 대기)
+					} else {
+						list = service.MypageJoinedTeamList(pageInfo, userId, status, sport);       // 가입한 팀 (승인)
+					}
 			        request.setAttribute("match", list);
 			        request.setAttribute("pageInfo", pageInfo);
 			        request.setAttribute("status", status);
 			        request.setAttribute("sport", sport);
+			        request.setAttribute("state", state);
 					request.getRequestDispatcher("/jsp/mypage/myPageMyTeam.jsp").forward(request, response);
 				} catch (Exception e) {
 					e.printStackTrace();

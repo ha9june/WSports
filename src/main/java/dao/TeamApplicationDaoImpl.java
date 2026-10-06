@@ -108,11 +108,27 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 	}
 
 	@Override
-	public List<TeamApplication> selectMypageMyTeamList(Map<String, Object> param) throws Exception {
+	public List<Map<String, Object>> selectMypageMyTeamList(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.teamapplication.selectMypageMyTeamList", param);
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+
+	@Override
+	public List<Map<String, Object>> selectMypageJoinedTeamList(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teamapplication.selectMypageJoinedTeamList", param);
+		} catch (Exception e) {
+			throw e;
+		}
+}
+
+	@Override
+	public Integer selectMypageJoinedTeamCnt(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectOne("mapper.teamapplication.selectMypageJoinedTeamCnt", param);
+	    }
 	}
 }
