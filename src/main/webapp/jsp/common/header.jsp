@@ -367,7 +367,7 @@ window.addEventListener("fcmMessageReceived", function(e) {
 					href="${ctx}/support/notice/list"
 					class="${activeNav eq 'notice' ? 'is-active' : ''}">공지사항</a>
 				<c:if test="${sessionScope.user.grade eq 'Admin'}">
-					<a href="${ctx}/admin/revenue/view"
+					<a href="${ctx}/admin/revenue"
 						class="${activeNav eq 'admin' ? 'is-active' : ''}">관리자(사이트)</a>
 				</c:if>
 			</nav>

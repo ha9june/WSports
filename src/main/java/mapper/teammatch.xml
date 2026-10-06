@@ -72,6 +72,12 @@
 		</if>
 
 	</select>
+	
+	<!-- 관리자 사이드바 팀 경기수 세기 -->
+	<select id="selectMatchCntTeam" resultType="Long">
+	 select count(*) from team_match
+	 where status = '종료'
+	</select>
 
 
 </mapper>
