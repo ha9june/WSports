@@ -4,49 +4,18 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.time.YearMonth, java.time.LocalDate"%>
-<link href="https://jsdelivr.net" rel="stylesheet" />
-<script src="https://jsdelivr.net"></script>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ko.js"></script>
 <%--
   내가 만든 경기 (myPageCreatedPersonalMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Recruited Matches / Desktop
   목록은 종목·상태 필터와 월 달력으로 조회합니다.
   TODO: 아래 act-card 를 <c:forEach var="m" items="${matchList}"> 로 반복 (날짜별 그룹 헤더 포함)
 --%>
-<%
-YearMonth ym;
-try {
-	String p = request.getParameter("ym");
-	ym = (p == null || p.isEmpty()) ? YearMonth.now() : YearMonth.parse(p);
-} catch (Exception e) {
-	ym = YearMonth.now();
-}
-YearMonth now = YearMonth.now();
-
-// ===== 추가: 일 단위 이동 =====
-LocalDate baseDate;
-try {
-	String dp = request.getParameter("date");
-	baseDate = (dp == null || dp.isEmpty()) ? LocalDate.now() : LocalDate.parse(dp);
-} catch (Exception e) {
-	baseDate = LocalDate.now();
-}
-
-request.setAttribute("ym", ym.toString());
-request.setAttribute("ymYear", ym.getYear());
-request.setAttribute("ymMonth", ym.getMonthValue());
-request.setAttribute("prevYm", ym.minusMonths(1).toString());
-request.setAttribute("nextYm", ym.plusMonths(1).toString());
-request.setAttribute("todayYm", now.toString());
-request.setAttribute("startOffset", ym.atDay(1).getDayOfWeek().getValue() % 7);
-request.setAttribute("lastDay", ym.lengthOfMonth());
-request.setAttribute("prevLastDay", ym.minusMonths(1).lengthOfMonth());
-request.setAttribute("todayDay", ym.equals(now) ? LocalDate.now().getDayOfMonth() : 0);
-
-request.setAttribute("baseDate", baseDate.toString());
-request.setAttribute("prevDate", baseDate.minusDays(1).toString());
-request.setAttribute("nextDate", baseDate.plusDays(1).toString());
-request.setAttribute("todayDate", LocalDate.now().toString());
-%>
 <c:set var="pageTitle" value="내가 만든 경기" />
 <c:set var="pageCss" value="mypage" />
 <c:set var="sideMenu" value="createdMatch" />
@@ -55,61 +24,135 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-/* 날짜 칸: 크기 고정 + 가운데 정렬 (타원 방지) */
-.cal .grid a {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 28px;
-	height: 28px;
-	margin: 0 auto;
-	border-radius: 50%;
-	font-size: 13px;
-	text-decoration: none;
+.act-layout {
+	display: flex;
+	gap: 24px;
+	align-items: flex-start;
 }
 
-/* 경기 있는 날: 연한 파란 원 */
-.cal .grid .has {
-	font-weight: 700;
-	color: #1a6bff;
-	background: #e8f0ff;
-	border-radius: 50%;
+.act-layout>section {
+	flex: 1;
+	min-width: 0;
 }
 
-/* 점 제거 */
-.cal .grid .has::after, .cal .grid .has::before {
-	display: none !important;
+.act-layout>aside.cal {
+	width: 340px;
+	flex-shrink: 0;
+	padding: 16px;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 16px;
 }
 
-/* 선택한 날: 진한 파란 원 (has보다 우선) */
-.cal .grid a.sel {
+.cal .flatpickr-calendar.inline {
+	box-shadow: none;
+	border: 0;
+	width: 100%;
+}
+
+.cal .flatpickr-days, .cal .dayContainer {
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+}
+
+.cal .flatpickr-day {
+	max-width: none;
+	border-radius: 0%;
+}
+
+/* [선택 기간] 기본 배경 사각형 */
+.cal .flatpickr-day.inRange {
+	background: #e8f0ff !important;
+	border-color: #e8f0ff !important;
+	box-shadow: none;
+	color: #1a6bff !important;
+}
+
+.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
+	{
 	background: #1a6bff !important;
+	border-color: #1a6bff !important;
 	color: #fff !important;
 }
 
-/* 이전 달 날짜, 요일도 같은 높이로 맞춤 */
-.cal .grid .muted, .cal .grid .dow {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	height: 28px;
+/* [지렁이/캡슐 모양] 시작과 끝 라운딩 */
+.cal .flatpickr-day.startRange {
+	border-top-left-radius: 50% !important;
+	border-bottom-left-radius: 50% !important;
 }
 
-/* 범례 */
+.cal .flatpickr-day.endRange {
+	border-top-right-radius: 50% !important;
+	border-bottom-right-radius: 50% !important;
+}
+
+.cal .flatpickr-day.startRange.endRange {
+	border-radius: 50% !important;
+}
+
+/* 주말 줄바꿈 처리 */
+.cal .dayContainer {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.cal .flatpickr-day.inRange:nth-child(7n+1) {
+	border-top-left-radius: 50%;
+	border-bottom-left-radius: 50%;
+}
+
+.cal .flatpickr-day.inRange:nth-child(7n) {
+	border-top-right-radius: 50%;
+	border-bottom-right-radius: 50%;
+}
+
+/* 경기 있는 날: 선택 여부 상관없이 365일 항상 표시 */
+.cal .flatpickr-day.has-match {
+	font-weight: 700 !important;
+	color: #1a6bff !important; /* 평소에도 무조건 글자를 파란색으로 */
+	position: relative !important;
+}
+
+/* 점(•) 강제 표시 */
+.cal .flatpickr-day.has-match::after {
+	content: "" !important;
+	position: absolute !important;
+	width: 5px !important;
+	height: 5px !important;
+	left: 50% !important;
+	bottom: 5px !important;
+	transform: translateX(-50%) !important;
+	border-radius: 50% !important;
+	background: #1a6bff !important;
+	display: block !important;
+}
+
+/* 범위 선택 중(.startRange, .endRange)일 때는 가독성을 위해 흰색 점으로 변경 */
+.cal .flatpickr-day.startRange.has-match::after, .cal .flatpickr-day.endRange.has-match::after,
+	.cal .flatpickr-day.selected.has-match::after {
+	background: #ffffff !important;
+}
+
+/* 연한 파란색 범위(.inRange) 안에 있을 때는 다시 파란색 점으로 */
+.cal .flatpickr-day.inRange.has-match::after {
+	background: #1a6bff !important;
+}
+
+/* 하단 범례 및 카드 */
 .cal .legend {
 	display: flex;
 	align-items: center;
 	gap: 6px;
+	margin: 10px 0 0;
 	font-size: 12px;
 }
 
 .cal .legend-dot {
-	display: inline-block;
-	width: 12px;
-	height: 12px;
+	width: 6px;
+	height: 6px;
 	border-radius: 50%;
-	background: #e8f0ff;
-	border: 1px solid #1a6bff;
+	background: #1a6bff;
 }
 
 .act-card {
@@ -119,7 +162,7 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 .list-head {
 	display: flex;
 	align-items: center;
-	margin-bottom: 12px
+	margin-bottom: 12px;
 }
 
 .btn-reset {
@@ -132,11 +175,10 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 	<p class="section-desc">내가 만든 경기와 참가 현황을 종목, 상태와 월별 달력으로 확인하세요.</p>
 
 	<!-- 선택하지않는 월/일 가리기 -->
-	<form class="act-filters" method="get">
-		<input type="hidden" name="ym" value="${ym}">
-		<c:if test="${not empty selectedDate}">
-			<input type="hidden" name="date" value="${selectedDate}">
-		</c:if>
+	<form class="act-filters" method="get" id="periodForm">
+		<input type="hidden" name="startDate" id="startDate"
+			value="${startDate}"> <input type="hidden" name="endDate"
+			id="endDate" value="${endDate}">
 		<!-- 경기 종목별 리스트 검색 -->
 		<select class="select" name="sport" onchange="this.form.submit()">
 			<option value="">전체</option>
@@ -159,23 +201,12 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 	<div class="act-layout">
 		<section>
 			<div class="act-head"></div>
-			<fmt:parseNumber var="mm" value="${fn:substring(ym, 5, 7)}"
-				integerOnly="true" />
 			<div class="list-head">
-				<h2>${fn:substring(ym, 0, 4)}년${mm}월·${fn:length(calMatch)}건</h2>
-				<a class="btn-reset" href="?ym=${ym}&date=${selectedDate}">필터
-					초기화</a>
+				<c:if test="${empty match}">
+					<p class="empty-msg">참가 경기가 없습니다.</p>
+				</c:if>
+				<a class="btn-reset" href="?">필터 초기화</a>
 			</div>
-			<c:choose>
-				<c:when test="${not empty selectedDate and not empty match}">
-					<p class="sel-title">${fn:substring(selectedDate, 5, 7)}월
-						${fn:substring(selectedDate, 8, 10)}일</p>
-				</c:when>
-				<c:when test="${not empty selectedDate and empty match}">
-					<p class="empty-msg">해당 날짜에는 경기가 없습니다.</p>
-				</c:when>
-
-			</c:choose>
 
 
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
@@ -209,10 +240,9 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 							<span><fmt:formatNumber value="${m.participationFee}"
 									pattern="#,###" />원</span>
 							<!-- 관심경기 추가/제거 -->
-							<button type="button" class="fav-btn ${m.favorite ? 'is-on':''}" 
-									data-match-id="${m.personalMatchId}"
-									data-match-type="Personal"
-									aria-label="관심 경기">${heart}</button>
+							<button type="button" class="fav-btn ${m.favorite ? 'is-on':''}"
+								data-match-id="${m.personalMatchId}" data-match-type="Personal"
+								aria-label="관심 경기">${heart}</button>
 						</div>
 						<div class="btns">
 							<a class="btn btn-primary btn-xs"
@@ -222,72 +252,61 @@ request.setAttribute("todayDate", LocalDate.now().toString());
 				</div>
 			</c:forEach>
 		</section>
+		<aside class="cal">
+			<div id="periodPicker"></div>
+			<p class="legend">
+				<span class="legend-dot"></span> 경기 있음</p>
+		</aside>
 		<%--
   마이페이지 활동 화면 공통 월 달력 (참가 경기 / 내가 만든 경기 / 관심경기 / 팀 경기)
    - calDays : 경기가 있는 날짜 (콤마 구분)  예) "19,20"
   피그마: MyPage / Month Picker / Overlay (연-월 선택)
   TODO: ?ym=2026-09 로 월 이동 → 서블릿에서 해당 월 목록 조회
 --%>
-		<aside class="cal">
-			<div class="head">
-				<div class="dropdown">
-					<button type="button" data-dropdown-toggle>${ymYear}년
-						${ymMonth}월 ▾</button>
-					<div class="dropdown-menu month-pop">
-						<div class="yr">
-							<a href="?ym=${ymYear - 1}-${ymMonth lt 10 ? '0' : ''}${ymMonth}">‹</a>
-							${ymYear} <a
-								href="?ym=${ymYear + 1}-${ymMonth lt 10 ? '0' : ''}${ymMonth}">›</a>
-						</div>
-						<div class="months">
-							<c:forEach var="mo" begin="1" end="12">
-								<a
-									href="?ym=${ymYear}-${mo lt 10 ? '0' : ''}${mo}&date=${ymYear}-${mo lt 10 ? '0' : ''}${mo}-01&sport=${sport}"
-									class="${mo eq ymMonth ? 'is-active' : ''}">${mo}월</a>
-							</c:forEach>
-						</div>
-					</div>
-				</div>
-				<div class="nav">
-					<a href="?ym=${prevYm}&sport=${sport}" aria-label="이전 달">‹</a> <a
-						href="?ym=${todayYm}&date=${todayDate}&sport=${sport}"
-						class="t-bold">오늘</a> <a href="?ym=${nextYm}&sport=${sport}"
-						aria-label="다음 달">›</a>
-				</div>
-			</div>
+		<script>
+		$(function() {
+		    var matchDates = [
+		    <c:forEach var="d" items="${matchDates}" varStatus="st">
+		        '${d}'${st.last ? '' : ','}
+		    </c:forEach>
+		];
+    	flatpickr('#periodPicker', {
+        inline: true,
+        mode: 'range',
+        locale: 'ko',
+        dateFormat: 'Y-m-d',
+        defaultDate: '${startDate}'
+            ? ['${startDate}', '${endDate}'] : null,
 
-			<div class="grid">
-				<span class="dow">일</span><span class="dow">월</span><span
-					class="dow">화</span> <span class="dow">수</span><span class="dow">목</span><span
-					class="dow">금</span><span class="dow">토</span>
+        onDayCreate: function(dObj, dStr, fp, dayElem) {
+            var currentDate = fp.formatDate(
+                dayElem.dateObj,
+                'Y-m-d'
+            );
+            if (matchDates.indexOf(currentDate) !== -1) {
+                dayElem.classList.add('has-match');
+            }
+        },
+        onChange: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2) {
+                var start = instance.formatDate(
+                    selectedDates[0],
+                    'Y-m-d'
+                );
+                var end = instance.formatDate(
+                    selectedDates[1],
+                    'Y-m-d'
+                );
+                $('#startDate').val(start);
+                $('#endDate').val(end);
+                $('#periodForm').submit();
+            }
+        }
+    });
 
-				<%-- 이전 달 날짜(흐리게) --%>
-				<c:forEach var="i" begin="1" end="${startOffset}">
-					<span class="muted">${prevLastDay - startOffset + i}</span>
-				</c:forEach>
-
-				<%-- 이번 달 날짜 --%>
-				<c:set var="calList" value=",${calDays}," />
-				<c:forEach var="d" begin="1" end="${lastDay}">
-					<c:set var="full" value="${ym}-${d lt 10 ? '0' : ''}${d}" />
-
-					<%-- 이 날짜에 경기가 있는지 확인 --%>
-					<c:set var="hasMatch" value="false" />
-					<c:forEach var="cm" items="${calMatch}">
-						<c:if test="${cm.matchDate.toString() eq full}">
-							<c:set var="hasMatch" value="true" />
-						</c:if>
-					</c:forEach>
-
-					<a href="?ym=${ym}&date=${full}&sport=${sport}"
-						class="${hasMatch ? 'has' : ''} ${selectedDate eq full ? 'sel' : ''}">${d}</a>
-				</c:forEach>
-			</div>
-			<p class="legend">
-				<span class="legend-dot"></span> 경기 있음
-			</p>
-		</aside>
-				<script>
+});
+</script>
+		<script>
 				$(function() {
 					$(".fav-btn").click(function(e) {
 						e.stopPropagation();

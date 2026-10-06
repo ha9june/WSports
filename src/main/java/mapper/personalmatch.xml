@@ -2,46 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.personalmatch">
-	<select id="selectNowPersonalMatchList" parameterType="util.MatchSearchInfo" resultType="personalmatch">
+	<select id="selectNowPersonalMatchList"
+		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-		    m.*,
-		    COUNT(p.participant_id) AS current_people
-		FROM personal_match m
-		LEFT JOIN personal_match_participant p
-		    ON m.personal_match_id = p.personal_match_id
+		m.*,
+		COUNT(p.participant_id) AS current_people
+		FROM personal_match
+		m
+		LEFT JOIN
+		personal_match_participant p
+		ON m.personal_match_id =
+		p.personal_match_id
 		WHERE 1=1
 		<if test="searchType == 'RECOMAND'">
-		    <if test="sports != null and sports.length > 0">
-		        AND m.sport IN
-		        <foreach collection="sports" item="sport" open="(" separator="," close=")">
-		            #{sport}
-		        </foreach>
-		    </if>
-		    <if test="regions != null and regions.length > 0">
-		        AND m.region IN
-		        <foreach collection="regions" item="region" open="(" separator="," close=")">
-		            #{region}
-		        </foreach>
-		    </if>
+			<if test="sports != null and sports.length > 0">
+				AND m.sport IN
+				<foreach collection="sports" item="sport" open="("
+					separator="," close=")">
+					#{sport}
+				</foreach>
+			</if>
+			<if test="regions != null and regions.length > 0">
+				AND m.region IN
+				<foreach collection="regions" item="region" open="("
+					separator="," close=")">
+					#{region}
+				</foreach>
+			</if>
 		</if>
 		GROUP BY m.personal_match_id
 		<choose>
-		    <when test="searchType == 'RECOMAND'">
-		        ORDER BY m.created_at DESC
-		    </when>
-		    <when test="searchType == 'POPULAR'">
-		        ORDER BY current_people DESC
-		    </when>
-		
-		    <when test="searchType == 'END'">
-		        ORDER BY m.deadline ASC
-		    </when>
-		
-		    <when test="searchType == 'NEW'">
-		        ORDER BY m.created_at DESC
-		    </when>
+			<when test="searchType == 'RECOMAND'">
+				ORDER BY m.created_at DESC
+			</when>
+			<when test="searchType == 'POPULAR'">
+				ORDER BY current_people DESC
+			</when>
+
+			<when test="searchType == 'END'">
+				ORDER BY m.deadline ASC
+			</when>
+
+			<when test="searchType == 'NEW'">
+				ORDER BY m.created_at DESC
+			</when>
 		</choose>
-		
+
 		LIMIT 4;
 	</select>
 
@@ -239,20 +245,14 @@
 		WHERE p.user_id = #{userId}
 		AND
 		p.status IN ('결제완료')
-		<if test="month != null and month != ''">
-			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month},
-			'-01'), '%Y-%m-%d')
-			AND m.match_date &lt;
-			DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'),
-			'%Y-%m-%d'), INTERVAL 1
-			MONTH)
-		</if>
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
 		<if test="status != null and status != ''">
 			AND m.status = #{status}
 		</if>
+		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
+		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 		ORDER BY m.match_date, m.personal_match_id
 		LIMIT #{size} OFFSET
 		#{offset}
@@ -288,27 +288,28 @@
 	<select id="selectMyPageCreatedPersonalMatchList"
 		parameterType="map" resultType="personalmatch">
 		SELECT m.*,
-		CASE WHEN f.favorite_id IS NULL THEN 0 ELSE 1 END AS favorite
+		CASE WHEN f.favorite_id IS NULL THEN 0 ELSE 1 END AS
+		favorite
 		FROM personal_match m
 		LEFT JOIN favorite f
-		ON f.match_id = m.personal_match_id
+		ON f.match_id =
+		m.personal_match_id
 		AND f.user_id = #{userId}
-		AND f.match_type = 'Personal'
+		AND f.match_type =
+		'Personal'
 		WHERE m.user_id = #{userId}
 		AND m.deleted = '0'
-		<if test="month != null and month != ''">
-			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d')
-			AND m.match_date &lt; DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'),
-			'%Y-%m-%d'), INTERVAL 1 MONTH)
-		</if>
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
 		<if test="status != null and status != ''">
 			AND m.status = #{status}
 		</if>
+		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
+		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 		ORDER BY m.match_date DESC, m.personal_match_id DESC
-		LIMIT #{size} OFFSET #{offset}
+		LIMIT #{size}
+		OFFSET #{offset}
 	</select>
 
 	<!-- 내가만든 경기 목록 갯수 조회 -->
@@ -354,5 +355,28 @@
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at DESC;
 	</select>
-
+	<select id="selectMyPagePersonalMatchDates" parameterType="map"
+		resultType="string">
+		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
+		FROM personal_match_participant p
+		JOIN personal_match m
+		ONm.personal_match_id = p.personal_match_id
+		WHERE p.user_id = #{userId}
+		AND p.status IN ('결제완료')
+		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
+		<if test="status != null and status != ''"> AND m.status = #{status} </if>
+	</select>
+	<select id="selectMyPageCreatedPersonalMatchDates"
+		parameterType="map" resultType="string">
+		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
+    	 FROM personal_match m
+   		 WHERE m.user_id = #{userId}
+     	 AND m.deleted = 0
+    <if test="sport != null and sport != ''">
+        AND m.sport = #{sport}
+    </if>
+    <if test="status != null and status != ''">
+        AND m.status = #{status}
+    </if>
+	</select>
 </mapper>
