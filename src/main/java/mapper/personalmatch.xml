@@ -357,8 +357,7 @@
 	</select>
 
 
-	<select id="selectPersonalMatch" parameterType="Integer"
-		resultType="map">
+	<select id="selectPersonalMatch" parameterType="Integer" resultType="personalMatch">
 		SELECT
 		m.*,
 		u.nickname,
@@ -376,6 +375,85 @@
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at DESC;
 	</select>
+	
+	<insert id="insertPersonalMatch" parameterType="personalMatch" useGeneratedKeys="true" keyProperty="personalMatchId">
+		INSERT INTO personal_match (
+		        user_id,
+		        sport,
+		        title,
+		        place_name,
+		        match_date,
+		        start_time,
+		        end_time,
+		        latitude,
+		        longitude,
+		        participation_fee,
+		        fee,
+		        min_people,
+		        max_people,
+		        deadline,
+		        gender,
+		        age_20s,
+		        age_30s,
+		        age_40s,
+		        age_50s,
+		        age_60_plus,
+		        skill_intro,
+		        skill_beginner,
+		        skill_intermediate,
+		        skill_advanced,
+		        content,
+		        image,
+		        image1,
+		        image2,
+		        image3,
+		        image4,
+		        image5,
+		        created_at,
+		        updated_at,
+		        deleted,
+		        status
+		    )
+		    VALUES (
+		        #{userId},
+		        #{sport},
+		        #{title},
+		        #{placeName},
+		        #{matchDate},
+		        #{startTime},
+		        #{endTime},
+		        #{latitude},
+		        #{longitude},
+		        #{participationFee},
+		        #{fee},
+		        #{minPeople},
+		        #{maxPeople},
+		        #{deadline},
+		        #{gender},
+		        #{age20s},
+		        #{age30s},
+		        #{age40s},
+		        #{age50s},
+		        #{age60Plus},
+		        #{skillIntro},
+		        #{skillBeginner},
+		        #{skillIntermediate},
+		        #{skillAdvanced},
+		        #{content},
+		        #{image1},
+		        #{image1},
+		        #{image2},
+		        #{image3},
+		        #{image4},
+		        #{image5},
+		        NOW(),
+		        NOW(),
+		        #{deleted},
+		        #{status}
+		    )
+	</insert>
+	
+
 	<select id="selectMyPagePersonalMatchDates" parameterType="map"
 		resultType="string">
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')

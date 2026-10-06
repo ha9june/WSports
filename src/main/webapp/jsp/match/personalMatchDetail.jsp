@@ -18,8 +18,123 @@
 <c:set var="activeNav" value="${isHost ? '' : 'match'}" />
 <c:set var="demoStates" value="recruiting:모집중|saved:찜함|applied:신청 완료|applyCancel:신청취소 모달|closed:모집 마감|completed:경기 종료|cancelledMin:자동 취소|host:주최자 관리|hostConfirmed:주최자-경기 예정|hostCancel:주최자-취소 모달|hostDelete:주최자-삭제 모달|completedHost:주최자-경기 종료|cancelledHost:주최자-취소됨" />
 <%@ include file="/jsp/common/header.jsp" %>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
+<style>
+	.main-photo {
+		width: 100%;
+		height: 348px;
+		overflow: hidden;
+		border-radius: 20px;
+		background: #1f2328;
+	}
+	.main-photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		display: block;
+	}
+	.thumbs {
+		display: flex;
+		gap: 12px;
+		margin-top: 12px;
+	}
+	.thumbs span {
+		width: 120px;
+		height: 90px;
+		overflow: hidden;
+		border-radius: 8px;
+		background: #1f2328;
+		flex-shrink: 0;
+	}
+	.thumbs span img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.detail-grid.no-photo .team-tabs {
+		margin-top: 0;
+	}
+	.detail-grid.no-photo .team-side {
+		width: 100%;
+	}
 
+	.intro {
+	    white-space: pre-line;
+	}
+	.team-tabs {
+		position: sticky;
+		top: var(--header-h);
+		z-index: 40;
+		background: #fff;
+	}
+
+</style>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
+<script>
+	$(function() {
+
+		const profileImage = '${personalMatch.image}';
+		const sport = '${personalMatch.sport}';
+
+		let imageSrc = '';
+
+		if (profileImage) {
+			imageSrc = '${ctx}/uploads/' + profileImage;
+		} else if (sport === '축구/풋살') {
+			imageSrc = '${ctx}/img/team-football.png';
+		} else if (sport === '농구') {
+			imageSrc = '${ctx}/img/team-basketball.png';
+		} else if (sport === '테니스') {
+			imageSrc = '${ctx}/img/team-tennis.png';
+		} else if (sport === '배드민턴') {
+			imageSrc = '${ctx}/img/team-badminton.png';
+		}
+
+		$('#mainPhoto').html('<img src="' + imageSrc + '" alt="팀 프로필 이미지">');
+
+		 const images = [ '${personalMatch.image1}', '${personalMatch.image2}',
+				'${personalMatch.image3}', '${personalMatch.image4}',
+				'${personalMatch.image5}' ];
+
+
+		var hasImage = images.some(function(image) {
+			return image;
+		});
+
+		if (!hasImage) {
+			$('#activePhoto').hide();
+
+			return;
+		}
+
+		let html = '';
+		let mainPhoto = '<img src="${ctx}/uploads/' + images[0]	 + '" alt="활동 사진">';
+
+		images.forEach(function(image, index) {
+					if (image && index === 0) {
+						html += '<span>'
+								+ '<img class="subImg" src="${ctx}/uploads/' + image + '" alt="활동 사진" style="border: 2px solid #1677ff">'
+								+ '</span>';
+					} else if (image) {
+						html += '<span>'
+								+ '<img class="subImg" src="${ctx}/uploads/' + image + '" alt="활동 사진">'
+								+ '</span>';
+					}
+				});
+
+		$('#mainPhoto').html(mainPhoto);
+		$('#thumbs').html(html);
+		$('#thumbs').on('click', '.subImg', function() {
+			// 메인 사진 변경
+			$('#mainPhoto img').attr('src', $(this).attr('src'));
+			// 기존 선택 표시 제거
+			$('.subImg').css('border', 'none');
+			// 클릭한 사진 선택 표시
+			$(this).css('border', '2px solid #1677ff');
+		}); 
+
+	});
+</script>
 
 <%-- 상태별 제목 옆 배지 --%>
 <c:choose>
@@ -45,12 +160,12 @@
 
     <%-- ===== 상단 : 종목 / 제목 / 호스트 ===== --%>
     <section class="detail-top">
-      <span class="sport-chip">${state eq 'hostConfirmed' ? '농구' : '축구/풋살'}</span>
+      <span class="sport-chip">${personalMatch.sport }</span>
       <div class="title-row">
         <h1>
         	${personalMatch.title }
         </h1>
-        <span class="pill pill-lg ${pillCls}">${pillText}</span>
+        <span class="pill pill-lg ${pillCls}">${personalMatch.status }</span>
         <c:if test="${role eq 'admin'}">
           <button type="button" class="btn btn-danger btn-sm admin-del" data-modal-open="adminDeleteModal">경기 삭제</button>
         </c:if>
@@ -75,27 +190,49 @@
     </section>
 
     <div class="detail-grid">
-      <%-- ===== 좌측 본문 ===== --%>
       <div class="detail-main">
         <div class="gallery">
-          <%-- TODO: 대표 사진이 있으면 <img> 로 교체 --%>
-          <div class="main-photo">경기 사진</div>
-          <div class="thumbs"><span>사진 1</span><span>사진 2</span><span>사진 3</span><em>경기 사진 3장</em></div>
+			<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
+			<div class="thumbs" id="thumbs"></div>
         </div>
+
 
         <section class="info-card">
           <h2>경기 정보</h2>
           <dl class="info-list">
-            <div class="info-row"><dt>일시</dt><dd>9월 19일 (토) 19:00 - 21:00</dd></div>
-            <div class="info-row"><dt>장소</dt><dd>${personalMatch.place_name}</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd>${personalMatch.participation_fee }원</dd></div>
-            <div class="info-row"><dt>참가 인원</dt><dd>${personalMatch.min_people} / ${personalMatch.max_people}명
-            	<small>최소 진행 8명 · 충족 ✓</small></dd>
+            <div class="info-row"><dt>일시</dt><dd>          
+            ${personalMatch.matchDate}（${personalMatch.dayOfWeekKorean}）
+            ${personalMatch.startTime} ～ 
+            ${personalMatch.endTime}
+            </dd></div>
+            <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
+            <div class="info-row"><dt>참가비</dt><dd>${personalMatch.participationFee }원</dd></div>
+            <div class="info-row"><dt>참가 인원</dt>
+	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
+	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}"><small>최소 진행 8명 · 충족 ✓</small></c:if>
+	           	</dd>
            	</div>
-            <div class="info-row"><dt>마감</dt><dd>${personalMatch.deadline}</dd></div>
-            <div class="info-row"><dt>성별</dt><dd>무관</dd></div>
-            <div class="info-row"><dt>연령</dt><dd>20대 · 30대</dd></div>
-            <div class="info-row"><dt>실력</dt><dd>초급 · 중급</dd></div>
+            <div class="info-row"><dt>마감</dt><dd>
+            ${fn:replace(personalMatch.deadline, 'T', ' ')}
+            </dd></div>
+            <div class="info-row"><dt>성별</dt><dd>${personalMatch.gender}</dd></div>
+            <div class="info-row"><dt>연령</dt>
+            	<dd>
+		            <c:if test="${personalMatch.age20s}">20대 </c:if>
+					<c:if test="${personalMatch.age30s}">30대 </c:if>
+					<c:if test="${personalMatch.age40s}">40대 </c:if>
+					<c:if test="${personalMatch.age50s}">50대 </c:if>
+					<c:if test="${personalMatch.age60Plus}">60대+ </c:if>
+            	</dd>
+            </div>
+            
+            <div class="info-row"><dt>실력</dt>
+            	<dd>
+            	<c:if test="${personalMatch.skillIntro}">입문 </c:if>
+				<c:if test="${personalMatch.skillBeginner}">초급 </c:if>
+				<c:if test="${personalMatch.skillIntermediate}">중급 </c:if>
+				<c:if test="${personalMatch.skillAdvanced}">고급 </c:if>
+            	</dd>
           </dl>
           <div class="desc">
             <h3>상세 설명</h3>
@@ -105,18 +242,10 @@
 
         <section class="map-card">
           <div class="head"><strong>경기 위치</strong><span>서울 마포구 망원 풋살장</span></div>
-          	${personalMatch.latitude}, ${personalMatch.longitude}
-          	
-          <div class="map-box">
-        	    <div id="map">
-          		</div>
-<!--           	<div class="map-pin">
-
-          		<div><strong>망원 풋살장</strong><small>지도 API로 실제 위치 표시</small>
-          		</div>
-          	</div> -->
+          <div id="map" style="width:100%;height:300px;">
           </div>
         </section>
+
 
         <c:if test="${not isHost}">
           <div class="detail-actions">
@@ -207,7 +336,7 @@
           <c:otherwise>
             <div class="side-card">
               <h2>결제 안내</h2>
-              <div class="kv">참가비 <b class="lg">${personalMatch.participation_fee }원</b></div>
+              <div class="kv">참가비 <b class="lg">${personalMatch.participationFee }원</b></div>
               <hr>
               <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
               <div class="actions">
@@ -273,8 +402,16 @@
 <script>
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	mapOption = {
-	    center: new kakao.maps.LatLng(37.5675000, 126.9790000), // 지도의 중심좌표
+	    center: new kakao.maps.LatLng(${personalMatch.latitude}, ${personalMatch.longitude}), // 지도의 중심좌표
 	    level: 5 // 지도의 확대 레벨
 	};
 	var map = new kakao.maps.Map(mapContainer, mapOption);
+	var markerPosition = new kakao.maps.LatLng(
+	    ${personalMatch.latitude},
+	    ${personalMatch.longitude}
+	);
+	var marker = new kakao.maps.Marker({
+	    position: markerPosition
+	});
+	marker.setMap(map);
 </script>

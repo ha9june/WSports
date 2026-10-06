@@ -3,6 +3,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 /** 개인 매치 */
 public class PersonalMatch {
@@ -46,7 +48,11 @@ public class PersonalMatch {
     private String placeName;           // 장소명
     private String address;             // 주소
     private String region;              // 지역
+    
     private String currentPeople;		//현재인원
+
+    private String nickname;
+
     
     private boolean favorite;
 
@@ -107,6 +113,7 @@ public class PersonalMatch {
 		this.address = address;
 		this.region = region;
 	}
+	
 	@Override
 	public String toString() {
 		return "PersonalMatch [personalMatchId=" + personalMatchId + ", title=" + title + ", content=" + content
@@ -119,7 +126,8 @@ public class PersonalMatch {
 				+ ", minPeople=" + minPeople + ", maxPeople=" + maxPeople + ", deleted=" + deleted + ", updatedAt="
 				+ updatedAt + ", deletedAt=" + deletedAt + ", image1=" + image1 + ", image2=" + image2 + ", image3="
 				+ image3 + ", image4=" + image4 + ", image5=" + image5 + ", status=" + status + ", placeName="
-				+ placeName + ", address=" + address + ", region=" + region + "]";
+				+ placeName + ", address=" + address + ", region=" + region + ", currentPeople=" + currentPeople
+				+ ", nickname=" + nickname + "]";
 	}
 	public Long getPersonalMatchId() {
 		return personalMatchId;
@@ -360,6 +368,21 @@ public class PersonalMatch {
 	}
 	public void setCurrentPeople(String currentPeople) {
 		this.currentPeople = currentPeople;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
+	public String getDayOfWeekKorean() {
+	    if (matchDate == null) {
+	        return "";
+	    }
+	    String day = matchDate.getDayOfWeek()
+	            .getDisplayName(TextStyle.FULL, Locale.KOREAN);
+	    return day.substring(0, 1);
 	}
 	
 	
