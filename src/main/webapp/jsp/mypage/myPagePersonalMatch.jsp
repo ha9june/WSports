@@ -4,7 +4,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.time.YearMonth, java.time.LocalDate"%>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 <%--
@@ -201,8 +202,6 @@
 				</c:if>
 				<a class="btn-reset" href="?">필터 초기화</a>
 			</div>
-
-
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
 			<c:forEach var="m" items="${match}">
 				<div class="act-card"
@@ -245,6 +244,19 @@
 					</div>
 				</div>
 			</c:forEach>
+			<c:set var="qs" value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
+			<nav class="pagination" style="display: flex; justify-content: center; padding: 0">
+				<c:if test="${pageInfo.curPage > 1}">
+					<a href="?page=${pageInfo.curPage - 1}${qs}">&lt;</a>
+				</c:if>
+				<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
+					var="p">
+					<a href="?page=${p}${qs}" class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+				</c:forEach>
+				<c:if test="${pageInfo.curPage < pageInfo.allPage}">
+					<a href="?page=${pageInfo.curPage + 1}${qs}">&gt;</a>
+				</c:if>
+			</nav>
 		</section>
 		<aside class="cal">
 			<div id="periodPicker"></div>

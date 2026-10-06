@@ -84,7 +84,8 @@ public class MyPagePersonalMatch extends HttpServlet {
 	        request.setAttribute("startDate", startDate);
 			request.setAttribute("endDate", endDate);
 			request.setAttribute("matchDates", service.getMyPagePersonalMatchDates(userId, status, sport));
-				
+			System.out.println("list=" + list.size() + ", curPage=" + pageInfo.getCurPage()
+		    + ", allPage=" + pageInfo.getAllPage());
 			request.getRequestDispatcher("/jsp/mypage/myPagePersonalMatch.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
