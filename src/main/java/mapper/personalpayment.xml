@@ -2,5 +2,71 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.personalpayment">
-
+	<!-- 총 매출 -->
+	<select id="totalRevenuePersonal" resultType="Long">
+		select ifnull((select sum(total_amount) from personal_payment),0) as totalRevenue
+	</select>
+	
+	<!-- 총 수익 -->
+	<select id="totalProfitPersonal" resultType="Long">
+		select 
+		floor(ifnull((select sum(total_amount) from personal_payment), 0) * 0.08)
+		as totalProfitPersonal
+	</select>
+	
+	<!-- 이번달 월간 매출 -->
+	<select id="monthlyRevenuePersonal" resultType="Long">
+		select ifnull(sum(total_amount), 0) as month_revenue <!-- 최종 결과 -->
+		from personal_payment
+		where year(approved_at) = year(curdate())
+		and month(approved_at) = month(curdate())
+	</select>
+	
+	<!-- 이번달 월간 수익 -->
+	<select id="monthlyProfitPersonal" resultType="Long">
+		select floor(ifnull(sum(total_amount), 0) * 0.08) as month_revenue <!-- 최종 결과 -->
+		from personal_payment
+		where year(approved_at) = year(curdate())
+		and month(approved_at) = month(curdate())
+	</select>
+	
+	<!-- 이번달을 포함한 최근 6개월간의 월간 매출 -->
+	<select id="sixMonthlyRevenuePersonal" resultType="Long">
+		select ifnull(sum(total_amount), 0) as month_revenue <!-- 최종 결과 -->
+		from personal_payment
+		where approved_at >= date_format(curdate(), '%Y-%m-01') - interval #{n} month <!-- 숫자만 바꿔서 호출 --> 
+		and approved_at &lt; date_format(curdate(), '%Y-%m-01') - interval #{n} month + Interval 1 month<!-- 숫자만 바꿔서 호출 -->
+	</select>
+	
+	<!-- 이번달을 포함한 최근 6개월간의 월간 수익 -->
+	<select id="sixMonthlyProfitPersonal" resultType="Long">
+		select floor(ifnull(sum(total_amount), 0)*0.08) as month_revenue <!-- 최종 결과 -->
+		from personal_payment
+		where approved_at >= date_format(curdate(), '%Y-%m-01') - interval #{n} month  <!-- 숫자만 바꿔서 호출 -->
+		and approved_at &lt; date_format(curdate(), '%Y-%m-01') - interval #{n} month + Interval 1 month<!-- 숫자만 바꿔서 호출 -->
+	</select>
+	
+	<!-- 기간 내 결제 건수 -->
+	<select id="selectPeriodPaymentCntPersonal" parameterType="map" resultType="Long">
+		select count(*) as period_cnt
+		from personal_payment
+		where approved_at >= #{startDate}
+		and approved_at &lt; #{endDate} + interval 1 day
+	</select>
+	
+	<!-- 기간 내 총 매출 -->
+	<select id="selectPeriodRevenuePersonal" parameterType="map" resultType="Long">
+		select ifnull(sum(total_amount), 0) as month_revenue
+		from personal_payment
+		where approved_at >= #{startDate}
+		and approved_at &lt; #{endDate} + interval 1 day
+	</select>
+	
+	<!-- 기간 내 총 수익 -->
+	<select id="selectPeriodProfitPersonal" parameterType="map" resultType="Long">
+		select floor(ifnull(sum(total_amount), 0)*0.08) as month_revenue
+		from personal_payment
+		where approved_at >= #{startDate}
+		and approved_at &lt; #{endDate} + interval 1 day
+	</select>
 </mapper>
