@@ -140,6 +140,6 @@
 	<select id="selectsTeamPenaltyScore" parameterType="Long" resultType="int">
 		select coalesce(sum(score), 0)
 		from team_penalty
-		where team_id=#{teamId}
+		where team_id=#{teamId} 
 	</select>
 </mapper>
