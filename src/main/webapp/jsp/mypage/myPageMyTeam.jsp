@@ -67,8 +67,10 @@
 							style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 6px; flex-shrink: 0; width: 80px;">
 							<span class="status-txt"
 								style="font-size: 12px; color: #6b7280; font-weight: 500; margin-right: 4px; white-space: nowrap;">${m.status}</span>
-							<button type="button" class="btn-cancel" data-id="${m.applicationId}"
-								style="width: 100%; background-color: #fff; border: 1px solid #d1d5db; color: #1f2937; font-size: 12px; font-weight: 600; padding: 6px 0; text-align: center; border-radius: 8px; cursor: pointer; white-space: nowrap;">신청 취소</button>
+							<button type="button" class="btn-cancel"
+								data-id="${m.applicationId}"
+								style="width: 100%; background-color: #fff; border: 1px solid #d1d5db; color: #1f2937; font-size: 12px; font-weight: 600; padding: 6px 0; text-align: center; border-radius: 8px; cursor: pointer; white-space: nowrap;">신청
+								취소</button>
 						</div>
 					</div>
 				</c:forEach>
@@ -96,8 +98,9 @@
 							<strong
 								style="display: block; font-size: 16px; margin-bottom: 4px;">${m.teamName}</strong>
 							<p class="meta"
-								style="font-size: 13px; color: #666; margin-bottom: 6px;">${m.sport}
-								· ${m.region}</p>
+								style="font-size: 13px; color: #666; margin-bottom: 6px; display: flex; gap: 8px;">
+								<span>${m.sport}</span> <span>${m.region}</span>
+							</p>
 							<p class="sub" style="margin: 0; font-size: 12px; color: #888;">가입일
 								${m.appliedAt}</p>
 						</div>
@@ -163,13 +166,13 @@
 		var targetId = null;
 		// 드롭다운 토글
 		$('[data-dropdown-toggle]').on('click', function(e) {
-		    e.stopPropagation();
-		    var $dd = $(this).closest('.dropdown');
-		    $('.dropdown').not($dd).removeClass('is-open');
-		    $dd.toggleClass('is-open');
+			e.stopPropagation();
+			var $dd = $(this).closest('.dropdown');
+			$('.dropdown').not($dd).removeClass('is-open');
+			$dd.toggleClass('is-open');
 		});
 		$(document).on('click', function() {
-		    $('.dropdown').removeClass('is-open');
+			$('.dropdown').removeClass('is-open');
 		});
 
 		// 신청 취소
@@ -196,10 +199,10 @@
 
 		// 팀 탈퇴
 		$('.btn-leave').on('click', function(e) {
-			 e.stopPropagation(); 
+			e.stopPropagation();
 			targetId = $(this).data('team-id');
 			$('#leaveModal').addClass('is-open');
-		}); 
+		});
 		$('#confirmLeave').on('click', function() {
 			$.post('${ctx}/mypage/clubs/leave', {
 				teamId : targetId
