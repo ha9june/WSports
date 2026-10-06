@@ -19,16 +19,32 @@
 	</div>
 	<%-- TODO: action 을 공지 등록 서블릿으로 교체 --%>
 	<form style="width:820px;max-width:100%" method="post" action="${ctx}/admin/notice/write">
-		<h2>공지 제목</h2>
-		<input class="input" name="title" required>
-		<br>
-		<h2>유형</h2>
-		<input class="input" name="type" required>
-		<br>
-		<h1>공지작성</h1>
-		<textarea class="textarea" name="content" rows="10" required></textarea>
-		<label><input type="checkbox" name="isPinned" > 상단 고정</label>
-		<button type="submit" class="btn btn-primary">등록</button>
+		<div class="field">
+			<label class="field-label" for="nTitle">공지 제목</label>
+			<input class="input" id="nTitle" name="title" required>
+		</div>
+		<div class="field mt-24">
+			<label class="field-label" for="nType">유형</label>
+			<input class="input" id="nType" name="type" required>
+		</div>
+		<div class="field mt-24">
+			<label class="field-label" for="nBody">공지 내용</label>
+			<textarea class="textarea" id="nBody" name="content" rows="12" required>${detail.content}</textarea>
+		</div>
+			<%-- 상단 고정 --%>
+		<div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding:16px 18px; border:1px solid var(--ds-border); border-radius:var(--r-12); background:#fff">
+			<div>
+				<p class="t-12 t-bold">📌 게시판 상단 고정</p>
+				<p class="t-11 t-2 mt-8">켜두면 공지사항 목록 맨 위에 고정돼요.</p>
+			</div>
+			<label class="switch">
+				<input type="checkbox" name="isPinned">
+				<span></span>
+			</label>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary" style="width:125px">등록</button>
+		</div>
 	</form>
 </div>
 </main></div>

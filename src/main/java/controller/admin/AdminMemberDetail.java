@@ -54,10 +54,17 @@ public class AdminMemberDetail extends HttpServlet {
 
 			String reason = request.getParameter("reason");
 			String action = request.getParameter("action");
-
-			if ("permanent".equals(action)) {
+			
+			if("adjust".equals(action)) {
+				// 패널티 점수 부여/차감
+				int change = Integer.parseInt(request.getParameter("change"));
+				System.out.println("서블릿 : "+change);
+				service.AdminChangeUserPenalty(userId, change, reason);
+			}
+			else if ("permanent".equals(action)) {
 				// 영구 정지 (기간 없음)
 				service.AdminUserPermanentPenalty(userId, reason);
+
 			} else {
 				// 기간 정지
 				int days = Integer.parseInt(request.getParameter("days"));

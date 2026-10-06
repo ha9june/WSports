@@ -28,7 +28,7 @@
 		<input class="input" id="nTitle" name="title" value="${detail.title}" required>
 	</div>
 	<div class="field mt-24">
-		<label class="field-label" for="nType">공지 제목</label>
+		<label class="field-label" for="nType">유형</label>
 		<input class="input" id="nType" name="type" value="${detail.type}" required>
 	</div>
 	<div class="field mt-24">
