@@ -27,7 +27,7 @@ public interface PersonalMatchDao {
 
 	
 	//매치 글 조회
-	Map<String,Object> selectPersonalMatch(Integer personaMatchId) throws Exception;
+	PersonalMatch selectPersonalMatch(Integer personaMatchId) throws Exception;
 
 	//매치글 인서트
 	Long insertPersonalMatch(PersonalMatch personalMatch) throws Exception;

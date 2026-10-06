@@ -88,7 +88,7 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		
 	
 	}
-	public Map<String,Object> selectPersonalMatch(Integer personaMatchId) throws Exception {
+	public PersonalMatch selectPersonalMatch(Integer personaMatchId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personaMatchId);
 		} catch (Exception e) {

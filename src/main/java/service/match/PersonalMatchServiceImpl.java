@@ -114,7 +114,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	
 	}
 	@Override
-	public Map<String,Object> getPersmalMatchDetail(Integer personalMatchId) throws Exception {
+	public PersonalMatch getPersmalMatchDetail(Integer personalMatchId) throws Exception {
 		// TODO Auto-generated method stub
 		return personalMatchDao.selectPersonalMatch(personalMatchId);
 	}
@@ -138,7 +138,6 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
             String fileName = fileUpload(realPath, part);
 
             if (imageIndex == 1) {
-            	personalMatch.setImage(fileName);
                 personalMatch.setImage1(fileName);
             } else if (imageIndex == 2) {
                 personalMatch.setImage2(fileName);

@@ -365,7 +365,7 @@
 		LIMIT #{size} OFFSET #{offset}
 	</select>
 
-	<select id="selectPersonalMatch" parameterType="Integer" resultType="map">
+	<select id="selectPersonalMatch" parameterType="Integer" resultType="personalMatch">
 		SELECT
 		    m.*,
 		    u.nickname,
@@ -407,6 +407,7 @@
 		        skill_intermediate,
 		        skill_advanced,
 		        content,
+		        image,
 		        image1,
 		        image2,
 		        image3,
@@ -443,6 +444,7 @@
 		        #{skillIntermediate},
 		        #{skillAdvanced},
 		        #{content},
+		        #{image1},
 		        #{image1},
 		        #{image2},
 		        #{image3},

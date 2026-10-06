@@ -30,7 +30,7 @@ public interface PersonalMatchService {
 	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String month,String status,String sport)throws Exception;
 		
 	//개인매치 상세글
-	Map<String,Object> getPersmalMatchDetail(Integer personalMatchId) throws Exception;
+	PersonalMatch getPersmalMatchDetail(Integer personalMatchId) throws Exception;
 
 	Long createPersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;
 
