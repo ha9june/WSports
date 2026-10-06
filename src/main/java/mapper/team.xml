@@ -327,4 +327,5 @@
 		  and tu.team_role in ('CAPTAIN', 'VICE_CAPTAIN')
 		  and tu.withdrawn = 0;
 	</select>
+	
 </mapper>
