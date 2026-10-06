@@ -21,9 +21,15 @@ public interface PersonalMatchDao {
 	List<PersonalMatch>selectMyPageCreatedPersonalMatchList(Map<String,Object> param)throws Exception;
 	//(페이징)마이페이지 내가만든 경기 목록 개수 조회
 	Integer selectMyPageCreatedPersonalMatchCnt(Map<String, Object> param)throws Exception;
+
+	//마이페이지 내가만든 경기 종목별 조회
+	List<PersonalMatch>selectMyPageCreatedPersonalMatchsportList(Map<String,Object> param)throws Exception;
+
 	
 	//매치 글 조회
-	Map<String,Object> selectPersonalMatch(Integer personaMatchId) throws Exception;
+	PersonalMatch selectPersonalMatch(Integer personaMatchId) throws Exception;
 
-
+	//매치글 인서트
+	Long insertPersonalMatch(PersonalMatch personalMatch) throws Exception;
+	
 }

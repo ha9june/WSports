@@ -37,7 +37,7 @@ public class MatchDetail extends HttpServlet {
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		try {
 			
-			Map<String,Object> pMatch = service.getPersmalMatchDetail(num);
+			PersonalMatch pMatch = service.getPersmalMatchDetail(num);
 			System.out.println(pMatch);
 			request.setAttribute("personalMatch", pMatch);
 			request.getRequestDispatcher("/jsp/match/personalMatchDetail.jsp").forward(request, response);;			

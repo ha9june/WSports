@@ -1,4 +1,4 @@
-package service.match;
+package controller.match;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class PersonalMatchWriteForm
+ * Servlet implementation class MatchWriteForm
  */
-@WebServlet("/match/create")
-public class PersonalMatchWriteForm extends HttpServlet {
+@WebServlet("/match/write/form")
+public class MatchWriteForm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PersonalMatchWriteForm() {
+    public MatchWriteForm() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,7 +26,9 @@ public class PersonalMatchWriteForm extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/match/personalMatchWriteForm.jsp").forward(request, response);;			
+		// TODO Auto-generated method stub
+		request.getRequestDispatcher("/jsp/match/personalMatchWriteForm.jsp").forward(request, response);;
+		
 	}
 
 	/**
