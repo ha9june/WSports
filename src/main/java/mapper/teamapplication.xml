@@ -52,4 +52,51 @@
 	      and team_id = #{teamId}
 	      and status = '대기'
 	</update>
+	<select id="selectMypageMyTeamList" parameterType="Long" resultType="map">
+		 select a.application_id, a.user_id, a.team_id, a.applied_at as appliedAt,
+       a.message as description,  
+       t.team_name as teamName,   
+       u.nickname, u.profile_image, u.preferred_region1,
+		           case t.sport
+		               when '축구/풋살' then u.soccer_skill
+		               when '농구'      then u.basketball_skill
+		               when '테니스'    then u.tennis_skill
+		               when '배드민턴'  then u.badminton_skill
+		           end as skill
+		    from team_application a
+		    join user u on u.user_id = a.user_id
+		    join team t on t.team_id = a.team_id
+		    where a.user_id = #{userId} and a.status = '대기'
+		    <if test="sport != null and sport != ''">
+			AND t.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+ 		ORDER BY a.applied_at DESC, a.application_id DESC
+		LIMIT #{size}
+		OFFSET #{offset}
+	</select>
+	<select id="selectMypageMyTeamCnt" parameterType="map"
+		resultType="int">
+		select count(*),
+		           case t.sport
+		               when '축구/풋살' then u.soccer_skill
+		               when '농구'      then u.basketball_skill
+		               when '테니스'    then u.tennis_skill
+		               when '배드민턴'  then u.badminton_skill
+		           end as skill
+		    from team_application a
+		    join user u on u.user_id = a.user_id
+		    join team t on t.team_id = a.team_id
+		    where a.user_id = #{userId} and a.status = '대기'
+		    order by a.applied_at
+		<if test="sport != null and sport != ''">
+			AND t.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+		</select>
+	
 </mapper>

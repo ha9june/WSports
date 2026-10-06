@@ -25,28 +25,29 @@
   <!-- 상단 탭 버튼 영역 -->
   <div class="seg" style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 12px; width: max-content; padding-left: 0 !important; margin-left: 0 !important;">
     <a class="seg-item ${state ne 'applications' ? 'is-active' : ''}" href="?state=joined" style="margin: 0 !important;">가입한 팀</a>
+    
+    
     <a class="seg-item ${state eq 'applications' ? 'is-active' : ''}" href="?state=applications" style="margin: 0 !important;">가입 신청</a>
+  
   </div>
 
   <c:choose>
     <c:when test="${state eq 'applications'}">
       <h2 class="sub-title" style="font-size:14px;margin-bottom:14px">가입 신청 현황</h2>
-      <div class="myteam-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+      <!-- <div class="myteam-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;"> -->
         <div class="myteam-card" style="display: flex; align-items: center; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px;">
           <img src="${ctx}/img/team-badminton.png" alt="" style="width: 50px; height: 50px; margin-right: 16px;">
           <div class="main" style="flex: 1;">
-            <strong style="display: block; font-size: 16px; margin-bottom: 4px;">한강 배드민턴 클럽</strong>
-            <p class="meta" style="font-size: 13px; color: #666; margin-bottom: 6px;">배드민턴 · 가입 신청</p>
+          
+          <c:forEach var = "m" items="${match}">
+            <strong style="display: block; font-size: 16px; margin-bottom: 4px;">${m.descriptions}</strong>
+            <p class="meta" style="font-size: 13px; color: #666; margin-bottom: 6px;">${m.team}</p>
             <p class="sub" style="display: flex; gap: 12px; margin: 0; font-size: 12px; color: #888;">
-              <span style="display: inline-flex; align-items: center; gap: 4px;"><img src="${ctx}/img/icon-user-12.svg" alt="" style="width: 12px; height: 12px;">신청일</span>
-              <span style="display: inline-flex; align-items: center; gap: 4px;"><img src="${ctx}/img/icon-pin-12.svg" alt="" style="width: 12px; height: 12px;">9/11</span>
+              <span style="display: inline-flex; align-items: center; gap: 4px;"><img src="${ctx}/img/icon-user-12.svg" alt="" style="width: 12px; height: 12px;">${m.appliedAt}</span>
             </p>
-          </div>
-          <div class="aside" style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-            <span class="t-11 t-2">승인 대기</span>
-            <button type="button" class="btn btn-outline btn-xs" data-modal-open="cancelApplyModal">신청 취소</button>
-          </div>
+            </c:forEach>
         </div>
+        
       </div>
     </c:when>
     

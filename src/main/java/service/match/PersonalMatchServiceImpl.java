@@ -169,7 +169,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		pageInfo.setEndPage(endPage);
 
 		param.put("offset", (pageInfo.getCurPage() - 1) * size);
-		param.put("size", 10);
+		param.put("size", size);
 
 		return favoriteDao.selectMyPageFavoriteList(param);
 	}

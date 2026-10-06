@@ -22,6 +22,18 @@ public class TeamApplication {
     private String badmintonSkill;           // 배드민턴 실력
     private String skill;
 
+    
+    private String team;
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+    }
+    
+    
+    
 	public TeamApplication() {
 		super();
 		// TODO Auto-generated constructor stub

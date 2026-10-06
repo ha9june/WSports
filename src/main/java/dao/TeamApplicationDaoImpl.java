@@ -17,7 +17,7 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 		try {
 			sqlSession.insert("mapper.teamapplication.insertTeamApplication", teamApplication);
 			sqlSession.commit();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			sqlSession.rollback();
 			e.printStackTrace();
 			throw e;
@@ -31,19 +31,19 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 		Map<String, Object> param = new HashMap<>();
 		param.put("teamId", teamId);
 		param.put("userId", userId);
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teamapplication.selectTeamApplication", param);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public TeamApplication selectTeamApplicationByApplicationId(Long applicationId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teamapplication.selectTeamApplicationByApplicationId", applicationId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
@@ -51,9 +51,9 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 
 	@Override
 	public List<dto.TeamApplication> selectTeamApplicationList(Long teamId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.teamapplication.selectTeamApplicationList", teamId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
@@ -69,7 +69,7 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 			int cnt = sqlSession.update("mapper.teamapplication.updateTeamApplicationApprove", param);
 			sqlSession.commit();
 			return cnt;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			sqlSession.rollback();
 			e.printStackTrace();
 			throw e;
@@ -89,7 +89,7 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 			int cnt = sqlSession.update("mapper.teamapplication.updateTeamApplicationReject", param);
 			sqlSession.commit();
 			return cnt;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			sqlSession.rollback();
 			e.printStackTrace();
 			throw e;
@@ -98,4 +98,21 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 		}
 	}
 
+	@Override
+	public Integer selectMypageMyTeamCnt(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teamapplication.selectMypageMyTeamCnt", param);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	@Override
+	public List<TeamApplication> selectMypageMyTeamList(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teamapplication.selectMypageMyTeamList", param);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 }
