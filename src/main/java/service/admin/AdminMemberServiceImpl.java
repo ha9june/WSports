@@ -67,5 +67,14 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		userpenaltyDao.insertUserPermanentPenalty(param);
 		
 	}
+	//회원 벌점 조정
+	@Override
+	public void AdminChangeUserPenalty(Long userId, int change, String reason) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("change", change);
+		param.put("reason", reason);
+		userpenaltyDao.insertUserPenalty(param);
+	}
 
 }

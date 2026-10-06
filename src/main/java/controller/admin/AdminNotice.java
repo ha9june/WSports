@@ -11,20 +11,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.PageInfo;
-import service.admin.AdminInquiryService;
-import service.admin.AdminInquiryServiceImpl;
+import dto.User;
+import service.admin.AdminNoticeService;
+import service.admin.AdminNoticeServiceImpl;
 
 /**
- * Servlet implementation class AdminInquiry
+ * Servlet implementation class AdminNotice
  */
-@WebServlet("/admin/inquiry")
-public class AdminInquiry extends HttpServlet {
+@WebServlet("/admin/notice")
+public class AdminNotice extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AdminInquiry() {
+    public AdminNotice() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,8 +34,7 @@ public class AdminInquiry extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		AdminInquiryService service = new AdminInquiryServiceImpl();
-		
+		AdminNoticeService service = new AdminNoticeServiceImpl();
 		try {
 			// 주소의 ?page= 값 받기 (없으면 1페이지)
 			String pageParam = request.getParameter("page");
@@ -49,15 +49,37 @@ public class AdminInquiry extends HttpServlet {
 			keyword = keyword.trim(); // 앞뒤 공백 제거
 						
 			PageInfo pageInfo = new PageInfo(page);
-			List<Map<String, Object>> inquirylist = service.getAdminInquiryList(pageInfo, status);
+			List<Map<String, Object>> noticelist = service.getAdminNoticeList(pageInfo, status);
 			
-			request.setAttribute("inquirylist", inquirylist); // 문의 목록
+			request.setAttribute("noticelist", noticelist); // 문의 목록
+			System.out.println(noticelist+": 서블릿");
 			request.setAttribute("pageInfo", pageInfo);     // 페이지 정보
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "정산관리 목록 조회 오류");
 		}
-		request.getRequestDispatcher("/jsp/admin/adminInquiry.jsp").forward(request, response);
+		request.getRequestDispatcher("/jsp/admin/adminNotice.jsp").forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		AdminNoticeService service = new AdminNoticeServiceImpl();
+		try {
+			String action = request.getParameter("action");
+			Long noticeId = Long.parseLong(request.getParameter("noticeId"));
+
+			if ("delete".equals(action)) {
+				service.AdminNoticeDelete(noticeId);   // 삭제
+			} else {
+				service.AdminNoticePin(noticeId);      // 핀 고정/해제
+			}
+			response.getWriter().print("true");
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.getWriter().print("false");
+		}
 	}
 
 }

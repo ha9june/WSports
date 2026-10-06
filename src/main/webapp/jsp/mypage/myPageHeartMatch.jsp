@@ -5,12 +5,9 @@
 <%@ page isELIgnored="false"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-<script
-	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ko.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ko.js"></script>
 <%--
   관심경기 (myPageHeartMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Saved Matches / Desktop
@@ -74,7 +71,7 @@
 .cal .flatpickr-day.inRange:nth-child(7n) { border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
 
 
-/* 🔥 [핵심 수정] 경기 있는 날: 선택 여부 상관없이 365일 항상 표시 */
+/* 경기 있는 날: 선택 여부 상관없이 365일 항상 표시 */
 .cal .flatpickr-day.has-match { 
   font-weight: 700 !important; 
   color: #1a6bff !important; /* 평소에도 무조건 글자를 파란색으로 */
