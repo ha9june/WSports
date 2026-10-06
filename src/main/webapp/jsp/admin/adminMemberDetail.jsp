@@ -169,7 +169,7 @@ $(function(){
 	$("#applyScore").click(function(e){
 		e.preventDefault();
 		
-		let userId = '${userinfo.user_id}';
+		let userId = '${info.user_id}';
 		let type = $("#scoreModal .chip.is-selected").text().trim();
 		let score = $("#score").val();
 		let reason = $('#scorereason').val();
@@ -184,7 +184,7 @@ $(function(){
 		}
 		let change = (type === '차감') ? -Number(score) : Number(score);
 		$.ajax({
-			url:'${ctx}/admin/user/detail',
+			url:'${ctx}/admin/member/detail',
 			type:'post',
 			dataType:'text',
 			data:{
@@ -206,8 +206,6 @@ $(function(){
 			}
 		});
 	});
-	
-
 		
 	// 영구 정지
 	$("#applyPermanent").click(function(e){
