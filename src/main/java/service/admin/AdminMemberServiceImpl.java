@@ -74,7 +74,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		param.put("userId", userId);
 		param.put("change", change);
 		param.put("reason", reason);
-		userpenaltyDao.insertUserPenalty(param);
+		userpenaltyDao.insertChangeUserPenalty(param);
 	}
 
 }
