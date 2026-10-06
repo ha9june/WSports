@@ -131,4 +131,24 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 	        return sqlSession.selectOne("mapper.teamapplication.selectMypageJoinedTeamCnt", param);
 	    }
 	}
+
+	@Override
+	public int updateMypageMyTeam(Long userId, Long applicationId, String status) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("applicationId", applicationId);
+		param.put("status", status);
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teamapplication.updateMypageMyTeam", param);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
 }

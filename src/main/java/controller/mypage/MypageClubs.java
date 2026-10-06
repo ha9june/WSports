@@ -1,6 +1,7 @@
 package controller.mypage;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -91,8 +92,25 @@ public class MypageClubs extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+		 response.setContentType("text/plain; charset=UTF-8");
+		    PrintWriter out = response.getWriter();
 
+		    HttpSession session = request.getSession(false);
+		    User user = (session == null) ? null : (User) session.getAttribute("user");
+		    if (user == null) {
+		        out.print("login");
+		        return;
+		    }
+		    long userId = user.getUserId();
+
+		    TeamApplicationService service = new TeamApplicationServiceImpl();
+		    try {
+		        Long applicationId = Long.parseLong(request.getParameter("applicationId"));
+		        service.cancelTeamApplication(userId, applicationId);
+		        out.print("ok"); // jsp한테 ok 보냄
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        out.print("fail"); //jsp한테 fail 보냄
+		    }
+    }
 }

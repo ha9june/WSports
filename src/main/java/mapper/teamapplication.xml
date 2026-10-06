@@ -72,7 +72,7 @@
 		and team_id = #{teamId}
 		and status = '대기'
 	</update>
-	<select id="selectMypageMyTeamList" parameterType="map"
+	<select id="selectMypageMyTeamList" parameterType="Map"
 		resultType="Map">
 		SELECT a.application_id AS applicationId,
 		a.team_id AS teamId,
@@ -97,7 +97,7 @@
 		OFFSET
 		#{offset}
 	</select>
-	<select id="selectMypageMyTeamCnt" parameterType="map"
+	<select id="selectMypageMyTeamCnt" parameterType="Map"
 		resultType="int">
 		select count(*)
 		from team_application a
@@ -110,8 +110,8 @@
 			AND a.status = #{status}
 		</if>
 	</select>
-	<select id="selectMypageJoinedTeamList" parameterType="map"
-		resultType="map">
+	<select id="selectMypageJoinedTeamList" parameterType="Map"
+		resultType="Map">
 		SELECT a.application_id AS applicationId,
 		a.team_id AS teamId,
 		a.status,
@@ -136,7 +136,7 @@
 		#{offset}
 	</select>
 
-	<select id="selectMypageJoinedTeamCnt" parameterType="map"
+	<select id="selectMypageJoinedTeamCnt" parameterType="Map"
 		resultType="int">
 		select count(*)
 		from team_application a
@@ -149,5 +149,12 @@
 			AND a.status = #{status}
 		</if>
 	</select>
+	<update id="updateMypageMyTeam">
+	update team_application
+	set status = #{status}
+	where application_id = #{applicationId}
+	and user_id=#{userId}
+	and status = '승인 대기'
+	</update>
 
 </mapper>

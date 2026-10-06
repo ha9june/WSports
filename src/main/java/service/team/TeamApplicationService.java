@@ -16,6 +16,7 @@ public interface TeamApplicationService {
 	void approve(Long teamId, Long applicationId) throws Exception;
 	void reject(Long teamId, Long applicationId, String reason) throws Exception;
 	
+	void cancelTeamApplication(Long userId,Long applicationId)throws Exception;
 	List<Map<String, Object>> MypageMyTeamList(PageInfo pageInfo, Long userId, String status, String sport) throws Exception;
 	List<Map<String, Object>> MypageJoinedTeamList(PageInfo pageInfo, Long userId, String status, String sport) throws Exception;
 }

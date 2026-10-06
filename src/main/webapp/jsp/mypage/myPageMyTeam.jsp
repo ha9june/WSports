@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/jsp/common/init.jsp"%>
 <%--
@@ -98,7 +99,7 @@
 								style="font-size: 13px; color: #666; margin-bottom: 6px;">${m.sport}
 								· ${m.region}</p>
 							<p class="sub" style="margin: 0; font-size: 12px; color: #888;">가입일
-								${m.joinedAt}</p>
+								${m.appliedAt}</p>
 						</div>
 
 						<div class="aside"
@@ -160,6 +161,16 @@
 <script>
 	$(function() {
 		var targetId = null;
+		// 드롭다운 토글
+		$('[data-dropdown-toggle]').on('click', function(e) {
+		    e.stopPropagation();
+		    var $dd = $(this).closest('.dropdown');
+		    $('.dropdown').not($dd).removeClass('is-open');
+		    $dd.toggleClass('is-open');
+		});
+		$(document).on('click', function() {
+		    $('.dropdown').removeClass('is-open');
+		});
 
 		// 신청 취소
 		$('.btn-cancel').on('click', function(e) {
@@ -168,7 +179,7 @@
 			$('#cancelApplyModal').addClass('is-open');
 		});
 		$('#confirmCancel').on('click', function() {
-			$.post('${ctx}/mypage/clubs/cancel', {
+			$.post('${ctx}/mypage/clubs', {
 				applicationId : targetId
 			}, function(res) {
 				res = res.trim();
@@ -185,10 +196,10 @@
 
 		// 팀 탈퇴
 		$('.btn-leave').on('click', function(e) {
-			e.stopPropagation();
+			 e.stopPropagation(); 
 			targetId = $(this).data('team-id');
 			$('#leaveModal').addClass('is-open');
-		});
+		}); 
 		$('#confirmLeave').on('click', function() {
 			$.post('${ctx}/mypage/clubs/leave', {
 				teamId : targetId
@@ -203,11 +214,6 @@
 					showToast('탈퇴할 수 없어요. 팀장은 탈퇴할 수 없습니다.');
 				}
 			});
-		});
-
-		// 드롭다운 메뉴 클릭이 카드 이동으로 번지지 않게
-		$('.dropdown').on('click', function(e) {
-			e.stopPropagation();
 		});
 	});
 </script>
