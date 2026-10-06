@@ -15,4 +15,6 @@ public interface UserPenaltyDao {
 	
 	//관리자 영구 정지
 	void insertUserPermanentPenalty(Map<String, Object> param) throws Exception;
+	//관리자 페널티 점수 부여
+	void insertChangeUserPenalty(Map<String, Object> param) throws Exception;
 }

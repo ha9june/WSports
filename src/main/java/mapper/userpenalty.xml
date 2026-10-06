@@ -96,4 +96,12 @@
 		values
 		(#{userId}, now(), #{score}, #{reason}, now(), null, 1)
 	</insert>
+	
+	<!-- 회원 패널티 점수 조정 기록 -->
+	<insert id="insertChangeUserPenalty" parameterType="map">
+		insert into user_penalty
+		(user_id, received_at, score, reason, permanent_suspension)
+		values
+		(#{userId}, now(), #{score}, #{reason}, 0)
+	</insert>
 </mapper>

@@ -2,5 +2,64 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.notice">
-
+	<!-- 관리자 공지관리 개수 / 핀 기준 필터 -->
+	<select id="selectAdminNoticeCnt" parameterType="map" resultType="int">
+		select count(*)
+		from notice
+		where (deleted = 0 or deleted is null)
+		and (
+			#{status} = 'ALL' 
+			or (#{status} = 'PIN' and is_pinned = 1)
+			or (#{status} = 'NOPIN' and is_pinned = 0)
+			)
+	</select>
+	<!-- 관리자 공지관리 리스트 10개씩 -->
+	<select id="selectAdminNoticeList" parameterType="map" resultType="map">
+		select n.notice_id, n.title, n.created_at, n.is_pinned, n.type, 
+				n.admin_id, n.updated_at, u.nickname 
+		from notice n
+		left join user u on u.user_id = n.admin_id
+		where (deleted = 0 or deleted is null)
+		and (
+			#{status} = 'ALL'
+			or (#{status} = 'PIN' and is_pinned = 1)
+			or (#{status} = 'NOPIN' and is_pinned = 0)
+		)
+		order by notice_id desc
+		limit #{row}, 10
+	</select>
+	<!-- 특정 공지 상세 정보 -->
+	<select id="selectAdminNoticeDetail" resultType="map">
+		select notice_id, title, content, created_at, is_pinned, admin_id, type, updated_at
+		from notice
+		where notice_id = #{noticeId}
+	</select>
+	<!-- 공지 수정 -->
+	<update id="updateAdminNotice" parameterType="map">
+		update notice
+		set title = #{title},
+			type = #{type},
+			content = #{content},
+			updated_at = now()
+		where notice_id = #{noticeId}			
+	</update>
+	<!-- 공지 핀 고정 / 해제 -->
+	<update id="updateAdminNoticePin">
+		update notice
+		set is_pinned = 1 - is_pinned
+		where notice_id = #{noticeId}
+	</update>
+	<!-- 논리 삭제 -->
+	<update id="updateAdminNoticeDelete">
+		update notice
+		set deleted = 1, updated_at = now()
+		where notice_id = #{noticeId}
+	</update>
+	<!-- 공지 작성 -->
+	<insert id="insertAdminNotice" parameterType="map">
+		insert into 
+		notice(title, content, created_at, is_pinned, admin_id, type, deleted, updated_at)
+		values
+		(#{title},#{content},now(), #{isPinned},#{adminId},#{type},0,null)
+	</insert>
 </mapper>

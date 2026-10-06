@@ -80,4 +80,26 @@ public class UserPenaltyDaoImpl implements UserPenaltyDao {
 		}
 	}
 
+	@Override
+	public void insertChangeUserPenalty(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			try {
+				// 현재 점수 (기록 없으면 0) - 기존 쿼리 재사용
+				Map<String, Object> latest = sqlSession.selectOne("mapper.userpenalty.selectLatestScore", param.get("userId"));
+				int current = latest == null ? 0 : ((Number) latest.get("score")).intValue();
+
+				// 조정 후 점수 (0 아래로는 안 내려가게)
+				int change = (int) param.get("change");
+				param.put("score", Math.max(0, current + change));
+
+				sqlSession.insert("mapper.userpenalty.insertChangeUserPenalty", param);
+				sqlSession.commit();
+			} catch (Exception e) {
+				sqlSession.rollback();
+				throw e;
+			}
+		}
+		
+	}
+
 }
