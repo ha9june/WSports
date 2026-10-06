@@ -52,7 +52,6 @@ public class AdminNotice extends HttpServlet {
 			List<Map<String, Object>> noticelist = service.getAdminNoticeList(pageInfo, status);
 			
 			request.setAttribute("noticelist", noticelist); // 문의 목록
-			System.out.println(noticelist+": 서블릿");
 			request.setAttribute("pageInfo", pageInfo);     // 페이지 정보
 		} catch (Exception e) {
 			e.printStackTrace();
