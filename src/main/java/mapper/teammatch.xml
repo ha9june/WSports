@@ -2,9 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teammatch">
-	<select id="selectTeamMatchList" parameterType="Long" resultType="teammatch">
-		select * 
+	<select id="selectTeamMatchList" parameterType="Long"
+		resultType="teammatch">
+		select *
 		from team_match
 		where team_id = #{teamId}
 	</select>
+	<select id="selectMypageTeamMatchList" parameterType="map"
+		resultType="TeamMatch">
+		select m.*, p.status AS participantStatus,
+		CASE WHEN f.favorite_id IS 
+		NULL THEN 0 ELSE 1 END AS favorite
+		from team_match_participant p
+		join team_match m 
+		on m.team_match_id = p.team_match_id
+		LEFT JOIN favorite f
+		on f.match_id = m.team_match_id
+		AND f.user_id = #{userId}
+		AND f.match_type = 'Team'
+		WHERE p.user_id = #{userId}
+		AND p.status IN ('결제완료')
+		<if test="sport != null and sport != ''">
+			AND m.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
+		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
+		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
+		ORDER BY m.match_date, m.team_match_id
+		LIMIT #{size} OFFSET
+		#{offset}
+	</select>
+	<select id="selectMypageTeamMatchCnt" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM team_match_participant p
+		JOIN team_match m ON m.team_match_id = p.team_match_id
+		WHERE p.user_id = #{userId}
+		AND p.status IN ('결제완료')
+		<if test="month != null and month != ''">
+			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month},
+			'-01'), '%Y-%m-%d')
+			AND m.match_date &lt;
+			DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'),
+			'%Y-%m-%d'), INTERVAL 1
+			MONTH)
+		</if>
+		<if test="sport != null and sport != ''">
+			AND m.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
+	</select>
+	<select id="selectMyPageTeamMatchDates" parameterType="map"
+		resultType="string">
+		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
+		FROM team_match_participant p
+		JOIN team_match m
+		ON m.team_match_id = p.team_match_id
+		WHERE p.user_id = #{userId}
+		AND p.status IN ('결제완료')
+		<if test="sport != null and sport != ''">
+			AND m.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
+
+	</select>
+
+
 </mapper>
