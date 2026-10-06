@@ -112,11 +112,32 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 			alarm.setUserId(teamApplication.getUserId());
 			alarm.setTitle("가입 신청 승인");
 			alarm.setContent("'"+team.getTeamName()+"'에 가입 신청이 승인되었어요.");
-			alarm.setLink("/team/detail/view?teamId=" + teamId);
+			alarm.setLink("/team/detail/view?teamId=" + teamId); //마이페이지 팀 부분으로?
 			notificationService.sendNotification(alarm);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void reject(Long teamId, Long applicationId, String reason) throws Exception {
+		TeamApplication teamApplication = getApplicationByApplicationId(applicationId);
+
+		//지원디비 업데이트
+		teamApplicationDao.updateTeamApplicationReject(teamId, applicationId, reason);
+		
+		Team team = teamDao.selectTeam(teamId);
+		try {
+			Notification alarm = new Notification();
+			alarm.setUserId(teamApplication.getUserId());
+			alarm.setTitle("'"+team.getTeamName()+"' 가입 신청 거절");
+			alarm.setContent("거절 사유 : " + reason);
+			alarm.setLink("/team/detail/view?teamId=" + teamId); //나중에 마이페이지 팀 부분으로?
+			notificationService.sendNotification(alarm);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

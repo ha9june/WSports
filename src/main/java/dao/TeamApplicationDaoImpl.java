@@ -78,4 +78,24 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 		}
 	}
 
+	@Override
+	public int updateTeamApplicationReject(Long teamId, Long applicationId, String reason) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("teamId", teamId);
+		param.put("applicationId", applicationId);
+		param.put("reason", reason);
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teamapplication.updateTeamApplicationReject", param);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+
 }

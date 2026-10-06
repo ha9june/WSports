@@ -81,7 +81,8 @@
 							data-application-id="${a.applicationId}"
 							data-nickname="<c:out value='${a.nickname}' />">승인</button>
 						<button type="button" class="btn btn-danger btn-sm"
-							data-modal-open="rejectModal">거절</button>
+							data-modal-open="rejectModal"
+							data-application-id="${a.applicationId}">거절</button>
 					</div>
 				</c:forEach>
 			</section>
@@ -106,26 +107,25 @@
 	</div>
 </main>
 
-<div
-	class="modal ${state eq 'reject' or state eq 'rejectFilled' ? 'is-open' : ''}"
-	id="rejectModal" role="dialog" aria-modal="true">
+<div class="modal" id="rejectModal" role="dialog" aria-modal="true">
 	<div class="modal-card">
 		<h2 class="modal-title">가입 신청 거절</h2>
 		<p class="modal-desc">거절 사유를 작성하면 신청자에게 함께 안내됩니다.</p>
-		<div class="field modal-body">
-			<label class="field-label" for="rejectReason">거절 사유</label>
-			<textarea class="textarea soft" id="rejectReason" name="reason"
-				rows="3" data-require-for="rejectBtn"
-				placeholder="예: 현재 모집 인원이 마감되어 이번 신청은 승인하기 어렵습니다.">${state eq 'rejectFilled' ? '현재 모집 인원이 마감되어 이번 신청은 승인하기 어렵습니다.' : ''}</textarea>
-		</div>
-		<div class="modal-actions split">
-			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
-			<button type="button" class="btn btn-danger" id="rejectBtn"
-				data-toast="가입 신청을 거절했어요."
-				${state eq 'rejectFilled' ? '' : 'disabled'}>거절하기</button>
-		</div>
+		<form id="rejectForm" action="${ctx}/team/application/reject" method="post">
+			<input type="hidden" name="teamId" value="${team.teamId}">
+			<input type="hidden" name="applicationId" id="rejectApplicationId">
+			<div class="field modal-body">
+				<label class="field-label" for="rejectReason">거절 사유</label>
+				<textarea class="textarea soft" id="rejectReason" name="reason" rows="3"
+					maxlength="200" data-require-for="rejectBtn"
+					placeholder="예: 현재 모집 인원이 마감되어 이번 신청은 승인하기 어렵습니다."></textarea>
+			</div>
+			<div class="modal-actions split">
+				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+				<button type="submit" class="btn btn-danger" id="rejectBtn" disabled>거절하기</button>
+			</div>
+		</form>
 	</div>
-
 </div>
 <div class="modal" id="approveModal" role="dialog" aria-modal="true">
 	<div class="modal-card sm" style="text-align: center">
@@ -154,6 +154,17 @@
 		$('#approveForm').on('submit', function() {
 			$('#approveBtn').prop('disabled', true).text('승인 중...'); // 중복 클릭 방지
 		});
+	});
+	
+	$(document).on('click', '[data-modal-open="rejectModal"]', function () {
+		$('#rejectApplicationId').val($(this).data('application-id'));
+		$('#rejectReason').val('');          // 이전 입력 초기화
+		$('#rejectBtn').prop('disabled', true);
+	});
+
+	$('#rejectForm').on('submit', function (e) {
+		if (!$.trim($('#rejectReason').val())) { e.preventDefault(); return; }   // 공백만 입력 방지
+		$('#rejectBtn').prop('disabled', true).text('처리 중...');
 	});
 </script>
 <%@ include file="/jsp/common/footer.jsp"%>

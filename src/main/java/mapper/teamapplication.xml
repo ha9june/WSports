@@ -44,4 +44,12 @@
 	      and team_id = #{teamId}
 	      and status = '대기'
 	</update>
+	
+	<update id="updateTeamApplicationReject" parameterType="Map">
+	    update team_application
+	    set status = '거절', processed_at = now(), rejection_reason = #{reason}
+	    where application_id = #{applicationId}
+	      and team_id = #{teamId}
+	      and status = '대기'
+	</update>
 </mapper>

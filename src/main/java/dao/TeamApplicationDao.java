@@ -11,4 +11,5 @@ public interface TeamApplicationDao {
 	TeamApplication selectTeamApplicationByApplicationId(Long applicationId) throws Exception;
 	List<TeamApplication> selectTeamApplicationList(Long teamId) throws Exception;
 	int updateTeamApplicationApprove(Long teamId, Long applicationId) throws Exception;
+	int updateTeamApplicationReject(Long teamId, Long applicationId, String reason) throws Exception;
 }

@@ -11,4 +11,5 @@ public interface TeamApplicationService {
 	TeamApplication getApplicationByApplicationId(Long applicationId) throws Exception;
 	List<TeamApplication> getApplicationList(Long teamId) throws Exception;
 	void approve(Long teamId, Long applicationId) throws Exception;
+	void reject(Long teamId, Long applicationId, String reason) throws Exception;
 }
