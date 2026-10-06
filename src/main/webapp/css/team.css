@@ -106,6 +106,9 @@
 .manage-grid { align-items: start; }
 .status-card { margin-top: 0; }
 
+.apply-row .apply-head { display: flex; align-items: center; gap: 8px; }
+.apply-row .avatar.sm { width: 28px; height: 28px; }
+
 .apply-row { display: flex; gap: 16px; align-items: center; padding: 16px 18px; border: 1px solid var(--ds-border); border-radius: var(--r-8); margin-bottom: 12px; background: #fff; }
 .apply-row .info { flex: 1; }
 .apply-row strong { font-size: 13px; }

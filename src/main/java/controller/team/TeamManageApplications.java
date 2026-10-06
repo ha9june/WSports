@@ -13,6 +13,10 @@ import dto.Team;
 import dto.TeamApplication;
 import service.team.TeamApplicationService;
 import service.team.TeamApplicationServiceImpl;
+import service.team.TeamMatchParticipantService;
+import service.team.TeamMatchParticipantServiceImpl;
+import service.team.TeamPenaltyService;
+import service.team.TeamPenaltyServiceImpl;
 import service.team.TeamService;
 import service.team.TeamServiceImpl;
 
@@ -37,6 +41,8 @@ public class TeamManageApplications extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			TeamService teamService = new TeamServiceImpl();
 			TeamApplicationService teamApplicationService = new TeamApplicationServiceImpl();
+			TeamPenaltyService teamPenaltyService = new TeamPenaltyServiceImpl();
+			TeamMatchParticipantService teamMatchParticipantService = new TeamMatchParticipantServiceImpl();
 		
 		try {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
@@ -46,6 +52,12 @@ public class TeamManageApplications extends HttpServlet {
 			List<TeamApplication> taList = teamApplicationService.getApplicationList(teamId);
 			request.setAttribute("teamApplicationList", taList);
 			request.setAttribute("applicationCnt", taList.size());
+			
+			int teamPenaltyScore = teamPenaltyService.getTeamPenaltyScore(teamId);
+			request.setAttribute("teamPenaltyScore", teamPenaltyScore);
+			
+			int expectedTeamMatchCnt = teamMatchParticipantService.getExpectedTeamMatchCnt(teamId);
+			request.setAttribute("expectedTeamMatchCnt", expectedTeamMatchCnt);
 			
 			request.getRequestDispatcher("/jsp/team/teamManageApplication.jsp").forward(request, response);
 		}catch(Exception e) {

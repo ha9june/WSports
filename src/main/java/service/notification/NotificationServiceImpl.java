@@ -31,9 +31,8 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public void sendNotification(Notification alarm) throws Exception {
 		Long alarmId = notificationDao.insertNotification(alarm);
-		System.out.println(alarmId);
+
 		Notification alarmFromDb = notificationDao.selectNotification(alarmId);
-		System.out.println(alarmFromDb);
 		
 		String fcmUrl = "https://fcm.googleapis.com/v1/projects/wsports-d9450/messages:send";
 		URL url = new URL(fcmUrl);

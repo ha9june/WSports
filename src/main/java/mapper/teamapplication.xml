@@ -7,12 +7,18 @@
 		(user_id, team_id, message, status, applied_at) values (#{userId}, #{teamId}, #{message}, '대기', now())
 	</insert>
 	
-	<select id="selectTeamApplication" parameterType="teamapplication" resultType="teamapplication">
+	<select id="selectTeamApplication" parameterType="Map" resultType="teamapplication">
 		select * 
 		from team_application 
 		where user_id = #{userId} and team_id = #{teamId} and status = '대기'
 		order by applied_at desc
     	limit 1
+	</select>
+	
+	<select id="selectTeamApplicationByApplicationId" parameterType="Long" resultType="teamapplication">
+		select * 
+		from team_application 
+		where application_id = #{applicationId}
 	</select>
 	
 	<select id="selectTeamApplicationList" parameterType="Long" resultType="teamapplication">
@@ -30,4 +36,20 @@
 		    where a.team_id = #{teamId} and a.status = '대기'
 		    order by a.applied_at
 	</select>
+	
+	<update id="updateTeamApplicationApprove" parameterType="Map">
+	    update team_application
+	    set status = '승인', processed_at = now()
+	    where application_id = #{applicationId}
+	      and team_id = #{teamId}
+	      and status = '대기'
+	</update>
+	
+	<update id="updateTeamApplicationReject" parameterType="Map">
+	    update team_application
+	    set status = '거절', processed_at = now(), rejection_reason = #{reason}
+	    where application_id = #{applicationId}
+	      and team_id = #{teamId}
+	      and status = '대기'
+	</update>
 </mapper>

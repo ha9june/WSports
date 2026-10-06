@@ -136,4 +136,10 @@
 		values
 		(#{teamId}, now(), #{score}, #{reason}, now(), null, 1)
 	</insert>
+	
+	<select id="selectsTeamPenaltyScore" parameterType="Long" resultType="int">
+		select coalesce(sum(score), 0)
+		from team_penalty
+		where team_id=#{teamId} 
+	</select>
 </mapper>

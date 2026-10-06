@@ -26,4 +26,6 @@ public interface TeamPenaltyDao {
 	void insertTeamChangePenalty(Map<String, Object> param) throws Exception;
 	//관리자 영구 정지
 	void insertTeamPermanentPenalty(Map<String, Object> param) throws Exception;
+	//팀 패널티 점수 구하기
+	int selectsTeamPenaltyScore(Long teamId) throws Exception;
 }
