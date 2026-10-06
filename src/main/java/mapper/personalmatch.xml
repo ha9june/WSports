@@ -383,7 +383,7 @@
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
 		FROM personal_match_participant p
 		JOIN personal_match m
-		ONm.personal_match_id = p.personal_match_id
+		ON m.personal_match_id = p.personal_match_id
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료')
 		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>

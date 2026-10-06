@@ -30,11 +30,9 @@
 		resultType="personalmatch">
 		SELECT m.*
 		FROM favorite f
-		JOIN personal_match m ON m.personal_match_id
-		= f.match_id
+		JOIN personal_match m ON m.personal_match_id = f.match_id
 		WHERE f.user_id = #{userId}
 		AND f.match_type = 'Personal'
-		AND m.deleted = '0'
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -59,14 +57,13 @@
 		JOIN personal_match m ON
 		m.personal_match_id = f.match_id
 		WHERE f.user_id = #{userId}
-		AND
-		f.match_type = 'Personal'
-		AND m.deleted = '0'
+		AND f.match_type = 'Personal'
 		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
 		<if test="status != null and status != ''"> AND m.status = #{status} </if>
 		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 	</select>
+	
 	<select id="selectMyPageFavoriteDates" parameterType="map"
 		resultType="string">
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
@@ -75,7 +72,6 @@
 		WHERE
 		f.user_id = #{userId}
 		AND f.match_type = 'Personal'
-		AND m.deleted = '0'
 		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
 		<if test="status != null and status != ''"> AND m.status = #{status} </if>
 	</select>

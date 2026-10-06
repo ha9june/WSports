@@ -109,7 +109,6 @@ public class MypageMatchesSaved extends HttpServlet {
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 
 		if (matchType == null || matchType.isEmpty()) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().write("error");
 			return;
 		}

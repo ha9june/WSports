@@ -6,6 +6,9 @@
 <%@ page import="java.time.YearMonth, java.time.LocalDate"%>
 <link href="https://jsdelivr.net" rel="stylesheet" />
 <script src="https://jsdelivr.net"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 <%--
   참가 경기 (myPagePersonalMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Participating Matches / Desktop
