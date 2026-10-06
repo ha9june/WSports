@@ -207,35 +207,26 @@
 		});
 		
 		//일반검색 버튼
-		//지도기반검색 버튼
 		$("#normalBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
-		  	$("#normalInputs").removeClass("is-hidden");
-			$("#normalDiv").show();
-		  	$("#mapInputs").addClass("is-hidden");
-			$("#mapDiv").hide();
+			$(".normalDivGroup").removeClass("is-hidden");
+		  	$(".mapDivGroup").addClass("is-hidden");
 			page=1;
 			NormalList(page, this);
-
 		});
 		$("#mapBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
-			
-		  	$("#normalInputs").addClass("is-hidden");
-			$("#normalDiv").hide();
-		  	$("#mapInputs").removeClass("is-hidden");
-			$("#mapDiv").show();
+			$(".normalDivGroup").addClass("is-hidden");
+		  	$(".mapDivGroup").removeClass("is-hidden");
 			map.relayout();
 			searchMatch(); 
 
 		});
 		$("#moreBtn").on("click", function(e) {
 			NormalList(++page,this);
-		});
-		
-		
+		})//전송 이벤트	//전송 이벤트
 	    $('#matchSearchForm').on('submit', function(e) {
 	        e.preventDefault();
 	        if ($("#mapInputs").hasClass("is-hidden")) {
@@ -323,12 +314,8 @@
         </div>
 
 
-
-
 		<div class="input-row">
-		
-		
-		  <div id="normalInputs" style="display:contents">
+		  <div id="normalInputs" class="normalDivGroup" style="display:contents">
 		    <select class="select" id="sido" name="sido" style="width: 140px"
 				aria-label="시·도">
 				<option value="">시 · 도</option>
@@ -350,11 +337,8 @@
  		  
 		  
 		  
-		  
-		  <div id="mapInputs" class="is-hidden" style="display:contents">
-		  
+		  <div id="mapInputs" class="mapDivGroup is-hidden" style="display:contents">
 	          <div class="map-query">
-	          	<!-- <span class="token-chip">📍 마포구 망원동 <button type="button" aria-label="지역 삭제">✕</button></span> -->
 	            <input id="keyword" type="text" name="keyword" placeholder="지역을 검색해 주세요" aria-label="키워드" data-value="서울시청">
 			  </div>
 		  </div>
@@ -362,71 +346,18 @@
 		  
 		  <button type="submit" class="btn btn-primary btn-lg">검색</button>
 		</div>
-		<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
-	    <div class="picked" id="pickedRegions"></div>
-	    <div id="regionInputs"></div>
-		
-
-        <%-- <div class="input-row">
-          <c:choose>
-          
-
-            <c:when test="${isMap}">
-              <div class="map-query ${state eq 'mapTyping' ? 'is-focus' : ''}">
-                <span class="t-3">⌕</span>
-                
-                
-                <c:choose>
-                  <c:when test="${state eq 'mapTyping'}">
-                    <input type="text" name="keyword" value="망원" autofocus aria-label="지역 또는 경기명">
-                  </c:when>
-                  <c:otherwise>
-                    <span class="token-chip">📍 마포구 망원동 <button type="button" aria-label="지역 삭제">✕</button></span>
-                    <input type="text" name="keyword" placeholder="경기명·팀명도 검색할 수 있어요" aria-label="키워드">
-                  </c:otherwise>
-                </c:choose>
-                
-                
-                
-                
-                <div class="search-dropdown" ${state eq 'mapTyping' ? '' : 'hidden'}>
-                  <p class="grp-title">지역 · 장소 — 선택하면 지도가 이동해요</p>
-                  <a href="?state=map" class="is-hover"><span class="ic">📍</span><span><b>망원</b> 동</span></a>
-                  <a href="?state=map"><span class="ic">📍</span><span><b>망원</b> 한강공원</span></a>
-                  <a href="?state=map"><span class="ic">📍</span><span><b>망원</b> 시장</span></a>
-                  <hr>
-                  <p class="grp-title">경기 — 현재 지도 영역에서 찾아요</p>
-                  <a href="${ctx}/jsp/match/personalMatchDetail.jsp"><span class="ic" style="background:var(--ds-bg-muted)">⌕</span>토요일 저녁 풋살 한 판!</a>
-                  <a href="?state=map" class="all">'망원'이 들어간 경기 모두 보기</a>
-                </div>
-              </div>
-              <select class="select date" name="period" aria-label="기간"><option>기간 선택</option><option>오늘</option><option>이번 주</option><option>이번 달</option></select>
-            
-            </c:when>
-            
-            <c:otherwise>
-              <select class="select" name="region" aria-label="지역"><option value="">지역 검색</option><option>서울 마포구</option><option>서울 성동구</option><option>서울 송파구</option></select>
-              <select class="select date" name="period" aria-label="기간"><option value="">기간 선택</option><option>오늘</option><option>이번 주</option><option>이번 달</option></select>
-              <input class="input keyword" type="text" name="keyword" placeholder="키워드 검색" aria-label="키워드">
-            </c:otherwise>
-            
-            
-          </c:choose>
-          
-          
-          
-          
-          
-          
-          <button type="submit" class="btn btn-primary btn-lg">검색</button>
-        </div> --%>
+		<div class="normalDivGroup">
+			<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
+		    <div class="picked" id="pickedRegions"></div>
+		    <div id="regionInputs"></div>
+		</div>
       </form>
     </section>
 
 
 
 	      <%-- ===== 일반 검색 결과 : 경기 리스트 ===== --%>
-	      <div id="normalDiv" class="normalDiv">
+	      <div id="normalDiv" class="normalDivGroup" style="display:contents">
 	        <section class="list-head">
 	          <h2 class="section-title">경기 리스트</h2>
 	          <p class="section-desc">검색 조건에 맞는 경기를 한 줄씩 빠르게 비교해보세요.</p>
@@ -442,10 +373,7 @@
 
 
 
-
-
-
-      	<div id="mapDiv" class="mapDiv" style="display: none;">
+      	<div id="mapDiv" class="mapDivGroup is-hidden" style="display:contents">
 	        <section class="list-head">
 	          <h2 class="section-title">지도 기반 경기 찾기</h2>
 	          <p class="section-desc">검색한 지역 주변 경기를 지도에서 확인하세요.</p>
@@ -453,42 +381,16 @@
 	        
 	        
 	        <div class="map-result">
-	          <%-- TODO: 카카오/네이버 지도 API 로 교체 (핀 좌표는 경기 장소의 위경도) --%>
-	          <%-- <div class="map-canvas" id="map">
-	            <a href="#" class="pin ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1" style="left:16%;top:26%"><span>풋살 · 1.2km</span></a>
-	            <a href="#" class="pin" data-pin="m2" style="left:68%;top:22%"><span>테니스 · 2.4km</span></a>
-	            <a href="#" class="pin ${state eq 'mapPin' ? 'is-active' : ''}" data-pin="m3" style="left:54%;top:55%"><span>농구 · 3.1km</span></a>
-	            <a href="#" class="pin" data-pin="m4" style="left:37%;top:78%"><span>배드민턴 · 4.0km</span></a>
-	            <c:if test="${state eq 'mapPin'}">
-	              <div class="map-popup" style="left:39%;top:9%">
-	                <span class="sport-tag basketball">농구</span>
-	                <strong>주말 실내 농구 같이 하실 분</strong>
-	                <p>9/20 14:00 · 성동구 · 3.1km</p>
-	                <p class="price">8,000원</p>
-	                <a class="btn btn-primary btn-sm btn-block" href="${ctx}/jsp/match/personalMatchDetail.jsp">경기 자세히 보기</a>
-	              </div>
-	            </c:if>
-	            <button type="button" class="ctrl" style="bottom:60px" aria-label="현재 위치">⌖</button>
-	            <button type="button" class="ctrl" style="bottom:16px" aria-label="확대">+</button>
-	          </div> --%>
-	          
    	          <div class="map-canvas" id="map">
-   
    	          </div>
-
 	          <div id="mapMatchListDiv" class="map-list" style="max-height:420px;overflow-y: auto;">
 	           </div>
-
 	        </div>
-
-	        
 		</div>
-
-
   </div>
 </main>
 
-<a class="fab" href="${ctx}/match/create" data-auth>
+<a class="fab" href="${ctx}/match/write/form" data-auth>
   <span class="fab-label">경기 만들기</span><span class="fab-btn" aria-hidden="true"></span>
 </a>
 
@@ -520,11 +422,10 @@
 	        alert('키워드를 입력해주세요!');
 	        return false;
 	    }
-
 	    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
 	    ps.keywordSearch( keyword, placesSearchCB); 
 	}
-	
+	//콜백함수
 	function placesSearchCB(data, status, pagination) {
 	    if (status === kakao.maps.services.Status.OK) {
 	        movePlace(data);
@@ -544,8 +445,7 @@
 	    
 	}
 	
-	
-	
+
 
 	function createMarker(item) {
     	 
@@ -681,135 +581,27 @@
 
 
 </script>
+<script src="${ctx}/js/address.js"></script>
+
 <script>
-	  (function () {
-	    var SEOUL = ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구",
-	                 "도봉구","동대문구","동작구","마포구","서대문구","서초구","성동구","성북구","송파구",
-	                 "양천구","영등포구","용산구","은평구","종로구","중구","중랑구"];
-	    var GYEONGGI = [
-	        "고양시", "과천시", "광명시", "광주시", "구리시",
-	        "군포시", "김포시", "남양주시", "동두천시", "부천시",
-	        "성남시", "수원시", "시흥시", "안산시", "안성시",
-	        "안양시", "양주시", "여주시", "오산시", "용인시",
-	        "의왕시", "의정부시", "이천시", "파주시", "평택시",
-	        "포천시", "하남시", "화성시"
-	    ];
-	    var MAX = 3;
-	
-	    var sido = document.getElementById("sido");
-	    var sigungu = document.getElementById("sigungu");
-	    var picked = document.getElementById("pickedRegions");
-	    var regionInputs = document.getElementById("regionInputs");
-	    var maxMsg = document.getElementById("maxRegion");
-	    var selected = [];
-	
-	    function resetSigungu(list) {
-	      sigungu.innerHTML = "";
-	      var ph = document.createElement("option");
-	      ph.value = "";
-	      ph.textContent = "시군구";
-	      sigungu.appendChild(ph);
-	      list.forEach(function (name) {
-	        var op = document.createElement("option");
-	        op.value = name;
-	        op.textContent = name;
-	        sigungu.appendChild(op);
-	      });
-	      sigungu.disabled = list.length === 0;
-	    }
-	
-	    function render() {
-	      picked.innerHTML = "";
-	      regionInputs.innerHTML = "";
-	      selected.forEach(function (region, index) {
-	        var chip = document.createElement("span");
-	        chip.className = "token-chip";
-	
-	        var label = document.createElement("span");
-	        label.textContent = region;
-	
-	        var del = document.createElement("button");
-	        del.type = "button";
-	        del.className = "deleteRegion";
-	        del.setAttribute("data-index", index);
-	        del.setAttribute("aria-label", region + " 삭제");
-	        del.textContent = "✕";
-	
-	        chip.appendChild(label);
-	        chip.appendChild(del);
-	        picked.appendChild(chip);
-	
-	        var hidden = document.createElement("input");
-	        hidden.type = "hidden";
-	        hidden.name = "regions";
-	        hidden.value = region;
-	        regionInputs.appendChild(hidden);
-	      });
-	    }
-	
-	    sido.addEventListener("change", function () {
-	      if (sido.value === "서울시") resetSigungu(SEOUL);
-	      else if (sido.value === "경기도") resetSigungu(GYEONGGI);
-	      else resetSigungu([]);
-	    });
-	
-	    sigungu.addEventListener("change", function () {
-	      if (!sigungu.value) return;
-	      var region = sido.value + " " + sigungu.value;
-	
-	      if (selected.indexOf(region) !== -1) {      // 중복 선택 방지
-	        sigungu.value = "";
-	        return;
-	      }
-	      if (selected.length >= MAX) {
-	        maxMsg.style.display = "";
-	        sigungu.value = "";
-	        return;
-	      }
-	      selected.push(region);
-	      render();
-	      sigungu.value = "";                          // 같은 지역을 다시 고를 수 있게 초기화
-	    });
-	
-	    picked.addEventListener("click", function (e) {
-	      if (!e.target.classList.contains("deleteRegion")) return;
-	      selected.splice(Number(e.target.getAttribute("data-index")), 1);
-	      render();
-	      maxMsg.style.display = "none";
-	    });
-	
-	    // 필터 초기화 버튼과 같이 지역도 비우기
-	    var resetBtn = document.querySelector("[data-filter-reset]");
-	    if (resetBtn) {
-	      resetBtn.addEventListener("click", function () {
-	        selected = [];
-	        render();
-	        sido.value = "";
-	        resetSigungu([]);
-	        maxMsg.style.display = "none";
-	      });
-	    }
-	  })();
-	</script>
-<script>
-		const periodPicker = document.getElementById('periodPicker');
-		if (periodPicker) {
-			flatpickr(periodPicker, {
-				mode: 'range',                    // 기간 선택
-				locale: 'ko',
-				dateFormat: 'Y-m-d',
-				disableMobile: true,
-				defaultDate: ['${startDate}', '${endDate}'],   // 현재 조회 중인 기간 표시
-				onClose: function (selectedDates, dateStr, instance) {
-					// 시작일, 종료일 둘 다 골랐을 때만 조회
-					if (selectedDates.length === 2) {
-						document.getElementById('startDate').value = instance.formatDate(selectedDates[0], 'Y-m-d');
-						document.getElementById('endDate').value = instance.formatDate(selectedDates[1], 'Y-m-d');
-					}
+	const periodPicker = document.getElementById('periodPicker');
+	if (periodPicker) {
+		flatpickr(periodPicker, {
+			mode: 'range',                    // 기간 선택
+			locale: 'ko',
+			dateFormat: 'Y-m-d',
+			disableMobile: true,
+			defaultDate: ['${startDate}', '${endDate}'],   // 현재 조회 중인 기간 표시
+			onClose: function (selectedDates, dateStr, instance) {
+				// 시작일, 종료일 둘 다 골랐을 때만 조회
+				if (selectedDates.length === 2) {
+					document.getElementById('startDate').value = instance.formatDate(selectedDates[0], 'Y-m-d');
+					document.getElementById('endDate').value = instance.formatDate(selectedDates[1], 'Y-m-d');
 				}
-			});
-		}
-	</script>
+			}
+		});
+	}
+</script>
 	
 
 

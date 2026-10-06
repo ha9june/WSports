@@ -96,6 +96,24 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		}
 
 	}
+	
+	@Override
+	public Long insertPersonalMatch(PersonalMatch personalMatch) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.personalmatch.insertPersonalMatch", personalMatch);
+			sqlSession.commit();
+			return personalMatch.getPersonalMatchId();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+
 
 	
 

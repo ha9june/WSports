@@ -1,14 +1,20 @@
 package service.match;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Part;
+
 import dao.PersonalMatchDao;
 import dao.PersonalMatchDaoImpl;
 import dto.PersonalMatch;
+import dto.PersonalMatchParticipant;
 import util.MatchSearchInfo;
 import util.PageInfo;
 
@@ -18,6 +24,17 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 	public PersonalMatchServiceImpl() {
 		personalMatchDao = new PersonalMatchDaoImpl();
+	}
+	
+	private String fileUpload(String uploadPath, Part file) throws Exception {
+		
+		String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();		
+		if(fileName != null && !fileName.isEmpty()) {
+			File uploadDir = new File(uploadPath);			
+			if(!uploadDir.exists()) uploadDir.mkdir();			
+			file.write(uploadPath+File.separator+fileName);		
+		}		
+		return fileName;
 	}
 	
 	
@@ -108,6 +125,50 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	public List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public Long createPersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath ) throws Exception {
+		int imageIndex = 1;
+		for (Part part : parts) {
+            if (part.getSubmittedFileName() == null || part.getSubmittedFileName().isEmpty()) {
+                continue;
+            }
+            String fileName = fileUpload(realPath, part);
+
+            if (imageIndex == 1) {
+            	personalMatch.setImage(fileName);
+                personalMatch.setImage1(fileName);
+            } else if (imageIndex == 2) {
+                personalMatch.setImage2(fileName);
+            } else if (imageIndex == 3) {
+                personalMatch.setImage3(fileName);
+            } else if (imageIndex == 4) {
+                personalMatch.setImage4(fileName);
+            } else if (imageIndex == 5) {
+                personalMatch.setImage5(fileName);
+            }
+            imageIndex++;
+            if (imageIndex > 5) {
+                break;
+            }
+            
+        }
+		
+        //개인 매치 인서트
+        Long personalMatchId = personalMatchDao.insertPersonalMatch(personalMatch);
+        //결제 완료시
+        
+        //개인 경기 참가지 인서트
+        PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+        pmp.setUserId(personalMatch.getUserId());	
+        pmp.setPersonalMatchId(personalMatchId);
+        pmp.setAttendance(true);
+        
+        return personalMatchId;
+		
+		
 	}
 
 

@@ -2,8 +2,11 @@ package service.match;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.Part;
 
 import dto.PersonalMatch;
 import util.MatchSearchInfo;
@@ -25,7 +28,11 @@ public interface PersonalMatchService {
 	List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo, long userId, String month)throws Exception;
 	//내가만든 경기 목록 페이징 처리
 	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String month,String status,String sport)throws Exception;
+		
 	//개인매치 상세글
 	Map<String,Object> getPersmalMatchDetail(Integer personalMatchId) throws Exception;
 
+	Long createPersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;
+
+	
 }

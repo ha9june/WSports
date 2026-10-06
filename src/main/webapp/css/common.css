@@ -202,6 +202,8 @@ table { border-collapse: collapse; width: 100%; }
 .form-section:first-child { margin-top: 0; }
 .form-section > .sub-title, .form-section > .section-head { margin-bottom: 16px; }
 .form-section .field + .field, .form-section .field + .form-grid, .form-section .form-grid + .field { margin-top: 20px; }
+.form-section .grid-3 > .field + .field,
+.form-section .form-grid > .field + .field { margin-top: 0; }
 .form-card { border: 1px solid var(--ds-border); border-radius: var(--r-12); padding: 28px 28px 24px; background: #fff; }
 .form-card .field + .field { margin-top: 24px; }
 .notice-box { margin-top: 20px; padding: 14px 16px; border-radius: var(--r-8); background: var(--ds-bg-subtle); font-size: 11px; color: var(--ds-text-2); }
