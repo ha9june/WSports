@@ -67,5 +67,21 @@ public class ReportDaoImpl implements ReportDao {
 			sqlSession.close();
 		}		
 	}
-
+	@Override
+	public List<Map<String, Object>> selectReportList(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.report.selectReportList",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	@Override
+	public Integer selectReportCnt(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.report.selectReportCnt",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
 }
