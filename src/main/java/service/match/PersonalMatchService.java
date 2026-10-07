@@ -42,9 +42,10 @@ public interface PersonalMatchService {
 	Boolean toggleMyPageHeartMatch(long userId,long matchId,String matchType)throws Exception;
 	Boolean isHeart(long userId,long matchId,String matchType)throws Exception;
 	//개인매치 상세글
-	PersonalMatch getPersmalMatchDetail(Integer personalMatchId) throws Exception;
+	PersonalMatch getPersmalMatchDetail(Long personalMatchId) throws Exception;
 
 	Long createPersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;
-
+	Long updatePersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;
+	void deletePersmalMatchDetail(Long personalMatchId) throws Exception;
 	
 }

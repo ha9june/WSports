@@ -273,3 +273,35 @@
   margin-right: auto;
 }
 
+/* ===== 상대 팀 모집 폼 ===== */
+.form-row { display: grid; gap: 24px; align-items: start; }
+.form-row.c-2 { grid-template-columns: 1fr 1fr; }
+.form-row > .field { margin-top: 0 !important; min-width: 0; }
+
+.time-range { display: flex; align-items: center; gap: 8px; }
+.time-range .select { flex: 1; min-width: 0; }
+
+.hint-gray { font-size: 11px; font-weight: 400; color: var(--ds-brand); margin-left: 0; }
+.sport-readonly .chip { pointer-events: none; cursor: default; }
+
+/* 섹션: 소제목 + 항목 간격 */
+.form-rail .form-section { margin-top: 48px; }
+.form-rail .form-section:first-child { margin-top: 0; }
+.form-rail .form-section > .sub-title { margin-bottom: 16px; }
+.form-rail .form-section > .section-desc { margin: -8px 0 16px; }
+.form-rail .form-section > .field + .field,
+.form-rail .form-section > .field + .form-row,
+.form-rail .form-section > .form-row + .field,
+.form-rail .form-section > .form-row + .form-row { margin-top: 24px; }
+
+/* 소제목이 있는 섹션 안의 항목 라벨은 보통 굵기로 (소제목만 굵게) */
+.form-rail .form-section .field-label.strong {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ds-text); font-weight: 500;
+}
+
+.place-row .place-address { flex: 3; min-width: 0; }
+.place-row .place-name { flex: 2; min-width: 0; }
+.place-row .btn { flex: none; }
+

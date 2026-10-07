@@ -10,7 +10,9 @@ public interface TeamSettlementDao {
 	List<Map<String, Object>> selectTeamSettlementFinishList() throws Exception;
 	List<Map<String, Object>> selectTeamSettlementDayList(Map<String, Object> param) throws Exception;
 	
-	List<Map<String, Object>> selectTeamSettlementDetail(int teamMatchId) throws Exception;
+	Map<String, Object> selectTeamSettlementDetail(Long teamMatchId) throws Exception;
 	List<Map<String, Object>> selectTeamSettlementList() throws Exception;
 	Integer updateTeamSettlement(Map<String, Object> param) throws Exception;
+	//정산 번호로 회원/경기 정보 조회
+	Map<String, Object> selectTeamSettlementUser(Long settlementId) throws Exception;
 }

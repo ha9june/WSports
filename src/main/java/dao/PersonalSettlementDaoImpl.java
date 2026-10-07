@@ -64,9 +64,9 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectPersonalSettlementDetail(int personalMatchId) throws Exception {
+	public Map<String, Object> selectPersonalSettlementDetail(Long personalMatchId) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalsettlement.selectPersonalSettlementDetail", personalMatchId);
+			return sqlSession.selectOne("mapper.personalsettlement.selectPersonalSettlementDetail", personalMatchId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -90,6 +90,16 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 			sqlSession.commit();
 			return result;
 		} 
+	}
+
+	@Override
+	public Map<String, Object> selectPersonalSettlementUser(Long settlementId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalsettlement.selectPersonalSettlementUser", settlementId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 }

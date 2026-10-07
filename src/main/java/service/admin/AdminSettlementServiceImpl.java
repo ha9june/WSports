@@ -9,16 +9,20 @@ import dao.PersonalSettlementDao;
 import dao.PersonalSettlementDaoImpl;
 import dao.TeamSettlementDao;
 import dao.TeamSettlementDaoImpl;
-
+import dto.Notification;
 import dto.TeamSettlement;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 
 public class AdminSettlementServiceImpl implements AdminSettlementService {
 	private PersonalSettlementDao personalsettlementDao;
 	private TeamSettlementDao teamsettlementDao;
+	private NotificationService notificationService;
 	
 	public AdminSettlementServiceImpl() {
 		this.personalsettlementDao = new PersonalSettlementDaoImpl();
 		this.teamsettlementDao = new TeamSettlementDaoImpl();
+		this.notificationService = new NotificationServiceImpl();
 	}
 	
 	
@@ -52,7 +56,7 @@ public class AdminSettlementServiceImpl implements AdminSettlementService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getPersonalSettlementDetail(int personalMatchId) throws Exception {
+	public Map<String, Object> getPersonalSettlementDetail(Long personalMatchId) throws Exception {
 		return personalsettlementDao.selectPersonalSettlementDetail(personalMatchId);
 	}
 	
@@ -60,13 +64,33 @@ public class AdminSettlementServiceImpl implements AdminSettlementService {
 	public List<Map<String, Object>> getPersonalSettlementList() throws Exception {
 		return personalsettlementDao.selectPersonalSettlementList();
 	}
-
+	//개인경기 정산
 	@Override
-	public int updatePersonalSettlement(long settlementId, Long adminId) throws Exception {
+	public void updatePersonalSettlement(Long settlementId, Long adminId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("settlementId", settlementId);
 		param.put("adminId", adminId);
-		return personalsettlementDao.updatePersonalSettlement(param);
+		personalsettlementDao.updatePersonalSettlement(param);
+		
+		//개인경기 정산 세부정보 조회
+		Map<String, Object> detail = personalsettlementDao.selectPersonalSettlementUser(settlementId);
+		if (detail == null) return;
+		//회원 id 꺼내기
+		Long userId = ((Number) detail.get("user_id")).longValue();
+		System.out.println(userId+":서비스");
+								
+		//알림 내용 만들기
+		String title = "개인 정산";
+		String content = "정산 완료 되었습니다.";
+		String link = "/settlement/detail?settlementId="+settlementId;
+		//알림 객체 채우기
+		Notification alarm = new Notification();
+		alarm.setUserId(userId);
+		alarm.setTitle("개인 경기 정산 완료");
+		alarm.setContent(content);
+		alarm.setLink(link);
+		//알림 저장, 푸시 전송
+		notificationService.sendNotification(alarm);
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +124,7 @@ public class AdminSettlementServiceImpl implements AdminSettlementService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getTeamSettlementDetail(int teamMatchId) throws Exception {
+	public Map<String, Object> getTeamSettlementDetail(Long teamMatchId) throws Exception {
 		return teamsettlementDao.selectTeamSettlementDetail(teamMatchId);
 	}
 
@@ -111,13 +135,33 @@ public class AdminSettlementServiceImpl implements AdminSettlementService {
 	}
 
 
-
+	//팀 경기 정산
 	@Override
-	public int updateTeamSettlement(long settlementId, Long adminId) throws Exception {
+	public void updateTeamSettlement(Long settlementId, Long adminId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("settlementId", settlementId);
 		param.put("adminId", adminId);
-		return teamsettlementDao.updateTeamSettlement(param);
+		teamsettlementDao.updateTeamSettlement(param);
+		
+		//팀경기 정산 세부정보 조회
+		Map<String, Object> detail = teamsettlementDao.selectTeamSettlementUser(settlementId);
+		if (detail == null) return;
+		//회원 id 꺼내기
+		Long userId = ((Number) detail.get("user_id")).longValue();
+		System.out.println(userId+":서비스");
+								
+		//알림 내용 만들기
+		String title = "팀 경기 정산";
+		String content = "정산 완료 되었습니다.";
+		String link = "/settlement/detail?settlementId="+settlementId;
+		//알림 객체 채우기
+		Notification alarm = new Notification();
+		alarm.setUserId(userId);
+		alarm.setTitle("팀 경기 정산 완료");
+		alarm.setContent(content);
+		alarm.setLink(link);
+		//알림 저장, 푸시 전송
+		notificationService.sendNotification(alarm);
 	}
 
 }

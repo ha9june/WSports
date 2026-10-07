@@ -24,10 +24,13 @@ public interface PersonalMatchDao {
 
 	
 	//매치 글 조회
-	PersonalMatch selectPersonalMatch(Integer personaMatchId) throws Exception;
+	PersonalMatch selectPersonalMatch(Long personaMatchId) throws Exception;
 
 	//매치글 인서트
 	Long insertPersonalMatch(PersonalMatch personalMatch) throws Exception;
+	Long updatePersonalMatch(PersonalMatch personalMatch) throws Exception;
+	void deletePersonalMatch(Long personaMatchId) throws Exception;
+
 	
 	//관리자 경기수 세기 - 개인
 	Long selectMatchCntPersonal() throws Exception;

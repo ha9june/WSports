@@ -84,3 +84,6 @@
   .work { padding-left: 48px; }
   .gnb { gap: 20px; }
 }
+.logout-btn { width: 32px; height: 32px; border-radius: var(--r-8); display: inline-flex; align-items: center; justify-content: center; }
+.logout-btn img { width: 18px; height: 18px; }
+.logout-btn:hover { background: var(--ds-bg-subtle); }

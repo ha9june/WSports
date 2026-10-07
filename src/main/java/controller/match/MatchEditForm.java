@@ -1,6 +1,7 @@
 package controller.match;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,22 +21,23 @@ import dto.PersonalMatch;
 import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
+import util.AlertUtil;
 
 /**
- * Servlet implementation class MatchCreate
+ * Servlet implementation class MatchEditForm
  */
-@WebServlet("/match/create")
+@WebServlet("/match/edit/form")
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10, // 개별 파일 최대 크키(10MB)
 	maxRequestSize = 1024 * 1024 * 10 * 5, // 전체 요청 최대 크키(50MB)
 	fileSizeThreshold = 1024 * 1024 * 1 // 1MB 초과시 임시 디스크 경로 사용
 )
-public class MatchCreate extends HttpServlet {
+public class MatchEditForm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MatchCreate() {
+    public MatchEditForm() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,70 +46,98 @@ public class MatchCreate extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		Long num = Long.parseLong(request.getParameter("num"));
+		
+		PersonalMatchService service = new PersonalMatchServiceImpl();
+		try {
+			
+			PersonalMatch pMatch = service.getPersmalMatchDetail(num);
+			System.out.println(pMatch);
+			request.setAttribute("personalMatch", pMatch);
+			request.getRequestDispatcher("/jsp/match/personalMatchEdit.jsp").forward(request, response);;			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 	    if (user == null) {
 	        response.sendRedirect(request.getContextPath() + "/auth/login");
 	        return;
 	    }
-	    long userId = user.getUserId();
-		String uploadPath = (String) request.getServletContext().getAttribute("uploadPath");
-		String realPath = request.getServletContext().getRealPath(uploadPath);
-	    
-	    try {
-			PersonalMatch pm = new PersonalMatch();
+    	PersonalMatchService service = new PersonalMatchServiceImpl();
 
+	    
+	    String uploadPath = (String) request.getServletContext().getAttribute("uploadPath");
+	    String realPath = request.getServletContext().getRealPath(uploadPath);
+	    
+	    Long personalMatchId;
+	    try {
+			personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
+		} catch (NumberFormatException e) {
+			AlertUtil.back(response, "잘못된 요청입니다.");
+			return;
+		}
+	    
+	    PersonalMatch origin = null;
+		try {
+			origin = service.getPersmalMatchDetail(personalMatchId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (origin == null) {
+			AlertUtil.back(response, "존재하지 않는 경기입니다.");
+			return;
+		}
+		if (user.getUserId() != origin.getUserId()) { // TODO: 필드명/타입(int, String) 맞추기
+			AlertUtil.back(response, "수정 권한이 없습니다.");
+			return;
+		}
+		
+		
+		PersonalMatch pm = new PersonalMatch();
+		try {
             String sport = request.getParameter("sport");
             String title = request.getParameter("title");
             String address = request.getParameter("address");
+            String addressDetail = request.getParameter("addressDetail");
             String gender = request.getParameter("gender");
             String content = request.getParameter("content");
-
+            
             LocalDate matchDate = LocalDate.parse(request.getParameter("matchDate"));
             LocalTime startTime = LocalTime.parse(request.getParameter("startTime"));
             LocalTime endTime = LocalTime.parse(request.getParameter("endTime"));
             LocalDateTime deadline = LocalDateTime.parse(request.getParameter("deadline"));
-
+			
             BigDecimal lat = toDecimal(request.getParameter("lat"));
             BigDecimal lng = toDecimal(request.getParameter("lng"));
-
-            // 숫자: 참가비는 "10,000원" 같은 입력에서 숫자만 추출
+            
             String participationFeeStr = request.getParameter("fee");
             int participationFee = (participationFeeStr == null || participationFeeStr.replaceAll("[^0-9]", "").isEmpty())
                     ? 0 : Integer.parseInt(participationFeeStr.replaceAll("[^0-9]", ""));
 
             int minPeople = Integer.parseInt(request.getParameter("minPeople"));
             int maxPeople = Integer.parseInt(request.getParameter("maxPeople"));
-
-            // 복수 선택
+            
             String ages = request.getParameter("ages");
             String levels = request.getParameter("levels");
             
-            System.out.println(address);
             String[] addressArr = address.split(" ");
-            String region = addressArr[0]+"시";
-            String addr = region+" "+addressArr[1];
+            String region = addressArr[0]+"시 "+addressArr[1];
             
             
-            
-            pm.setUserId(userId);
-            
+            pm.setPersonalMatchId(personalMatchId);
             pm.setSport(sport);
             pm.setTitle(title);
-            pm.setAddress(addr);
+            pm.setAddress(address);
             pm.setRegion(region);
-            pm.setAddress(addr);
-            pm.setRegion(region);
-            pm.setPlaceName(address);
+            pm.setPlaceName(addressDetail);
             pm.setGender(gender);
             pm.setContent(content);
             
@@ -138,35 +168,38 @@ public class MatchCreate extends HttpServlet {
             pm.setDeleted(false);
             pm.setStatus("모집중");
             
-            //create_at, update_at, deleted = false,status = 모집중
+            System.out.println(pm);
             
-            Collection<Part> parts = request.getParts();
 
+		} catch (Exception e) {
+			AlertUtil.back(response,"입력값 형식이 올바르지 않습니다.");
+			return;
+		}
+		
+	    Collection<Part> parts = request.getParts();
+	    for (Part part : parts) {
 
-            
-            PersonalMatchService service = new PersonalMatchServiceImpl();
-            Long psersonalMatchId = service.createPersonalMatch(pm,parts,realPath);
-            
+	    	if (!"keepImage".equals(part.getName())
+	    	        && !"photos".equals(part.getName())) {
+	    	    continue;
+	    	}
+
+	        System.out.println(part.getSubmittedFileName());
+	        System.out.println(part.getName());
+	    }
+	    System.out.println("----------");
+	    try {
+            Long psersonalMatchId = service.updatePersonalMatch(pm,parts,realPath);
             System.out.println(psersonalMatchId);
-
             response.sendRedirect(request.getContextPath() + "/match/detail/view?num=" + psersonalMatchId);
-            //response.sendRedirect(request.getContextPath() + "/jsp/match/personalMatchList.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+			AlertUtil.back(response,"수정에 실패하였습니다. 관리자에게 문의하여 주세요.");
+			return;
+		}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            //forwardError(request, response, "입력값 형식이 올바르지 않습니다.");
-        }
-		
-		
-
-		
-	    
-	    
-		
 	}
-	
 	private BigDecimal toDecimal(String s) {
         return (s == null || s.isBlank()) ? null : new BigDecimal(s.trim());
     }
-
 }

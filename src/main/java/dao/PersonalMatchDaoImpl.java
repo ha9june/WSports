@@ -78,7 +78,7 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		
 	
 	}
-	public PersonalMatch selectPersonalMatch(Integer personaMatchId) throws Exception {
+	public PersonalMatch selectPersonalMatch(Long personaMatchId) throws Exception {
 
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personaMatchId);
@@ -103,6 +103,36 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			sqlSession.close();
 		}
 	}
+	
+	@Override
+	public Long updatePersonalMatch(PersonalMatch personalMatch) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.update("mapper.personalmatch.updatePersonalMatch", personalMatch);
+			sqlSession.commit();
+			return personalMatch.getPersonalMatchId();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+	@Override
+	public void deletePersonalMatch(Long personaMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.update("mapper.personalmatch.deletePersonalMatch", personaMatchId);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}		
+	}
 
 
 
@@ -119,6 +149,8 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			return Session.selectList("mapper.personalmatch.selectMyPageCreatedPersonalMatchDates", param);
 		}
 	}
+
+	
 	//관리자 경기수 세기 - 개인
 	@Override
 	public Long selectMatchCntPersonal() throws Exception {

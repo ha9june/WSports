@@ -56,13 +56,13 @@ public class AuthLogin extends HttpServlet {
 			HttpSession session = request.getSession();
 			User user = service.login(loginId);
 			session.setAttribute("user", service.login(loginId));
-			
+			session.setAttribute("fcmToken", fcmToken);
 			service.updateLastLogin(user.getLoginId());
 			
 			userFcmToken.setUserId(user.getUserId());
 			userFcmTokenService.registerToken(userFcmToken);
 			
-			response.sendRedirect(request.getContextPath()+"/home/main"); // main suvlet으로 교체 필요 
+			response.sendRedirect(request.getContextPath()+"/home/main");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

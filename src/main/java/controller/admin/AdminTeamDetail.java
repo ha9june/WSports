@@ -39,7 +39,7 @@ public class AdminTeamDetail extends HttpServlet {
 			Map<String, Object> teaminfo = service.getTeamInfo(teamId);
 			List<Map<String, Object>> penaltylist = service.getTeamPenaltyList(teamId);
 			
-			String captain = service.getTeamCaptain(teamId);
+			Map<String, Object> captain = service.getTeamCaptain(teamId);
 			Integer membercnt = service.getTeamMemberCnt(teamId);
 			String suspension = service.getTeamSuspention(teamId)> 0 ? "정지" : "정상";
 			

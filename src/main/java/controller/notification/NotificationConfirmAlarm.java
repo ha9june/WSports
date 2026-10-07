@@ -36,6 +36,7 @@ public class NotificationConfirmAlarm extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	//알림을 읽음 처리하는 요청을 받는 서블릿
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		NotificationService notificationService = new NotificationServiceImpl();
 		Long notificationId = Long.parseLong(request.getParameter("notificationId"));

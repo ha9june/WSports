@@ -1,29 +1,26 @@
 package controller.match;
 
 import java.io.IOException;
-import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import dto.PersonalMatch;
-import service.match.PersonalMatchService;
-import service.match.PersonalMatchServiceImpl;
+import dto.User;
 
 /**
- * Servlet implementation class MatchDetail
+ * Servlet implementation class PersonalMatchParticipation
  */
-@WebServlet("/match/detail/view")
-public class MatchDetail extends HttpServlet {
+@WebServlet("/match/detail/participation")
+public class PersonalMatchParticipation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MatchDetail() {
+    public PersonalMatchParticipation() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,30 +29,24 @@ public class MatchDetail extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+	    if (user == null) {
+	        response.sendRedirect(request.getContextPath() + "/auth/login");
+	        return;
+	    }
+	    
 		Long num = Long.parseLong(request.getParameter("num"));
+
 		
-		PersonalMatchService service = new PersonalMatchServiceImpl();
-		try {
-			
-			PersonalMatch pMatch = service.getPersmalMatchDetail(num);
-			System.out.println(pMatch);
-			request.setAttribute("personalMatch", pMatch);
-			request.getRequestDispatcher("/jsp/match/personalMatchDetail.jsp").forward(request, response);;			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		
+	
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-//		doGet(request, response);
+		//doGet(request, response);
 	}
 
 }
