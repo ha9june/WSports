@@ -17,6 +17,11 @@ public interface TeamMatchDao {
 
 	//관리자 경기수 세기 - 팀
 	Long selectMatchCntTeam() throws Exception;
+	
+	
+	//스케줄러
+	List<TeamMatch> selectExpiredRecruiting() throws Exception;
+	int updateStatusToNoOpponentCancel(Long teamMatchId) throws Exception;
 
 	
 	

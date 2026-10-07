@@ -22,6 +22,6 @@
 	<select id="selectTeamMatchParticipantTeamIdList" parameterType="Long" resultType="Long">
 		select team_id
 		from team_match_participant
-		where team_match_id = #{teamMatchId}
+		where team_match_id = #{teamMatchId} and status = '결제완료'
 	</select>
 </mapper>

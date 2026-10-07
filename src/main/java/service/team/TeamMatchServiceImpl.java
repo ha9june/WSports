@@ -2,6 +2,7 @@ package service.team;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.http.Part;
@@ -54,6 +55,41 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 	@Override
 	public TeamMatch getTeamMatch(Long teamMatchId) throws Exception {
 		return teamMatchDao.selectTeamMatch(teamMatchId);
+	}
+
+	@Override
+	public String getTeamMatchState(TeamMatch teamMatch) throws Exception {
+		TeamMatchService teamMatchService = new TeamMatchServiceImpl();
+	    TeamMatchParticipantService teamMatchParticipantService = new TeamMatchParticipantServiceImpl();
+	    TeamUserService teamUserService = new TeamUserServiceImpl();
+	    
+		try {
+			
+			//state
+		    
+		    //작성자 취소 // 디비에서 상태값으로 가져옴 처리 X
+		    //인원 미달 취소 //마감 시간에 팀 안 차면 자동으로 처리되게. 디비도? 그게 되나
+		    //경기 종료 //모집 마감 상태였다가 경기 시간 지나면 경기 종료
+
+			String state = "";
+			LocalDateTime now = LocalDateTime.now();
+			
+			LocalDateTime matchStart = LocalDateTime.of(teamMatch.getMatchDate(), teamMatch.getStartTime());
+			LocalDateTime matchEnd   = LocalDateTime.of(teamMatch.getMatchDate(), teamMatch.getEndTime());
+			LocalDateTime deadline   = teamMatch.getDeadline();
+			
+			boolean pastDeadline = !deadline.isAfter(now);    // 마감 시각이 되었거나 지남 (deadline ≤ now)
+			boolean started      = !matchStart.isAfter(now);  // 경기 시작됨
+			boolean finished     = !matchEnd.isAfter(now);    // 경기 끝남
+			
+			//모집 마감 //팀 구해짐.
+
+			return state;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
 	}
 	
 }

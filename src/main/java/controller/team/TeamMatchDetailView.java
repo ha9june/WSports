@@ -1,6 +1,7 @@
 package controller.team;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,8 @@ import service.team.TeamMatchParticipantService;
 import service.team.TeamMatchParticipantServiceImpl;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
+import service.team.TeamUserService;
+import service.team.TeamUserServiceImpl;
 
 /**
  * Servlet implementation class TeamMatchDetailView
@@ -36,37 +39,47 @@ public class TeamMatchDetailView extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = (User)request.getSession().getAttribute("user");
-	    if (user == null) {
-	        response.sendRedirect(request.getContextPath() + "/auth/login");
-	        return;
-	    }
 	    
-	    //내가 신청한 경기인지
-	    
-	    //모집 마감
-	    //작성자 취소
-	    //인원 미달 취소
-	    //경기 종료
+
 	    TeamMatchService teamMatchService = new TeamMatchServiceImpl();
 	    TeamMatchParticipantService teamMatchParticipantService = new TeamMatchParticipantServiceImpl();
+	    TeamUserService teamUserService = new TeamUserServiceImpl();
 		try {
 			Long teamMatchId = Long.parseLong(request.getParameter("teamMatchId"));
 			TeamMatch teamMatch = teamMatchService.getTeamMatch(teamMatchId);
 			
 			//내가 호스트인지
-			if(teamMatch.getUserId() == user.getUserId()) {
-				request.setAttribute("isHost", "host");
+			if(teamMatch.getUserId().equals(user.getUserId())) {
+				request.setAttribute("isHost", true);
 			}else {
-				request.setAttribute("isHost", "notHost");
+				request.setAttribute("isHost", false);
 			}
+			
 			//우리 팀이 신청한 경기인지 아닌지
 			
 			//유저 아이디로 소속된 팀 불러오기
+			List<Long> teamIdList = teamUserService.getTeamIdListByUserId(user.getUserId());
 			//이 경기 아이디로 참가 팀 아이디 불러오기 2개
 			List<Long> tmpIdList = teamMatchParticipantService.getTeamMatchParticipantIdList(teamMatchId);
 			//유저 아이디로 불러온 팀 아이디랑 맞으면 소속된 팀이 신청한 경기
+			Boolean applied = false;
+			for(Long teamId : teamIdList) {
+				for(Long tmpId : tmpIdList) {
+					if(teamId.equals(tmpId)) {
+						applied = true;
+					}
+				}
+			}
 			
-			request.setAttribute("teamMatchInfo", teamMatch);
+			//신청한 매치인지 아닌지
+			request.setAttribute("applied", applied);
+			
+			//모집중 //모집 마감 // 경기 종료 // 경기 취소
+			//근데 이거 그냥 팀매치를 넘기는데 거기서 가져와도 되는거 아닌지 그게 맞는듯
+//			request.setAttribute("state", teamMatch.getStatus());
+			
+			request.setAttribute("t", teamMatch);
+			request.getRequestDispatcher("/jsp/team/teamMatchDetail.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", "팀 경기 상세보기 불러오는 중 에러 발생");

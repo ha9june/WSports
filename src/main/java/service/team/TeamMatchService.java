@@ -11,4 +11,6 @@ public interface TeamMatchService {
 	List<TeamMatch> getTeamMatchList(Long teamId) throws Exception;
 	Long makeTeamMatch(TeamMatch teamMatch, String realPath, List<Part> files) throws Exception;
 	TeamMatch getTeamMatch(Long teamMatchId) throws Exception;
+	String getTeamMatchState(TeamMatch teamMatch) throws Exception;
+
 }

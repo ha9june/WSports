@@ -146,5 +146,18 @@
 		  and coalesce(tm.deleted, 0) = 0
 	</select>
 
-
+	<select id="selectExpiredRecruiting" resultType="teammatch">
+		select team_match_id, team_id, user_id, title
+		from team_match where status = '모집중' and deadline &lt;= now() and coalesce(deleted, 0) = 0
+	</select>
+	
+	<update id="updateStatusToNoOpponentCancel" parameterType="Long">
+		update team_match
+		set status = '인원 미달 경기 취소'
+		where team_match_id = #{teamMatchId}
+		  and status = '모집중'
+		  and coalesce(deleted, 0) = 0
+	</update>
+	
+	
 </mapper>

@@ -81,4 +81,32 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			throw e;
 		}
 	}
+
+	
+	//스케줄러
+	@Override
+	public List<TeamMatch> selectExpiredRecruiting() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatch.selectExpiredRecruiting");
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
+
+	@Override
+	public int updateStatusToNoOpponentCancel(Long teamMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teammatch.updateStatusToNoOpponentCancel", teamMatchId);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+		
+	}
 }
