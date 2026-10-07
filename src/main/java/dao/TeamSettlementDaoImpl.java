@@ -62,9 +62,9 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectTeamSettlementDetail(int teamMatchId) throws Exception {
+	public Map<String, Object> selectTeamSettlementDetail(Long teamMatchId) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.teamsettlement.selectTeamSettlementDetail", teamMatchId);
+			return sqlSession.selectOne("mapper.teamsettlement.selectTeamSettlementDetail", teamMatchId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -87,6 +87,16 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 			Integer result = sqlSession.update("mapper.teamsettlement.updateTeamSettlement", param);
 			sqlSession.commit();
 			return result;
+		}
+	}
+
+	@Override
+	public Map<String, Object> selectTeamSettlementUser(Long settlementId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teamsettlement.selectTeamSettlementUser", settlementId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 

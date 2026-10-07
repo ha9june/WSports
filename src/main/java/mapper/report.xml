@@ -7,6 +7,27 @@
 	values(#{userId},#{type},#{title},#{content},#{postType},#{postId},now(),'처리대기')
 	</insert>
 
+	<select id="selectReportList" parameterType="Map" resultType="Map">
+	select report_id,title,type,date_format(created_at,'%m/%d') as created_at,status 
+	from report 
+	where user_id=#{userId} 
+		  and (deleted = 0 or deleted is null) 
+		  <if test="status != null">
+		  and status = #{status}
+		  </if>
+	order by report_id desc limit #{row},10
+	</select>
+	
+	<select id="selectReportCnt" resultType="Integer" parameterType="Map">
+	select count(*) 
+	from report 
+	where user_id=#{userId} 
+		  and (deleted = 0 or deleted is null) 
+		  <if test="status != null">
+		  and status = #{status}
+		  </if>
+	</select>
+	
 	<!-- 관리자 신고관리 개수 / 상태 기준 필터 -->
 	<select id="selectAdminReportCnt" parameterType="map" resultType="int">
 		select count(*)

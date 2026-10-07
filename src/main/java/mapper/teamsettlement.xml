@@ -65,7 +65,13 @@
 		left join user u on s.user_id = u.user_id
 		where s.team_match_id = #{teamMatchId}
 	</select>
-	
+	<!-- 정산 번호로 회원/경기 정보 조회 (알림용) -->
+	<select id="selectTeamSettlementUser" resultType="map">
+		select s.user_id, s.team_match_id, m.title
+		from team_settlement s
+		left join team_match m on s.team_match_id = m.team_match_id	
+		where s.settlement_id = #{settlementId}
+	</select>
 	<!-- 정산 대기를 지급완료로 -->
 	<update id="updateTeamSettlement" parameterType="map">
 		update team_settlement
