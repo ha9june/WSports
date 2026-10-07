@@ -21,6 +21,25 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.pill-green {
+    color: var(--ds-success-fg);
+    background: var(--ds-success-bg);
+    border: var(--ds-success-bd);
+    font-weight: bold;
+}
+.pill-blue {
+    color: var(--ds-info-fg);
+    background: var(--ds-info-bg);
+    border:var(--ds-info-bd);
+    font-weight: bold;
+}
+.pill-red {
+    color: var(--ds-danger-fg);
+    background: var(--ds-danger-bg);
+    border:var(--ds-danger-bd);
+    font-weight: bold;
+}
+
 .act-layout { display: flex; gap: 24px; align-items: flex-start; }
 .act-layout > section { flex: 1; min-width: 0; }
 
@@ -109,6 +128,19 @@
 .cal .legend { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font-size: 12px; }
 .cal .legend-dot { width: 6px; height: 6px; border-radius: 50%; background: #1a6bff; }
 .act-card { margin-bottom: 16px; }
+.act-card .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 70px;          /* 왼쪽 영역 폭 고정 */
+}
+.act-card .left img {
+    width: 170px;
+    height: 100px;
+    object-fit: contain;  /* 비율 유지하면서 칸에 맞춤 */
+    flex-shrink: 0;
+}
 .list-head { display: flex; align-items: center; margin-bottom: 12px; }
 .btn-reset { margin-left: auto; }
 </style>
@@ -158,8 +190,35 @@
 				<div class="act-card"
 					data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
 					<div class="left">
-						<span class="pill pill-info">${m.status}</span><img
-							src="${ctx}/img/sport-icon-football.png" alt="">
+						<c:choose>
+							<c:when test="${m.status eq '모집중'}">
+								<span class="pill-green">모집중</span>
+							</c:when>
+							<c:when test="${m.status eq '모집 마감' or m.status eq '경기 종료'}">
+								<span class="pill-blue">${m.status}</span>
+							</c:when>
+							<c:when test="${m.status eq '경기 취소'}">
+								<span class="pill-red">경기 취소</span>
+							</c:when>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${m.sport eq '축구/풋살'}">
+								<img src="${ctx}/img/art-football.png" alt="축구/풋살">
+							</c:when>
+							<c:when test="${m.sport eq '농구'}">
+								<img src="${ctx}/img/art-basketball.png" alt="농구">
+							</c:when>
+							<c:when test="${m.sport eq '테니스'}">
+								<img src="${ctx}/img/art-tennis.png" alt="테니스">
+							</c:when>
+							<c:when test="${m.sport eq '배드민턴'}">
+								<img src="${ctx}/img/art-badminton.png" alt="배드민턴">
+							</c:when>
+							<c:otherwise>
+								<img src="${ctx}/img/match-default.png" alt="">
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<!-- 경기 제목 -->
 					<div class="main">

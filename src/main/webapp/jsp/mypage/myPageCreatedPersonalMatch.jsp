@@ -4,9 +4,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.time.YearMonth, java.time.LocalDate"%>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ko.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ko.js"></script>
 <%--
   내가 만든 경기 (myPageCreatedPersonalMatch.jsp) - 담당: 강신우
   피그마: MyPage / Activity / Recruited Matches / Desktop
@@ -21,6 +24,25 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.pill-green {
+    color: var(--ds-success-fg);
+    background: var(--ds-success-bg);
+    border: var(--ds-success-bd);
+    font-weight: bold;
+}
+.pill-blue {
+    color: var(--ds-info-fg);
+    background: var(--ds-info-bg);
+    border:var(--ds-info-bd);
+    font-weight: bold;
+}
+.pill-red {
+    color: var(--ds-danger-fg);
+    background: var(--ds-danger-bg);
+    border:var(--ds-danger-bd);
+    font-weight: bold;
+}
+
 .act-layout {
 	display: flex;
 	gap: 24px;
@@ -155,6 +177,19 @@
 .act-card {
 	margin-bottom: 16px;
 }
+.act-card .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 70px;          /* 왼쪽 영역 폭 고정 */
+}
+.act-card .left img {
+    width: 170px;
+    height: 100px;
+    object-fit: contain;  /* 비율 유지하면서 칸에 맞춤 */
+    flex-shrink: 0;
+}
 
 .list-head {
 	display: flex;
@@ -177,22 +212,21 @@
 			value="${startDate}"> <input type="hidden" name="endDate"
 			id="endDate" value="${endDate}">
 		<!-- 경기 종목별 리스트 검색 -->
+		<c:set var="sports" value="축구/풋살,농구,테니스,배드민턴" />
 		<select class="select" name="sport" onchange="this.form.submit()">
 			<option value="">전체</option>
-			<option value="축구/풋살" ${sport == '축구/풋살' ? 'selected' : ''}>축구/풋살</option>
-			<option value="농구" ${sport == '농구' ? 'selected' : ''}>농구</option>
-			<option value="테니스" ${sport == '테니스' ? 'selected' : ''}>테니스</option>
-			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
-		</select> <select class="select" name="status" onchange="this.form.submit()">
-			<option value="">전체 상태</option>
-			<option value="모집중" ${status == '모집중' ? 'selected' : ''}>모집중</option>
-			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
-				마감</option>
-			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
-				종료</option>
-			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기
-				취소</option>
+			<c:forEach var="s" items="${sports}">
+				<option value="${s}" ${sport eq s ? 'selected' : ''}>${s}</option>
+			</c:forEach>
 		</select>
+		<c:set var="statuses" value="모집중,모집 마감,경기 종료,경기 취소" />
+		<select class="select" name="status" onchange="this.form.submit()">
+			<option value="">전체 상태</option>
+			<c:forEach var="st" items="${statuses}">
+				<option value="${st}" ${status eq st ? 'selected' : ''}>${st}</option>
+			</c:forEach>
+		</select>
+
 	</form>
 
 	<div class="act-layout">
@@ -211,8 +245,35 @@
 				<div class="act-card"
 					data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
 					<div class="left">
-						<span class="pill pill-info">${m.status}</span><img
-							src="${ctx}/img/sport-icon-football.png" alt="">
+						<c:choose>
+							<c:when test="${m.status eq '모집중'}">
+								<span class="pill-green">모집중</span>
+							</c:when>
+							<c:when test="${m.status eq '모집 마감' or m.status eq '경기 종료'}">
+								<span class="pill-blue">${m.status}</span>
+							</c:when>
+							<c:when test="${m.status eq '경기 취소'}">
+								<span class="pill-red">경기 취소</span>
+							</c:when>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${m.sport eq '축구/풋살'}">
+								<img src="${ctx}/img/art-football.png" alt="축구/풋살">
+							</c:when>
+							<c:when test="${m.sport eq '농구'}">
+								<img src="${ctx}/img/art-basketball.png" alt="농구">
+							</c:when>
+							<c:when test="${m.sport eq '테니스'}">
+								<img src="${ctx}/img/art-tennis.png" alt="테니스">
+							</c:when>
+							<c:when test="${m.sport eq '배드민턴'}">
+								<img src="${ctx}/img/art-badminton.png" alt="배드민턴">
+							</c:when>
+							<c:otherwise>
+								<img src="${ctx}/img/match-default.png" alt="">
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<!-- 경기 제목 -->
 					<div class="main">
@@ -248,14 +309,17 @@
 					</div>
 				</div>
 			</c:forEach>
-			<c:set var="qs" value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
-			<nav class="pagination" style="display: flex; justify-content: center; padding: 0">
+			<c:set var="qs"
+				value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
+			<nav class="pagination"
+				style="display: flex; justify-content: center; padding: 0">
 				<c:if test="${pageInfo.curPage > 1}">
 					<a href="?page=${pageInfo.curPage - 1}${qs}">&lt;</a>
 				</c:if>
 				<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
 					var="p">
-					<a href="?page=${p}${qs}" class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+					<a href="?page=${p}${qs}"
+						class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
 				</c:forEach>
 				<c:if test="${pageInfo.curPage < pageInfo.allPage}">
 					<a href="?page=${pageInfo.curPage + 1}${qs}">&gt;</a>
@@ -265,7 +329,8 @@
 		<aside class="cal">
 			<div id="periodPicker"></div>
 			<p class="legend">
-				<span class="legend-dot"></span> 경기 있음</p>
+				<span class="legend-dot"></span> 경기 있음
+			</p>
 		</aside>
 		<%--
   마이페이지 활동 화면 공통 월 달력 (참가 경기 / 내가 만든 경기 / 관심경기 / 팀 경기)

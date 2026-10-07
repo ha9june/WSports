@@ -14,6 +14,21 @@
 	value="joined:가입한 팀|applications:가입 신청|leave:탈퇴 모달" />
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
+<style>
+.myteam-card .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 70px;          /* 왼쪽 영역 폭 고정 */
+}
+.team-logo-wrap .left img {
+    width: 170px;
+    height: 100px;
+    object-fit: contain;  /* 비율 유지하면서 칸에 맞춤 */
+    flex-shrink: 0;
+}
+</style>
 <div class="work-inner" style="width: 100%; max-width: 1000px;">
 	<h1 class="section-title">내 팀</h1>
 	<p class="section-desc">${state eq 'applications' ? '가입 신청 현황을 확인하고 대기 중인 신청을 취소할 수 있어요.' : '가입한 팀을 확인하고 팀별 역할에 따라 관리하세요.'}</p>
@@ -70,7 +85,7 @@
 							<button type="button" class="btn-cancel"
 								data-id="${m.applicationId}"
 								style="width: 100%; background-color: #fff; border: 1px solid #d1d5db; color: #1f2937; font-size: 12px; font-weight: 600; padding: 6px 0; text-align: center; border-radius: 8px; cursor: pointer; white-space: nowrap;">신청
-								취소</button>
+								취소</button> 
 						</div>
 					</div>
 				</c:forEach>
@@ -196,7 +211,6 @@
 				}
 			});
 		});
-
 		// 팀 탈퇴
 		$('.btn-leave').on('click', function(e) {
 			e.stopPropagation();
