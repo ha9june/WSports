@@ -104,7 +104,6 @@
         <mapper resource="mapper/userpenalty.xml"/>
         <mapper resource="mapper/userrating.xml"/>
         <mapper resource="mapper/userfcmtoken.xml"/>
-
     </mappers>
 
 </configuration>

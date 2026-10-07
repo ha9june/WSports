@@ -86,4 +86,14 @@ public class UserDaoImpl implements UserDao {
 			sqlSession.close();
 		}
 	}
+	//관리자 인원수 세기
+	@Override
+	public Long selectUserCnt() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectUserCnt");
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

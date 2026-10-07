@@ -195,6 +195,20 @@
 					</div>
 				</div>
 			</c:forEach>
+			<c:set var="qs" value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
+			<nav class="pagination" style="display: flex; justify-content: center; padding: 0">
+				<c:if test="${pageInfo.curPage > 1}">
+					<a href="?page=${pageInfo.curPage - 1}${qs}">&lt;</a>
+				</c:if>
+				<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
+					var="p">
+					<a href="?page=${p}${qs}" class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+				</c:forEach>
+				<c:if test="${pageInfo.curPage < pageInfo.allPage}">
+					<a href="?page=${pageInfo.curPage + 1}${qs}">&gt;</a>
+				</c:if>
+			</nav>
+			
 		</section>
 				<aside class="cal">
 				<div id="periodPicker"></div>

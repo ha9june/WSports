@@ -2,54 +2,159 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teamapplication">
-	<insert id="insertTeamApplication" parameterType="teamapplication">
+	<insert id="insertTeamApplication"
+		parameterType="teamapplication">
 		insert into team_application
-		(user_id, team_id, message, status, applied_at) values (#{userId}, #{teamId}, #{message}, '대기', now())
+		(user_id, team_id, message,
+		status, applied_at) values (#{userId}, #{teamId}, #{message}, '대기',
+		now())
 	</insert>
-	
-	<select id="selectTeamApplication" parameterType="Map" resultType="teamapplication">
-		select * 
-		from team_application 
-		where user_id = #{userId} and team_id = #{teamId} and status = '대기'
-		order by applied_at desc
-    	limit 1
+
+	<select id="selectTeamApplication" parameterType="Map"
+		resultType="teamapplication">
+		select *
+		from team_application
+		where user_id = #{userId} and
+		team_id = #{teamId} and status = '대기'
+		order by
+		applied_at desc
+		limit 1
 	</select>
-	
-	<select id="selectTeamApplicationByApplicationId" parameterType="Long" resultType="teamapplication">
-		select * 
-		from team_application 
-		where application_id = #{applicationId}
+
+	<select id="selectTeamApplicationByApplicationId"
+		parameterType="Long" resultType="teamapplication">
+		select *
+		from team_application
+		where
+		application_id = #{applicationId}
 	</select>
-	
-	<select id="selectTeamApplicationList" parameterType="Long" resultType="teamapplication">
-		 select a.application_id, a.user_id, a.team_id, a.message, a.applied_at,
-		           u.nickname, u.profile_image, u.preferred_region1,
-		           case t.sport
-		               when '축구/풋살' then u.soccer_skill
-		               when '농구'      then u.basketball_skill
-		               when '테니스'    then u.tennis_skill
-		               when '배드민턴'  then u.badminton_skill
-		           end as skill
-		    from team_application a
-		    join user u on u.user_id = a.user_id
-		    join team t on t.team_id = a.team_id
-		    where a.team_id = #{teamId} and a.status = '대기'
-		    order by a.applied_at
+
+	<select id="selectTeamApplicationList" parameterType="Long"
+		resultType="teamapplication">
+		select a.application_id, a.user_id, a.team_id, a.message,
+		a.applied_at,
+		u.nickname, u.profile_image, u.preferred_region1,
+		case
+		t.sport
+		when '축구/풋살' then u.soccer_skill
+		when '농구' then
+		u.basketball_skill
+		when '테니스' then u.tennis_skill
+		when '배드민턴' then
+		u.badminton_skill
+		end as skill
+		from team_application a
+		join user u on
+		u.user_id = a.user_id
+		join team t on t.team_id = a.team_id
+		where
+		a.team_id = #{teamId} and a.status = '대기'
+		order by a.applied_at
 	</select>
-	
+
 	<update id="updateTeamApplicationApprove" parameterType="Map">
-	    update team_application
-	    set status = '승인', processed_at = now()
-	    where application_id = #{applicationId}
-	      and team_id = #{teamId}
-	      and status = '대기'
+		update
+		team_application
+		set status = '승인', processed_at = now()
+		where
+		application_id = #{applicationId}
+		and team_id = #{teamId}
+		and status =
+		'대기'
 	</update>
-	
+
 	<update id="updateTeamApplicationReject" parameterType="Map">
-	    update team_application
-	    set status = '거절', processed_at = now(), rejection_reason = #{reason}
-	    where application_id = #{applicationId}
-	      and team_id = #{teamId}
-	      and status = '대기'
+		update
+		team_application
+		set status = '거절', processed_at = now(),
+		rejection_reason = #{reason}
+		where application_id = #{applicationId}
+		and team_id = #{teamId}
+		and status = '대기'
 	</update>
+	<select id="selectMypageMyTeamList" parameterType="Map"
+		resultType="Map">
+		SELECT a.application_id AS applicationId,
+		a.team_id AS teamId,
+		a.status,
+		DATE_FORMAT(a.applied_at, '%Y-%m-%d %H:%i') AS appliedAt,
+		a.message AS description,
+		t.team_name AS teamName,
+		t.sport
+		from
+		team_application a
+		join team t on t.team_id = a.team_id
+		where a.user_id
+		= #{userId} and a.status = '승인 대기'
+		<if test="sport != null and sport != ''">
+			AND t.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+		ORDER BY a.applied_at DESC, a.application_id DESC
+		LIMIT #{size}
+		OFFSET
+		#{offset}
+	</select>
+	<select id="selectMypageMyTeamCnt" parameterType="Map"
+		resultType="int">
+		select count(*)
+		from team_application a
+		where a.user_id = #{userId} and
+		a.status = '승인 대기'
+		<if test="sport != null and sport != ''">
+			AND t.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+	</select>
+	<select id="selectMypageJoinedTeamList" parameterType="Map"
+		resultType="Map">
+		SELECT a.application_id AS applicationId,
+		a.team_id AS teamId,
+		a.status,
+		DATE_FORMAT(a.applied_at, '%Y-%m-%d %H:%i') AS appliedAt,
+		a.message AS description,
+		t.team_name AS teamName,
+		t.sport
+		from
+		team_application a
+		join team t on t.team_id = a.team_id
+		where a.user_id
+		= #{userId} and a.status = '승인'
+		<if test="sport != null and sport != ''">
+			AND t.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+		ORDER BY a.applied_at DESC, a.application_id DESC
+		LIMIT #{size}
+		OFFSET
+		#{offset}
+	</select>
+
+	<select id="selectMypageJoinedTeamCnt" parameterType="Map"
+		resultType="int">
+		select count(*)
+		from team_application a
+		where a.user_id = #{userId} and
+		a.status = '승인'
+		<if test="sport != null and sport != ''">
+			AND t.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+	</select>
+	<update id="updateMypageMyTeam">
+	update team_application
+	set status = #{status}
+	where application_id = #{applicationId}
+	and user_id=#{userId}
+	and status = '승인 대기'
+	</update>
+
 </mapper>
