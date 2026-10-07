@@ -116,6 +116,7 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			try {
 				// 현재 점수 그대로 이어받기 (기록이나 점수가 없으면 0)
+				
 				Map<String, Object> latest = sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty", param.get("teamId"));
 				int score = (latest == null || latest.get("score") == null) ? 0 : ((Number) latest.get("score")).intValue();
 				param.put("score", score);
