@@ -36,6 +36,14 @@
 		and (#{status} = 'ALL' or status =  #{status})
 	</select>
 	
+	<!-- 관리자 신고관리 개수 / 처리대기 -->
+	<select id="selectAdminReportWaitCnt" resultType="int">
+		select count(*)
+		from report
+		where (deleted = 0 or deleted is null)
+		and status = '처리대기'
+	</select>
+	
 	<!-- 관리자 신고관리 리스트 10개씩 -->
 	<select id="selectAdminReportList" parameterType="map" resultType="map">
 		select r.report_id, r.created_at, r.type, u.name, u.nickname, r.title, r.status, r.content

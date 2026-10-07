@@ -2,6 +2,8 @@ package dao;
 
 import java.util.Map;
 
+import dto.PersonalPayment;
+
 public interface PersonalPaymentDao {
 	Long totalRevenuePersonal() throws Exception;//총 매출
 	Long totalProfitPersonal() throws Exception; //총 수익
@@ -12,4 +14,8 @@ public interface PersonalPaymentDao {
 	Long selectPeriodPaymentCntPersonal(Map<String, Object> param) throws Exception; //기간 내 결제 건수
 	Long selectPeriodRevenuePersonal(Map<String, Object> param) throws Exception; //기간 내 총 매출
 	Long selectPeriodProfitPersonal(Map<String, Object> param) throws Exception; //기간 내 총 수익
+	//결제내역 삽입
+	void insertPaymentHistory(PersonalPayment personalPayment) throws Exception;
+	//결제내역 선택
+	PersonalPayment selectPaymentHistory(String paymentKey) throws Exception;
 }

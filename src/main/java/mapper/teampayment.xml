@@ -69,4 +69,47 @@
 		where approved_at >= #{startDate}
 		and approved_at &lt; #{endDate} + interval 1 day
 	</select>
+	
+	<!-- 팀 경기 결제 내역 -->
+	<insert id="insertTeamPaymentHistory" parameterType="TeamPayment">
+	INSERT INTO payment_history (
+            order_id,
+            payment_key,
+            order_name,
+            payment_status,
+            payment_method,
+            total_amount,
+            balance,
+            currency,
+            card_company,
+            card_number,
+            installment_months,
+            easy_payment_provider,
+            receipt_url,
+            requested_at,
+            approved_at,
+            raw_response
+        ) VALUES (
+            #{orderId},
+            #{paymentKey},
+            #{orderName},
+            #{paymentStatus},
+            #{paymentMethod},
+            #{totalAmount},
+            #{balance},
+            #{currency},
+            #{cardCompany},
+            #{cardNumber},
+            #{installmentMonths},
+            #{easyPaymentProvider},
+            #{receiptUrl},
+            #{requestedAt},
+            #{approvedAt},
+            #{rawResponse}
+        )		
+	</insert>
+	
+	<select id="selectTeamPaymentHistory" parameterType="String" resultType="TeamPayment">
+		select * from team_payment where payment_key=#{paymentKey}
+	</select>
 </mapper>

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.TeamPayment;
 
 public class TeamPaymentDaoImpl implements TeamPaymentDao {
 	//총 매출
@@ -95,6 +96,27 @@ public class TeamPaymentDaoImpl implements TeamPaymentDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+	//결제 내역 삽입
+	@Override
+	public void insertPaymentHistory(TeamPayment teamPayment) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.teampayment.insertPaymentHistory", teamPayment);
+			sqlSession.commit();
+		} catch(Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}		
+	}
+	//결제내역 선택
+	@Override
+	public TeamPayment selectPaymentHistory(String paymentKey) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teampayment.selectPaymentHistory", paymentKey);
 		}
 	}
 

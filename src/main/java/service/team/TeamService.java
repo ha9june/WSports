@@ -16,7 +16,8 @@ public interface TeamService {
 	int modifyTeam(Team team, String realPath, Part profileImage, Part activityImg1, Part activityImg2, Part activityImg3,
 			Part activityImg4, Part activityImg5) throws Exception;
 	List<Team> getTeamInfoByUserManager(Long userId) throws Exception;
-	
+	//메인화면 팀 추천
+	List<Team> getNowTeamList(TeamSearchCondition condition) throws Exception;
 	
 	
 	String changeAges(Boolean age20s, Boolean age30s, Boolean age40s, Boolean age50s, Boolean age60Plus) throws Exception;

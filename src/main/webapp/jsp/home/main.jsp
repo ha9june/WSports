@@ -39,7 +39,7 @@
       
       
 	<div id="recomandMatchListDiv" class="feature-row">
-	    <c:forEach var="match" items="${nList}">
+	    <c:forEach var="match" items="${nMList}">
 	  		<c:set var="sportClass" value="${match.sport eq '축구' ? 'football' :
     		    match.sport eq '농구' ? 'basketball' :	
                 match.sport eq '테니스' ? 'tennis' :
@@ -72,30 +72,33 @@
       </div>
       <%-- TODO: <c:forEach var="t" items="${teamList}"> --%>
       <div id="recomandTeamListDiv" class="team-mini-row">
-        <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
-          <div class="top"><img src="${ctx}/img/team-football.png" alt="">
-            <div><strong>서울 풋살 크루</strong><p class="meta">축구/풋살 · 마포</p>
-              <p class="sub"><span><img src="${ctx}/img/icon-user-12.svg" alt="">34명</span><span><img src="${ctx}/img/icon-pin-12.svg" alt="">마포구</span></p></div></div>
-          <div class="foot"><span class="sport-tag football">축구/풋살</span></div>
-        </a>
-        <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
-          <div class="top"><img src="${ctx}/img/team-basketball.png" alt="">
-            <div><strong>라켓메이트</strong><p class="meta">농구 · 송파/강동</p>
-              <p class="sub"><span><img src="${ctx}/img/icon-user-12.svg" alt="">18명</span><span><img src="${ctx}/img/icon-pin-12.svg" alt="">송파구</span></p></div></div>
-          <div class="foot"><span class="sport-tag basketball">농구</span></div>
-        </a>
-        <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
-          <div class="top"><img src="${ctx}/img/team-tennis.png" alt="">
-            <div><strong>셔틀콕 데이</strong><p class="meta">테니스 · 영등포/구로</p>
-              <p class="sub"><span><img src="${ctx}/img/icon-user-12.svg" alt="">26명</span><span><img src="${ctx}/img/icon-pin-12.svg" alt="">영등포구</span></p></div></div>
-          <div class="foot"><span class="sport-tag tennis">테니스</span></div>
-        </a>
-        <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
-          <div class="top"><img src="${ctx}/img/team-badminton.png" alt="">
-            <div><strong>서울롬 데이</strong><p class="meta">배드민턴 · 노원/도봉</p>
-              <p class="sub"><span><img src="${ctx}/img/icon-user-12.svg" alt="">22명</span><span><img src="${ctx}/img/icon-pin-12.svg" alt="">노원구</span></p></div></div>
-          <div class="foot"><span class="sport-tag badminton">배드민턴</span></div>
-        </a>
+    	<c:forEach var="team" items="${nTList}">
+    		<c:set var="sportClass" value="${team.sport eq '축구' ? 'football' :
+    		    team.sport eq '축구/농구' ? 'football' :	
+    		    team.sport eq '농구' ? 'basketball' :	
+                team.sport eq '테니스' ? 'tennis' :
+                team.sport eq '배드민턴' ? 'badminton' : ''}" />
+	    	 <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
+	          <div class="top"><img src="${ctx}/img/team-${sportClass }.png" alt="">
+	            <div>
+		            <strong>${team.teamName}</strong>
+		            <p class="meta">${team.sport} · ${team.region1}</p>
+		            <p class="sub">
+		            	<span>
+		            		<img src="${ctx}/img/icon-user-12.svg" alt="">${team.currentPeople}
+	            		</span>
+	            		<span>
+	            		<img src="${ctx}/img/icon-pin-12.svg" alt="">${team.region1}
+	            		</span>
+            		</p>
+	            </div>
+	           </div>
+	          <div class="foot"><span class="sport-tag football">${team.sport}</span>
+	          </div>
+	        </a>
+      	</c:forEach>
+        
+        
       </div>
     </section>
 
