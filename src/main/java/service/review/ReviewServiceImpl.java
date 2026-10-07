@@ -2,40 +2,63 @@ package service.review;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.Part;
 
 import dao.ReviewDao;
 import dao.ReviewDaoImpl;
+import dao.UserDao;
+import dao.UserDaoImpl;
 import dto.Review;
 
 public class ReviewServiceImpl implements ReviewService {
 	private ReviewDao reviewDao;
-	
+	private UserDao user;
+
 	public ReviewServiceImpl() {
 		reviewDao = new ReviewDaoImpl();
-		
+		user = new UserDaoImpl();
 	}
-	
-	
+
 	// 사진(이미지) 파일 업로드
-	
-	public String fileUpload(String uploadPath,Part file)throws Exception{
-		String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
-		if(fileName!=null&&!fileName.isEmpty()) {
-			File uploadDir = new File(uploadPath);
-			if(!uploadDir.exists()) uploadDir.mkdir();
-			file.write(uploadPath + File.separator + fileName);
-		}
-		return fileName;
+	public String fileUpload(String uploadPath, Part file) throws Exception {
+		File dir = new File(uploadPath);
+		if (!dir.exists())
+			dir.mkdirs();
+
+		String original = file.getSubmittedFileName();
+		String ext = original.substring(original.lastIndexOf(".")).toLowerCase();
+		String saved = UUID.randomUUID() + ext;
+
+		file.write(uploadPath + File.separator + saved);
+		return saved;
 	}
 
-	// 후기 글작성
-	
 	@Override
-	public Long wirteReview(Review review, String uploadPath, Part ifile, Part dfile) throws Exception {
-		if(ifile!=null) review.setImage(fileUpload(uploadPath, dfile));
-		return reviewDao.insertReview(review);
-	}
+	public Long writeReview(Review review, long userId, String realPath, List<Part> images) throws Exception {
+		review.setUserId(userId);
 
+		List<String> savedNames = new ArrayList<>();
+		try {
+			if (images != null) {
+				for (Part part : images) {
+					savedNames.add(fileUpload(realPath, part));
+				}
+			}
+			if (!savedNames.isEmpty()) {
+				review.setImage(String.join(",", savedNames));
+			}
+			return reviewDao.insertReview(review);
+
+		} catch (Exception e) {
+			for (String name : savedNames) {
+				new File(realPath, name).delete();
+			}
+			throw e;
+		}
+
+	}
 }
