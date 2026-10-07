@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%--
   문의 상세 (adminInquiryDetail.jsp) - 담당: 임태균
   피그마: Admin / Inquiry Detail / Desktop
@@ -32,7 +31,7 @@
     	<dl class="kv1 mt-24">
     		<dt>작성자</dt><dd>${inquirydetail.nickname }</dd>
     		<dt>접수일</dt>
-    		<dd><fmt:formatDate value="${inquirydetail.created_at}" pattern="yyyy.MM.dd HH:mm" /></dd>
+    		<dd>${inquirydetail.created_at}</dd>
     	</dl>
     	<h3 class="t-12 t-bold mt-24">내용</h3>
     	<p class="t-12 mt-8" style="line-height:1.7">${inquirydetail.content }</p>
