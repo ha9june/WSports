@@ -357,7 +357,7 @@
 	</select>
 
 
-	<select id="selectPersonalMatch" parameterType="Integer" resultType="personalMatch">
+	<select id="selectPersonalMatch" parameterType="Long" resultType="personalMatch">
 		SELECT
 		m.*,
 		u.nickname,
@@ -381,6 +381,8 @@
 		        user_id,
 		        sport,
 		        title,
+		        address,
+		        region,
 		        place_name,
 		        match_date,
 		        start_time,
@@ -418,6 +420,8 @@
 		        #{userId},
 		        #{sport},
 		        #{title},
+		        #{address},
+		        #{region},
 		        #{placeName},
 		        #{matchDate},
 		        #{startTime},
@@ -453,6 +457,68 @@
 		    )
 	</insert>
 	
+	<update id="updatePersonalMatch" parameterType="personalMatch">
+
+	    UPDATE personal_match
+	    SET
+	        sport = #{sport},
+	        title = #{title},
+	        address = #{address},
+	        region = #{region},
+	        place_name = #{placeName},
+	        match_date = #{matchDate},
+	        start_time = #{startTime},
+	        end_time = #{endTime},
+	        latitude = #{latitude},
+	        longitude = #{longitude},
+	        participation_fee = #{participationFee},
+	        fee = #{fee},
+	        min_people = #{minPeople},
+	        max_people = #{maxPeople},
+	        deadline = #{deadline},
+	        gender = #{gender},
+	        age_20s = #{age20s},
+	        age_30s = #{age30s},
+	        age_40s = #{age40s},
+	        age_50s = #{age50s},
+	        age_60_plus = #{age60Plus},
+	        skill_intro = #{skillIntro},
+	        skill_beginner = #{skillBeginner},
+	        skill_intermediate = #{skillIntermediate},
+	        skill_advanced = #{skillAdvanced},
+	        content = #{content},
+	        <if test="image1 != null">
+	            image = #{image1},
+	            image1 = #{image1},
+	        </if>
+	        <if test="image2 != null">
+	            image2 = #{image2},
+	        </if>
+	        <if test="image3 != null">
+	            image3 = #{image3},
+	        </if>
+	        <if test="image4 != null">
+	            image4 = #{image4},
+	        </if>
+	
+	        <if test="image5 != null">
+	            image5 = #{image5},
+	        </if>
+	        updated_at = NOW(),
+	        deleted = #{deleted},
+	        status = #{status}
+	    WHERE personal_match_id = #{personalMatchId}
+	</update>
+	
+	<update id="deletePersonalMatch" parameterType="long">
+	    UPDATE personal_match
+	    SET
+	        deleted = 1,
+	        status = '삭제',
+	        updated_at = NOW()
+	    WHERE personal_match_id = #{personalMatchId}
+	</update>
+	
 
 	<select id="selectMyPagePersonalMatchDates" parameterType="map"
 		resultType="string">
@@ -479,3 +545,4 @@
     </if>
 	</select>
 </mapper>
+

@@ -12,36 +12,9 @@
 <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
 
-<script>
-		$(function(){
-			$('#postSearch').on("click", function(e) {
-			    e.preventDefault();
-		        new daum.Postcode({
-		            oncomplete: function(data) {
-		                $('#address').val(data.roadAddress);
-		                console.log($('#address').val());
-		      
-		                var geocoder = new kakao.maps.services.Geocoder();
-		                geocoder.addressSearch(data.roadAddress, function(result, status) {
-		                    if (status === kakao.maps.services.Status.OK) {
-		                        var lat = result[0].y;
-		                        var lng = result[0].x;
-		                        $('#lat').val(lat);
-		                        $('#lng').val(lng);
-		                    }
-		                });
-		            }
-		        }).open();
-			});
-		});
-</script>
 
 <main class="page">
-	<!-- <input type="text" id="sample5_address" placeholder="주소">
-	<input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
-	<div id="map" style="width:300px;height:300px;margin-top:10px;"></div> -->
-
-<form id="writeForm" class="form-rail" action="${ctx}/match/create" method="post" enctype="multipart/form-data">
+<form id="writeForm" class="form-rail" action="${ctx}/match/write/form" method="post" enctype="multipart/form-data">
   <nav class="breadcrumb"><a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a><span class="sep">›</span><span>경기 만들기</span></nav>
   <div class="page-head"><h1 class="page-title">경기 만들기</h1></div>
   <section class="form-section">
@@ -75,11 +48,15 @@
       </div>
     </div>
     <div class="field">
-      <label class="field-label" for="place">장소</label>
- 		<div class="field-row">
- 			<input class="input" id="address" name="address" placeholder="장소를 검색하세요" value="" readonly required>
-      		<button id="postSearch" class="btn btn-primary btn-lg">검색</button>
- 		</div>
+      <label class="field-label" for="address" style="margin-top:10px;">주소</label>
+	  <div class="field-row">
+		<input class="input" id="address" name="address" style="width:50%;" placeholder="주소 검색" value="" readonly required>
+     	<button id="postSearch" class="btn btn-primary btn-lg">검색</button>
+	  </div>
+      <label class="field-label" for="addressDetail">상세주소</label>
+	  <div class="field-row">
+		<input class="input" id="addressDetail" name="addressDetail" placeholder="장소를 입력하세요" value="" required>
+	  </div>
 	<input type="hidden" id="lat" name="lat" required>
 	<input type="hidden" id="lng" name="lng" required>
     </div>
@@ -123,8 +100,10 @@
     </div>
     <div class="field"><span class="field-label">실력 <span class="hint">복수 선택 가능</span></span>
       <div class="chip-group" data-select="multi" data-name="levels">
-        <button type="button" class="chip">입문</button><button type="button" class="chip is-selected">초급</button>
-        <button type="button" class="chip is-selected">중급</button><button type="button" class="chip">상급</button>
+        <button type="button" class="chip">입문</button>
+        <button type="button" class="chip is-selected">초급</button>
+        <button type="button" class="chip is-selected">중급</button>
+        <button type="button" class="chip">상급</button>
       </div>
     </div>
   </section>
@@ -149,6 +128,14 @@
   </div>
 </form>
 </main>
-<script src="${ctx}/js/common.match.js"></script>
-
 <%@ include file="/jsp/common/footer.jsp" %>
+<script src="${ctx}/js/common.match.js"></script>
+<script src="${ctx}/js/common.postAddress.js"></script>
+<script>
+	$(function(){
+		$('#postSearch').on("click", function(e) {
+			e.preventDefault();
+			searchPostAddress();
+		});
+	})
+</script>
