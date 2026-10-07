@@ -37,17 +37,17 @@ public class AdminSettlementDetail extends HttpServlet {
 		
 		AdminSettlementService service = new AdminSettlementServiceImpl();
 		try {
-			int matchId = Integer.parseInt(request.getParameter("matchId"));
+			Long matchId = Long.parseLong(request.getParameter("matchId"));
 			String matchType = request.getParameter("matchType");
 
-			List<Map<String, Object>> detail;
+			Map<String, Object> detail;
 			
 			if ("team".equals(matchType)) {
 				detail = service.getTeamSettlementDetail(matchId);
 			} else {
 				detail = service.getPersonalSettlementDetail(matchId);
 			}
-			request.setAttribute("detail", detail.isEmpty() ? null : detail.get(0));
+			request.setAttribute("detail", detail);
 			request.setAttribute("matchId", matchId);
 			request.setAttribute("isTeam", "team".equals(matchType));
 			
@@ -82,15 +82,10 @@ public class AdminSettlementDetail extends HttpServlet {
 		Long adminId = (loginUser == null) ? null : loginUser.getUserId();
 		
 		try {
-			int result;
 			if ("team".equals(matchType)) {
-				result = service.updateTeamSettlement(settlementId, adminId);
+				service.updateTeamSettlement(settlementId, adminId);
 			} else {
-				result = service.updatePersonalSettlement(settlementId, adminId);
-			}
-
-			if (result == 0) {
-				System.out.println("이미 지급완료된 정산이거나 없는 정산 번호: " + settlementId);
+				service.updatePersonalSettlement(settlementId, adminId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -367,7 +367,7 @@ window.addEventListener("fcmMessageReceived", function(e) {
 					href="${ctx}/support/notice/list"
 					class="${activeNav eq 'notice' ? 'is-active' : ''}">공지사항</a>
 				<c:if test="${sessionScope.user.grade eq 'Admin'}">
-					<a href="${ctx}/admin/revenue/view"
+					<a href="${ctx}/admin/revenue"
 						class="${activeNav eq 'admin' ? 'is-active' : ''}">관리자(사이트)</a>
 				</c:if>
 			</nav>
@@ -389,6 +389,10 @@ window.addEventListener("fcmMessageReceived", function(e) {
 							title="마이페이지"> <img src="${ctx}/img/profile-default.png"
 							alt="내 프로필">
 						</a>
+						<button type="button" class="logout-btn" data-modal-open="logoutModal"
+							title="로그아웃" aria-label="로그아웃">
+							<img src="${ctx}/img/icon-logout.svg" alt="">
+						</button>	
 					</c:otherwise>
 				</c:choose>
 			</div>

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.Inquiry;
 
 public class InquiryDaoImpl implements InquiryDao {
 	//관리자 문의관리 개수
@@ -48,5 +49,35 @@ public class InquiryDaoImpl implements InquiryDao {
 			throw e;
 		}
 	}
-
+	@Override
+	public void insertInquiry(Inquiry inquiry) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.inquiry.insertInquiry", inquiry);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}		
+	}
+	@Override
+	public List<Map<String, Object>> selectInquiryList(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.inquiry.selectInquiryList",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	@Override
+	public Integer selectInquiryCnt(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.inquiry.selectInquiryCnt",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}	
 }

@@ -151,4 +151,13 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	}
 
 	
+	//관리자 경기수 세기 - 개인
+	@Override
+	public Long selectMatchCntPersonal() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalmatch.selectMatchCntPersonal");
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 }

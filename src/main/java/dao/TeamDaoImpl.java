@@ -81,5 +81,25 @@ public class TeamDaoImpl implements TeamDao {
 			sqlSession.close();
 		}
 	}
+	//관리자 팀 수 세기
+	@Override
+	public Long selectTeamCnt() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectOne("mapper.team.selectTeamCnt");
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<Team> selectTeamInfoByUserManager(Long userId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.team.selectTeamInfoByUserManager", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 }

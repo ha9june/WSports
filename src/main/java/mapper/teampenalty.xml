@@ -61,12 +61,12 @@
 	</select>
 	
 	<!-- 팀 주장 닉네임 -->
-	<select id="selectTeamCaptain" resultType="string">
-		select u.nickname
+	<select id="selectTeamCaptain" resultType="map">
+		select u.nickname, tu.user_id, tu.team_id
 		from team_user tu
 		join user u on u.user_id = tu.user_id
 		where tu.team_id = #{teamId}
-		and tu.team_role = '주장'
+		and tu.team_role = 'CAPTAIN'
 		and tu.withdrawn = 0
 		limit 1
 	</select>

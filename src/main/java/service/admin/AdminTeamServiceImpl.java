@@ -6,13 +6,17 @@ import java.util.Map;
 
 import dao.TeamPenaltyDao;
 import dao.TeamPenaltyDaoImpl;
+import dto.Notification;
 import dto.PageInfo;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 
 public class AdminTeamServiceImpl implements AdminTeamService {
 	private TeamPenaltyDao teampenaltyDao;
-
+	private NotificationService notificationService;
 	public AdminTeamServiceImpl() {
 		this.teampenaltyDao = new TeamPenaltyDaoImpl();
+		this.notificationService = new NotificationServiceImpl();
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 	
 	//주장 닉네임
 	@Override
-	public String getTeamCaptain(Long teamId) throws Exception {
+	public Map<String, Object> getTeamCaptain(Long teamId) throws Exception {
 		return teampenaltyDao.selectTeamCaptain(teamId);
 	}
 	
@@ -98,7 +102,27 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		param.put("teamId", teamId);
 		param.put("days", days);
 		param.put("reason", reason);
-		teampenaltyDao.insertTeamPenalty(param);
+		teampenaltyDao.insertTeamPenalty(param);//사유 저장
+		
+		//팀 페널티 세부정보 조회
+		Map<String, Object> detail = teampenaltyDao.selectTeamCaptain(teamId);
+		if (detail == null) return;
+		//팀 주장 유저 id 꺼내기
+		Long userId = ((Number) detail.get("user_id")).longValue();
+		System.out.println(userId+":서비스");
+						
+		//알림 내용 만들기
+		String title = "팀 정지";
+		String content = "팀이 "+days+"일 정지되었습니다.";
+		String link = "/team/detail?teamId="+teamId;
+		//알림 객체 채우기
+		Notification alarm = new Notification();
+		alarm.setUserId(userId);
+		alarm.setTitle("팀 페널티 등록");
+		alarm.setContent(content);
+		alarm.setLink(link);
+		//알림 저장, 푸시 전송
+		notificationService.sendNotification(alarm);
 		
 	}
 	//팀 영구정지
@@ -108,6 +132,27 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		param.put("teamId", teamId);
 		param.put("reason", reason);
 		teampenaltyDao.insertTeamPermanentPenalty(param);
+		
+		//팀 페널티 세부정보 조회
+		Map<String, Object> detail = teampenaltyDao.selectTeamCaptain(teamId);
+		if (detail == null) return;
+		//팀 주장 유저 id 꺼내기
+		Long userId = ((Number) detail.get("user_id")).longValue();
+		System.out.println(userId+":서비스");
+						
+		//알림 내용 만들기
+		String title = "팀 영구정지 부과";
+		String content = "팀이 영구정지 되었습니다.";
+		String link = "/team/detail?teamId="+teamId;
+		//알림 객체 채우기
+		Notification alarm = new Notification();
+		alarm.setUserId(userId);
+		alarm.setTitle("팀 페널티 등록");
+		alarm.setContent(content);
+		alarm.setLink(link);
+		//알림 저장, 푸시 전송
+		notificationService.sendNotification(alarm);
+
 	}
 	// 팀 페널티 점수 조정
 	@Override
@@ -117,5 +162,25 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		param.put("change", change);   // 부여면 +, 차감이면 -
 		param.put("reason", reason);
 		teampenaltyDao.insertTeamChangePenalty(param);
+		
+		//팀 페널티 세부정보 조회
+		Map<String, Object> detail = teampenaltyDao.selectTeamCaptain(teamId);
+		if (detail == null) return;
+		//팀 주장 유저 id 꺼내기
+		Long userId = ((Number) detail.get("user_id")).longValue();
+						
+		//알림 내용 만들기
+		String title = "팀 패널티 점수 조정";
+		String content = "팀 페널티 점수가 "+change+"점 조정되었습니다.";
+		String link = "/team/detail?teamId="+teamId;
+		//알림 객체 채우기
+		Notification alarm = new Notification();
+		alarm.setUserId(userId);
+		alarm.setTitle("팀 페널티 등록");
+		alarm.setContent(content);
+		alarm.setLink(link);
+		//알림 저장, 푸시 전송
+		notificationService.sendNotification(alarm);
+
 	}
 }

@@ -2,6 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.inquiry">
+	<insert id="insertInquiry" parameterType="inquiry">
+	insert into inquiry(user_id,type,title,content,created_at,answer_status)
+	values(#{userId},#{type},#{title},#{content},now(),'답변대기')
+	</insert>
+	
+	<select id="selectInquiryList" parameterType="Map" resultType="Map">
+	select inquiry_id,title,type,date_format(created_at,'%m/%d') as created_at,answer_status 
+	from inquiry 
+	where user_id=#{userId} 
+		  and (deleted = 0 or deleted is null) 
+		  <if test="status != null">
+		  and answer_status = #{status}
+		  </if>
+	order by inquiry_id desc limit #{row},10
+	</select>
+	
+	<select id="selectInquiryCnt" resultType="Integer" parameterType="Map">
+	select count(*) 
+	from inquiry 
+	where user_id=#{userId} 
+		  and (deleted = 0 or deleted is null) 
+		  <if test="status != null">
+		  and answer_status = #{status}
+		  </if>
+	</select>	
+
 	<!-- 관리자 문의관리 개수 / 상태 기준 필터 -->
 	<select id="selectAdminInquiryCnt" parameterType="map" resultType="int">
 		select count(*)

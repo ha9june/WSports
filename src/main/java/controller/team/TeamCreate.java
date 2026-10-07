@@ -113,11 +113,12 @@ public class TeamCreate extends HttpServlet {
 			agesSet.addAll(Arrays.asList(ages.split(",")));
 		}
 
-		team.setAge20s(agesSet.contains("20대"));
-		team.setAge30s(agesSet.contains("30대"));
-		team.setAge40s(agesSet.contains("40대"));
-		team.setAge50s(agesSet.contains("50대 이상"));
-		team.setAge60Plus(agesSet.contains("연령 무관"));
+		boolean anyAge = agesSet.contains("연령 무관");
+		team.setAge20s(anyAge || agesSet.contains("20대"));
+		team.setAge30s(anyAge || agesSet.contains("30대"));
+		team.setAge40s(anyAge || agesSet.contains("40대"));
+		team.setAge50s(anyAge || agesSet.contains("50대 이상"));
+		team.setAge60Plus(anyAge);
 
 		String[] regions = request.getParameterValues("regions");
 		if (regions != null && regions.length >= 1)

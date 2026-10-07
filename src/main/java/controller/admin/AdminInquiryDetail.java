@@ -39,7 +39,7 @@ public class AdminInquiryDetail extends HttpServlet {
 			request.setAttribute("inquirydetail", inquirydetail);
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "정산관리 목록 조회 오류");
+			request.setAttribute("err", "문의 상세 조회 오류");
 		}
 		request.getRequestDispatcher("/jsp/admin/adminInquiryDetail.jsp").forward(request, response);
 	}

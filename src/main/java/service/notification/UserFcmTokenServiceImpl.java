@@ -24,4 +24,9 @@ public class UserFcmTokenServiceImpl implements UserFcmTokenService {
 		return userFcmTokenDao.selectUserFcmToken(userId);
 	}
 
+	@Override
+	public int changeActiveUserFcmToken(Long userId, String fcmToken) throws Exception {
+		return userFcmTokenDao.updateUserFcmToken(userId, fcmToken);
+	}
+
 }

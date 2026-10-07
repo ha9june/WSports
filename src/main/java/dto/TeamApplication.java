@@ -22,42 +22,19 @@ public class TeamApplication {
     private String badmintonSkill;           // 배드민턴 실력
     private String skill;
 
+    private Team team; 
+    public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
+    
 	public TeamApplication() {
 		super();
 		// TODO Auto-generated constructor stub
-	}
-
-	public TeamApplication(Long applicationId, Long userId, Long teamId, String message, String status,
-			String rejectionReason, LocalDateTime appliedAt, LocalDateTime processedAt, String profileImage,
-			String nickname, String preferredRegion1, String soccerSkill, String basketballSkill, String tennisSkill,
-			String badmintonSkill, String skill) {
-		super();
-		this.applicationId = applicationId;
-		this.userId = userId;
-		this.teamId = teamId;
-		this.message = message;
-		this.status = status;
-		this.rejectionReason = rejectionReason;
-		this.appliedAt = appliedAt;
-		this.processedAt = processedAt;
-		this.profileImage = profileImage;
-		this.nickname = nickname;
-		this.preferredRegion1 = preferredRegion1;
-		this.soccerSkill = soccerSkill;
-		this.basketballSkill = basketballSkill;
-		this.tennisSkill = tennisSkill;
-		this.badmintonSkill = badmintonSkill;
-		this.skill = skill;
-	}
-
-	@Override
-	public String toString() {
-		return "TeamApplication [applicationId=" + applicationId + ", userId=" + userId + ", teamId=" + teamId
-				+ ", message=" + message + ", status=" + status + ", rejectionReason=" + rejectionReason
-				+ ", appliedAt=" + appliedAt + ", processedAt=" + processedAt + ", profileImage=" + profileImage
-				+ ", nickname=" + nickname + ", preferredRegion1=" + preferredRegion1 + ", soccerSkill=" + soccerSkill
-				+ ", basketballSkill=" + basketballSkill + ", tennisSkill=" + tennisSkill + ", badmintonSkill="
-				+ badmintonSkill + ", skill=" + skill + "]";
 	}
 
 	public Long getApplicationId() {
@@ -187,5 +164,40 @@ public class TeamApplication {
 	public void setSkill(String skill) {
 		this.skill = skill;
 	}
-    
+
+	@Override
+	public String toString() {
+		return "TeamApplication [applicationId=" + applicationId + ", userId=" + userId + ", teamId=" + teamId
+				+ ", message=" + message + ", status=" + status + ", rejectionReason=" + rejectionReason
+				+ ", appliedAt=" + appliedAt + ", processedAt=" + processedAt + ", profileImage=" + profileImage
+				+ ", nickname=" + nickname + ", preferredRegion1=" + preferredRegion1 + ", soccerSkill=" + soccerSkill
+				+ ", basketballSkill=" + basketballSkill + ", tennisSkill=" + tennisSkill + ", badmintonSkill="
+				+ badmintonSkill + ", skill=" + skill + ", team=" + team + "]";
+	}
+
+	public TeamApplication(Long applicationId, Long userId, Long teamId, String message, String status,
+			String rejectionReason, LocalDateTime appliedAt, LocalDateTime processedAt, String profileImage,
+			String nickname, String preferredRegion1, String soccerSkill, String basketballSkill, String tennisSkill,
+			String badmintonSkill, String skill, Team team) {
+		super();
+		this.applicationId = applicationId;
+		this.userId = userId;
+		this.teamId = teamId;
+		this.message = message;
+		this.status = status;
+		this.rejectionReason = rejectionReason;
+		this.appliedAt = appliedAt;
+		this.processedAt = processedAt;
+		this.profileImage = profileImage;
+		this.nickname = nickname;
+		this.preferredRegion1 = preferredRegion1;
+		this.soccerSkill = soccerSkill;
+		this.basketballSkill = basketballSkill;
+		this.tennisSkill = tennisSkill;
+		this.badmintonSkill = badmintonSkill;
+		this.skill = skill;
+		this.team = team;
+	}
+
 }
+	

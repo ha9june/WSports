@@ -48,7 +48,6 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		return personalMatchDao.selectNowPersonalMatchList(searchInfo);
 	}
 
-	// 마이페이지 참가 경기 목록 조회(페이징)
 	@Override
 	public List<PersonalMatch> getNormalMatchList(MatchSearchInfo searchInfo) throws Exception {
 		return personalMatchDao.selectNormalPersonalMatchList(searchInfo);
@@ -68,27 +67,28 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
 
+		int size = 5;
 		int cnt = personalMatchDao.selectMyPagePersonalMatchCnt(param);
-		Integer allPage = (int) Math.ceil(cnt / 10.0);
+		
+		
+		Integer allPage = (int) Math.ceil(cnt / (double) size);
+		if (allPage == 0) allPage = 1;
+		
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
+	    if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
+	    
 		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
 		int endPage = Math.min(startPage + 9, allPage);
 
-		if (endPage < 1)
-			endPage = 1;
-		if (pageInfo.getCurPage() > endPage) {
-			pageInfo.setCurPage(endPage);
-		}
+		
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
-
-		param.put("offset", (pageInfo.getCurPage() - 1) * 10);
-		param.put("size", 10);
-
+		param.put("size", size);
+		param.put("offset", (pageInfo.getCurPage() - 1) * size);
 		return personalMatchDao.selectMyPagePersonalMatchList(param);
 	}
 
-	// 마이페이지 내가 만든 경기 목록 조회(페이징)
 	@Override
 	public List<PersonalMatch> MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate) throws Exception {
 		Map<String, Object> param = new HashMap<>();
@@ -97,23 +97,23 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("sport", sport);
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
-
+		
+		int size = 5;
 		int cnt = personalMatchDao.selectMyPageCreatedPersonalMatchCnt(param);
-		Integer allPage = (int) Math.ceil(cnt / 10.0);
-		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
-		int endPage = Math.min(startPage + 9, allPage);
+		
+		Integer allPage = (int) Math.ceil(cnt / (double) size);
+		if (allPage == 0) allPage = 1;
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
+	    if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
 
-		if (endPage < 1)
-			endPage = 1;
-		if (pageInfo.getCurPage() > endPage) {
-			pageInfo.setCurPage(endPage);
-		}
+	    Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
+		int endPage = Math.min(startPage + 9, allPage);
+		
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
-
-		param.put("offset", (pageInfo.getCurPage() - 1) * 10);
-		param.put("size", 10);
+		param.put("size", size);
+		param.put("offset", (pageInfo.getCurPage() - 1) * size);
 
 		return personalMatchDao.selectMyPageCreatedPersonalMatchList(param);
 
@@ -173,9 +173,9 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		param.put("sport", sport);
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
-
+		int size = 5;
 		int cnt = favoriteDao.selectMyPageFavoriteCnt(param);
-		Integer allPage = (int) Math.ceil(cnt / 10.0);
+		Integer allPage = (int) Math.ceil(cnt / (double) size);
 		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
 		int endPage = Math.min(startPage + 9, allPage);
 
@@ -188,8 +188,8 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
 
-		param.put("offset", (pageInfo.getCurPage() - 1) * 10);
-		param.put("size", 10);
+		param.put("offset", (pageInfo.getCurPage() - 1) * size);
+		param.put("size", size);
 
 		return favoriteDao.selectMyPageFavoriteList(param);
 	}

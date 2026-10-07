@@ -73,5 +73,39 @@
 
 	</select>
 
+	<insert id="insertTeamMatch" parameterType="teammatch" useGeneratedKeys="true" keyProperty="teamMatchId">
+		insert into team_match
+		(
+			title, content, user_id, team_id, created_at,
+			match_date, sport, start_time, end_time,
+			place_name, address, latitude, longitude,
+			participation_fee, fee, deadline,
+			skill_intro, skill_beginner, skill_intermediate, skill_advanced,
+			age_20s, age_30s, age_40s, age_50s, age_60_plus,
+			gender, match_people, deleted,
+			image1, image2, image3, image4, image5,
+			status, region
+		)
+		values
+		(
+			#{title}, #{content}, #{userId}, #{teamId}, now(),
+			#{matchDate}, #{sport}, #{startTime}, #{endTime},
+			#{placeName}, #{address}, #{latitude}, #{longitude},
+			#{participationFee}, #{fee}, #{deadline},
+			#{skillIntro}, #{skillBeginner}, #{skillIntermediate}, #{skillAdvanced},
+			#{age20s}, #{age30s}, #{age40s}, #{age50s}, #{age60Plus},
+			#{gender}, #{matchPeople}, false,
+			#{image1}, #{image2}, #{image3}, #{image4}, #{image5},
+			'모집중', #{region}
+		)
+	</insert>
+
+	
+	<!-- 관리자 사이드바 팀 경기수 세기 -->
+	<select id="selectMatchCntTeam" resultType="Long">
+	 select count(*) from team_match
+	 where status = '종료'
+	</select>
+
 
 </mapper>

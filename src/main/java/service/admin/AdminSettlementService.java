@@ -12,9 +12,9 @@ public interface AdminSettlementService {
 	List<Map<String, Object>> getPersonalSettlementWaitList() throws Exception;
 	List<Map<String, Object>> getPersonalSettlementFinishList() throws Exception;
 	List<Map<String, Object>> getPersonalSettlementDayList(LocalDate startDate, LocalDate endDate) throws Exception;
-	List<Map<String, Object>> getPersonalSettlementDetail(int personalMatchId) throws Exception;
+	Map<String, Object> getPersonalSettlementDetail(Long personalMatchId) throws Exception;
 	List<Map<String, Object>> getPersonalSettlementList() throws Exception;
-	int updatePersonalSettlement(long settlementId, Long adminId) throws Exception;
+	void updatePersonalSettlement(Long settlementId, Long adminId) throws Exception;
 	
 	Integer getTeamSettlementWait() throws Exception;
 	Long getTeamSettlementWaitMoney() throws Exception;
@@ -22,7 +22,7 @@ public interface AdminSettlementService {
 	List<Map<String, Object>> getTeamSettlementList() throws Exception;
 	List<Map<String, Object>> getTeamSettlementFinishList() throws Exception;
 	List<Map<String, Object>> getTeamSettlementDayList(LocalDate startDate, LocalDate endDate) throws Exception;
-	List<Map<String, Object>> getTeamSettlementDetail(int teamMatchId) throws Exception;
-	int updateTeamSettlement(long settlementId, Long adminId) throws Exception;
+	Map<String, Object> getTeamSettlementDetail(Long teamMatchId) throws Exception;
+	void updateTeamSettlement(Long settlementId, Long adminId) throws Exception;
 	
 }

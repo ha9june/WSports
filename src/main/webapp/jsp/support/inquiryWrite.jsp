@@ -11,7 +11,7 @@
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
 <%-- TODO: action 을 문의 등록 서블릿으로 교체 --%>
-<form class="work-inner" action="${ctx}/jsp/support/inquiryList.jsp" method="post" style="width:860px">
+<form class="work-inner" action="${ctx}/support/inquiry/create" method="post" style="width:860px">
   <div class="page-head" style="margin-bottom:24px"><h1 class="page-title">문의하기</h1><p class="page-desc">서비스 이용 중 궁금한 점이나 오류를 남겨주세요. 확인 후 답변해드릴게요.</p></div>
   <div class="form-card" style="width:780px;max-width:100%">
     <div class="field"><label class="field-label" for="qType">문의 유형</label>
@@ -22,7 +22,7 @@
     <p class="notice-box">에러 문의 시 발생 시간과 화면, 재현 방법을 함께 적어주시면 더 빠르게 확인할 수 있어요.</p>
   </div>
   <div class="form-actions" style="width:780px;max-width:100%">
-    <a class="btn btn-outline" href="${ctx}/jsp/support/inquiryList.jsp">취소</a>
+    <a class="btn btn-outline" href="${ctx}/support/inquiry/list">취소</a>
     <button type="submit" class="btn btn-primary">문의 등록</button>
   </div>
 </form>

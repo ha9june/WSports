@@ -40,7 +40,7 @@
 				</c:if>
 			</c:forEach>
       		<dl class="kv2">
-      			<dt>주장</dt>	<dd>${captain }</dd>
+      			<dt>주장</dt>	<dd>${captain.nickname }</dd>
       			<dt>팀원</dt>	<dd>${membercnt}명</dd>
       			<dt>패널티점수</dt>	<dd>${empty penaltylist ? 0 : penaltylist[0].score}점</dd>
       			<dt>주 활동 지역</dt>
