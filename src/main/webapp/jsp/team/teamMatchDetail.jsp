@@ -115,7 +115,7 @@
 			</div>
 
 			<aside class="detail-side">
-				<c:choose>
+				<c:choose> 
 
 					<%-- 모집중 --%>
 					<c:when test="${status eq '모집중'}">
