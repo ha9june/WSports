@@ -23,6 +23,7 @@
     <a class="row-card" href="${ctx}/jsp/support/reportDetail.jsp?state=processing" style="padding:18px 24px"><div><p class="title">경기 중 비매너 신고</p><p class="meta">경기 신고 · 9/12</p></div><span class="status"><span class="pill pill-brand">접수</span></span></a>
     <a class="row-card" href="${ctx}/jsp/support/reportDetail.jsp?state=done" style="padding:18px 24px"><div><p class="title">부적절한 후기 신고</p><p class="meta">콘텐츠 신고 · 8/28</p></div><span class="status"><span class="pill pill-neutral">처리 완료</span></span></a>
   </div>
+  <nav class="pagination"><a href="#">‹</a><a href="#" class="is-active">1</a><a href="#">2</a><a href="#">3</a><a href="#">›</a></nav>
 </div>
 </main></div>
 <a class="fab" href="${ctx}/jsp/support/reportWrite.jsp"><span class="fab-label">신고 접수</span><span class="fab-btn" aria-hidden="true"></span></a>

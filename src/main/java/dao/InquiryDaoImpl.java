@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.Inquiry;
 
 public class InquiryDaoImpl implements InquiryDao {
 	//관리자 문의관리 개수
@@ -47,6 +48,20 @@ public class InquiryDaoImpl implements InquiryDao {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	@Override
+	public void insertInquiry(Inquiry inquiry) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.inquiry.insertInquiry", inquiry);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}		
 	}
 
 }
