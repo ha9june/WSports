@@ -78,4 +78,9 @@ public class ReviewServiceImpl implements ReviewService {
 	    }
 	    return list;
 	}
+
+	@Override
+	public List<Review> getReviewList(Long userId) throws Exception {
+		return reviewDao.selectReviewList(userId);
+	}
 }

@@ -19,8 +19,6 @@ public interface PersonalMatchDao {
 	List<PersonalMatch>selectMyPageCreatedPersonalMatchList(Map<String,Object> param)throws Exception;
 	Integer selectMyPageCreatedPersonalMatchCnt(Map<String, Object> param)throws Exception;
 
-	//마이페이지 내가만든 경기 종목별 조회
-	List<PersonalMatch>selectMyPageCreatedPersonalMatchsportList(Map<String,Object> param)throws Exception;
 
 	
 	//매치 글 조회
