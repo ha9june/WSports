@@ -30,23 +30,26 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 		param.put("sport", sport);
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
-
+		
+		int size = 5;
+		
 		int cnt = teamMatchDao.selectMypageTeamMatchCnt(param);
-		Integer allPage = (int) Math.ceil(cnt / 10.0);
-		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
+		
+		Integer allPage = (int) Math.ceil(cnt / (double) size);
+		if (allPage == 0) allPage = 1;
+		
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
+	    if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
+	    
+	    Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
 		int endPage = Math.min(startPage + 9, allPage);
-
-		if (endPage < 1)
-			endPage = 1;
-		if (pageInfo.getCurPage() > endPage) {
-			pageInfo.setCurPage(endPage);
-		}
+		
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
-
-		param.put("offset", (pageInfo.getCurPage() - 1) * 10);
-		param.put("size", 10);
+		
+		param.put("size", size);
+		param.put("offset", (pageInfo.getCurPage() - 1) * size);
 
 		return teamMatchDao.selectMypageTeamMatchList(param);
 	}

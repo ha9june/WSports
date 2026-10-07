@@ -41,7 +41,7 @@ public class TeamPaymentDaoImpl implements TeamPaymentDao {
 	@Override
 	public Long monthlyProfitTeam() throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectOne("mapper.teampayment.totalRevenueTeam");
+			return sqlSession.selectOne("mapper.teampayment.monthlyProfitTeam");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

@@ -39,7 +39,7 @@ public class NotificationList extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    
+    //날짜 표시 형식 만들기
     private String formatNotificationDate(LocalDateTime createdAt) {
 
         LocalDate today = LocalDate.now();
@@ -71,11 +71,12 @@ public class NotificationList extends HttpServlet {
     }
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		//로그인 확인
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("user") == null) {
 		    return;
 		}
-
+		//로그인 사용자 꺼내기
 		User user = (User) session.getAttribute("user");
 		
 		NotificationService notificationService = new NotificationServiceImpl();

@@ -12,4 +12,10 @@ public interface TeamApplicationDao {
 	List<TeamApplication> selectTeamApplicationList(Long teamId) throws Exception;
 	int updateTeamApplicationApprove(Long teamId, Long applicationId) throws Exception;
 	int updateTeamApplicationReject(Long teamId, Long applicationId, String reason) throws Exception;
+	
+	int updateMypageMyTeam(Long userId,Long applicationId,String status)throws Exception;
+	List<Map<String, Object>> selectMypageJoinedTeamList(Map<String, Object> param) throws Exception;
+	Integer selectMypageJoinedTeamCnt(Map<String, Object> param) throws Exception;
+	List<Map<String, Object>> selectMypageMyTeamList(Map<String, Object> param) throws Exception;
+	Integer selectMypageMyTeamCnt(Map<String,Object>param)throws Exception;
 }

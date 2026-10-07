@@ -48,12 +48,10 @@
     	<div class="kpi">
     		<p>이번달 매출</p>
     		<b><fmt:formatNumber value="${monthlyRevenue}" pattern="#,###" />원</b>
-    		<small>9월 결제 금액</small>
     	</div>
     	<div class="kpi">
     		<p>이번달 수익</p>
     		<b><fmt:formatNumber value="${monthlyProfit}" pattern="#,###" />원</b>
-    		<small>9월 순수익</small>
     	</div>
   	</div>
   	<section class="admin-panel">

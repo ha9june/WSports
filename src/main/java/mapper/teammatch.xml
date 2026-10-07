@@ -72,6 +72,7 @@
 		</if>
 
 	</select>
+
 	<insert id="insertTeamMatch" parameterType="teammatch" useGeneratedKeys="true" keyProperty="teamMatchId">
 		insert into team_match
 		(
@@ -98,5 +99,13 @@
 			'모집중', #{region}
 		)
 	</insert>
+
+	
+	<!-- 관리자 사이드바 팀 경기수 세기 -->
+	<select id="selectMatchCntTeam" resultType="Long">
+	 select count(*) from team_match
+	 where status = '종료'
+	</select>
+
 
 </mapper>

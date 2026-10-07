@@ -8,7 +8,7 @@ import dto.PageInfo;
 public interface AdminTeamService {
 	List<Map<String, Object>> getAdminTeamList(PageInfo pageInfo, String status, String keyword) throws Exception;
 	//주장 닉네임
-	String getTeamCaptain(Long teamId) throws Exception;
+	Map<String, Object> getTeamCaptain(Long teamId) throws Exception;
 	//팀원 수
 	Integer getTeamMemberCnt(Long teamId) throws Exception;
 	//팀 개수

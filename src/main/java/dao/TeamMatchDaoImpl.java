@@ -45,6 +45,7 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 		}
 	}
 
+
 	@Override
 	public Long insertTeamMatch(TeamMatch teamMatch) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
@@ -57,6 +58,15 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			throw e;
 		} finally {
 			sqlSession.close();
+
+	//관리자 경기수 세기 - 팀
+	@Override
+	public Long selectMatchCntTeam() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teammatch.selectMatchCntTeam");
+		} catch (Exception e) {
+			throw e;
+
 		}
 	}
 }

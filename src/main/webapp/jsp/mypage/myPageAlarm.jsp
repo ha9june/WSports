@@ -22,14 +22,35 @@
   
   <section class="noti-group">
     <h2>미확인</h2>
-    <a class="noti-item unread" href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied"><strong>참가가 확정되었습니다.</strong><p>토요일 저녁 풋살 한 판! · 결제가 완료되어 참가가 확정됐어요.</p><time>10:24</time></a>
-    <a class="noti-item unread" href="${ctx}/jsp/match/personalMatchDetail.jsp?state=closed"><strong>경기 모집이 마감되었습니다.</strong><p>주말 실내 농구 같이 하실 분 · 모집 인원이 모두 찼어요.</p><time>09:12</time></a>
+    	<a class="noti-item unread" href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
+    		<strong>참가가 확정되었습니다.</strong>
+    		<p>토요일 저녁 풋살 한 판! · 결제가 완료되어 참가가 확정됐어요.</p>
+    		<time>10:24</time>
+    	</a>
+    	<a class="noti-item unread" href="${ctx}/jsp/match/personalMatchDetail.jsp?state=closed">
+    		<strong>경기 모집이 마감되었습니다.</strong>
+    		<p>주말 실내 농구 같이 하실 분 · 모집 인원이 모두 찼어요.</p>
+    		<time>09:12</time>
+    	</a>
   </section>
   <section class="noti-group" style="margin-top:28px">
     <h2>확인</h2>
-    <a class="noti-item" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=participant"><strong>참가자 평가를 남겨주세요.</strong><p>지난 경기에 함께한 참가자를 평가할 수 있어요.</p><time>9/11</time></a>
-    <a class="noti-item" href="${ctx}/jsp/team/teamDetail.jsp?state=member"><strong>팀 가입 신청이 승인되었습니다.</strong><p>마포 풋살 크루에 가입되었어요.</p><time>9/10</time></a>
-    <a class="noti-item" href="${ctx}/jsp/support/noticeDetail.jsp"><strong>서비스 이용 안내</strong><p>서비스 이용 정책이 업데이트되었습니다.</p><time>9/08</time></a>
+    <a class="noti-item" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=participant">
+    	<strong>참가자 평가를 남겨주세요.</strong>
+    	<p>지난 경기에 함께한 참가자를 평가할 수 있어요.</p>
+    	<time>9/11</time>
+    </a>
+    	
+    <a class="noti-item" href="${ctx}/jsp/team/teamDetail.jsp?state=member">
+    	<strong>팀 가입 신청이 승인되었습니다.</strong>
+    	<p>마포 풋살 크루에 가입되었어요.</p>
+    	<time>9/10</time>
+    </a>
+    <a class="noti-item" href="${ctx}/jsp/support/noticeDetail.jsp">
+    	<strong>서비스 이용 안내</strong>
+    	<p>서비스 이용 정책이 업데이트되었습니다.</p>
+    	<time>9/08</time>
+    </a>
   </section>
 </div>
 </main></div>
