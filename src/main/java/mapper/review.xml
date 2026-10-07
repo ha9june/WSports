@@ -2,22 +2,86 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.review">
-	
-	<insert id="insertReview" parameterType="review" useGeneratedKeys="true" keyProperty="num">
-	insert into review(user_id, match_type, match_id, title, content, image, deleted, created_at, updated_at) 
-	values (#{userId}, #{matchType}, #{matchId}, #{title}, #{content}, NOW(), #{image})
+
+	<insert id="insertReview" parameterType="Review"
+		useGeneratedKeys="true" keyProperty="reviewId">
+		INSERT INTO review
+		(user_id, match_type, match_id, title, content, image, deleted, created_at,
+		updated_at)
+		VALUES
+		(#{userId}, #{matchType}, #{matchId}, #{title}, #{content}, #{image}, 0, NOW(),
+		NOW())
 	</insert>
-	
-	<select id="selectReview" parameterType="review" resultType="review">
-	 select r.*,u.nickname,
-	 u.profile_image from review r
-	 join user u on u.user_id=r.user_id where r.deleted=false 
-	 order by r.created_at desc limit ?,?;
+
+	<select id="selectReview" parameterType="Review"
+		resultType="Review">
+		select r.*,u.nickname,
+		u.profile_image from review r
+		join
+		user u on u.user_id=r.user_id where r.deleted=false
+		order by
+		r.created_at desc limit ?,?;
 	</select>
-	
-	<update id="UpdateReview" parameterType="review">
-	update set 
-	where
+
+	<update id="UpdateReview" parameterType="Review">
+		update set
+		where
 	</update>
-	
+
+	<select id="selectReviewablePersonal" parameterType="long"
+		resultType="Review">
+		SELECT 'PERSONAL' AS matchType,
+		m.personal_match_id AS
+		matchId,
+		m.title AS title
+		FROM personal_match_participant p
+		JOIN
+		personal_match m
+		ON m.personal_match_id = p.personal_match_id
+		WHERE
+		p.user_id = #{userId}
+		AND p.status = '결제완료'
+		AND m.deleted = '0'
+		AND
+		m.status = '경기 종료'
+		AND
+		p.attendance = true
+		AND NOT EXISTS (SELECT 1 FROM
+		review r
+		WHERE r.user_id = #{userId}
+		AND r.match_type = 'PERSONAL'
+		AND
+		r.match_id = m.personal_match_id
+		AND r.deleted = 0)
+		ORDER BY
+		m.match_date DESC
+	</select>
+
+	<select id="selectReviewableTeam" parameterType="long"
+		resultType="Review">
+		SELECT 'TEAM' AS matchType,
+		m.team_match_id AS matchId,
+		m.title AS title
+		FROM team_match_participant p
+		JOIN team_match m
+		ON
+		m.team_match_id = p.team_match_id
+		WHERE p.user_id = #{userId}
+		AND
+		p.status = '결제완료'
+		AND m.deleted = 0
+		AND m.status = '경기 종료'
+		AND
+		p.attendance = true
+		AND NOT EXISTS (SELECT 1 FROM review r
+		WHERE
+		r.user_id = #{userId}
+		AND r.match_type = 'TEAM'
+		AND r.match_id =
+		m.team_match_id
+		AND r.deleted = 0)
+		ORDER BY m.match_date DESC
+	</select>
+
+
 </mapper>

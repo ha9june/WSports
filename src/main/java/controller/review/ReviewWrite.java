@@ -44,23 +44,24 @@ public class ReviewWrite extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	 User user = (User) request.getSession().getAttribute("user");
-         if (user == null) {
-             response.sendRedirect(request.getContextPath() + "/auth/login");
-             return;
-         }
+    	User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
 
-         // 테스트용 데이터 (연결 확인 후 DB 조회로 교체)
-         List<Map<String, Object>> list = new ArrayList<>();
-         Map<String, Object> m = new HashMap<>();
-         m.put("matchType", "PERSONAL");
-         m.put("matchId", 1);
-         m.put("title", "테스트 경기");
-         list.add(m);
-         request.setAttribute("myMatches", list);
+        ReviewService service = new ReviewServiceImpl();
+        try {
+            List<Review> myMatches = service.getReviewableMatches(user.getUserId());
+            request.setAttribute("myMatches", myMatches);
+            System.out.println(myMatches);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/review/create?error=fail");
+        }
 
-         request.getRequestDispatcher("/jsp/review/reviewWrite.jsp").forward(request, response);
-     }
+        request.getRequestDispatcher("/jsp/review/reviewWrite.jsp").forward(request, response);
+    }
     
     
     
@@ -85,32 +86,55 @@ public class ReviewWrite extends HttpServlet {
 		String realPath = request.getServletContext().getRealPath(uploadPath);
 		
 		
-		String matchType = request.getParameter("matchType");
+		String matchNo = request.getParameter("matchNo");
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
-		String matchId = request.getParameter("matchId");
+		
+		  String[] parts = matchNo.split(":");
+		    String matchType = parts[0];
+		    Long matchId;
+		    try {
+		        matchId = Long.parseLong(parts[1].trim());
+		    } catch (NumberFormatException e) {
+		        response.sendRedirect(request.getContextPath() + "/review/write?error=invalid");
+		        return;
+		    }
 		
 		
 		 // 사진 수집 (최대 5장, jpg/png만)
         List<Part> image = new ArrayList<>();
         for (Part part : request.getParts()) {
-            if (!"image".equals(part.getName()) || part.getSize() == 0) continue;
+            if (!"photos".equals(part.getName()) || part.getSize() == 0) continue;
             String type = part.getContentType();
             if (!"image/jpeg".equals(type) && !"image/png".equals(type)) continue;
             if (image.size() >= MAX_PHOTOS) break;
             image.add(part);
         }
-        Review review = new Review();
-        review.setMatchId(Long.parseLong(matchId.trim()));
-        review.setTitle(title.trim());
-        review.setContent(content.trim());
         
 		ReviewService service = new ReviewServiceImpl();
 		
 		try{
-			Long reviewId = service.writeReview(review, userId, realPath, image);
-			
-			response.sendRedirect(request.getContextPath() + "/jsp/review/reviewDetail.jsp?reviewId=" + reviewId + "&state=mine");
+			 boolean allowed = false;
+		        for (Review r : service.getReviewableMatches(userId)) {
+		            if (r.getMatchType().equals(matchType) && r.getMatchId().equals(matchId)) {
+		                allowed = true;
+		                break;
+		            }
+		        }
+		        if (!allowed) {
+		            response.sendRedirect(request.getContextPath() + "/review/write?error=notAllowed");
+		            return;
+		        }
+
+		        Review review = new Review();
+		        review.setMatchType(matchType);
+		        review.setMatchId(matchId);
+		        review.setTitle(title.trim());
+		        review.setContent(content.trim());
+
+		        Long reviewId = service.writeReview(review, userId, realPath, image);
+		        response.sendRedirect(request.getContextPath()
+		                + "/jsp/review/reviewDetail.jsp?reviewId=" + reviewId + "&state=mine");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

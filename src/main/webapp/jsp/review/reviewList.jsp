@@ -51,5 +51,5 @@
     </c:choose>
   </div>
 </main>
-<a class="fab" href="${ctx}/jsp/review/reviewWrite.jsp" data-auth><span class="fab-label">후기 쓰기</span><span class="fab-btn" aria-hidden="true"></span></a>
+<a class="fab" href="${ctx}/review/create" data-auth><span class="fab-label">후기 쓰기</span><span class="fab-btn" aria-hidden="true"></span></a>
 <%@ include file="/jsp/common/footer.jsp" %>

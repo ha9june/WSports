@@ -3,6 +3,7 @@ package service.review;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,5 +61,21 @@ public class ReviewServiceImpl implements ReviewService {
 			throw e;
 		}
 
+	}
+
+	@Override
+	public List<Review> getReviewableMatches(long userId) throws Exception {
+	    List<Review> list = new ArrayList<>();
+	    try {
+	        list.addAll(reviewDao.selectReviewablePersonal(userId));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    try {
+	        list.addAll(reviewDao.selectReviewableTeam(userId));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
 	}
 }
