@@ -7,4 +7,15 @@
 		from team_match_participant
 		where team_id = #{teamId} and status = '결제완료'
 	</select>
+	
+	<insert id="insertTeamMatchParticipant" parameterType="teammatchparticipant">
+		insert into team_match_participant
+			(
+				user_id, team_match_id, team_id, applied_at, status, payment_id, attendance
+			)
+			values
+			(
+				#{userId}, #{teamMatchId}, #{teamId}, now(), #{status}, #{paymentId}, '출석'
+			)
+	</insert>
 </mapper>
