@@ -25,6 +25,7 @@
     <a class="row-card" href="${ctx}/jsp/support/inquiryDetail.jsp?state=waiting" style="padding:18px 24px"><div><p class="title">팀 가입 신청 상태가 궁금해요</p><p class="meta">팀 · 가입 · 2026.09.12</p></div><span class="status"><span class="pill pill-neutral">답변 대기</span></span></a>
     <a class="row-card" href="${ctx}/jsp/support/inquiryDetail.jsp?state=answered" style="padding:18px 24px"><div><p class="title">경기 장소가 지도에서 다르게 보여요</p><p class="meta">오류 · 지도 · 2026.09.10</p></div><span class="status"><span class="pill pill-success">답변 완료</span></span></a>
   </div>
+  <nav class="pagination"><a href="#">‹</a><a href="#" class="is-active">1</a><a href="#">2</a><a href="#">3</a><a href="#">›</a></nav>
 </div>
 </main></div>
 <a class="fab" href="${ctx}/jsp/support/inquiryWrite.jsp"><span class="fab-label">문의 작성</span><span class="fab-btn" aria-hidden="true"></span></a>

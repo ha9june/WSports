@@ -3,7 +3,10 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+import dto.Inquiry;
+
 public interface InquiryDao {
+	void insertInquiry(Inquiry inquiry) throws Exception;
 	//관리자 문의관리 개수 
 	Integer selectAdminInquiryCnt(Map<String, Object> param) throws Exception;
 	//관리자 문의관리 리스트

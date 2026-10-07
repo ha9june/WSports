@@ -1,5 +1,7 @@
 package service.support;
 
-public interface InquiryService {
+import dto.Inquiry;
 
+public interface InquiryService {
+	void write(Inquiry inquiry) throws Exception;
 }
