@@ -39,7 +39,7 @@
     <p class="notice-box">카테고리에 맞는 항목이 없으면 기타를 선택하고 상황을 구체적으로 적어주세요.</p>
   </div>
   <div class="form-actions" style="width:780px;max-width:100%">
-    <a class="btn btn-outline" href="${ctx}/jsp/support/reportList.jsp" style="width:100px">취소</a>
+    <a class="btn btn-outline" href="${ctx}/support/report/list" style="width:100px">취소</a>
     <button type="submit" class="btn btn-primary" style="width:104px">신고 접수</button>
   </div>
 </form>

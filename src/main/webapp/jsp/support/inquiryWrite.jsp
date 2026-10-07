@@ -22,7 +22,7 @@
     <p class="notice-box">에러 문의 시 발생 시간과 화면, 재현 방법을 함께 적어주시면 더 빠르게 확인할 수 있어요.</p>
   </div>
   <div class="form-actions" style="width:780px;max-width:100%">
-    <a class="btn btn-outline" href="${ctx}/jsp/support/inquiryList.jsp">취소</a>
+    <a class="btn btn-outline" href="${ctx}/support/inquiry/list">취소</a>
     <button type="submit" class="btn btn-primary">문의 등록</button>
   </div>
 </form>

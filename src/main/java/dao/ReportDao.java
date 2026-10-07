@@ -14,4 +14,7 @@ public interface ReportDao {
 	Integer updateAdminReportAnswer(Map<String, Object> param) throws Exception;
 	//특정 신고 상세
 	Map<String, Object> selectAdminReportDetail(Long reportId) throws Exception;
+	
+	List<Map<String, Object>> selectReportList(Map<String, Object> param) throws Exception;
+	Integer selectReportCnt(Map<String, Object> param) throws Exception;
 }
