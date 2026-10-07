@@ -55,7 +55,7 @@
 				<span>${r.nickname}</span>
 				<span>${r.title}</span>
 				<span class="pill ${r.status eq '처리완료' ? 'pill-neutral' : 'pill-warning bd'}">${r.status}</span>
-				<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/report/detail?reportId=${m.report_id}">보기</a>
+				<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/report/detail?reportId=${r.report_id}">보기</a>
 			</div>
 		</c:forEach>
 		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">

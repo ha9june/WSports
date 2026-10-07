@@ -53,7 +53,7 @@
     			<span>${i.nickname}</span>
     			<span>${i.title }</span>
     			<span class="pill ${i.answer_status eq '답변완료' ? 'pill-neutral' : 'pill-warning bd'}">${i.answer_status}</span>
-    			<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/inquiry/detail?inquiryId=${m.inquiry_id}">보기</a>
+    			<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/inquiry/detail?inquiryId=${i.inquiry_id}">보기</a>
 			</div>
     	</c:forEach>
    		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">

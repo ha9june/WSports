@@ -23,9 +23,16 @@
 			<label class="field-label" for="nTitle">공지 제목</label>
 			<input class="input" id="nTitle" name="title" required>
 		</div>
+		
 		<div class="field mt-24">
 			<label class="field-label" for="nType">유형</label>
-			<input class="input" id="nType" name="type" required>
+			<select class="notice-type" id="nType" name="type">
+				<option value="notice">공지</option>
+				<option value="policy">정책</option>
+				<option value="inspection">점검</option>
+				<option value="event">이벤트</option>
+				<option value="update">업데이트</option>
+			</select>
 		</div>
 		<div class="field mt-24">
 			<label class="field-label" for="nBody">공지 내용</label>

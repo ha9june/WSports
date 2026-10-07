@@ -46,7 +46,7 @@
     		<span>수정,삭제</span>
     	</div>
 		<c:forEach var="n" items="${noticelist}">
-			<div class="tbl-row" style="grid-template-columns: 70px 100px 70px 100px 200px 110px 130px; 
+			<div class="tbl-row" id="notice-${n.notice_id}" style="grid-template-columns: 70px 100px 70px 100px 200px 110px 130px; 
 			justify-items: center; align-items: center; padding-left: 0px">
     			<span>${n.notice_id }</span>
     			<b><fmt:formatDate value="${n.created_at}" pattern="yyyy/MM/dd" /></b>
@@ -60,7 +60,7 @@
 				</button>
 
 				<%-- 수정(상세) / 삭제 --%>
-				<div style="display:flex; gap:6px">
+				<div style="display:flex; gap:6px ">
 					<a class="btn btn-outline btn-xs" href="${ctx}/admin/notice/modify?noticeId=${n.notice_id}">수정</a>
 					<button type="button" class="btn btn-danger btn-xs delete-btn" data-id="${n.notice_id}">삭제</button>
 				</div>
