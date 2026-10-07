@@ -60,7 +60,7 @@
    			<span>패널티 점수</span>
    			<span>팀 정지 상태</span>
    			<span>최근 사유</span>
-   			<span>상세</span>
+   			<span>팀 상세정보</span>
 		</div>
 		<c:forEach var="t" items="${teamlist}">
    			<div class="tbl-body">
@@ -71,7 +71,7 @@
    					<span>${t.score}점</span>
    					<span class="${t.suspension eq '정상' ? '' : 't-danger'}">${t.suspension }</span>
    					<span>${t.reason}</span>
-   					<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/team/detail?teamId=${t.team_id}">상세</a>
+   					<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/team/detail?teamId=${t.team_id}">보기</a>
    				</div>
    			</div>
    		</c:forEach>

@@ -18,9 +18,18 @@
 <c:set var="pageCss" value="mypage" />
 <c:set var="sideMenu" value="personalMatch" />
 <c:set var="demoRoles" value="member" />
+
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.pill-info.bd { border: 1px solid var(--ds-info-bd); }
+.match-left img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: contain;
+}
+
 .act-layout {
 	display: flex;
 	gap: 24px;
@@ -156,6 +165,20 @@
 	margin-bottom: 16px;
 }
 
+.act-card .left {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	width: 90px;
+}
+
+.act-card .left img {
+	width: 64px;
+	height: 64px;
+	object-fit: contain; /* 비율 유지하면서 칸에 맞춤 */
+}
+
 .list-head {
 	display: flex;
 	align-items: center;
@@ -183,8 +206,7 @@
 			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
 		</select> <select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
-			<option value="모집중" ${status == '모집중' ? 'selected' : ''}
-				style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
+			<option value="모집중" ${status == '모집중' ? 'selected' : ''}>모집중</option>
 			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
 				마감</option>
 			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
@@ -207,8 +229,38 @@
 				<div class="act-card"
 					data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
 					<div class="left">
-						<span class="pill pill-info">${m.status}</span><img
-							src="${ctx}/img/sport-icon-football.png" alt="">
+						<c:choose>
+							<c:when test="${m.status eq '모집중'}">
+								<span class="pill pill-success bd">모집중</span>
+							</c:when>
+							<c:when test="${m.status eq '모집 마감' or m.status eq '경기 종료'}">
+								<span class="pill pill-info bd">${m.status}</span>
+							</c:when>
+							<c:when test="${m.status eq '경기 취소'}">
+								<span class="pill pill-danger bd">경기 취소</span>
+							</c:when>
+							<c:otherwise>
+								<span class="pill pill-neutral bd">${m.status}</span>
+							</c:otherwise>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${m.sport eq '축구/풋살'}">
+								<img src="${ctx}/img/art-football.png" alt="축구/풋살">
+							</c:when>
+							<c:when test="${m.sport eq '농구'}">
+								<img src="${ctx}/img/art-basketball.png" alt="농구">
+							</c:when>
+							<c:when test="${m.sport eq '테니스'}">
+								<img src="${ctx}/img/art-tennis.png" alt="테니스">
+							</c:when>
+							<c:when test="${m.sport eq '배드민턴'}">
+								<img src="${ctx}/img/art-badminton.png" alt="배드민턴">
+							</c:when>
+							<c:otherwise>
+								<img src="${ctx}/img/match-default.png" alt="">
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<!-- 경기 제목 -->
 					<div class="main">
@@ -244,14 +296,17 @@
 					</div>
 				</div>
 			</c:forEach>
-			<c:set var="qs" value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
-			<nav class="pagination" style="display: flex; justify-content: center; padding: 0">
+			<c:set var="qs"
+				value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
+			<nav class="pagination"
+				style="display: flex; justify-content: center; padding: 0">
 				<c:if test="${pageInfo.curPage > 1}">
 					<a href="?page=${pageInfo.curPage - 1}${qs}">&lt;</a>
 				</c:if>
 				<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
 					var="p">
-					<a href="?page=${p}${qs}" class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+					<a href="?page=${p}${qs}"
+						class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
 				</c:forEach>
 				<c:if test="${pageInfo.curPage < pageInfo.allPage}">
 					<a href="?page=${pageInfo.curPage + 1}${qs}">&gt;</a>

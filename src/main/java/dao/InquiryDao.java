@@ -15,6 +15,8 @@ public interface InquiryDao {
 	Integer updateAdminInquiryAnswer(Map<String, Object> param) throws Exception;
 	//특정 문의 상세
 	Map<String, Object> selectAdminInquiryDetail(Long inquiryId) throws Exception;
+	//관리자 사이드바 - 답변대기 개수
+	Integer selectAdminInquiryWaitCnt() throws Exception;
 	
 	List<Map<String, Object>> selectInquiryList(Map<String, Object> param) throws Exception;
 	Integer selectInquiryCnt(Map<String, Object> param) throws Exception;

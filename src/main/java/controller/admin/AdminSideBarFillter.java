@@ -43,13 +43,19 @@ public class AdminSideBarFillter implements Filter {
 		// 화면을 그리는 GET 요청일 때만 조회 (POST 저장 등에서는 생략)
 		if("GET".equals(request.getMethod())){
 			try {
+				//운영 현황
 				request.setAttribute("adminStats", service.getAdminStats());
-				System.out.println("필터 : " + request.getAttribute("adminStats"));
+				//정산 대기
+				request.setAttribute("settlementWaitCnt", service.getSettlementWaitCnt());
+				//신고관리 처리대기
+				request.setAttribute("reportWaitCnt", service.getReportWaitCnt());
+				//문의관리 답변대기
+				request.setAttribute("inquiryWaitCnt", service.getInquiryWaitCnt());
 			} catch (Exception e) {
 				e.printStackTrace(); // 통계 조회가 실패해도 페이지는 열리게
 			}
 		}
-		chain.doFilter(req, res); // 원래 서블릿으로 진행s
+		chain.doFilter(req, res); // 원래 서블릿으로 진행
 	}
 
 }
