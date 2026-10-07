@@ -193,7 +193,7 @@ public class TeamMatchCreate extends HttpServlet {
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", "팀 경기 생성중 에러 발생");
-			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response); 
 		}
 		
 		
