@@ -22,6 +22,17 @@ public class Review {
     public LocalDate getMatchDate() { return matchDate; }
     public void setMatchDate(LocalDate matchDate) { this.matchDate = matchDate; }
     
+    private int likeCount;
+    private int commentCount;
+
+    public int getLikeCount() { return likeCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+    public int getCommentCount() { return commentCount; }
+    public void setCommentCount(int commentCount) { this.commentCount = commentCount; }
+    
+    
+    
+    
     public Review() {
 		super();
 		// TODO Auto-generated constructor stub
