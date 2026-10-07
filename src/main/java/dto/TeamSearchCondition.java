@@ -11,6 +11,10 @@ public class TeamSearchCondition {
     private String[] regions;
     private String keyword;
     private String sort;
+    
+    //메인 추천선택용
+  	private String SearchType;
+    
 	public TeamSearchCondition() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -81,6 +85,13 @@ public class TeamSearchCondition {
 	public void setSort(String sort) {
 		this.sort = sort;
 	}
+	public String getSearchType() {
+		return SearchType;
+	}
+	public void setSearchType(String searchType) {
+		SearchType = searchType;
+	}
+	
 	
 	
     

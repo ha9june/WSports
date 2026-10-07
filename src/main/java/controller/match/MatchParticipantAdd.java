@@ -43,7 +43,7 @@ public class MatchParticipantAdd extends HttpServlet {
 		}
 	    
 	    
-		Long personalMatchId = Long.parseLong(request.getParameter("num"));
+		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 		
 
 		

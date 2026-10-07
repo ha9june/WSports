@@ -39,7 +39,7 @@ public class MatchDetailProfileList extends HttpServlet {
 		    response.sendRedirect(request.getContextPath() + "/auth/login");
 		    return;
 		}
-		Long personalMatchId = Long.parseLong(request.getParameter("num"));
+		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 		
 		
 		PersonalMatchParticipantService service = new PersonalMatchParticipantServiceImpl();
