@@ -58,6 +58,8 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			throw e;
 		} finally {
 			sqlSession.close();
+		}
+	}
 
 	//관리자 경기수 세기 - 팀
 	@Override
