@@ -106,6 +106,45 @@
 	 select count(*) from team_match
 	 where status = '종료'
 	</select>
+	
+	<select id="selectTeamMatch" parameterType="Long" resultType="teammatch">
+		select tm.team_match_id, tm.title, tm.content, tm.user_id, tm.team_id, tm.created_at,
+		       tm.match_date, tm.sport, tm.start_time, tm.end_time,
+		       tm.place_name, tm.address, tm.latitude, tm.longitude,
+		       tm.participation_fee, tm.fee, tm.deadline,
+		       tm.skill_intro, tm.skill_beginner, tm.skill_intermediate, tm.skill_advanced,
+		       tm.age_20s, tm.age_30s, tm.age_40s, tm.age_50s, tm.age_60_plus,
+		       tm.gender, tm.match_people,
+		       tm.image1, tm.image2, tm.image3, tm.image4, tm.image5,
+		       tm.status, tm.region,
+		       t.team_name          as team_name,
+		       u.nickname           as host_nickname,
+		       u.profile_image      as host_profile_image,
+		       u.bio                as host_bio,
+		       u.preferred_region1  as host_region1,
+		       u.preferred_region2  as host_region2,
+		       u.preferred_region3  as host_region3,
+		       tu.team_role         as host_role,
+		       case tm.sport
+		           when '축구/풋살' then u.soccer_skill
+		           when '농구'      then u.basketball_skill
+		           when '테니스'    then u.tennis_skill
+		           when '배드민턴'  then u.badminton_skill
+		       end as host_skill,
+		   (select round(avg(r.score), 1) from user_rating r where r.receiver_user_id = tm.user_id) as host_rating,
+	       (select count(*)               from user_rating r where r.receiver_user_id = tm.user_id) as host_rating_count,
+	       (select round(avg(tr.score), 1) from team_rating tr where tr.team_id = tm.team_id) as team_rating,
+	       (select count(*)                from team_rating tr where tr.team_id = tm.team_id) as team_rating_count 
+		from team_match tm
+		join team t on t.team_id = tm.team_id
+		join user u on u.user_id = tm.user_id
+		left join team_user tu
+		       on tu.team_id = tm.team_id
+		      and tu.user_id = tm.user_id
+		      and tu.withdrawn = 0
+		where tm.team_match_id = #{teamMatchId}
+		  and coalesce(tm.deleted, 0) = 0
+	</select>
 
 
 </mapper>

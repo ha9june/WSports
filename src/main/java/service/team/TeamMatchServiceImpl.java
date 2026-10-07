@@ -50,5 +50,10 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 		teamMatchDao.insertTeamMatch(teamMatch);
 		return teamMatch.getTeamMatchId();
 	}
+
+	@Override
+	public TeamMatch getTeamMatch(Long teamMatchId) throws Exception {
+		return teamMatchDao.selectTeamMatch(teamMatchId);
+	}
 	
 }

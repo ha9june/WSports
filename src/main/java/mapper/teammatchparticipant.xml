@@ -18,4 +18,10 @@
 				#{userId}, #{teamMatchId}, #{teamId}, now(), #{status}, #{paymentId}, true
 			)
 	</insert>
+	
+	<select id="selectTeamMatchParticipantTeamIdList" parameterType="Long" resultType="Long">
+		select team_id
+		from team_match_participant
+		where team_match_id = #{teamMatchId}
+	</select>
 </mapper>

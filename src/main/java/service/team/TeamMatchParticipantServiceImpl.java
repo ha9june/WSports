@@ -1,5 +1,7 @@
 package service.team;
 
+import java.util.List;
+
 import dao.TeamDao;
 import dao.TeamDaoImpl;
 import dao.TeamMatchParticipantDao;
@@ -27,6 +29,11 @@ public class TeamMatchParticipantServiceImpl implements TeamMatchParticipantServ
 	@Override
 	public void maekTeamMatchParticipant(TeamMatchParticipant teamMatchParticipant) throws Exception {
 		teamMatchParticipantDao.insertTeamMatchParticipant(teamMatchParticipant);	
+	}
+
+	@Override
+	public List<Long> getTeamMatchParticipantIdList(Long teamMatchId) throws Exception {
+		return teamMatchParticipantDao.selectTeamMatchParticipantTeamIdList(teamMatchId);
 	}
 
 }

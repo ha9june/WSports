@@ -71,4 +71,14 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 
 		}
 	}
+
+	@Override
+	public TeamMatch selectTeamMatch(Long teamMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectOne("mapper.teammatch.selectTeamMatch", teamMatchId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }
