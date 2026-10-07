@@ -1,7 +1,7 @@
 package controller.team;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -16,6 +16,8 @@ import service.team.TeamMatchParticipantService;
 import service.team.TeamMatchParticipantServiceImpl;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
+import service.team.TeamService;
+import service.team.TeamServiceImpl;
 import service.team.TeamUserService;
 import service.team.TeamUserServiceImpl;
 
@@ -44,9 +46,10 @@ public class TeamMatchDetailView extends HttpServlet {
 	    TeamMatchService teamMatchService = new TeamMatchServiceImpl();
 	    TeamMatchParticipantService teamMatchParticipantService = new TeamMatchParticipantServiceImpl();
 	    TeamUserService teamUserService = new TeamUserServiceImpl();
+	    TeamService teamService = new TeamServiceImpl();
 		try {
 			Long teamMatchId = Long.parseLong(request.getParameter("teamMatchId"));
-			TeamMatch teamMatch = teamMatchService.getTeamMatch(teamMatchId);
+			TeamMatch teamMatch = teamMatchService.getTeamMatch(teamMatchId, user.getUserId());
 			
 			//내가 호스트인지
 			if(teamMatch.getUserId().equals(user.getUserId())) {
@@ -77,6 +80,29 @@ public class TeamMatchDetailView extends HttpServlet {
 			//모집중 //모집 마감 // 경기 종료 // 경기 취소
 			//근데 이거 그냥 팀매치를 넘기는데 거기서 가져와도 되는거 아닌지 그게 맞는듯
 //			request.setAttribute("state", teamMatch.getStatus());
+			
+			//데이터 가공 재언님과 통일 필요
+			//나이대
+			String ages = teamService.changeAges(teamMatch.getAge20s(), teamMatch.getAge30s(), teamMatch.getAge40s(), teamMatch.getAge50s(), teamMatch.getAge60Plus());
+			request.setAttribute("ages", ages);
+			//실력
+			boolean[] s = {
+			        Boolean.TRUE.equals(teamMatch.getSkillIntro()), Boolean.TRUE.equals(teamMatch.getSkillBeginner()),
+			        Boolean.TRUE.equals(teamMatch.getSkillIntermediate()), Boolean.TRUE.equals(teamMatch.getSkillAdvanced())
+			    };
+			String[] label = {"입문", "초급", "중급", "상급"};
+			List<String> parts = new ArrayList<>();
+			int i=0; 
+			while(i < s.length) {
+				if(s[i]) {
+					parts.add(label[i]);
+				}
+				i++;
+			}
+			String skills = String.join(" · ", parts);
+			request.setAttribute("skills", skills);
+			//일시
+			//참가비
 			
 			request.setAttribute("t", teamMatch);
 			request.getRequestDispatcher("/jsp/team/teamMatchDetail.jsp").forward(request, response);

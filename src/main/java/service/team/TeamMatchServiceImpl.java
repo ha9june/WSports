@@ -53,8 +53,8 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 	}
 
 	@Override
-	public TeamMatch getTeamMatch(Long teamMatchId) throws Exception {
-		return teamMatchDao.selectTeamMatch(teamMatchId);
+	public TeamMatch getTeamMatch(Long teamMatchId, Long userId) throws Exception {
+		return teamMatchDao.selectTeamMatch(teamMatchId, userId);
 	}
 
 	@Override

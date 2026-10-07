@@ -107,7 +107,7 @@
 	 where status = '종료'
 	</select>
 	
-	<select id="selectTeamMatch" parameterType="Long" resultType="teammatch">
+	<select id="selectTeamMatch" parameterType="Map" resultType="teammatch">
 		select tm.team_match_id, tm.title, tm.content, tm.user_id, tm.team_id, tm.created_at,
 		       tm.match_date, tm.sport, tm.start_time, tm.end_time,
 		       tm.place_name, tm.address, tm.latitude, tm.longitude,
@@ -134,7 +134,12 @@
 		   (select round(avg(r.score), 1) from user_rating r where r.receiver_user_id = tm.user_id) as host_rating,
 	       (select count(*)               from user_rating r where r.receiver_user_id = tm.user_id) as host_rating_count,
 	       (select round(avg(tr.score), 1) from team_rating tr where tr.team_id = tm.team_id) as team_rating,
-	       (select count(*)                from team_rating tr where tr.team_id = tm.team_id) as team_rating_count 
+	       (select count(*)                from team_rating tr where tr.team_id = tm.team_id) as team_rating_count,
+	       (select count(*) > 0
+			 from favorite f
+			 where f.user_id = #{userId}
+			   and f.match_type = 'Team'
+			   and f.match_id = tm.team_match_id) as favorite
 		from team_match tm
 		join team t on t.team_id = tm.team_id
 		join user u on u.user_id = tm.user_id

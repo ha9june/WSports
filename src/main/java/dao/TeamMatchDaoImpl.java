@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,9 +74,12 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 	}
 
 	@Override
-	public TeamMatch selectTeamMatch(Long teamMatchId) throws Exception {
+	public TeamMatch selectTeamMatch(Long teamMatchId, Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("teamMatchId", teamMatchId);
+		param.put("userId", userId);
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
-			return sqlSession.selectOne("mapper.teammatch.selectTeamMatch", teamMatchId);
+			return sqlSession.selectOne("mapper.teammatch.selectTeamMatch", param);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;

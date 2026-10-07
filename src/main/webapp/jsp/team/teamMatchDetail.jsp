@@ -84,8 +84,8 @@
 						<div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${t.participationFee}" />원</dd></div>
 						<div class="info-row"><dt>마감</dt><dd>${t.deadline} (가공 필요)</dd></div>
 						<div class="info-row"><dt>성별</dt><dd><c:out value="${t.gender}" /></dd></div>
-						<div class="info-row"><dt>연령</dt><dd>연령 가공 필요</dd></div>
-						<div class="info-row"><dt>팀 레벨</dt><dd>레벨 가공 필요</dd></div>
+						<div class="info-row"><dt>연령</dt><dd>${ages }</dd></div>
+						<div class="info-row"><dt>팀 레벨</dt><dd>${skills }</dd></div>
 					</dl>
 					<div class="desc">
 						<h3>상세 설명</h3>
@@ -104,15 +104,14 @@
 					</div>
 				</section>
 
-				<c:if test="${not isHost}">
-					<div class="detail-actions">
-						<%-- 찜 여부는 아직 받아오지 않음 (is-on 처리 제외) --%>
-						<button type="button" class="fav-btn sq" data-fav data-auth aria-label="관심 경기">${heart}</button>
-						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/support/reportWrite.jsp?targetType=team&targetNo=${t.teamMatchId}"
-							data-auth style="height: 36px">신고</a>
-					</div>
-				</c:if>
+				<div class="detail-actions">
+					<button type="button" class="fav-btn sq ${t.favorite ? 'is-on' : ''}"
+						data-fav data-auth aria-label="관심 경기"
+						data-target-type="TEAM_MATCH" data-target-id="${t.teamMatchId}">${heart}</button>
+					<a class="btn btn-outline btn-sm"
+						href="${ctx}/jsp/support/reportWrite.jsp?targetType=team&targetNo=${t.teamMatchId}"
+						data-auth style="height: 36px">신고</a>
+				</div>
 			</div>
 
 			<aside class="detail-side">
