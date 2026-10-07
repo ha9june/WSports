@@ -150,6 +150,7 @@ table { border-collapse: collapse; width: 100%; }
 .pill-success { background: var(--ds-success-bg); color: var(--ds-success-fg); }
 .pill-success.bd { border-color: var(--ds-success-bd); }
 .pill-info { background: var(--ds-info-bg); color: var(--ds-info-fg); }
+.pill-info.bd { border: 1px solid var(--ds-info-bd); }
 .pill-brand { background: var(--ds-brand-subtle); color: var(--ds-brand); }
 .pill-warning { background: var(--ds-warning-bg); color: var(--ds-warning-fg); }
 .pill-warning.bd { border-color: var(--ds-warning-bd); }

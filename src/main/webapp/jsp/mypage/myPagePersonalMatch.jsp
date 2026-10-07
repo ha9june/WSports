@@ -22,26 +22,7 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-.pill-green {
-    color: var(--ds-success-fg);
-    background: var(--ds-success-bg);
-    border: var(--ds-success-bd);
-    font-weight: bold;
-}
-.pill-blue {
-    color: var(--ds-info-fg);
-    background: var(--ds-info-bg);
-    border:var(--ds-info-bd);
-    font-weight: bold;
-}
-.pill-red {
-    color: var(--ds-danger-fg);
-    background: var(--ds-danger-bg);
-    border:var(--ds-danger-bd);
-    font-weight: bold;
-}
-
-
+.pill-info.bd { border: 1px solid var(--ds-info-bd); }
 .match-left img {
 	width: 40px;
 	height: 40px;
@@ -188,15 +169,14 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 5px;
-	width: 70px; /* 왼쪽 영역 폭 고정 */
+	gap: 6px;
+	width: 90px;
 }
 
 .act-card .left img {
-	width: 170px;
-	height: 100px;
+	width: 64px;
+	height: 64px;
 	object-fit: contain; /* 비율 유지하면서 칸에 맞춤 */
-	flex-shrink: 0;
 }
 
 .list-head {
@@ -226,8 +206,7 @@
 			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
 		</select> <select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
-			<option value="모집중" ${status == '모집중' ? 'selected' : ''}
-				style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
+			<option value="모집중" ${status == '모집중' ? 'selected' : ''}>모집중</option>
 			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
 				마감</option>
 			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
@@ -252,14 +231,17 @@
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">
-								<span class="pill-green">모집중</span>
+								<span class="pill pill-success bd">모집중</span>
 							</c:when>
 							<c:when test="${m.status eq '모집 마감' or m.status eq '경기 종료'}">
-								<span class="pill-blue">${m.status}</span>
+								<span class="pill pill-info bd">${m.status}</span>
 							</c:when>
 							<c:when test="${m.status eq '경기 취소'}">
-								<span class="pill-red">경기 취소</span>
+								<span class="pill pill-danger bd">경기 취소</span>
 							</c:when>
+							<c:otherwise>
+								<span class="pill pill-neutral bd">${m.status}</span>
+							</c:otherwise>
 						</c:choose>
 
 						<c:choose>

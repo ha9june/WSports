@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/jsp/common/init.jsp"%>
 <%--
@@ -15,19 +14,26 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-.myteam-card .left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    width: 70px;          /* 왼쪽 영역 폭 고정 */
+.sport-circle {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 16px;
+	flex-shrink: 0;
 }
-.team-logo-wrap .left img {
-    width: 170px;
-    height: 100px;
-    object-fit: contain;  /* 비율 유지하면서 칸에 맞춤 */
-    flex-shrink: 0;
+.sport-circle img {
+	width: 44px;
+	height: 44px;
+	object-fit: contain;
 }
+.sc-football   { background-color: #dcf5e7; }
+.sc-basketball { background-color: #ffe3d1; }
+.sc-tennis     { background-color: #dbeafe; }
+.sc-badminton  { background-color: #e6e0ff; }
+.sc-default    { background-color: #e5e7eb; }
 </style>
 <div class="work-inner" style="width: 100%; max-width: 1000px;">
 	<h1 class="section-title">내 팀</h1>
@@ -53,15 +59,34 @@
 						중인 팀이 없습니다.</p>
 				</c:if>
 				<c:forEach var="m" items="${match}">
+					<c:choose>
+						<c:when test="${m.sport eq '축구/풋살'}">
+							<c:set var="sportCls" value="sc-football" />
+							<c:set var="sportImg" value="art-football.png" />
+						</c:when>
+						<c:when test="${m.sport eq '농구'}">
+							<c:set var="sportCls" value="sc-basketball" />
+							<c:set var="sportImg" value="art-basketball.png" />
+						</c:when>
+						<c:when test="${m.sport eq '테니스'}">
+							<c:set var="sportCls" value="sc-tennis" />
+							<c:set var="sportImg" value="art-tennis.png" />
+						</c:when>
+						<c:when test="${m.sport eq '배드민턴'}">
+							<c:set var="sportCls" value="sc-badminton" />
+							<c:set var="sportImg" value="art-badminton.png" />
+						</c:when>
+						<c:otherwise>
+							<c:set var="sportCls" value="sc-default" />
+							<c:set var="sportImg" value="match-default.png" />
+						</c:otherwise>
+					</c:choose>
+
 					<div class="myteam-card"
 						style="display: flex; align-items: center; padding: 16px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); position: relative; height: 110px; box-sizing: border-box;">
 
-						<div class="team-logo-wrap"
-							style="width: 56px; height: 56px; border-radius: 50%; background-color: #e0e0ff; display: flex; align-items: center; justify-content: center; margin-left: 6px; margin-right: 20px; flex-shrink: 0;">
-							<img
-								src="${ctx}/img/sport-icon-${m.sport eq '축구/풋살' ? 'football' : (m.sport eq '농구' ? 'basketball' : (m.sport eq '테니스' ? 'tennis' : 'badminton'))}.png"
-								alt=""
-								style="width: 34px; height: 34px; object-fit: contain; display: block;">
+						<div class="sport-circle ${sportCls}">
+							<img src="${ctx}/img/${sportImg}" alt="${m.sport}">
 						</div>
 
 						<div class="main-info"
@@ -85,7 +110,7 @@
 							<button type="button" class="btn-cancel"
 								data-id="${m.applicationId}"
 								style="width: 100%; background-color: #fff; border: 1px solid #d1d5db; color: #1f2937; font-size: 12px; font-weight: 600; padding: 6px 0; text-align: center; border-radius: 8px; cursor: pointer; white-space: nowrap;">신청
-								취소</button> 
+								취소</button>
 						</div>
 					</div>
 				</c:forEach>
@@ -102,12 +127,36 @@
 						팀이 없습니다.</p>
 				</c:if>
 				<c:forEach var="m" items="${match}">
+					<c:choose>
+						<c:when test="${m.sport eq '축구/풋살'}">
+							<c:set var="sportCls" value="sc-football" />
+							<c:set var="sportImg" value="art-football.png" />
+						</c:when>
+						<c:when test="${m.sport eq '농구'}">
+							<c:set var="sportCls" value="sc-basketball" />
+							<c:set var="sportImg" value="art-basketball.png" />
+						</c:when>
+						<c:when test="${m.sport eq '테니스'}">
+							<c:set var="sportCls" value="sc-tennis" />
+							<c:set var="sportImg" value="art-tennis.png" />
+						</c:when>
+						<c:when test="${m.sport eq '배드민턴'}">
+							<c:set var="sportCls" value="sc-badminton" />
+							<c:set var="sportImg" value="art-badminton.png" />
+						</c:when>
+						<c:otherwise>
+							<c:set var="sportCls" value="sc-default" />
+							<c:set var="sportImg" value="match-default.png" />
+						</c:otherwise>
+					</c:choose>
+
 					<div class="myteam-card"
 						data-href="${ctx}/jsp/team/teamDetail.jsp?teamId=${m.teamId}"
 						style="display: flex; align-items: center; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff;">
-						<img
-							src="${ctx}/img/team-${m.sport eq '축구/풋살' ? 'football' : (m.sport eq '농구' ? 'basketball' : 'badminton')}.png"
-							alt="" style="width: 50px; height: 50px; margin-right: 16px;">
+
+						<div class="sport-circle ${sportCls}">
+							<img src="${ctx}/img/${sportImg}" alt="${m.sport}">
+						</div>
 
 						<div class="main" style="flex: 1;">
 							<strong

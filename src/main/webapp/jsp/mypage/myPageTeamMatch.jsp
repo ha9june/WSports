@@ -182,14 +182,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    width: 70px;          /* 왼쪽 영역 폭 고정 */
+    gap: 6px;
+    width: 90px;          
 }
 .act-card .left img {
-    width: 170px;
-    height: 100px;
+    width: 64px;
+    height: 64px;
     object-fit: contain;  /* 비율 유지하면서 칸에 맞춤 */
-    flex-shrink: 0;
 }
 
 
@@ -246,14 +245,17 @@
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">
-								<span class="pill-green">모집중</span>
+								<span class="pill pill-success bd">모집중</span>
 							</c:when>
 							<c:when test="${m.status eq '모집 마감' or m.status eq '경기 종료'}">
-								<span class="pill-blue">${m.status}</span>
+								<span class="pill pill-info bd">${m.status}</span>
 							</c:when>
 							<c:when test="${m.status eq '경기 취소'}">
-								<span class="pill-red">경기 취소</span>
+								<span class="pill pill-danger bd">경기 취소</span>
 							</c:when>
+							<c:otherwise>
+								<span class="pill pill-neutral bd">${m.status}</span>
+							</c:otherwise>
 						</c:choose>
 
 						<c:choose>
