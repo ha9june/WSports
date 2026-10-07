@@ -52,6 +52,16 @@ public class ReportDaoImpl implements ReportDao {
 			throw e;
 		}
 	}
+	//관리자 사이드 바 - 처리대기 개수
+	@Override
+	public Integer selectAdminReportWaitCnt() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.report.selectAdminReportWaitCnt");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 	@Override
 	public void insertReport(Report report) throws Exception {
@@ -84,4 +94,5 @@ public class ReportDaoImpl implements ReportDao {
 			throw e;
 		}
 	}
+	
 }

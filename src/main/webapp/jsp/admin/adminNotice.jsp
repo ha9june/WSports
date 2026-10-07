@@ -35,6 +35,16 @@
     	</div>
     </form>
 	<div style="width:fit-content; max-width:100%">
+		<div class="tbl-head" style="grid-template-columns:70px 100px 70px 100px 200px 110px 130px;
+    	justify-self: start; justify-items: center; padding-left: 0px">
+    		<span>공지번호</span>
+    		<span>공지날짜</span>
+    		<span>공지유형</span>
+    		<span>공지작성자</span>
+    		<span>공지제목</span>
+    		<span>핀 여부</span>
+    		<span>수정,삭제</span>
+    	</div>
 		<c:forEach var="n" items="${noticelist}">
 			<div class="tbl-row" style="grid-template-columns: 70px 100px 70px 100px 200px 110px 130px; 
 			justify-items: center; align-items: center; padding-left: 0px">
