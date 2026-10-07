@@ -58,7 +58,7 @@
 					    
 
 					    html += `
-					    	<a class="match-card `+sportsType+`" href="${ctx}/match/detail/view?num=`+item.personalMatchId+`">
+					    	<a class="match-card `+sportsType+`" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
 						    <img class="art" src="${ctx}/img/art-`+sportsType+`.png" alt="">
 						    <span class="sport-tag football">
 						    `+item.sport+`
@@ -130,7 +130,7 @@
 					    }
 						
 						html+=`
-							<a class="match-row" href="${ctx}/match/detail/view?num=`+item.personalMatchId+`">
+							<a class="match-row" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
 				            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
 				            <div class="main">
 				              <p class="title">
@@ -477,7 +477,7 @@
 
 	    const content = `
 	        <div class="map-list">
-	            <a href="${ctx}/match/detail/view?num="`+item.personalMatchId+`
+	            <a href="${ctx}/match/detail/view?personalMatchId="`+item.personalMatchId+`
 	               class="football ${state eq 'mapPin' ? '' : 'is-active'}"
 	               data-pin="m1">
 	                <small>`+item.sport+`</small>
@@ -502,7 +502,7 @@
 	    });
 	    kakao.maps.event.addListener(marker, "click", function() {
 	        location.href =
-	            "${ctx}/match/detail/view?num="
+	            "${ctx}/match/detail/view?personalMatchId="
 	            + item.personalMatchId;
 	    });
 

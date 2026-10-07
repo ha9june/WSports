@@ -1,4 +1,5 @@
 package dto;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /** 후기 */
@@ -16,6 +17,10 @@ public class Review {
     private LocalDateTime createdAt;  // 작성 일시
     private LocalDateTime updatedAt;  // 수정 일시
     
+    
+    private LocalDate matchDate;   // 조회용
+    public LocalDate getMatchDate() { return matchDate; }
+    public void setMatchDate(LocalDate matchDate) { this.matchDate = matchDate; }
     
     public Review() {
 		super();

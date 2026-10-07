@@ -25,7 +25,7 @@
     	<div style="display:flex;justify-content:space-between">
     		<div>
     			<span>${inquirydetail.inquiry_id } · ${inquirydetail.type }</span>
-    			<h2 style="margin:8px 0 0">결제 후 참가 확정이 되지 않아요</h2>
+    			<h2 style="margin:8px 0 0">${inquirydetail.title }</h2>
     		</div>
      	</div>
     	<dl class="kv1 mt-24">

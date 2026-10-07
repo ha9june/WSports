@@ -312,7 +312,7 @@
               <p class="sub">${state eq 'hostConfirmed' ? '모집 마감 · 내일 경기' : '마감까지 1일 3시간'}</p>
               <div class="actions">
                 <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=host">출석 현황</a>
-                <a class="btn btn-outline" href="${ctx}/match/detail/profile/list">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
+                <a class="btn btn-outline" href="${ctx}/match/detail/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
                 <a class="btn btn-outline" href="${ctx}/match/edit/form?num=${personalMatch.personalMatchId}" data-auth>경기 정보 수정</a>
               </div>
               <p class="note">수정 시 참가자에게 알림이 전송돼요.</p>
@@ -332,7 +332,7 @@
               <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
               <div class="actions">
                 <a class="btn btn-primary" href="${ctx}/jsp/payment/toss_checkout.jsp?state=match" data-auth>결제하기</a>
-                <a class="btn btn-primary" href="${ctx}/match/detail/participation?num=${personalMatch.personalMatchId}" data-auth>참가하기</a>
+                <a class="btn btn-primary" href="${ctx}/match/detail/participation?personalMatchId=${personalMatch.personalMatchId}" data-auth>참가하기</a>
             	<a class="btn btn-primary" href="#" data-auth>수정하기</a>
               </div>
             </div>

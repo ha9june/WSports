@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.PersonalPayment;
 
 public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 	//총 매출
@@ -95,6 +96,25 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+	@Override
+	public void insertPaymentHistory(PersonalPayment personalPayment) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.personalpayment.insertPaymentHistory", personalPayment);
+			sqlSession.commit();
+		} catch(Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}		
+	}
+	@Override
+	public PersonalPayment selectPaymentHistory(String paymentKey) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalpayment.selectPaymentHistory", paymentKey);
 		}
 	}
 

@@ -50,3 +50,4 @@
 .history-row b.minus { color: var(--ds-text); }
 .answer-box { margin-top: 20px; }
 .admin-title-row { display: flex; align-items: center; gap: 12px; }
+.field .notice-type{width: 100px; align-self: flex-start}

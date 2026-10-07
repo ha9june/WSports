@@ -19,6 +19,16 @@ public class InquiryDaoImpl implements InquiryDao {
 			throw e;
 		}
 	}
+	//관리자 사이드바 - 답변대기 개수
+	@Override
+	public Integer selectAdminInquiryWaitCnt() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.inquiry.selectAdminInquiryWaitCnt");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 	//관리자 문의관리 리스트
 	@Override
 	public List<Map<String, Object>> selectAdminInquiryList(Map<String, Object> param) throws Exception {
@@ -79,5 +89,6 @@ public class InquiryDaoImpl implements InquiryDao {
 		} catch(Exception e) {
 			throw e;
 		}
-	}	
+	}
+	
 }

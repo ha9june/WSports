@@ -23,38 +23,62 @@
 <c:set var="total" value="${isTeam ? '54,000' : '10,800'}" />
 <c:set var="totalNum" value="${isTeam ? 54000 : 10800}" />
 <%@ include file="/jsp/common/header.jsp" %>
-
+<!-- 여기가 계산하는 곳 -->
 <main class="page">
-  <div class="pay-wrap">
-    <nav class="breadcrumb">
-      <c:choose>
-        <c:when test="${isTeam}"><a href="${ctx}/jsp/team/teamMatchList.jsp">팀 매칭</a><span class="sep">›</span><span>신청</span><span class="sep">›</span><span>결제</span></c:when>
-        <c:otherwise><a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a><span class="sep">›</span><a href="${ctx}/jsp/match/personalMatchDetail.jsp">경기 상세</a><span class="sep">›</span><span>결제</span></c:otherwise>
-      </c:choose>
-    </nav>
-    <div class="page-head"><h1 class="page-title">${isTeam ? '팀 매칭 결제' : '결제'}</h1><p class="page-desc">참가비와 수수료를 확인한 뒤 결제하세요.</p></div>
+	<div class="pay-wrap">
+    	<nav class="breadcrumb">
+      		<c:choose>
+        		<c:when test="${isTeam}">
+        			<a href="${ctx}/jsp/team/teamMatchList.jsp">팀 매칭</a>
+        			<span class="sep">›</span>
+        			<span>신청</span>
+        			<span class="sep">›</span>
+        			<span>결제</span>
+        		</c:when>
+        		<c:otherwise>
+        			<a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a>
+        			<span class="sep">›</span>
+        			<a href="${ctx}/jsp/match/personalMatchDetail.jsp">경기 상세</a>
+        			<span class="sep">›</span>
+        			<span>결제</span>
+        		</c:otherwise>
+      		</c:choose>
+    	</nav>
+	<div class="page-head">
+		<h1 class="page-title">${isTeam ? '팀 매칭 결제' : '결제'}</h1>
+		<p class="page-desc">참가비와 수수료를 확인한 뒤 결제하세요.</p>
+	</div>
 
     <section class="pay-card">
-      <h2>${itemName}</h2>
-      <p class="when">${itemWhen}</p>
-      <div class="pay-lines">
-        <div class="ln"><span>참가비</span><span>${fee}원</span></div>
-        <div class="ln"><span>수수료</span><span>${charge}원</span></div>
-        <div class="ln total"><span>결제 금액</span><b>${total}원</b></div>
-      </div>
-    </section>
+    	<h2>${itemName}</h2>
+      	<p class="when">${itemWhen}</p>
+      	<div class="pay-lines">
+        	<div class="ln">
+        		<span>참가비</span>
+        		<span>${fee}원</span>
+        	</div>
+        	<div class="ln">
+        		<span>수수료</span>
+        		<span>${charge}원</span>
+        	</div>
+        	<div class="ln total">
+        		<span>결제 금액</span>
+        		<b>${total}원</b>
+        	</div>
+      	</div>
+	</section>
 
     <section class="method-card">
-      <p class="label">결제 수단</p>
-      <h3>신용·체크카드</h3>
-      <p class="sub">${total}원 결제 예정</p>
-      <%-- 토스 결제위젯을 쓰는 경우 아래 영역에 렌더링 : <div id="payment-method"></div><div id="agreement"></div> --%>
-      <div class="foot">
-        <label class="check"><input type="checkbox" id="refundAgree">환불 정책을 확인했습니다.</label>
-        <button type="button" class="btn btn-primary btn-sm" id="payOpenBtn" data-modal-open="payConfirmModal" disabled>결제하기</button>
-      </div>
+    	<p class="label">결제 수단</p>
+      	<h3>신용·체크카드</h3>
+      	<p class="sub">${total}원 결제 예정</p>
+      	<%-- 토스 결제위젯을 쓰는 경우 아래 영역에 렌더링 : <div id="payment-method"></div><div id="agreement"></div> --%>
+      	<div class="foot">
+        	<label class="check"><input type="checkbox" id="refundAgree">환불 정책을 확인했습니다.</label>
+        	<button type="button" class="btn btn-primary btn-sm" id="payOpenBtn" data-modal-open="payConfirmModal" disabled>결제하기</button>
+      	</div>
     </section>
-  </div>
+	</div>
 </main>
 
 <div class="modal ${fn:endsWith(state, 'Confirm') ? 'is-open' : ''}" id="payConfirmModal" role="dialog" aria-modal="true">

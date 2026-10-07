@@ -36,6 +36,14 @@
 		and (#{status} = 'ALL' or answer_status = #{status})
 	</select>
 	
+	<!-- 관리자 문의관리 개수 / 상태 기준 필터 -->
+	<select id="selectAdminInquiryWaitCnt" resultType="int">
+		select count(*)
+		from inquiry
+		where (deleted = 0 or deleted is null)
+		and answer_status = '답변대기'
+	</select>
+	
 	<!-- 관리자 문의관리 리스트 10개씩 -->
 	<select id="selectAdminInquiryList" parameterType="map" resultType="map">
 		select i.inquiry_id, i.created_at, i.type, u.name, u.nickname, 

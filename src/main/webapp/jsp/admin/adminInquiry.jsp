@@ -33,7 +33,7 @@
     	</div>
     </form>
     <div style="width:fit-content; max-width:100%">
-    	<div class="tbl-head" style="grid-template-columns:70px 70px 70px 100px 200px 100px;
+    	<div class="tbl-head" style="grid-template-columns:70px 70px 70px 100px 200px 100px 100px;
     	justify-self: start; justify-items: center; padding-left: 0px">
     		<span>문의번호</span>
     		<span>문의날짜</span>
@@ -41,10 +41,11 @@
     		<span>문의자</span>
     		<span>문의제목</span>
     		<span>상태</span>
+    		<span>문의 상세정보</span>
     	</div>
     	<c:forEach var="i" items="${inquirylist}">
-			<a class="tbl-row" href="${ctx}/admin/inquiry/detail?inquiryId=${i.inquiry_id}"
-		   	style="grid-template-columns: 70px 70px 70px 100px 200px 100px; 
+			<div class="tbl-row" href="${ctx}/admin/inquiry/detail?inquiryId=${i.inquiry_id}"
+		   	style="grid-template-columns: 70px 70px 70px 100px 200px 100px 100px; 
 		   	justify-items: center; padding-left: 0px">
     			<span>${i.inquiry_id }</span>
     			<b><fmt:formatDate value="${i.created_at}" pattern="MM/dd" /></b>
@@ -52,7 +53,8 @@
     			<span>${i.nickname}</span>
     			<span>${i.title }</span>
     			<span class="pill ${i.answer_status eq '답변완료' ? 'pill-neutral' : 'pill-warning bd'}">${i.answer_status}</span>
-			</a>
+    			<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/inquiry/detail?inquiryId=${i.inquiry_id}">보기</a>
+			</div>
     	</c:forEach>
    		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">
 			<a href="${pageInfo.curPage > 1 ? ctx += '/admin/inquiry?status=' += status += '&page=' += (pageInfo.curPage - 1) : '#'}">&lt;</a>

@@ -19,16 +19,25 @@
 </c:if>
 <div style="width:800px;max-width:100%">
 	<section class="admin-card" style="display:flex;justify-content:space-between;align-items:center">
-      <div>
-      	<p class="t-11 t-2">관련 경기</p>
-      	<p class="t-bold" style="font-size:15px;margin-top:6px">${detail.title}</p>
-      	<p class="t-11 t-2" style="margin-top:4px">${detail.sport} / 
+    	<div>
+      		<p class="t-11 t-2">관련 경기</p>
+      		<p class="t-bold" style="font-size:15px;margin-top:6px">${detail.title}</p>
+      		<p class="t-11 t-2" style="margin-top:4px">${detail.sport} / 
       		<fmt:formatDate value="${detail.match_date}" pattern="yyyy.MM.dd"/>
-      	</p>
-      </div>
-      <a class="t-12 t-success t-bold" 
-      href="${ctx}/matchinfo?matchId=${matchId}&matchType=${isTeam ? 'team' : 'personal'}">
-      경기 보기 →</a>
+      		</p>
+      	</div>
+		<c:choose>
+      		<c:when test="${param.matchType eq 'team'}">
+      			<a class="btn btn-primary btn-sm" href="${ctx}/team/detail/view?teamMatchId = ${matchId}">경기보기
+      			</a>
+      		</c:when>
+      		<!-- !!확인!! -->
+      		<c:otherwise>
+      			<a class="btn btn-primary btn-sm" href="${ctx}/match/detail/view?personalMatchId = ${matchId}">경기보기
+      			</a>
+      		</c:otherwise>
+      	</c:choose>
+      
     </section>
     
     <h2 class="sub-title mt-32">정산 대상</h2>

@@ -2,6 +2,9 @@ package dao;
 
 import java.util.Map;
 
+import dto.PersonalPayment;
+import dto.TeamPayment;
+
 public interface TeamPaymentDao {
 	Long totalRevenueTeam() throws Exception; //총 매출
 	Long totalProfitTeam() throws Exception; //총 수익
@@ -13,4 +16,8 @@ public interface TeamPaymentDao {
 	Long selectPeriodRevenueTeam(Map<String, Object> param) throws Exception; //기간 내 총 매출
 	Long selectPeriodProfitTeam(Map<String, Object> param) throws Exception; //기간 내 총 수익
 	
+	//결제내역 삽입
+	void insertPaymentHistory(TeamPayment teamPayment) throws Exception;
+	//결제내역 선택
+	TeamPayment selectPaymentHistory(String paymentKey) throws Exception;	
 }
