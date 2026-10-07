@@ -47,9 +47,8 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 		if(files.size() > 2) teamMatch.setImage3(fileUpload(realPath, files.get(2)));
 		if(files.size() > 3) teamMatch.setImage4(fileUpload(realPath, files.get(3)));
 		if(files.size() > 4) teamMatch.setImage5(fileUpload(realPath, files.get(4)));
-		System.out.println(files.size());
-		System.out.println(teamMatch);
-		return teamMatchDao.insertTeamMatch(teamMatch);
+		teamMatchDao.insertTeamMatch(teamMatch);
+		return teamMatch.getTeamMatchId();
 	}
 	
 }

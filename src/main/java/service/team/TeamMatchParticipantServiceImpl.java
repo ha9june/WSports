@@ -4,6 +4,7 @@ import dao.TeamDao;
 import dao.TeamDaoImpl;
 import dao.TeamMatchParticipantDao;
 import dao.TeamMatchParticipantDaoImpl;
+import dto.TeamMatchParticipant;
 
 public class TeamMatchParticipantServiceImpl implements TeamMatchParticipantService {
 	
@@ -21,6 +22,11 @@ public class TeamMatchParticipantServiceImpl implements TeamMatchParticipantServ
 			throw new Exception ("존재하지 않는 팀 입니다.");
 		}
 		return teamMatchParticipantDao.selectExpectedTeamMatchCnt(teamId);
+	}
+
+	@Override
+	public void maekTeamMatchParticipant(TeamMatchParticipant teamMatchParticipant) throws Exception {
+		teamMatchParticipantDao.insertTeamMatchParticipant(teamMatchParticipant);	
 	}
 
 }

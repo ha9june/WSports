@@ -15,7 +15,7 @@
 			)
 			values
 			(
-				#{userId}, #{teamMatchId}, #{teamId}, now(), #{status}, #{paymentId}, '출석'
+				#{userId}, #{teamMatchId}, #{teamId}, now(), #{status}, #{paymentId}, true
 			)
 	</insert>
 </mapper>

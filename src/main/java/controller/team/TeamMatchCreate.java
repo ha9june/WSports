@@ -21,11 +21,16 @@ import javax.servlet.http.Part;
 
 import dto.Team;
 import dto.TeamMatch;
+import dto.TeamMatchParticipant;
 import dto.User;
+import service.team.TeamMatchParticipantService;
+import service.team.TeamMatchParticipantServiceImpl;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
 import service.team.TeamService;
 import service.team.TeamServiceImpl;
+import service.team.TeamUserService;
+import service.team.TeamUserServiceImpl;
 
 /**
  * Servlet implementation class TeamMatchCreate
@@ -57,8 +62,14 @@ public class TeamMatchCreate extends HttpServlet {
 	        response.sendRedirect(request.getContextPath() + "/auth/login");
 	        return;
 	    }
+	    
 		try {
 			List<Team> teamList = teamService.getTeamInfoByUserManager(user.getUserId());
+			if(teamList == null || teamList.isEmpty()) {
+				request.setAttribute("error", "팀장 또는 부팀장으로 있는 팀이 없어요. 팀 경기는 팀장과 부팀장만 만들 수 있어요.");
+				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+				return; 
+			}
 			request.setAttribute("teamList", teamList);
 			request.getRequestDispatcher("/jsp/team/teamMatchMakeForm.jsp").forward(request, response);
 		}catch(Exception e) {
@@ -75,14 +86,28 @@ public class TeamMatchCreate extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		TeamService teamService = new TeamServiceImpl();
 		TeamMatchService teamMatchService = new TeamMatchServiceImpl();
+		TeamMatchParticipantService teamMatchParticipantService = new TeamMatchParticipantServiceImpl();
+		TeamUserService teamUserService = new TeamUserServiceImpl();
 		
-		try {
+		User user = (User) request.getSession().getAttribute("user");
+	    if (user == null) {
+	        response.sendRedirect(request.getContextPath() + "/auth/login");
+	        return;
+	    }
+	    
+		try {			
 			TeamMatch teamMatch = new TeamMatch();
 			
-			User user = (User) request.getSession().getAttribute("user");
+			
 			teamMatch.setUserId(user.getUserId());
 			
 			Long teamId = Long.parseLong(request.getParameter("teamNo"));
+			String role = teamUserService.getRole(teamId, user.getUserId());
+			if (!"CAPTAIN".equals(role) && !"VICE_CAPTAIN".equals(role)) {
+				request.setAttribute("error", "팀장 또는 부팀장으로 있는 팀이 없어요. 팀 경기는 팀장과 부팀장만 만들 수 있어요.");
+				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+				return;
+			}
 			teamMatch.setTeamId(teamId);
 			
 			Team team = teamService.getTeam(teamId);
@@ -91,10 +116,8 @@ public class TeamMatchCreate extends HttpServlet {
 			teamMatch.setMatchDate(LocalDate.parse(request.getParameter("matchDate")));
 			teamMatch.setStartTime(LocalTime.parse(request.getParameter("startTime")));
 			
-			LocalTime endTime = LocalTime.parse(request.getParameter("endTime"));
-			if(endTime.equals("24:00")) {
-				endTime = LocalTime.parse("23:59");
-			}
+			String endStr = request.getParameter("endTime");
+			LocalTime endTime = "24:00".equals(endStr) ? LocalTime.of(23, 59, 59) : LocalTime.parse(endStr);
 			teamMatch.setEndTime(endTime);
 			
 			String address = request.getParameter("address");
@@ -117,11 +140,14 @@ public class TeamMatchCreate extends HttpServlet {
 			if (ages != null && !ages.isBlank()) {
 				agesSet.addAll(Arrays.asList(ages.split(",")));
 			}
-			teamMatch.setAge20s(agesSet.contains("20대"));
-			teamMatch.setAge30s(agesSet.contains("30대"));
-			teamMatch.setAge40s(agesSet.contains("40대"));
-			teamMatch.setAge50s(agesSet.contains("50대 이상"));
-			teamMatch.setAge60Plus(agesSet.contains("연령 무관"));
+			boolean anyAge = agesSet.contains("연령 무관");
+			teamMatch.setAge20s(anyAge || agesSet.contains("20대"));
+			teamMatch.setAge30s(anyAge || agesSet.contains("30대"));
+			teamMatch.setAge40s(anyAge || agesSet.contains("40대"));
+			teamMatch.setAge50s(anyAge || agesSet.contains("50대 이상"));
+			teamMatch.setAge60Plus(anyAge); 
+			
+			
 			teamMatch.setGender(request.getParameter("gender"));
 			
 			String skill = request.getParameter("skill");
@@ -130,10 +156,10 @@ public class TeamMatchCreate extends HttpServlet {
 				skillSet.addAll(Arrays.asList(skill.split(",")));
 			}
 			
-			teamMatch.setSkillIntro(agesSet.contains("입문"));
-			teamMatch.setSkillBeginner(agesSet.contains("초급"));
-			teamMatch.setSkillIntermediate(agesSet.contains("중급"));
-			teamMatch.setSkillAdvanced(agesSet.contains("상급"));
+			teamMatch.setSkillIntro(skillSet.contains("입문"));
+			teamMatch.setSkillBeginner(skillSet.contains("초급"));
+			teamMatch.setSkillIntermediate(skillSet.contains("중급"));
+			teamMatch.setSkillAdvanced(skillSet.contains("상급"));
 			teamMatch.setContent(request.getParameter("content"));
 			
 			String uploadPath = (String) request.getServletContext().getAttribute("uploadPath");
@@ -155,7 +181,15 @@ public class TeamMatchCreate extends HttpServlet {
             teamMatch.setRegion(region);
 
             Long teamMatchId = teamMatchService.makeTeamMatch(teamMatch, realPath, files);
-            request.getRequestDispatcher("/team-match/detail?teamMatchId="+teamMatchId).forward(request, response);
+            
+            TeamMatchParticipant teamMatchParticipant = new TeamMatchParticipant();
+            teamMatchParticipant.setUserId(user.getUserId());
+            teamMatchParticipant.setTeamMatchId(teamMatchId);
+            teamMatchParticipant.setTeamId(teamId);
+            teamMatchParticipant.setStatus("결제대기");
+            
+            teamMatchParticipantService.maekTeamMatchParticipant(teamMatchParticipant);
+            response.sendRedirect(request.getContextPath() + "/team-match/detail?teamMatchId=" + teamMatchId);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", "팀 경기 생성중 에러 발생");
