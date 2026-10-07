@@ -17,5 +17,8 @@ public interface TeamDao {
 
 	//관리자 팀수 세기
 	Long selectTeamCnt() throws Exception;
+	
+	//메인 경기 추천 팀
+	List<Team> selectNowTeamList(TeamSearchCondition condition) throws Exception;
 
 }

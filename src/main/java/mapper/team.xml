@@ -334,5 +334,42 @@
 	<select id="selectTeamCnt" resultType="Long">
 		select count(*) from team
 	</select>
+	
+	<select id="selectNowTeamList" parameterType="teamsearchcondition" resultType="team">
+		SELECT
+	        t.*,
+	        COUNT(tu.team_user_id) AS current_people
+	    FROM team t
+	    LEFT JOIN team_user tu
+	        ON t.team_id = tu.team_id
+	        AND (tu.withdrawn IS NULL OR tu.withdrawn = FALSE)
+	    WHERE t.deleted = FALSE
+	    <if test="searchType == 'RECOMAND'">
+	        <if test="sports != null and sports.length > 0">
+	            AND t.sport IN
+	            <foreach collection="sports"
+	                     item="sport"
+	                     open="("
+	                     separator=","
+	                     close=")">
+	                #{sport}
+	            </foreach>
+	        </if>
+	    </if>
+	    GROUP BY t.team_id
+	    <choose>
+	        <when test="searchType == 'RECOMAND'">
+	            ORDER BY t.created_at DESC
+	        </when>
+	        <when test="searchType == 'NEW'">
+	            ORDER BY t.created_at DESC
+	        </when>
+	    </choose>
+	    LIMIT 4;
+	</select>
+	
+
+	
+	
 
 </mapper>

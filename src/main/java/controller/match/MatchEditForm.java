@@ -46,7 +46,7 @@ public class MatchEditForm extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long num = Long.parseLong(request.getParameter("num"));
+		Long num = Long.parseLong(request.getParameter("personalMatchId"));
 		
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		try {
