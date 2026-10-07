@@ -25,6 +25,25 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.pill-green {
+    color: var(--ds-success-fg);
+    background: var(--ds-success-bg);
+    border: var(--ds-success-bd);
+    font-weight: bold;
+}
+.pill-blue {
+    color: var(--ds-info-fg);
+    background: var(--ds-info-bg);
+    border:var(--ds-info-bd);
+    font-weight: bold;
+}
+.pill-red {
+    color: var(--ds-danger-fg);
+    background: var(--ds-danger-bg);
+    border:var(--ds-danger-bd);
+    font-weight: bold;
+}
+
 .act-layout {
 	display: flex;
 	gap: 24px;
@@ -159,6 +178,19 @@
 .act-card {
 	margin-bottom: 16px;
 }
+.act-card .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 90px;          
+}
+.act-card .left img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;  /* 비율 유지하면서 칸에 맞춤 */
+}
+
 
 .list-head {
 	display: flex;
@@ -211,8 +243,38 @@
 				<div class="act-card"
 					data-href="${ctx}/jsp/team/teamMatchDetail.jsp?state=completed">
 					<div class="left">
-						<span class="pill pill-info">${m.status}</span><img
-							src="${ctx}/img/sport-icon-football.png" alt="">
+						<c:choose>
+							<c:when test="${m.status eq '모집중'}">
+								<span class="pill pill-success bd">모집중</span>
+							</c:when>
+							<c:when test="${m.status eq '모집 마감' or m.status eq '경기 종료'}">
+								<span class="pill pill-info bd">${m.status}</span>
+							</c:when>
+							<c:when test="${m.status eq '경기 취소'}">
+								<span class="pill pill-danger bd">경기 취소</span>
+							</c:when>
+							<c:otherwise>
+								<span class="pill pill-neutral bd">${m.status}</span>
+							</c:otherwise>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${m.sport eq '축구/풋살'}">
+								<img src="${ctx}/img/art-football.png" alt="축구/풋살">
+							</c:when>
+							<c:when test="${m.sport eq '농구'}">
+								<img src="${ctx}/img/art-basketball.png" alt="농구">
+							</c:when>
+							<c:when test="${m.sport eq '테니스'}">
+								<img src="${ctx}/img/art-tennis.png" alt="테니스">
+							</c:when>
+							<c:when test="${m.sport eq '배드민턴'}">
+								<img src="${ctx}/img/art-badminton.png" alt="배드민턴">
+							</c:when>
+							<c:otherwise>
+								<img src="${ctx}/img/match-default.png" alt="">
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<!-- 경기 제목 -->
 					<div class="main">
