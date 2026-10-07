@@ -1,16 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
-<%--
-  개인 경기 상세 (personalMatchDetail.jsp) - 담당: 변재언
-  피그마: Match / Detail (기본·Guest·Saved·Applied·Recruitment Closed·Completed·Completed Host·
-          Cancelled Min Players·Cancelled Host·Admin View), Match / Host Manage (기본·Confirmed),
-          Match / Apply Cancel · Cancel · Recruit Delete / Modal
-  ─ 하나의 JSP 로 처리 ─
-   role  : guest → 결제 버튼 클릭 시 로그인 안내 / admin → 관리자 헤더 + 경기 삭제
-   state : recruiting | saved | applied | applyCancel | closed | completed | cancelledMin
-           | host | hostConfirmed | hostCancel | hostDelete | completedHost | cancelledHost
-  실구현 시 state 는 (경기 상태 + 로그인 사용자와 경기의 관계: 작성자/참가자/일반) 로 서블릿에서 계산해 넘기면 됩니다.
---%>
 <c:set var="state" value="${empty param.state ? 'recruiting' : param.state}" />
 <c:set var="isHost" value="${fn:startsWith(state, 'host') or state eq 'completedHost' or state eq 'cancelledHost'}" />
 <c:set var="pageTitle" value="경기 상세" />
@@ -154,7 +143,7 @@
     <nav class="breadcrumb">
       <c:choose>
         <c:when test="${isHost}"><a href="${ctx}/jsp/mypage/myPageCreatedPersonalMatch.jsp">내 경기</a><span class="sep">›</span><span>만든 경기</span><span class="sep">›</span><span>${state eq 'completedHost' or state eq 'cancelledHost' ? '경기 상세' : '경기 관리'}</span></c:when>
-        <c:otherwise><a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a><span class="sep">›</span><span>경기 상세</span></c:otherwise>
+        <c:otherwise><a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a><span class="sep"></span><span>경기 상세</span></c:otherwise>
       </c:choose>
     </nav>
 
@@ -205,6 +194,7 @@
             ${personalMatch.startTime} ～ 
             ${personalMatch.endTime}
             </dd></div>
+            <div class="info-row"><dt>주소</dt><dd>${personalMatch.address}</dd></div>
             <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
             <div class="info-row"><dt>참가비</dt><dd>${personalMatch.participationFee }원</dd></div>
             <div class="info-row"><dt>참가 인원</dt>
@@ -236,7 +226,7 @@
           </dl>
           <div class="desc">
             <h3>상세 설명</h3>
-            <p>경기 시작 10분 전까지 도착 부탁드립니다.<br>실내화와 개인 음료를 준비해주세요.</p>
+            <p>${personalMatch.content}</p>
           </div>
         </section>
 
@@ -247,7 +237,7 @@
         </section>
 
 
-        <c:if test="${not isHost}">
+        <c:if test="${empty sessionScope.user}">
           <div class="detail-actions">
             <button type="button" class="fav-btn sq ${state eq 'saved' ? 'is-on' : ''}" data-fav data-auth aria-label="관심 경기">${heart}</button>
             <a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
@@ -314,15 +304,16 @@
           </c:when>
 
           <%-- 주최자(작성자) 경기 관리 --%>
-          <c:when test="${isHost}">
+          <%-- <c:when test="${isHost}"> --%>
+          <c:when test="${not empty sessionScope.user && sessionScope.user.userId == personalMatch.userId}">
             <div class="side-card">
               <h2>내가 작성한 경기</h2>
               <p style="margin-top:8px"><span class="pill ${state eq 'hostConfirmed' ? 'pill-info' : 'pill-brand'}">${state eq 'hostConfirmed' ? '경기 예정' : '모집중'}</span></p>
               <p class="sub">${state eq 'hostConfirmed' ? '모집 마감 · 내일 경기' : '마감까지 1일 3시간'}</p>
               <div class="actions">
-                <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=host">출석 체크</a>
-                <a class="btn btn-outline" href="${ctx}/jsp/match/personalMatchProfileList.jsp">참가자 명단 (${state eq 'hostConfirmed' ? '6/8' : '8/10'})</a>
-                <a class="btn btn-outline" href="${ctx}/jsp/match/personalMatchEdit.jsp">경기 정보 수정</a>
+                <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=host">출석 현황</a>
+                <a class="btn btn-outline" href="${ctx}/match/detail/profile/list">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
+                <a class="btn btn-outline" href="${ctx}/match/edit/form?num=${personalMatch.personalMatchId}" data-auth>경기 정보 수정</a>
               </div>
               <p class="note">수정 시 참가자에게 알림이 전송돼요.</p>
               <button type="button" class="cancel-link" data-modal-open="hostCancelModal" style="width:100%">경기 취소</button>
@@ -341,6 +332,8 @@
               <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
               <div class="actions">
                 <a class="btn btn-primary" href="${ctx}/jsp/payment/toss_checkout.jsp?state=match" data-auth>결제하기</a>
+                <a class="btn btn-primary" href="${ctx}/match/detail/participation?num=${personalMatch.personalMatchId}" data-auth>참가하기</a>
+            	<a class="btn btn-primary" href="#" data-auth>수정하기</a>
               </div>
             </div>
           </c:otherwise>
