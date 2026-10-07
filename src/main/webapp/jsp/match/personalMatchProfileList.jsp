@@ -23,14 +23,16 @@
 
     <%-- TODO: <c:forEach var="p" items="${participantList}"> --%>
     <div class="people-grid">
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>풋살초보</strong><span class="lv">중급</span><span class="rating">4.6</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>마포킥커</strong><span class="lv">초급</span><span class="rating">4.5</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>주말러너</strong><span class="lv">중급</span><span class="rating">4.6</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>수비장인</strong><span class="lv">상급</span><span class="rating">4.9</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>골키퍼K</strong><span class="lv">중급</span><span class="rating">4.9</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>유나이티드7</strong><span class="lv">중급</span><span class="rating">4.7</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>MF88</strong><span class="lv">중급</span><span class="rating">4.7</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>FC마포</strong><span class="lv">초급</span><span class="rating">4.4</span></a>
+       <c:forEach var="user" items="${userList}">
+	        <a class="person-row"
+	           href="${ctx}/jsp/member/userProfileInfo.jsp?userId=${user.userId}">
+	            <span class="avatar sm default"></span>
+	            <strong>${user.nickname}</strong>
+	            <%-- <span class="lv">${user.skill}</span> --%>
+	            <span class="rating">${user.avgRatingScore}</span>
+	            
+	        </a>
+	    </c:forEach>
     </div>
 
     <div class="form-actions"><a class="btn btn-outline btn-sm" href="${ctx}/jsp/mypage/myPagePersonalMatch.jsp">내 경기로 돌아가기</a></div>

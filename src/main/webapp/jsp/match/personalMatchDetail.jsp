@@ -312,7 +312,7 @@
               <p class="sub">${state eq 'hostConfirmed' ? '모집 마감 · 내일 경기' : '마감까지 1일 3시간'}</p>
               <div class="actions">
                 <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=host">출석 현황</a>
-                <a class="btn btn-outline" href="${ctx}/match/detail/profile/list">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
+                <a class="btn btn-outline" href="${ctx}/match/detail/profile/list?num=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
                 <a class="btn btn-outline" href="${ctx}/match/edit/form?num=${personalMatch.personalMatchId}" data-auth>경기 정보 수정</a>
               </div>
               <p class="note">수정 시 참가자에게 알림이 전송돼요.</p>
