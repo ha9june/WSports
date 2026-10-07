@@ -32,7 +32,7 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 	
 	//팀 주장 닉네임
 	@Override
-	public String selectTeamCaptain(Long teamId) throws Exception {
+	public Map<String, Object> selectTeamCaptain(Long teamId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampenalty.selectTeamCaptain", teamId);
 		}
@@ -90,21 +90,23 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 			throw e;
 		}
 	}
-	//관리자 벌점 조치
+	//관리자 정지기간 조치
 	@Override
 	public void insertTeamPenalty(Map<String, Object> param) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			// 현재 점수 이어받기 (기록 없으면 0)
-			Integer score = sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty", param);
-			param.put("score", score == null ? 0 : score);
+			Map<String, Object> latest = sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty", param);
+			int score = (latest == null || latest.get("score") == null) ? 0 : ((Number) latest.get("score")).intValue();
+			param.put("score", score);
 
 			sqlSession.insert("mapper.teampenalty.insertTeamPenalty", param);
-
 			sqlSession.commit();
 		} catch(Exception e) {
 			sqlSession.rollback();
 			throw e;
+		}finally {
+			sqlSession.close();
 		}
 		
 	}

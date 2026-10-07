@@ -66,7 +66,7 @@
    			<div class="tbl-body">
   				<div class="tbl-row" style="grid-template-columns:repeat(7, 100px); justify-self: start; justify-items: center; padding-left: 0px">
    					<span>${t.team_name}</span>
-   					<span>${t.nickname}</span>
+   					<span>${t.nickname.nickname}</span>
    					<span>${t.membercnt}명</span>
    					<span>${t.score}점</span>
    					<span class="${t.suspension eq '정상' ? '' : 't-danger'}">${t.suspension }</span>
