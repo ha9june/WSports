@@ -17,9 +17,10 @@
 <c:set var="pageTitle" value="팀 경기 상세" />
 <c:set var="pageCss" value="match,team" />
 <c:set var="activeNav" value="teamMatch" />
-<c:set var="demoStates" value="recruiting:모집중|saved:찜함|applied:신청 완료|applyCancel:신청취소 모달|closed:모집 마감|cancelled:경기 취소|failed:매칭 실패|completed:경기 종료|hostRecruiting:작성팀-모집중|hostDelete:작성팀-삭제 모달|hostCancel:작성팀-취소 모달|hostMatched:작성팀-매칭 확정" />
+<%-- <c:set var="demoStates" value="recruiting:모집중|saved:찜함|applied:신청 완료|applyCancel:신청취소 모달|closed:모집 마감|cancelled:경기 취소|failed:매칭 실패|completed:경기 종료|hostRecruiting:작성팀-모집중|hostDelete:작성팀-삭제 모달|hostCancel:작성팀-취소 모달|hostMatched:작성팀-매칭 확정" /> --%>
 <%@ include file="/jsp/common/header.jsp" %>
 
+<%-- 모집중 / 모집 마감/ 경기 종료 / 경기 취소 --%>
 <c:choose>
   <c:when test="${state eq 'applied' or state eq 'applyCancel'}"><c:set var="pillCls" value="pill-neutral" /><c:set var="pillText" value="신청 완료" /></c:when>
   <c:when test="${state eq 'closed'}"><c:set var="pillCls" value="pill-neutral" /><c:set var="pillText" value="모집 마감" /></c:when>

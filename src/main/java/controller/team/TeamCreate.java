@@ -142,6 +142,8 @@ public class TeamCreate extends HttpServlet {
 		    response.sendRedirect(request.getContextPath()+"/team/detail/view?teamId="+ teamId);
 		} catch (Exception e) {
 			e.printStackTrace();
+			request.setAttribute("error", "팀 생성 중 오류가 발생했어요.");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 
 	}
