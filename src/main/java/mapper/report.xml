@@ -49,7 +49,7 @@
 	</select>
 	<!-- 특정 신고 상세 정보 -->
 	<select id="selectAdminReportDetail" resultType="map">
-		select r.report_id, r.type, r.title, r.content, r.post_type, r.post_id,
+		select r.report_id, r.type, r.title, r.content, r.post_type, r.post_id, r.user_id,
 	       	   r.created_at, r.status, r.answer, r.answered_at, u.name, u.nickname
 		from report r
 		left join user u

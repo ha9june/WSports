@@ -4,14 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dao.InquiryDao;
 import dao.ReportDao;
 import dao.ReportDaoImpl;
+import dto.Notification;
 import dto.PageInfo;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 
 public class AdminReportServiceImpl implements AdminReportService {
 	private ReportDao reportDao;
+	private NotificationService notificationService;
 	public AdminReportServiceImpl() {
 		this.reportDao = new ReportDaoImpl();
+		this.notificationService = new NotificationServiceImpl();
 	}
 	@Override
 	public List<Map<String, Object>> getAdminReportList(PageInfo pageInfo, String status)
@@ -54,8 +60,26 @@ public class AdminReportServiceImpl implements AdminReportService {
 		param.put("reportId", reportId);
 		param.put("answer", answer);
 		param.put("adminId", adminId);
+		reportDao.updateAdminReportAnswer(param); //답변 저장
+		//신고 세부정보 조회, 작성자 번호, 신고 제목 꺼내기
+		Map<String, Object> detail = reportDao.selectAdminReportDetail(reportId);
+		if(detail == null) return;
 		
-		reportDao.updateAdminReportAnswer(param);
+		Long userId = ((Number) detail.get("user_id")).longValue();
+		String reportTitle = (String) detail.get("title");
+		
+		//알림 내용 만들기
+		String content = ""+reportTitle+"신고에 답변이 등록되었습니다.";
+		String link = "/report/detail?reportId="+reportId;
+		//알림 객체 채우기
+		Notification alarm = new Notification();
+		alarm.setUserId(userId);
+		alarm.setTitle("신고 답변 등록");
+		alarm.setContent(content);
+		alarm.setLink(link);
+		//알림 저장, 푸시 전송
+		notificationService.sendNotification(alarm);
+		
 	}
 	//신고 세부 정보
 	@Override

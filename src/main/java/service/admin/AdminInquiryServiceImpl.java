@@ -6,12 +6,17 @@ import java.util.Map;
 
 import dao.InquiryDao;
 import dao.InquiryDaoImpl;
+import dto.Notification;
 import dto.PageInfo;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 
 public class AdminInquiryServiceImpl implements AdminInquiryService {
 	private InquiryDao inquiryDao;
+	private NotificationService notificationService;
 	public AdminInquiryServiceImpl() {
 		this.inquiryDao = new InquiryDaoImpl();
+		this.notificationService = new NotificationServiceImpl();
 	}
 	//문의 페이징 처리 및 전체 문의 리스트
 	@Override
@@ -54,12 +59,29 @@ public class AdminInquiryServiceImpl implements AdminInquiryService {
 		param.put("inquiryId", inquiryId);
 		param.put("answer", answer);
 		param.put("adminId", adminId);
-		inquiryDao.updateAdminInquiryAnswer(param);
+		inquiryDao.updateAdminInquiryAnswer(param);//답변 저장
+		//문의 세부정보 조회, 작성자 번호, 문의 제목 꺼내기
+		Map<String, Object> detail = inquiryDao.selectAdminInquiryDetail(inquiryId);
+		if (detail == null) return;
+		
+		Long userId = ((Number) detail.get("user_id")).longValue();
+		String inquiryTitle = (String) detail.get("title");
+		
+		//알림 내용 만들기
+		String content = ""+inquiryTitle+"문의에 답변이 등록되었습니다.";
+		String link = "/inquiry/detail?inquiryId="+inquiryId;
+		//알림 객체 채우기
+		Notification alarm = new Notification();
+		alarm.setUserId(userId);
+		alarm.setTitle("문의 답변 등록");
+		alarm.setContent(content);
+		alarm.setLink(link);
+		//알림 저장, 푸시 전송
+		notificationService.sendNotification(alarm);
 	}
 	//문의 세부정보
 	@Override
 	public Map<String, Object> getAdminInquiryDetail(Long inquiryId) throws Exception {
 		return inquiryDao.selectAdminInquiryDetail(inquiryId);
 	}
-
 }
