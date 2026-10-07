@@ -3,9 +3,9 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.review">
 	
-	<insert id="insertReview" parameterType="review">
-	insert into review(user_id,match_type,match_id,title,content,created_at,image) 
-	values (#{userid},#{matchtype},#{matchid},#{title},#{content},#{createdat},#{image})
+	<insert id="insertReview" parameterType="review" useGeneratedKeys="true" keyProperty="num">
+	insert into review(user_id, match_type, match_id, title, content, image, deleted, created_at, updated_at) 
+	values (#{userId}, #{matchType}, #{matchId}, #{title}, #{content}, NOW(), #{image})
 	</insert>
 	
 	<select id="selectReview" parameterType="review" resultType="review">

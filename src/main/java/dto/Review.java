@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 /** 후기 */
 public class Review {
 
-    private Long reviewId;            // 후기 ID (PK)
+
+	private Long reviewId;            // 후기 ID (PK)
     private Long userId;              // 작성자 회원 ID
     private String matchType;         // 매치 유형 (개인/팀)
     private Long matchId;             // 매치 ID
@@ -16,8 +17,10 @@ public class Review {
     private LocalDateTime updatedAt;  // 수정 일시
     
     
-    
-    
+    public Review() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Review(String title, String content, String image) {
 		super();
