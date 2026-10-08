@@ -36,12 +36,23 @@
         <h3>출석 · 참가자 평가</h3>
         <p>본인을 제외한 참가자의 출석 상태와 평가 점수를 확인할 수 있어요.</p>
       </div>
-      <%-- TODO: <c:forEach var="p" items="${ratingList}"> --%>
+       <c:forEach var="user" items="${userList}">
+             <div class="eval-row">
+             	<div class="who">
+             		<span class="avatar sm default"></span>
+             		${user.nickname }
+             	</div>
+	            <div>
+	             	<span class="att-badge">출석</span>
+	             	<span class="att-badge">${user.attendance }</span>
+	            </div>
+	            <div class="rate">
+           		</div>
+          	</div>
+       </c:forEach>
       <div class="eval-row"><div class="who"><span class="avatar sm default"></span>서울킥</div><div><span class="att-badge">출석</span></div><div class="rate"></div></div>
-      <div class="eval-row"><div class="who"><span class="avatar sm default"></span>공차는날</div><div><span class="att-badge">출석</span></div><div class="rate"><span class="rating">4.5</span></div></div>
-      <div class="eval-row"><div class="who"><span class="avatar sm default"></span>운동하자</div><div><span class="att-badge">미출석</span></div><div class="rate"><span class="rating">4.5</span></div></div>
       <div class="form-actions" style="margin-right:20px">
-        <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=${state}">정보 수정</a>
+        <a class="btn btn-primary" href="${ctx}/match/after/profile/list/edit">정보 수정</a>
       </div>
     </div>
   </div>

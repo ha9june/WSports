@@ -46,12 +46,12 @@ public class MatchEditForm extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long num = Long.parseLong(request.getParameter("personalMatchId"));
+		Long psersonalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 		
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		try {
 			
-			PersonalMatch pMatch = service.getPersmalMatchDetail(num);
+			PersonalMatch pMatch = service.getPersmalMatchDetail(psersonalMatchId);
 			System.out.println(pMatch);
 			request.setAttribute("personalMatch", pMatch);
 			request.getRequestDispatcher("/jsp/match/personalMatchEdit.jsp").forward(request, response);;			
@@ -191,7 +191,7 @@ public class MatchEditForm extends HttpServlet {
 	    try {
             Long psersonalMatchId = service.updatePersonalMatch(pm,parts,realPath);
             System.out.println(psersonalMatchId);
-            response.sendRedirect(request.getContextPath() + "/match/detail/view?num=" + psersonalMatchId);
+            response.sendRedirect(request.getContextPath() + "/match/detail/view?psersonalMatchId=" + psersonalMatchId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			AlertUtil.back(response,"수정에 실패하였습니다. 관리자에게 문의하여 주세요.");

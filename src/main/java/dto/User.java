@@ -48,6 +48,8 @@ public class User {
     private String teamRole;
     //추가 : 프로필 조회 시 평점 불러오기
     private Double avgRatingScore;
+    //추가 : 경기 후 참가 여부
+    private Boolean attendance;
 
     
 	public User() {
@@ -68,7 +70,25 @@ public class User {
 				+ ", preferredSport1=" + preferredSport1 + ", preferredSport2=" + preferredSport2 + ", preferredSport3="
 				+ preferredSport3 + ", bankName=" + bankName + ", accountNumber=" + accountNumber + ", accountHolder="
 				+ accountHolder + ", accountCreatedAt=" + accountCreatedAt + ", accountUpdatedAt=" + accountUpdatedAt
-				+ ", teamRole=" + teamRole + ", avgRatingScore=" + avgRatingScore + "]";
+				+ ", teamRole=" + teamRole + ", avgRatingScore=" + avgRatingScore + ", attendance=" + attendance
+				+ ", getUserId()=" + getUserId() + ", getLoginId()=" + getLoginId() + ", getPassword()=" + getPassword()
+				+ ", getName()=" + getName() + ", getBirthDate()=" + getBirthDate() + ", getNickname()=" + getNickname()
+				+ ", getPhone()=" + getPhone() + ", getEmail()=" + getEmail() + ", getGender()=" + getGender()
+				+ ", getCreatedAt()=" + getCreatedAt() + ", getUpdatedAt()=" + getUpdatedAt() + ", getLastLoginAt()="
+				+ getLastLoginAt() + ", getGrade()=" + getGrade() + ", getWithdrawalAt()=" + getWithdrawalAt()
+				+ ", getSuspended()=" + getSuspended() + ", getProfileImage()=" + getProfileImage() + ", getBio()="
+				+ getBio() + ", getSoccerSkill()=" + getSoccerSkill() + ", getBasketballSkill()=" + getBasketballSkill()
+				+ ", getTennisSkill()=" + getTennisSkill() + ", getBadmintonSkill()=" + getBadmintonSkill()
+				+ ", getProfileUpdatedAt()=" + getProfileUpdatedAt() + ", getPreferredRegion1()="
+				+ getPreferredRegion1() + ", getPreferredRegion2()=" + getPreferredRegion2()
+				+ ", getPreferredRegion3()=" + getPreferredRegion3() + ", getPreferredSport1()=" + getPreferredSport1()
+				+ ", getPreferredSport2()=" + getPreferredSport2() + ", getPreferredSport3()=" + getPreferredSport3()
+				+ ", getBankName()=" + getBankName() + ", getAccountNumber()=" + getAccountNumber()
+				+ ", getAccountHolder()=" + getAccountHolder() + ", getAccountCreatedAt()=" + getAccountCreatedAt()
+				+ ", getAccountUpdatedAt()=" + getAccountUpdatedAt() + ", getTeamRole()=" + getTeamRole()
+				+ ", getAvgRatingScore()=" + getAvgRatingScore() + ", getAttendance()=" + getAttendance()
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
+				+ "]";
 	}
 
 
@@ -418,6 +438,15 @@ public class User {
 	public void setAvgRatingScore(Double avgRatingScore) {
 		this.avgRatingScore = avgRatingScore;
 	}
+
+	public Boolean getAttendance() {
+		return attendance;
+	}
+
+	public void setAttendance(Boolean attendance) {
+		this.attendance = attendance;
+	}
+	
 	
 	
 

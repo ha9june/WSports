@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.PersonalMatch;
+import dto.Review;
 import dto.Team;
 import dto.TeamSearchCondition;
 import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
+import service.review.ReviewService;
+import service.review.ReviewServiceImpl;
 import service.team.TeamService;
 import service.team.TeamServiceImpl;
 import util.MatchSearchInfo;
@@ -47,6 +50,7 @@ public class HomeMain extends HttpServlet {
 		
 		PersonalMatchService matchService = new PersonalMatchServiceImpl();
 		TeamService teamService = new TeamServiceImpl();
+		ReviewService reviewService = new ReviewServiceImpl();
 		try {
 			
 			MatchSearchInfo searchInfo = new MatchSearchInfo();
@@ -65,6 +69,7 @@ public class HomeMain extends HttpServlet {
 					    user.getPreferredRegion3()
 					});
 				searchInfo.setSports(preferredSports);
+				searchInfo.setUserId(user.getUserId());
 				
 				
 				condition.setSearchType("RECOMAND");
@@ -78,12 +83,15 @@ public class HomeMain extends HttpServlet {
 
 			List<PersonalMatch> nowMatchList = matchService.getNowMatchList(searchInfo);
 			List<Team> nowTeamList = teamService.getNowTeamList(condition);
+			List<Review> nowReviewList = reviewService.getNowReviewList();
 
 			System.out.println(nowMatchList);
 			System.out.println(nowTeamList);
+			System.out.println(nowReviewList);
 			
 			request.setAttribute("nMList", nowMatchList);
 			request.setAttribute("nTList", nowTeamList);
+			request.setAttribute("nRList", nowReviewList);
 			request.getRequestDispatcher("/jsp/home/main.jsp").forward(request, response);
 
 		} catch (Exception e) {

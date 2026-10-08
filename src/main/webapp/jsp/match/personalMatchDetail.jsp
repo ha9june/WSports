@@ -6,6 +6,7 @@
 <c:set var="pageCss" value="match" />
 <c:set var="activeNav" value="${isHost ? '' : 'match'}" />
 <c:set var="demoStates" value="recruiting:모집중|saved:찜함|applied:신청 완료|applyCancel:신청취소 모달|closed:모집 마감|completed:경기 종료|cancelledMin:자동 취소|host:주최자 관리|hostConfirmed:주최자-경기 예정|hostCancel:주최자-취소 모달|hostDelete:주최자-삭제 모달|completedHost:주최자-경기 종료|cancelledHost:주최자-취소됨" />
+<script src="${ctx}/js/common.format.js"></script>
 <%@ include file="/jsp/common/header.jsp" %>
 <style>
 	.main-photo {
@@ -173,7 +174,7 @@
             <div><strong>
             ${personalMatch.nickname }
             </strong><p>서울 · 중급</p><p class="rating">4.8 · 21개 평가</p></div></div>
-          <dl><dt>주 활동 지역</dt><dd>서울 마포구</dd><dt>선호 시간</dt><dd>주말 저녁</dd></dl>
+          <dl><dt>주 활동 지역</dt><dd>서울 마포구</dd></dl>
         </div>
       </div>
     </section>
@@ -196,10 +197,11 @@
             </dd></div>
             <div class="info-row"><dt>주소</dt><dd>${personalMatch.address}</dd></div>
             <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd>${personalMatch.participationFee }원</dd></div>
+            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee }" />원</dd></div>
+            
             <div class="info-row"><dt>참가 인원</dt>
 	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
-	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}"><small>최소 진행 8명 · 충족 ✓</small></c:if>
+	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}"><small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small></c:if>
 	           	</dd>
            	</div>
             <div class="info-row"><dt>마감</dt><dd>
@@ -304,16 +306,15 @@
           </c:when>
 
           <%-- 주최자(작성자) 경기 관리 --%>
-          <%-- <c:when test="${isHost}"> --%>
           <c:when test="${not empty sessionScope.user && sessionScope.user.userId == personalMatch.userId}">
             <div class="side-card">
               <h2>내가 작성한 경기</h2>
               <p style="margin-top:8px"><span class="pill ${state eq 'hostConfirmed' ? 'pill-info' : 'pill-brand'}">${state eq 'hostConfirmed' ? '경기 예정' : '모집중'}</span></p>
               <p class="sub">${state eq 'hostConfirmed' ? '모집 마감 · 내일 경기' : '마감까지 1일 3시간'}</p>
               <div class="actions">
-                <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=host">출석 현황</a>
-                <a class="btn btn-outline" href="${ctx}/match/detail/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
-                <a class="btn btn-outline" href="${ctx}/match/edit/form?num=${personalMatch.personalMatchId}" data-auth>경기 정보 수정</a>
+                <a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석 현황</a>
+                <a class="btn btn-outline" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
+                <a class="btn btn-outline" href="${ctx}/match/edit/form?personalMatchId=${personalMatch.personalMatchId}" data-auth>경기 정보 수정</a>
               </div>
               <p class="note">수정 시 참가자에게 알림이 전송돼요.</p>
               <button type="button" class="cancel-link" data-modal-open="hostCancelModal" style="width:100%">경기 취소</button>

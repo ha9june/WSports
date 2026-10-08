@@ -25,6 +25,9 @@ public class MatchSearchInfo {
 	private BigDecimal maxLat;
 	private BigDecimal minLng;
 	private BigDecimal maxLng;
+	
+	//좋아요용
+	private Long userId;
 
 	
 	
@@ -112,6 +115,14 @@ public class MatchSearchInfo {
 	}
 	public void setMaxLng(BigDecimal maxLng) {
 		this.maxLng = maxLng;
+	}
+	
+	
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	@Override
 	public String toString() {

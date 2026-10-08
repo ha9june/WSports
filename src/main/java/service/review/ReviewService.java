@@ -13,6 +13,8 @@ public interface ReviewService {
 	Long writeReview(Review review,long userId, String realPath, List<Part> images)throws Exception; 
 	List<Review>getReviewableMatches(long userId)throws Exception;
 	List<Review>getReviewList(Long userId)throws Exception;
+	
+	List<Review> getNowReviewList() throws Exception;
 	List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status) throws Exception;
 	List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId)throws Exception;
 	int modifyMypageReview(Long userId, Long reviewId, String title, String content, String image) throws Exception;

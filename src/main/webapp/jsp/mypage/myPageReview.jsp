@@ -18,7 +18,7 @@
 <p class="section-desc">내가 작성한 후기와 연결된 경기를 확인하고 수정하거나 삭제할 수 있어요.</p>
 
 <div class="act-head t-11">
-  <span class="t-2">작성한 후기 ${pageInfo.totalCnt}개</span>
+  <span class="t-2">작성한 후기 ${r.reviewId}개</span>
   <span class="t-2">${pageInfo.curPage} / ${pageInfo.allPage} 페이지</span>
 </div>
 
