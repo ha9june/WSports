@@ -1,6 +1,7 @@
 package controller.mypage;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -35,40 +36,57 @@ public class MypageReview extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				// 로그인 체크
-				HttpSession session = request.getSession(false);
-				User user = (session == null) ? null : (User) session.getAttribute("user");
-				if (user == null) {
-					response.sendRedirect(request.getContextPath() + "/login");
-					return;// 로그인 경로 수정
-				}
-				long userId = user.getUserId();
+		HttpSession session = request.getSession(false);
+	    User user = (session == null) ? null : (User) session.getAttribute("user");
+	    if (user == null) {
+	        response.sendRedirect(request.getContextPath() + "/login");
+	        return;
+	    }
 
-				// 페이지 번호 (기본 1)
-				int page = 1;
-				String sPage = request.getParameter("page");
-				if (sPage != null && !sPage.isEmpty()) {
-					try {
-						page = Integer.parseInt(sPage);
-					} catch (NumberFormatException e) {
-						page = 1;
-					}
-				}
-				String state = request.getParameter("state");
-				if (state == null || state.isEmpty())
-					state = "joined";
-				PageInfo pageInfo = new PageInfo(page);
-				ReviewService service = new ReviewServiceImpl();
+	    int page = 1;
+	    String sPage = request.getParameter("page");
+	    if (sPage != null && sPage.matches("\\d+")) page = Integer.parseInt(sPage);
 
-				try {
-					List<Map<String, Object>> list = service.getMypageReviewList(pageInfo, userId);
-					request.setAttribute("Review", list);
-					request.setAttribute("pageInfo", pageInfo);
-					System.out.println(list);
-					request.getRequestDispatcher("/jsp/mypage/myPageReview.jsp").forward(request, response);
-				} catch (Exception e) {
-					e.printStackTrace();
-					request.setAttribute("err", "개인 경기 목록 조회 오류");
-				}
+	    PageInfo pageInfo = new PageInfo(page);
+	    ReviewService service = new ReviewServiceImpl();
+	    try {
+	        List<Map<String, Object>> list = service.getMypageReviewList(pageInfo, user.getUserId());
+	        request.setAttribute("Review", list);
+	        request.setAttribute("pageInfo", pageInfo);
+	        request.getRequestDispatcher("/jsp/mypage/myPageReview.jsp").forward(request, response);
+	    } catch (Exception e) {
+	        throw new ServletException(e);
+	    }
+	}
+
+				
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException {
+	    response.setContentType("text/plain; charset=UTF-8");
+	    PrintWriter out = response.getWriter();
+
+	    HttpSession session = request.getSession(false);
+	    User user = (session == null) ? null : (User) session.getAttribute("user");
+	    if (user == null) {
+	        out.print("login");
+	        return;
+	    }
+
+	    String action = request.getParameter("action");
+	    String idParam = request.getParameter("reviewId");
+
+	    try {
+	        if ("delete".equals(action) && idParam != null && idParam.matches("\\d+")) {
+	            ReviewService service = new ReviewServiceImpl();
+	            int cnt = service.deleteMypageReview(user.getUserId(), Long.parseLong(idParam));
+	            out.print(cnt > 0 ? "ok" : "fail");
+	            System.out.println("delete userId=" + user.getUserId() + ", reviewId=" + idParam);
+	        } else {
+	            out.print("fail");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        out.print("fail");
+	    }
 	}
 }

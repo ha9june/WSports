@@ -20,4 +20,5 @@ public interface ReviewService {
 	int modifyMypageReview(Long userId, Long reviewId, String title, String content, String image) throws Exception;
 	int deleteMypageReview(Long userId, Long reviewId) throws Exception; 
 	String fileUpload(String uploadPath, Part file) throws Exception;
+	Map<String,Object>selectMyReview(Long userId,Long reviewId)throws Exception;
 }
