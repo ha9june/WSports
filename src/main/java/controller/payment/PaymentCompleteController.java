@@ -8,10 +8,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 import service.payment.PaymentService;
 import service.payment.PaymentServiceImpl;
+import service.team.TeamMatchService;
+import service.team.TeamMatchServiceImpl;
 
 /**
  * Servlet implementation class PaymentCompleteController
@@ -46,11 +49,11 @@ public class PaymentCompleteController extends HttpServlet {
 			Long matchId = Long.parseLong(matchIdParam);
 			Object payment;
 			Object match;
-			
+
 			if(isTeam) {
-				payment = paymentService.getPersonalPaymentByPaymentKey(paymentKey);
-				match = paymentService.getTeamPaymentByPaymentKey(paymentKey);
-				
+				payment = paymentService.getTeamPaymentByPaymentKey(paymentKey);
+				TeamMatchService teamMatchService = new TeamMatchServiceImpl();
+				match = teamMatchService.getTeamMatchNotUser(matchId);
 			} else {
 				payment = paymentService.getPersonalPaymentByPaymentKey(paymentKey);
 				PersonalMatchService personalMatchService = new PersonalMatchServiceImpl();

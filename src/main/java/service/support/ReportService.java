@@ -7,6 +7,6 @@ import dto.Report;
 import util.PageInfo;
 
 public interface ReportService {
-	void write(Report report) throws Exception;
+	void writeReport(Report report) throws Exception;
 	List<Map<String,Object>> reportList(PageInfo pageInfo, long userId, String status) throws Exception;
 }

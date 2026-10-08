@@ -11,7 +11,34 @@
 <c:set var="showFooter" value="true" />
 <%@ include file="/jsp/common/header.jsp" %>
 <script>
+
+
 	$(function(){
+	
+
+		$(document).on("click", ".fav-btn", function(e){
+		    e.preventDefault();
+		    e.stopPropagation();
+		    const $btn = $(this);
+
+		    $.ajax({
+		        url: "${ctx}/mypage/matches/saved",
+		        type: "post",
+		        dataType: "text",              
+		        data: {
+		            matchId: $btn.data("id"),
+		            matchType: "PERSONAL"      
+		        },
+		        success: function(res){
+		            if(res === "insert") $btn.addClass("is-on");
+		            else if(res === "delete") $btn.removeClass("is-on");
+		        },
+		        error: function(xhr){
+		            if(xhr.status == 401) alert("로그인이 필요합니다.");
+		            else alert("오류가 생겼습니다.");
+		        }
+		    });
+		});
 		
 
 	});
@@ -30,7 +57,6 @@
     <section>
       <div class="section-head">
         <div>
-          <h3>${sessionScope.user.loginId }</h3>
           <h2 class="section-title">경기 찾기</h2>
           <p class="section-desc">지금 열려있는 경기를 둘러보세요.</p>
         </div>
@@ -40,14 +66,14 @@
       
 	<div id="recomandMatchListDiv" class="feature-row">
 	    <c:forEach var="match" items="${nMList}">
-	  		<c:set var="sportClass" value="${match.sport eq '축구' ? 'football' :
+	  		<c:set var="sportClass" value="${match.sport eq '축구/풋살' ? 'football' :
     		    match.sport eq '농구' ? 'basketball' :	
                 match.sport eq '테니스' ? 'tennis' :
                 match.sport eq '배드민턴' ? 'badminton' : ''}" />
-			<a class="match-card ${sportClass}" href="${ctx}/match/detail/view?num=${match.personalMatchId}">
+			<a class="match-card ${sportClass}" href="${ctx}/match/detail/view?personalMatchId=${match.personalMatchId}">
 			    <img class="art" src="${ctx}/img/art-${sportClass}.png" alt="">
 			    <span class="sport-tag ${sportClass}">${match.sport}</span>
-			    <button type="button" class="fav-btn bare" data-fav data-auth aria-label="관심 경기">${heart}</button>
+			    <button type="button" class="fav-btn bare ${match.favorite ? 'is-on' : ''}" data-fav data-auth data-id="${match.personalMatchId}" aria-label="관심 경기">${heart}</button>
 			    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">${sessionScope.user == null  ? '인기 경기' : '지역 · 실력 일치'}</span>
 			    <div class="body">
 			      <p class="title">${match.title}</p>
@@ -68,17 +94,16 @@
           <h2 class="section-title">팀</h2>
           <p class="section-desc">꾸준히 함께 뛸 사람들을 팀에서 만나보세요.</p>
         </div>
-        <a href="${ctx}/jsp/team/teamList.jsp">전체보기 →</a>
+        <a href="${ctx}/team/list">전체보기 →</a>
       </div>
-      <%-- TODO: <c:forEach var="t" items="${teamList}"> --%>
       <div id="recomandTeamListDiv" class="team-mini-row">
     	<c:forEach var="team" items="${nTList}">
-    		<c:set var="sportClass" value="${team.sport eq '축구' ? 'football' :
-    		    team.sport eq '축구/농구' ? 'football' :	
+    		<c:set var="sportClass" value="${team.sport eq '축구/풋살' ? 'football' :
+    		    team.sport eq '축구' ? 'football' :	
     		    team.sport eq '농구' ? 'basketball' :	
                 team.sport eq '테니스' ? 'tennis' :
                 team.sport eq '배드민턴' ? 'badminton' : ''}" />
-	    	 <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
+	    	 <a class="team-mini" href="${ctx}/team/detail/view?teamId=${team.teamId}">
 	          <div class="top"><img src="${ctx}/img/team-${sportClass }.png" alt="">
 	            <div>
 		            <strong>${team.teamName}</strong>
@@ -110,23 +135,15 @@
         </div>
         <a href="${ctx}/jsp/review/reviewList.jsp">전체보기 →</a>
       </div>
-      <%-- TODO: <c:forEach var="r" items="${reviewList}"> --%>
+
       <div class="review-mini-row">
-        <a class="review-mini" href="${ctx}/jsp/review/reviewDetail.jsp">
-          <div class="top"><span class="sport-tag football">축구/풋살</span><time>2026.09.16</time></div>
-          <strong>매너 좋은 사람들과 함께한 토요일 풋살</strong>
-          <p>경기 매칭이 빠르고 매너 온도가 높은 분들이 많아서 계속 참여하게 돼요. 다음 주에도 신청했어요.</p>
-        </a>
-        <a class="review-mini" href="${ctx}/jsp/review/reviewDetail.jsp">
-          <div class="top"><span class="sport-tag tennis">테니스</span><time>2026.09.14</time></div>
-          <strong>실력별 매칭 덕분에 편하게 즐긴 테니스</strong>
-          <p>실력대가 잘 맞아서 처음 오는 분들도 편하게 즐길 수 있었어요.</p>
-        </a>
-        <a class="review-mini" href="${ctx}/jsp/review/reviewDetail.jsp">
-          <div class="top"><span class="sport-tag badminton">배드민턴</span><time>2026.09.12</time></div>
-          <strong>퇴근 후 바로 참가한 배드민턴 후기</strong>
-          <p>퇴근 후에 바로 참가할 수 있는 경기가 많아서 좋아요.</p>
-        </a>
+    	<c:forEach var="review" items="${nRList}">
+	    	<a class="review-mini" href="${ctx}/jsp/review/reviewDetail.jsp">
+	          <div class="top"><span class="sport-tag football">${review.sport }</span><time>2026.09.16</time></div>
+	          <strong>${review.title }</strong>
+	          <p>${review.content }</p>
+	        </a>
+      	</c:forEach>
       </div>
     </section>
   </div>

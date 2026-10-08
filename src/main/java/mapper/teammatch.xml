@@ -368,4 +368,17 @@
 	          OR content LIKE CONCAT('%', #{keyword}, '%'))
 	    </if>
 	</select>
+	
+	<select id="selectTeamIdByMatchId" parameterType="Long" resultType="Long">
+		select team_id from team_match where team_match_id = #{matchId}
+	</select>
+	
+	<update id="updateStatusToClosed" parameterType="Long">
+	    update team_match
+	    set status = '모집 마감',
+	        updated_at = now()
+	    where team_match_id = #{teamMatchId}
+	      and status = '모집중'
+	      and coalesce(deleted, 0) = 0
+	</update>
 </mapper>

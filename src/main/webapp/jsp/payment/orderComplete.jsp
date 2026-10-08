@@ -20,7 +20,7 @@
       <div class="ln"><span>경기</span><span class="t-bold">${match.title }</span></div>
       <div class="ln"><span>일시</span><span>${match.matchDate} ${match.startTime }</span></div>
       <div class="ln"><span>결제 수단</span><span>${empty payment.easyPaymentProvider ? payment.paymentMethod : payment.easyPaymentProvider}</span></div>
-      <div class="ln"><span>결제 일시</span><span>${payment.approvedAt }</span></div>
+      <div class="ln"><span>결제 일시</span><span>${fn:replace(payment.approvedAt, 'T', ' ')}</span></div>
       <div class="ln total"><span>결제 금액</span><b><fmt:formatNumber value="${payment.totalAmount}" pattern="#,###" />원</b></div>
     </div>
     <div class="btn-group">

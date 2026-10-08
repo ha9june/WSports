@@ -102,6 +102,14 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<Review> getNowReviewList() throws Exception {
+		List<Review> list = reviewDao.selectNowReviewList();
+		return list;
+	}
+	
+	
 	private Map<Long, Integer> toCountMap(List<Map<String, Object>> rows) {
 		Map<Long, Integer> map = new HashMap<>();
 		for (Map<String, Object> m : rows) {
@@ -110,6 +118,7 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 		return map;
 	}
+
 
 	@Override
 	public List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status) throws Exception {

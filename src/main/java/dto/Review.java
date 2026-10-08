@@ -19,6 +19,7 @@ public class Review {
     
     
     private LocalDate matchDate;   // 조회용
+    private String sport; //종목
     public LocalDate getMatchDate() { return matchDate; }
     public void setMatchDate(LocalDate matchDate) { this.matchDate = matchDate; }
     
@@ -124,11 +125,22 @@ public class Review {
 		this.updatedAt = updatedAt;
 	}
 	
+	public String getSport() {
+		return sport;
+	}
+	public void setSport(String sport) {
+		this.sport = sport;
+	}
 	@Override
 	public String toString() {
 		return "Review [reviewId=" + reviewId + ", userId=" + userId + ", matchType=" + matchType + ", matchId="
 				+ matchId + ", title=" + title + ", content=" + content + ", image=" + image + ", deleted=" + deleted
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", matchDate=" + matchDate + ", sport="
+				+ sport + ", likeCount=" + likeCount + ", commentCount=" + commentCount + "]";
 	}
+	
+	
+	
+	
 }
 

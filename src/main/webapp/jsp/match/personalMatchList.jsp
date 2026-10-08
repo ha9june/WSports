@@ -18,17 +18,24 @@
 <style>
 	.is-hidden { display: none !important; }
 </style>
-<script src="${ctx}/js/common_header.js"></script>
+<script src="${ctx}/js/common.format.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 
-<script>
+<script>		
 	let page =1;
+	
+	function favBtn(item, extraClass){
+	    return `<button type="button" class="fav-btn `+(extraClass||"")+(item.favorite ? " is-on" : "")+`"
+	    data-fav data-auth data-id="`+item.personalMatchId+`" aria-label="관심 경기">${heart}</button>`;
+	}
 
 	$(function(){
 		let data = {"userId":"test1","grade":"User"};
+		
+		
 		
 		function NowList(searchType){
 			$.ajax({
@@ -42,7 +49,7 @@
 			    	},
 				success:function(result){
 					let html = "";
-					
+					let searchtypeText = "";
 					result.forEach(function(item) {
 						
 					    let sportsType = "";
@@ -56,6 +63,18 @@
 					    	sportsType="tennis";
 					    }
 					    
+					    if(searchType=="RECOMAND"){
+					    	searchtypeText="지역 · 실력 일치";
+					    }else if(searchType=="POPULAR"){
+					    	searchtypeText="인기 경기";
+
+					    }else if(searchType=="NEW"){
+					    	searchtypeText="최신 경기";
+
+					    }else if(searchType=="END"){
+					    	searchtypeText="마감임박 경기";
+					    }
+					    
 
 					    html += `
 					    	<a class="match-card `+sportsType+`" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
@@ -63,14 +82,14 @@
 						    <span class="sport-tag football">
 						    `+item.sport+`
 						    </span>
-						    <button type="button" class="fav-btn bare" data-fav data-auth aria-label="관심 경기">${heart}</button>
-						    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">${role eq 'guest' ? '인기 경기' : '지역 · 실력 일치'}</span>
+						    `+favBtn(item, "bare")+`
+						    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">`+searchtypeText+`</span>
 						    <div class="body">
 						      <p class="title">
 						      	`+item.title+`
 						      </p>
 						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
-				                `+formatDate(item.matchDate, item.startTime)+`
+				                `+FormatDate(item.matchDate, item.startTime)+`
 						      `+item.region+`
 						      </p>
 						      <p class="price">
@@ -115,8 +134,8 @@
 			    dataType: "json",
 			    data: data,
 				success:function(result){
-					console.log(result);
 					let html = "";
+					let searchTypeText="";
 					result.forEach(function(item) {
 						let sportsType = "";
 					    if(item.sport == "축구/풋살" || item.sport == "축구"){
@@ -128,6 +147,7 @@
 					    }else if(item.sport == "테니스"){
 					    	sportsType="tennis";
 					    }
+					    					    
 						
 						html+=`
 							<a class="match-row" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
@@ -138,11 +158,10 @@
 				              </p>
 				              <div class="meta">
 				                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">8/10 &nbsp; 최소 8명 <span class="cap"><i style="width:80%"></i></span></span>
-				                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">9/19 (토)</span>
-				                <span class="it"><img src="${ctx}/img/icon-clock-16.svg" alt="">19:00</span>
+				                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">`+FormatDate(item.matchDate, item.startTime)+`</span>
 				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 마포구</span>
 				                <span class="price">10,000원</span>
-				                <button type="button" class="fav-btn" data-fav data-auth aria-label="관심 경기">${heart}</button>
+				                `+favBtn(item)+`
 				              </div>
 				            </div>
 				          </a>
@@ -161,30 +180,14 @@
 				
 			});
 		}
-		function MapList(page){
-			$.ajax({
-				url:"${ctx}/match/list/map",
-				type:"post",
-			    dataType: "json",
-			    data: {
-			    	requestType: "ajax",
-			    	page:page,
-			    	data:data,
-			    	},
-				success:function(result){
-					console.log(result);
+		
 
-				},
-				error:function(err){
-					console.log("err");
-					console.log(err);
-				}
-				
-			});
-		}
-		NowList("RECOMAND");
+		
+		
+		
+	    NowList("${sessionScope.user == null ? 'POPULAR' : 'RECOMAND'}");
+		
 		NormalList(page);
-
 		$("#nowRecomandBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
@@ -226,7 +229,7 @@
 		});
 		$("#moreBtn").on("click", function(e) {
 			NormalList(++page,this);
-		})//전송 이벤트	//전송 이벤트
+		});
 	    $('#matchSearchForm').on('submit', function(e) {
 	        e.preventDefault();
 	        if ($("#mapInputs").hasClass("is-hidden")) {
@@ -237,6 +240,33 @@
 			    searchMatch();   
 			}
 	    });
+		
+		$(document).on("click", ".fav-btn", function(e){
+		    e.preventDefault();
+		    e.stopPropagation();
+		    const $btn = $(this);
+		    alert($btn.data("id"));
+
+		    $.ajax({
+		        url: "${ctx}/mypage/matches/saved",
+		        type: "post",
+		        dataType: "text",              
+		        data: {
+		            matchId: $btn.data("id"),
+		            matchType: "PERSONAL"      
+		        },
+		        success: function(res){
+		            if(res === "insert") $btn.addClass("is-on");
+		            else if(res === "delete") $btn.removeClass("is-on");
+		        },
+		        error: function(xhr){
+		            if(xhr.status == 401) alert("로그인이 필요합니다.");
+		            else alert("오류가 생겼습니다.");
+		        }
+		    });
+		});
+
+		
 
 	});
 </script>
@@ -362,9 +392,7 @@
 	          <h2 class="section-title">경기 리스트</h2>
 	          <p class="section-desc">검색 조건에 맞는 경기를 한 줄씩 빠르게 비교해보세요.</p>
 	        </section>
-	        <%-- TODO: <c:forEach var="m" items="${matchList}"> 로 아래 행 하나를 반복 --%>
 	        <div id="normalMatchListDiv" class="match-rows">
-
 	        </div>
 	        <div class="more-wrap">
 	        	<button id="moreBtn" type="button" class="btn-more">↓ &nbsp;더보기</button>
@@ -482,7 +510,7 @@
 	               data-pin="m1">
 	                <small>`+item.sport+`</small>
 	                <strong>`+item.title+`</strong>
-	                <span>`+formatDate(item.matchDate, item.startTime)+`</span>
+	                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
 
 	            </a>
 	        </div>
@@ -556,14 +584,15 @@
 	        data:data,
 	        success: function(data) {
 	            removeMarkers();
-				let html = "<h3>지도 주변 경기 4개</h3>";
+				let html = "<h3>지도 주변 경기</h3>";
 	            data.forEach(function(item) {	
 					html+= `
 			            <a href="${ctx}/match/detail/view?="`+item.personalMatchId+` 
 			            class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
 			            <small>`+item.sport+`</small>
 			            <strong>`+item.title+`</strong>
-		                <span>`+formatDate(item.matchDate, item.startTime)+`</span>
+		                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
+		                `+favBtn(item, "bare")+`
 			            </a>
 					`;
 	            	//마커찍기

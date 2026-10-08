@@ -117,4 +117,12 @@ public class ReviewDaoImpl implements ReviewDao {
 	        throw e;
 	    }
 	}
+	public List<Review> selectNowReviewList() throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        return sqlSession.selectList("mapper.review.selectNowReviewList");
+	    } finally {
+	        sqlSession.close();
+	    }
+	}
 }

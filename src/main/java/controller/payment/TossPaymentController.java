@@ -23,6 +23,8 @@ import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 import service.payment.PaymentService;
 import service.payment.PaymentServiceImpl;
+import service.team.TeamMatchService;
+import service.team.TeamMatchServiceImpl;
 
 /**
  * Servlet implementation class PaymentHistoryList
@@ -54,7 +56,6 @@ public class TossPaymentController extends HttpServlet {
 			return;
 		}
 		Long matchId = Long.parseLong(matchIdParam);
-
 		try {
 			// 로그인 확인
 			User loginUser = (User) request.getSession().getAttribute("user");
@@ -74,10 +75,18 @@ public class TossPaymentController extends HttpServlet {
 			Object match;
 			Integer totalAmount;
 			
+			String teamIdParam = request.getParameter("teamId");
 			if(isTeam) {
+			    if (teamIdParam == null || teamIdParam.isEmpty()) {
+			        request.setAttribute("error", "신청할 팀을 선택해 주세요.");
+			        request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+			        return;
+			    }
 				//팀 경기 상세 조회 서비스
-				match = null;totalAmount = paymentService.getTeamMatchTotalAmount(matchId.intValue());
+				TeamMatchService teamMatchService = new TeamMatchServiceImpl();
+				match = teamMatchService.getTeamMatchNotUser(matchId);
 				totalAmount = paymentService.getTeamMatchTotalAmount(matchId.intValue());
+				request.setAttribute("teamId", Long.parseLong(teamIdParam));
 			} else {
 				PersonalMatchService personalMatchService = new PersonalMatchServiceImpl();
 				match = personalMatchService.getPersmalMatchDetail(matchId);
@@ -85,7 +94,8 @@ public class TossPaymentController extends HttpServlet {
 			}
 
 			if(totalAmount ==null || match == null) {
-				response.sendRedirect(request.getContextPath()+"/jsp/match/personalMatchList.jsp");
+				request.setAttribute("error", "결제 중 에러 발생");
+				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 				return;
 			}
 			request.setAttribute("match", match);
@@ -94,7 +104,8 @@ public class TossPaymentController extends HttpServlet {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath()+"/jsp/match/personalMatchList.jsp");
+			request.setAttribute("error", "결제 중 에러 발생");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -118,7 +129,7 @@ public class TossPaymentController extends HttpServlet {
 
 		String matchType = requestJson.optString("matchType", "personal");
 		int matchId = requestJson.optInt("matchId", 0);
-		
+		long teamId = requestJson.optLong("teamId", 0);
 		// 로그인 회원 확인 (토스 승인 전에 체크)
 		User loginUser = (User) request.getSession().getAttribute("user");
 		Long userId = (loginUser != null) ? loginUser.getUserId() : null;
@@ -203,12 +214,12 @@ public class TossPaymentController extends HttpServlet {
 			}
 
 			System.out.println(responseStr);
-			
+
 			if (statusCode >= 200 && statusCode < 300) {
 				// [결제 성공 처리]
 				// JSONObject responseJson = new JSONObject(responseStr.toString());
 				if ("team".equals(matchType)) {
-					paymentService.completeTeamPayment(responseStr.toString(), userId, (long)matchId);// DB 상태 변경 트랜잭션 실행
+					paymentService.completeTeamPayment(responseStr.toString(), userId, (long)matchId, teamId);// DB 상태 변경 트랜잭션 실행
 				} else {
 					paymentService.completePersonalPayment(responseStr.toString(), userId, (long) matchId);// DB 상태 변경 트랜잭션 실행
 				}

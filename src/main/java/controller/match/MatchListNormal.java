@@ -10,10 +10,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
 import dto.PersonalMatch;
+import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 import util.MatchSearchInfo;
@@ -45,6 +47,9 @@ public class MatchListNormal extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		
 		String requestType = request.getParameter("requestType");
 		Integer page = Integer.parseInt(request.getParameter("page"));
 		
@@ -87,6 +92,10 @@ public class MatchListNormal extends HttpServlet {
 		searchInfo.setEndDate(endDate);
 		searchInfo.setKeyword(keyword);
 		searchInfo.setRegions(regions);
+		if(user!=null) {
+			searchInfo.setUserId(user.getUserId());
+		}
+
 		
 		System.out.println(searchInfo);
 		
