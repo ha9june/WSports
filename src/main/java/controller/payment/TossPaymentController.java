@@ -226,7 +226,7 @@ public class TossPaymentController extends HttpServlet {
 			response.getWriter().write("{\"message\":\"서버 내부 통신 오류가 발생했습니다.\"}");
 		} finally {
 			if (conn != null) {
-				conn.disconnect();
+				 conn.disconnect();
 			}
 		}
 	}
