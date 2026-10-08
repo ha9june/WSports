@@ -197,8 +197,7 @@ public class ReviewServiceImpl implements ReviewService {
 		Map<String, Object> param = new HashMap<>();
 	    param.put("userId", userId);
 	    param.put("reviewId", reviewId);
-	    param.put("deleted", 1);        // 서버에서 고정 (클라이언트 값 사용 금지)
-	    return reviewDao.updateMypageReview(param);
+	    return reviewDao.deleteMypageReview(param);
 	}
 
 	@Override
