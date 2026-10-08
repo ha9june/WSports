@@ -6,6 +6,7 @@ import dto.TeamMatch;
 import dto.TeamPayment;
 
 public interface PaymentService {
+	//알림 넣어라
 	void completePersonalPayment(String responseJson, Long userId, Long matchId) throws Exception;
 	void completeTeamPayment(String responseStr, Long userId, Long matchId) throws Exception;
 	PersonalPayment getPersonalPaymentByPaymentKey(String paymentKey) throws Exception;
