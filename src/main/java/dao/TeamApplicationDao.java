@@ -18,4 +18,5 @@ public interface TeamApplicationDao {
 	Integer selectMypageJoinedTeamCnt(Map<String, Object> param) throws Exception;
 	List<Map<String, Object>> selectMypageMyTeamList(Map<String, Object> param) throws Exception;
 	Integer selectMypageMyTeamCnt(Map<String,Object>param)throws Exception;
+	int updateMypageJoinTeam(Long userId,Long teamId)throws Exception;
 }

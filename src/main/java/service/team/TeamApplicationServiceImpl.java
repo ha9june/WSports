@@ -206,7 +206,7 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 	}
 
 	@Override
-	public void cancelTeamApplication(Long userId, Long applicationId) throws Exception {
+	public void MypageMyTeamCancelApplication(Long userId, Long applicationId) throws Exception {
 		if (userId == null || applicationId == null) {
 			throw new Exception("잘못된 요청입니다.");
 		}
@@ -216,5 +216,10 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 		if (cnt == 0) {
 			throw new Exception("이미 처리되었거나 취소할 수 없는 신청입니다.");
 		}
+	}
+
+	@Override
+	public int MypageMyTeamJoinCancelApplication(Long userId, Long teamId) throws Exception {
+		 return teamApplicationDao.updateMypageJoinTeam(userId, teamId);
 	}
 }
