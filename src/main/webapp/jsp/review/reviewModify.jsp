@@ -11,8 +11,8 @@
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
 <main class="page">
-<form class="rail" action="${ctx}/jsp/review/reviewDetail.jsp?state=mine" method="post" enctype="multipart/form-data">
-  <nav class="breadcrumb"><a href="${ctx}/jsp/review/reviewList.jsp">후기</a><span class="sep">›</span><span>수정</span></nav>
+<form class="rail" action="${ctx}/review/detail?state=mine" method="post" enctype="multipart/form-data">
+  <nav class="breadcrumb"><a href="${ctx}/review/list">후기</a><span class="sep">›</span><span>수정</span></nav>
   <div class="page-head"><h1 class="page-title">후기 수정</h1><p class="page-desc">경기 후기를 작성하고 경험을 공유해보세요.</p></div>
   <div style="width:744px;max-width:100%">
     <div class="field"><label class="field-label" for="matchNo">참여 경기</label>

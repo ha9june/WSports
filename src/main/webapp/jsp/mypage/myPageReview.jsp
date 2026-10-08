@@ -37,7 +37,7 @@
   
   <div class="aside">
     <time>${r.createdAt}</time>
-    <a class="btn btn-primary btn-sm" href="${ctx}/review/modify?id=${r.reviewId}">수정</a>
+    <a class="btn btn-primary btn-sm" href="${ctx}/review/edit?id=${r.reviewId}">수정</a>
     <button type="button" class="btn btn-danger btn-sm btn-review-delete"
             data-id="${r.reviewId}">삭제</button>
   </div>
