@@ -150,7 +150,7 @@ public class ReviewServiceImpl implements ReviewService {
 		// 전체 게시글 수
 		Integer reviewCnt = reviewDao.selectMypageReviewListCnt(param);
 				
-		Integer allPage = (int) Math.ceil(reviewCnt / 9.0); // 전체 페이지 수
+		Integer allPage = (int) Math.ceil(reviewCnt / 5.0); // 전체 페이지 수
 		if (allPage == 0) allPage = 1; // 회원이 0명이어도 1페이지는 있도록
 
 		// 현재 페이지 보정을 먼저 (1 ~ 마지막 페이지 사이로)
@@ -166,7 +166,7 @@ public class ReviewServiceImpl implements ReviewService {
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
 
-		param.put("row",(pageInfo.getCurPage() - 1) * 9);
+		param.put("row",(pageInfo.getCurPage() - 1) * 5);
 						
 		return reviewDao.selectMypageReviewList(param);
 	}

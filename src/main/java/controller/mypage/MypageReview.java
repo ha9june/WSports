@@ -64,7 +64,6 @@ public class MypageReview extends HttpServlet {
 					List<Map<String, Object>> list = service.getMypageReviewList(pageInfo, userId);
 					request.setAttribute("Review", list);
 					request.setAttribute("pageInfo", pageInfo);
-					System.out.println(list);
 					request.getRequestDispatcher("/jsp/mypage/myPageReview.jsp").forward(request, response);
 				} catch (Exception e) {
 					e.printStackTrace();

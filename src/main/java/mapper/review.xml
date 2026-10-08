@@ -129,7 +129,7 @@
 		WHERE r.deleted = 0
 		AND r.user_id = #{userId}
 		ORDER BY r.created_at DESC, r.review_id DESC
-		LIMIT #{row}, 9
+		LIMIT #{row}, 5
 	</select>
 
 	<select id="selectMypageReviewListCnt" parameterType="map"
