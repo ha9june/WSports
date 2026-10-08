@@ -67,7 +67,7 @@
 										참여 경기 ·
 										<c:out value="${r.matchType}" />
 									</p>
-									<p class="cnt">♡ ${r.reviewLikeId} &nbsp; 댓글 ${r.commentId}</p>
+									♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}
 								</div>
 							</a>
 						</c:forEach>
@@ -90,7 +90,7 @@
 							<div class="thumb">
 								<c:choose>
 									<c:when test="${not empty r.image}">
-										<img src="${ctx}${r.image}" alt="<c:out value='${r.title}'/>"
+										<img src="${ctx}/uploads/${r.image}"
 											style="width: 100%; height: 100%; object-fit: cover;">
 									</c:when>
 									<c:otherwise>

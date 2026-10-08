@@ -73,27 +73,14 @@
 		AND r.deleted = '0')
 		ORDER BY m.match_date DESC
 	</select>
-<!-- 	<select id="selectReviewList" resultType="Review">
-		SELECT r.review_id AS
-		reviewId, r.user_id AS userId, u.nickname AS nickname,
-		r.match_type AS
-		matchType, r.match_id AS matchId,
-		COALESCE(pm.title, tm.title) AS
-		matchTitle,
-		r.title AS title, r.image AS image, r.created_at AS
-		createdAt
-		FROM review r
-		JOIN `user` u ON u.user_id = r.user_id
-		LEFT JOIN
-		personal_match pm ON r.match_type = 'PERSONAL' AND
-		pm.personal_match_id = r.match_id
-		LEFT JOIN team_match tm ON
-		r.match_type = 'TEAM' AND tm.team_match_id =
-		r.match_id
-		WHERE r.deleted
-		= '0'
-		ORDER BY r.created_at DESC
-	</select> -->
+	<!-- <select id="selectReviewList" resultType="Review"> SELECT r.review_id 
+		AS reviewId, r.user_id AS userId, u.nickname AS nickname, r.match_type AS 
+		matchType, r.match_id AS matchId, COALESCE(pm.title, tm.title) AS matchTitle, 
+		r.title AS title, r.image AS image, r.created_at AS createdAt FROM review 
+		r JOIN `user` u ON u.user_id = r.user_id LEFT JOIN personal_match pm ON r.match_type 
+		= 'PERSONAL' AND pm.personal_match_id = r.match_id LEFT JOIN team_match tm 
+		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id WHERE r.deleted 
+		= '0' ORDER BY r.created_at DESC </select> -->
 
 	<select id="selectMainReviewList" parameterType="map"
 		resultType="map">
@@ -104,7 +91,7 @@
 		r.match_id AS matchId,
 		COALESCE(pm.title, tm.title) AS matchTitle,
 		r.title AS title,
-		r.image AS image,
+		SUBSTRING_INDEX(r.image, ',', 1) AS image,
 		r.created_at AS createdAt
 		FROM review r
 		JOIN `user` u ON u.user_id = r.user_id
@@ -112,7 +99,7 @@
 		ON r.match_type = 'PERSONAL' AND pm.personal_match_id = r.match_id
 		LEFT JOIN team_match tm
 		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id
-		WHERE r.deleted = '0'
+		WHERE r.deleted = 0
 		ORDER BY r.created_at DESC, r.review_id DESC
 		LIMIT #{row}, 9
 	</select>

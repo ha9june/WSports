@@ -24,7 +24,6 @@ import util.PageInfo;
 @WebServlet("/review/list")
 public class ReviewList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -42,56 +41,36 @@ public class ReviewList extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 		Long userId = (user == null) ? null : user.getUserId();
 		ReviewService service = new ReviewServiceImpl();
+		
+		
+		String state = "grouped".equals(request.getParameter("state")) ? "grouped" : "recent";
+        request.setAttribute("state", state);
+		
+        try {
+            if ("grouped".equals(state)) {
+                List<Review> reviewList = service.getReviewList(userId);
+                Map<Long, List<Review>> groupList = new LinkedHashMap<>();
+                for (Review r : reviewList) {
+                    groupList.computeIfAbsent(r.getMatchId(), k -> new ArrayList<>()).add(r);
+                }
+                request.setAttribute("groupList", groupList);
+            } else {
+                String pageParam = request.getParameter("page");
+                Integer page = (pageParam == null || !pageParam.matches("\\d+"))
+                        ? 1 : Integer.parseInt(pageParam);
 
-		try {
-			// 주소의 ?page= 값 받기 (없으면 1페이지)
-			String pageParam = request.getParameter("page");
-			Integer page = (pageParam == null || pageParam.isEmpty()) ? 1 : Integer.parseInt(pageParam);
+                String status = request.getParameter("status");
+                if (status == null || status.isEmpty()) status = "ALL";
 
-			// 주소의 ?status= 값 받기 (없으면 전체)
-			String status = request.getParameter("status");
-			if (status == null || status.isEmpty())
-				status = "ALL";
-
-			String keyword = request.getParameter("keyword");
-			if (keyword == null)
-				keyword = "";
-			keyword = keyword.trim(); // 앞뒤 공백 제거
-
-			PageInfo pageInfo = new PageInfo(page);
-			List<Map<String, Object>> list = service.selectMainReviewList(pageInfo, status);
-			request.setAttribute("reviewList", list);
-			request.setAttribute("pageInfo", pageInfo); // 페이지 정보
+                PageInfo pageInfo = new PageInfo(page);
+                List<Map<String, Object>> list = service.selectMainReviewList(pageInfo, status);
+                request.setAttribute("reviewList", list);
+                request.setAttribute("pageInfo", pageInfo);
+            }
+            
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "후기 목록 조회 오류");
-		}
-		String state = "grouped".equals(request.getParameter("state")) ? "grouped" : "recent";
-
-		try {
-			if ("grouped".equals(state)) {
-				List<Review> reviewList = service.getReviewList(userId);
-				Map<Long, List<Review>> groupList = new LinkedHashMap<>();
-				for (Review r : reviewList) {
-					groupList.computeIfAbsent(r.getMatchId(), k -> new ArrayList<>()).add(r);
-				}
-				request.setAttribute("groupList", groupList);
-			} else {
-				// 최근 후기: 페이징
-				String pageParam = request.getParameter("page");
-				Integer page = (pageParam == null || pageParam.isEmpty()) ? 1 : Integer.parseInt(pageParam);
-
-				String status = request.getParameter("status");
-				if (status == null || status.isEmpty())
-					status = "ALL";
-
-				PageInfo pageInfo = new PageInfo(page);
-				List<Map<String, Object>> list = service.selectMainReviewList(pageInfo, status);
-				request.setAttribute("reviewList", list);
-				request.setAttribute("pageInfo", pageInfo);
-			}
-		} catch (Exception e) {
-			throw new ServletException(e);
 		}
 
 		request.getRequestDispatcher("/jsp/review/reviewList.jsp").forward(request, response);
