@@ -14,10 +14,6 @@
 		#{content}, #{image}, 0, NOW(),
 		NOW())
 	</insert>
-	<update id="UpdateReview" parameterType="Review">
-		update set
-		where
-	</update>
 
 	<select id="selectReviewablePersonal" parameterType="long"
 		resultType="Review">
@@ -73,14 +69,6 @@
 		AND r.deleted = '0')
 		ORDER BY m.match_date DESC
 	</select>
-	<!-- <select id="selectReviewList" resultType="Review"> SELECT r.review_id 
-		AS reviewId, r.user_id AS userId, u.nickname AS nickname, r.match_type AS 
-		matchType, r.match_id AS matchId, COALESCE(pm.title, tm.title) AS matchTitle, 
-		r.title AS title, r.image AS image, r.created_at AS createdAt FROM review 
-		r JOIN `user` u ON u.user_id = r.user_id LEFT JOIN personal_match pm ON r.match_type 
-		= 'PERSONAL' AND pm.personal_match_id = r.match_id LEFT JOIN team_match tm 
-		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id WHERE r.deleted 
-		= '0' ORDER BY r.created_at DESC </select> -->
 
 	<select id="selectMainReviewList" parameterType="map"
 		resultType="map">
@@ -88,19 +76,24 @@
 		r.user_id AS userId,
 		u.nickname AS nickname,
 		r.match_type AS matchType,
-		r.match_id AS matchId,
+		r.match_id AS
+		matchId,
 		COALESCE(pm.title, tm.title) AS matchTitle,
 		r.title AS title,
 		SUBSTRING_INDEX(r.image, ',', 1) AS image,
 		r.created_at AS createdAt
 		FROM review r
 		JOIN `user` u ON u.user_id = r.user_id
-		LEFT JOIN personal_match pm
-		ON r.match_type = 'PERSONAL' AND pm.personal_match_id = r.match_id
+		LEFT JOIN
+		personal_match pm
+		ON r.match_type = 'PERSONAL' AND pm.personal_match_id
+		= r.match_id
 		LEFT JOIN team_match tm
-		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id
+		ON r.match_type = 'TEAM' AND
+		tm.team_match_id = r.match_id
 		WHERE r.deleted = 0
-		ORDER BY r.created_at DESC, r.review_id DESC
+		ORDER BY r.created_at
+		DESC, r.review_id DESC
 		LIMIT #{row}, 9
 	</select>
 	<select id="selectReviewListCnt" parameterType="Map"
@@ -118,8 +111,53 @@
 		= '0'
 	</select>
 
+	<select id="selectMypageReviewList" parameterType="map" resultType="map">
+		SELECT r.review_id AS reviewId,
+		r.user_id AS userId,
+		r.match_type AS matchType,
+		r.match_id AS matchId,
+		COALESCE(pm.title, tm.title) AS matchTitle,
+		r.title AS title,
+		r.content AS content,
+		r.created_at AS createdAt
+		FROM review r
+		JOIN `user` u ON u.user_id = r.user_id
+		LEFT JOIN personal_match pm
+		ON r.match_type = 'PERSONAL' AND pm.personal_match_id = r.match_id
+		LEFT JOIN team_match tm
+		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id
+		WHERE r.deleted = 0
+		AND r.user_id = #{userId}
+		ORDER BY r.created_at DESC, r.review_id DESC
+		LIMIT #{row}, 9
+	</select>
 
+	<select id="selectMypageReviewListCnt" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM review r
+		JOIN `user` u ON u.user_id = r.user_id
+		LEFT JOIN personal_match pm
+		ON r.match_type = 'PERSONAL' AND pm.personal_match_id = r.match_id
+		LEFT JOIN team_match tm
+		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id
+		WHERE r.deleted = 0
+		<if test="userId != null">
+			AND r.user_id = #{userId}
+		</if>
+	</select>
+	<update id="updateMyReview">
+		UPDATE review
+		SET title = #{title}, content = #{content}, image = #{image}, updated_at
+		= NOW()
+		WHERE review_id = #{reviewId} AND user_id = #{userId} AND deleted = 0
+	</update>
 
+	<update id="deleteMyReview">
+		UPDATE review
+		SET deleted = 1, updated_at = NOW()
+		WHERE review_id = #{reviewId} AND user_id = #{userId} AND deleted = 0
+	</update>
 
 
 

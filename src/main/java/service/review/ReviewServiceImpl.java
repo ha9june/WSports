@@ -139,5 +139,35 @@ public class ReviewServiceImpl implements ReviewService {
 								
 				return reviewDao.selectMainReviewList(param);
 			}
-	
+
+	@Override
+	public List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		Integer cnt = reviewDao.selectReviewListCnt(param);
+
+		
+		// 전체 게시글 수
+		Integer reviewCnt = reviewDao.selectMypageReviewListCnt(param);
+				
+		Integer allPage = (int) Math.ceil(reviewCnt / 9.0); // 전체 페이지 수
+		if (allPage == 0) allPage = 1; // 회원이 0명이어도 1페이지는 있도록
+
+		// 현재 페이지 보정을 먼저 (1 ~ 마지막 페이지 사이로)
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
+		if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
+				
+		// startPage : curPage(1~10)=>1, curPage(11~20)=>11, curPage(21~30)=>21
+		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 9 + 1 ;
+		Integer endPage = startPage + 10 -1;
+		if (endPage > allPage) endPage = allPage; // 마지막 페이지 보정, 전체 페이지 넘지 않게
+
+		pageInfo.setAllPage(allPage);
+		pageInfo.setStartPage(startPage);
+		pageInfo.setEndPage(endPage);
+
+		param.put("row",(pageInfo.getCurPage() - 1) * 9);
+						
+		return reviewDao.selectMypageReviewList(param);
+	}
 }
