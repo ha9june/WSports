@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import dao.PersonalPaymentDao;
 import dao.PersonalPaymentDaoImpl;
+import dao.TeamMatchDao;
+import dao.TeamMatchDaoImpl;
 import dao.TeamPaymentDao;
 import dao.TeamPaymentDaoImpl;
 import dto.PersonalMatch;
@@ -69,7 +71,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public void completeTeamPayment(String responseStr, Long userId, Long matchId) throws Exception {
+	public void completeTeamPayment(String responseStr, Long userId, Long matchId, Long teamId) throws Exception {
 		JSONObject json = new JSONObject(responseStr);	
 		TeamPayment team = new TeamPayment();
 		
@@ -109,10 +111,11 @@ public class PaymentServiceImpl implements PaymentService {
 		    JSONObject receipt = json.getJSONObject("receipt");
 		    team.setReceiptUrl(receipt.optString("url", null));
 		}
-
+		TeamMatchDao teamMatchDao = new TeamMatchDaoImpl();
+		teamMatchDao.updateStatusToClosed(matchId);
 		// 5. 응답 원본 전체 보관
 		team.setRawResponse(responseStr);		
-		teamPaymentDao.insertTeamPaymentParticipant(team, userId, matchId);
+		teamPaymentDao.insertTeamPaymentParticipant(team, userId, matchId, teamId);
 	}
 
 

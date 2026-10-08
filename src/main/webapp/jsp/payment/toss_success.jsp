@@ -25,11 +25,12 @@
   const amount = Number(params.get("amount"));
   const matchId = params.get("matchId");
   const matchType = params.get("matchType") || "personal";
-
+  const teamId = params.get('teamId') || 0;
+  
   fetch("${ctx}/payment/confirm", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ paymentKey, orderId, amount, matchId: Number(matchId), matchType })
+    body: JSON.stringify({ paymentKey, orderId, amount, matchId: Number(matchId), matchType, teamId: Number(teamId) })
   })
   .then(function (res) {
     return res.json().then(function (data) { return { ok: res.ok, data: data }; });

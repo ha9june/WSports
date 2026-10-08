@@ -18,4 +18,8 @@ public interface NoticeDao {
 	Integer insertAdminNotice(Map<String, Object> param) throws Exception;
 	//공지 삭제
 	Integer updateAdminNoticeDelete(Long noticeId) throws Exception;
+	
+	List<Map<String, Object>> selectPinnedNoticeList(Map<String, Object> param) throws Exception;
+	List<Map<String, Object>> selectNotPinnedNoticeList(Map<String, Object> param) throws Exception;
+	Integer selectNoticeCnt(Map<String, Object> param) throws Exception;
 }

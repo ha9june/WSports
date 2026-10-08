@@ -17,7 +17,7 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Override
-	public void write(Report report) throws Exception {
+	public void writeReport(Report report) throws Exception {
 		reportDao.insertReport(report);
 		
 	}

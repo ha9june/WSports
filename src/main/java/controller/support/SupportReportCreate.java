@@ -65,7 +65,7 @@ public class SupportReportCreate extends HttpServlet {
 		
 		ReportService service = new ReportServiceImpl();
 		try {
-			service.write(report);
+			service.writeReport(report);
 			response.sendRedirect(request.getContextPath()+"/jsp/support/reportList.jsp");
 		} catch(Exception e) {
 			e.printStackTrace();

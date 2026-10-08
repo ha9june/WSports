@@ -18,7 +18,7 @@ public interface TeamPaymentDao {
 	Long selectPeriodProfitTeam(Map<String, Object> param) throws Exception; //기간 내 총 수익
 	
 	//결제내역 삽입
-	void insertTeamPaymentParticipant(TeamPayment teamPayment, Long userID, Long matchId) throws Exception;
+	void insertTeamPaymentParticipant(TeamPayment teamPayment, Long userID, Long matchId, Long teamId) throws Exception;
 	//결제내역 선택
 	TeamPayment selectTeamPaymentHistory(String paymentKey) throws Exception;	
 	//검증
