@@ -2,6 +2,7 @@ package dao;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -50,5 +51,25 @@ public class ReviewDaoImpl implements ReviewDao {
 		    } finally {
 		        sqlSession.close();
 		    }
+	}
+
+	@Override
+	public List<Map<String, Object>> selectMainReviewList(Map<String, Object> param) throws Exception {
+		 try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		        return sqlSession.selectList("mapper.review.selectMainReviewList", param);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        throw e;
+		    }
+	}
+
+	@Override
+	public Integer selectReviewListCnt(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectOne("mapper.review.selectReviewListCnt", param);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
 	}
 }

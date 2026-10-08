@@ -67,7 +67,7 @@
 										참여 경기 ·
 										<c:out value="${r.matchType}" />
 									</p>
-									<p class="cnt">♡ ${r.likeCount} &nbsp; 댓글 ${r.commentCount}</p> 
+									<p class="cnt">♡ ${r.reviewLikeId} &nbsp; 댓글 ${r.commentId}</p>
 								</div>
 							</a>
 						</c:forEach>
@@ -88,7 +88,15 @@
 						<a class="review-card"
 							href="${ctx}/review/detail?id=${r.reviewId}">
 							<div class="thumb">
-								<c:out value="${r.title}" />
+								<c:choose>
+									<c:when test="${not empty r.image}">
+										<img src="${ctx}${r.image}" alt="<c:out value='${r.title}'/>"
+											style="width: 100%; height: 100%; object-fit: cover;">
+									</c:when>
+									<c:otherwise>
+										<c:out value="${r.title}" />
+									</c:otherwise>
+								</c:choose>
 							</div>
 							<div class="body">
 								<strong><c:out value="${r.title}" /></strong>
@@ -100,7 +108,8 @@
 									참여 경기 ·
 									<c:out value="${r.matchType}" />
 								</p>
-								<p class="cnt">♡ ${r.likeCount} &nbsp; 댓글 ${r.commentCount}</p> 
+								<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
+									&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
 							</div>
 						</a>
 					</c:forEach>
@@ -108,9 +117,26 @@
 				<c:if test="${empty reviewList}">
 					<p>등록된 후기가 없어요.</p>
 				</c:if>
-				<nav class="pagination green">
-					<a href="#" class="is-active">1</a><a href="#">2</a><a href="#">3</a>
-				</nav>
+				<!-- 페이징 -->
+				<c:if test="${pageInfo.allPage > 1}">
+					<nav class="pagination"
+						style="display: flex; justify-content: center; padding: 0">
+						<c:set var="base"
+							value="${ctx}/review/list?state=${state}&keyword=${fn:escapeXml(param.keyword)}" />
+
+						<a
+							href="${pageInfo.curPage > 1 ? base.concat('&page=').concat(pageInfo.curPage - 1) : '#'}">&lt;</a>
+
+						<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
+							var="p">
+							<a href="${base}&page=${p}"
+								class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+						</c:forEach>
+
+						<a
+							href="${pageInfo.curPage < pageInfo.allPage ? base.concat('&page=').concat(pageInfo.curPage + 1) : '#'}">&gt;</a>
+					</nav>
+				</c:if>
 			</c:otherwise>
 		</c:choose>
 	</div>
