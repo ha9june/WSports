@@ -123,13 +123,13 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 		} catch (Exception e) {
 			throw e;
 		}
-}
+	}
 
 	@Override
 	public Integer selectMypageJoinedTeamCnt(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-	        return sqlSession.selectOne("mapper.teamapplication.selectMypageJoinedTeamCnt", param);
-	    }
+			return sqlSession.selectOne("mapper.teamapplication.selectMypageJoinedTeamCnt", param);
+		}
 	}
 
 	@Override
@@ -141,6 +141,25 @@ public class TeamApplicationDaoImpl implements TeamApplicationDao {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			int cnt = sqlSession.update("mapper.teamapplication.updateMypageMyTeam", param);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	@Override
+	public int updateMypageJoinTeam(Long userId,Long teamId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("teamId", teamId);
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teamapplication.updateMypageJoinTeam", param);
 			sqlSession.commit();
 			return cnt;
 		} catch (Exception e) {

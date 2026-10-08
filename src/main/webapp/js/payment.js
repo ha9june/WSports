@@ -1,5 +1,6 @@
 /* =========================================================
    결제 : 환불 정책 동의 체크 → 결제 버튼 활성화 → 토스페이먼츠 결제창 호출
+   (토스 결제위젯 호출은 toss_checkout.jsp 인라인 스크립트에서 처리)
    ========================================================= */
 (function () {
   'use strict';
@@ -11,7 +12,7 @@
     if (document.querySelector('#payConfirmModal.is-open')) { agree.checked = true; openBtn.disabled = false; }
   }
 
-  var payBtn = document.getElementById('tossPayBtn');
+  /*var payBtn = document.getElementById('tossPayBtn');
   if (!payBtn) return;
   payBtn.addEventListener('click', function () {
     var amount = Number(payBtn.dataset.amount);
@@ -36,5 +37,5 @@
       // [시연] 클라이언트 키가 없으면 결제 성공 화면으로 바로 이동
       location.href = successUrl + '?paymentKey=demo&orderId=' + orderId + '&amount=' + amount;
     }
-  });
+  });*/
 })();

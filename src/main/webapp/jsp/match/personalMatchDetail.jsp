@@ -332,7 +332,7 @@
               <hr>
               <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
               <div class="actions">
-                <a class="btn btn-primary" href="${ctx}/jsp/payment/toss_checkout.jsp?state=match" data-auth>결제하기</a>
+                <a class="btn btn-primary" href="${ctx}/payment/confirm?state=match&matchId=${personalMatch.personalMatchId}" data-auth>결제하기</a>
                 <a class="btn btn-primary" href="${ctx}/match/detail/participation?personalMatchId=${personalMatch.personalMatchId}" data-auth>참가하기</a>
             	<a class="btn btn-primary" href="#" data-auth>수정하기</a>
               </div>

@@ -1,25 +1,24 @@
 package controller.review;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class MypageReviews
+ * Servlet implementation class ReviewEdit
  */
-@WebServlet("/mypage/reviews")
-
-public class MypageReviews extends HttpServlet {
+@WebServlet("/review/edit")
+public class ReviewEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MypageReviews() {
+    public ReviewEdit() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,8 +27,12 @@ public class MypageReviews extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/mypage/myPageReview.jsp").forward(request, response);
-	
-	
-	}
+            request.getRequestDispatcher("/jsp/review/reviewModify.jsp").forward(request, response);
+        }
 }
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+//	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		
+//}

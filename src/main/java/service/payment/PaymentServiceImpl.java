@@ -8,7 +8,9 @@ import dao.PersonalPaymentDao;
 import dao.PersonalPaymentDaoImpl;
 import dao.TeamPaymentDao;
 import dao.TeamPaymentDaoImpl;
+import dto.PersonalMatch;
 import dto.PersonalPayment;
+import dto.TeamMatch;
 import dto.TeamPayment;
 
 public class PaymentServiceImpl implements PaymentService {
@@ -18,18 +20,19 @@ public class PaymentServiceImpl implements PaymentService {
 		this.personalPaymentDao = new PersonalPaymentDaoImpl();
 		this.teamPaymentDao = new TeamPaymentDaoImpl();
 	}
+	//결제 내역 + 참가자 등록
 	@Override
-	public void completePersonalPayment(String responseStr) throws Exception {
-		JSONObject json = new JSONObject(responseStr);	
+	public void completePersonalPayment(String responseJson, Long userId, Long matchId) throws Exception {
+		JSONObject json = new JSONObject(responseJson);	
 		PersonalPayment personal = new PersonalPayment();
 		
 		personal.setOrderId(json.getString("orderId"));
 		personal.setPaymentKey(json.optString("paymentKey", "")); // 실제 응답의 paymentKey
 		personal.setOrderName(json.getString("orderName"));
 		personal.setPaymentStatus(json.getString("status"));
-		personal.setPaymentMethod(json.getString("paymentmethod"));
+		personal.setPaymentMethod(json.getString("method"));
 		personal.setTotalAmount(json.getInt("totalAmount"));
-		personal.setBalance(json.getInt("balance"));
+		personal.setBalance(json.getInt("balanceAmount"));
 		personal.setCurrency(json.optString("currency", "KRW"));
 
 		// 1. 날짜 처리 (ISO 8601: "2026-09-22T15:19:25+09:00" -> LocalDateTime)
@@ -61,12 +64,12 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		// 5. 응답 원본 전체 보관
-		personal.setRawResponse(responseStr);		
-		personalPaymentDao.insertPaymentHistory(personal);
+		personal.setRawResponse(responseJson);		
+		personalPaymentDao.insertPersonalPaymentParticipant(personal,userId, matchId);
 	}
 
 	@Override
-	public void completeTeamPayment(String responseStr) throws Exception {
+	public void completeTeamPayment(String responseStr, Long userId, Long matchId) throws Exception {
 		JSONObject json = new JSONObject(responseStr);	
 		TeamPayment team = new TeamPayment();
 		
@@ -74,9 +77,9 @@ public class PaymentServiceImpl implements PaymentService {
 		team.setPaymentKey(json.optString("paymentKey", "")); // 실제 응답의 paymentKey
 		team.setOrderName(json.getString("orderName"));
 		team.setPaymentStatus(json.getString("status"));
-		team.setPaymentMethod(json.getString("paymentmethod"));
+		team.setPaymentMethod(json.getString("method"));
 		team.setTotalAmount(json.getInt("totalAmount"));
-		team.setBalance(json.getInt("balance"));
+		team.setBalance(json.getInt("balanceAmount"));
 		team.setCurrency(json.optString("currency", "KRW"));
 
 		// 1. 날짜 처리 (ISO 8601: "2026-09-22T15:19:25+09:00" -> LocalDateTime)
@@ -109,18 +112,50 @@ public class PaymentServiceImpl implements PaymentService {
 
 		// 5. 응답 원본 전체 보관
 		team.setRawResponse(responseStr);		
-		teamPaymentDao.insertPaymentHistory(team);
+		teamPaymentDao.insertTeamPaymentParticipant(team, userId, matchId);
 	}
 
 
 	@Override
 	public PersonalPayment getPersonalPaymentByPaymentKey(String paymentKey) throws Exception {
-		return personalPaymentDao.selectPaymentHistory(paymentKey);
+		return personalPaymentDao.selectPersonalPaymentHistory(paymentKey);
 	}
 
 	@Override
 	public TeamPayment getTeamPaymentByPaymentKey(String paymentKey) throws Exception {
-		return teamPaymentDao.selectPaymentHistory(paymentKey);
+		return teamPaymentDao.selectTeamPaymentHistory(paymentKey);
+	}
+	//개인 결제 검증
+	@Override
+	public Integer getPersonalMatchTotalAmount(Integer matchId) throws Exception {
+		return personalPaymentDao.selectPersonalMatchTotalAmount(matchId);
+	}
+	@Override
+	public Integer getTeamMatchTotalAmount(Integer matchId) throws Exception {
+		return teamPaymentDao.selectTeamMatchTotalAmount(matchId);
+	}
+	//개인 경기정보
+	@Override
+	public PersonalMatch getPersonalPaymentMatch(String paymentKey) throws Exception {
+		return personalPaymentDao.selectPersonalPaymentMatch(paymentKey);
+	}
+	//팀 경기정보
+	@Override
+	public TeamMatch getTeamPaymentMatch(String paymentKey) throws Exception {
+		return teamPaymentDao.selectTeamPaymentMatch(paymentKey);
+	}
+	//특정 팀경기 정보
+	@Override
+	public TeamMatch getTeamMatch(Long matchId) throws Exception {
+		return teamPaymentDao.selectTeamMatch(matchId);
+	}
+	//중복참가 확인
+	@Override
+	public boolean isAlreadyJoined(Long userId, Long matchId, boolean isTeam) throws Exception {
+		int cnt = isTeam
+				? teamPaymentDao.selectTeamJoinCnt(userId, matchId)
+				: personalPaymentDao.selectPersonalJoinCnt(userId, matchId);
+		return cnt > 0;
 	}
 
 }
