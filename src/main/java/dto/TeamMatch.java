@@ -3,6 +3,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 /** 팀 매치 */
 public class TeamMatch {
@@ -63,6 +65,15 @@ public class TeamMatch {
 
     public boolean isFavorite() { return favorite; }
     public void setFavorite(boolean favorite) { this.favorite = favorite; }
+    
+	public String getDayOfWeekKorean() {
+	    if (matchDate == null) {
+	        return "";
+	    }
+	    String day = matchDate.getDayOfWeek()
+	            .getDisplayName(TextStyle.FULL, Locale.KOREAN);
+	    return day.substring(0, 1);
+	}
     
 	public TeamMatch() {
 		super();

@@ -3,6 +3,7 @@ package dao;
 import java.util.Map;
 
 import dto.PersonalPayment;
+import dto.TeamMatch;
 import dto.TeamPayment;
 
 public interface TeamPaymentDao {
@@ -17,7 +18,16 @@ public interface TeamPaymentDao {
 	Long selectPeriodProfitTeam(Map<String, Object> param) throws Exception; //기간 내 총 수익
 	
 	//결제내역 삽입
-	void insertPaymentHistory(TeamPayment teamPayment) throws Exception;
+	void insertTeamPaymentParticipant(TeamPayment teamPayment, Long userID, Long matchId) throws Exception;
 	//결제내역 선택
-	TeamPayment selectPaymentHistory(String paymentKey) throws Exception;	
+	TeamPayment selectTeamPaymentHistory(String paymentKey) throws Exception;	
+	//검증
+	Integer selectTeamMatchTotalAmount(Integer matchId) throws Exception;
+	//경기정보 가져오기
+	TeamMatch selectTeamPaymentMatch(String paymentKey) throws Exception;
+	//팀 경기 한 건 조회
+	TeamMatch selectTeamMatch(Long matchId) throws Exception;
+	//중복참가 확인
+	Integer selectTeamJoinCnt(Long userId, Long matchId) throws Exception;
+	
 }

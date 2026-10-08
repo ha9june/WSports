@@ -49,31 +49,45 @@ public class TeamMatchDetailView extends HttpServlet {
 	    TeamService teamService = new TeamServiceImpl();
 		try {
 			Long teamMatchId = Long.parseLong(request.getParameter("teamMatchId"));
-			TeamMatch teamMatch = teamMatchService.getTeamMatch(teamMatchId, user.getUserId());
-			
-			//내가 호스트인지
-			if(teamMatch.getUserId().equals(user.getUserId())) {
-				request.setAttribute("isHost", true);
+			TeamMatch teamMatch;
+			if(user != null) {
+				teamMatch = teamMatchService.getTeamMatchUser(teamMatchId, user.getUserId());
+				if(teamMatch.getUserId().equals(user.getUserId())) {
+					request.setAttribute("isHost", true);
+				}else {
+					request.setAttribute("isHost", false);
+				}
 			}else {
+				teamMatch = teamMatchService.getTeamMatchNotUser(teamMatchId);
 				request.setAttribute("isHost", false);
 			}
 			
-			//우리 팀이 신청한 경기인지 아닌지
 			
-			//유저 아이디로 소속된 팀 불러오기
-			List<Long> teamIdList = teamUserService.getTeamIdListByUserId(user.getUserId());
-			//이 경기 아이디로 참가 팀 아이디 불러오기 2개
-			List<Long> tmpIdList = teamMatchParticipantService.getTeamMatchParticipantIdList(teamMatchId);
-			//유저 아이디로 불러온 팀 아이디랑 맞으면 소속된 팀이 신청한 경기
+			//내가 호스트인지
+//			if(teamMatch.getUserId().equals(user.getUserId())) {
+//				request.setAttribute("isHost", true);
+//			}else {
+//				request.setAttribute("isHost", false);
+//			}
+			
 			Boolean applied = false;
-			for(Long teamId : teamIdList) {
-				for(Long tmpId : tmpIdList) {
-					if(teamId.equals(tmpId)) {
-						applied = true;
+			//우리 팀이 신청한 경기인지 아닌지
+			if(user != null) {
+				//유저 아이디로 소속된 팀 불러오기
+				List<Long> teamIdList = teamUserService.getTeamIdListByUserId(user.getUserId());
+				//이 경기 아이디로 참가 팀 아이디 불러오기 2개
+				List<Long> tmpIdList = teamMatchParticipantService.getTeamMatchParticipantIdList(teamMatchId);
+				//유저 아이디로 불러온 팀 아이디랑 맞으면 소속된 팀이 신청한 경기
+				
+				for(Long teamId : teamIdList) {
+					for(Long tmpId : tmpIdList) {
+						if(teamId.equals(tmpId)) {
+							applied = true;
+						}
 					}
 				}
 			}
-			
+
 			//신청한 매치인지 아닌지
 			request.setAttribute("applied", applied);
 			
