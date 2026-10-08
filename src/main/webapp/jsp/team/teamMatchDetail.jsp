@@ -281,7 +281,7 @@ $('#thumbs').on('click', '.subImg', function() {
 							</c:when>
 							<c:when test="${isMyTeamList}">
 								<div class="side-card">
-									<h2>팀 매칭 신청</h2>
+									<h2>팀 매칭 신청</h2> 
 									<div class="field mt-16">
 										<label class="field-label" for="myTeam">내 ${t.sport} 팀 선택</label>
 										<%-- TODO: 내가 팀장/부팀장인 팀 목록 (서블릿에서 myTeamList로 전달) --%>
