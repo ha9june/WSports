@@ -107,4 +107,14 @@ public class ReviewDaoImpl implements ReviewDao {
 	        sqlSession.close();
 	    }
 	}
+
+	@Override
+	public Map<String, Object> selectMyReview(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectOne("mapper.review.selectMyReview", param);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 }

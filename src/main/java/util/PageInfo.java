@@ -7,7 +7,9 @@ public class PageInfo {
 	private Integer endPage;   //끝나는 페이지
 	
 	public PageInfo() {}
-	
+	private Integer totalCnt;
+	public Integer getTotalCnt() { return totalCnt; }
+	public void setTotalCnt(Integer totalCnt) { this.totalCnt = totalCnt; }
 	public PageInfo(Integer curPage) {
 		this.curPage=curPage;
 	}

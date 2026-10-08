@@ -1,6 +1,7 @@
 package controller.mypage;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ public class MypageReview extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+				PrintWriter out = response.getWriter();
 				// 로그인 체크
 				HttpSession session = request.getSession(false);
 				User user = (session == null) ? null : (User) session.getAttribute("user");
@@ -59,8 +61,18 @@ public class MypageReview extends HttpServlet {
 					state = "joined";
 				PageInfo pageInfo = new PageInfo(page);
 				ReviewService service = new ReviewServiceImpl();
+				
+				 String action = request.getParameter("action");
+				  String idParam = request.getParameter("reviewId");
 
 				try {
+					if ("delete".equals(action) && idParam != null && idParam.matches("\\d+")) {
+			            ReviewService reviewservice = new ReviewServiceImpl();
+			            int cnt = reviewservice.deleteMypageReview(user.getUserId(), Long.parseLong(idParam));
+			            out.print(cnt > 0 ? "ok" : "fail");
+			        } else {
+			            out.print("fail");
+			        }
 					List<Map<String, Object>> list = service.getMypageReviewList(pageInfo, userId);
 					request.setAttribute("Review", list);
 					request.setAttribute("pageInfo", pageInfo);
@@ -68,6 +80,7 @@ public class MypageReview extends HttpServlet {
 					request.getRequestDispatcher("/jsp/mypage/myPageReview.jsp").forward(request, response);
 				} catch (Exception e) {
 					e.printStackTrace();
+					out.print("fail");
 					request.setAttribute("err", "개인 경기 목록 조회 오류");
 				}
 	}

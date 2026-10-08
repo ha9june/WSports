@@ -144,7 +144,7 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
-
+		
 		
 		// 전체 게시글 수
 		Integer reviewCnt = reviewDao.selectMypageReviewListCnt(param);
@@ -160,7 +160,7 @@ public class ReviewServiceImpl implements ReviewService {
 		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 9 + 1 ;
 		Integer endPage = startPage + 10 -1;
 		if (endPage > allPage) endPage = allPage; // 마지막 페이지 보정, 전체 페이지 넘지 않게
-
+		pageInfo.setTotalCnt(reviewCnt);
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
@@ -191,4 +191,12 @@ public class ReviewServiceImpl implements ReviewService {
 	    param.put("deleted", 1);        // 서버에서 고정 (클라이언트 값 사용 금지)
 	    return reviewDao.updateMypageReview(param);
 	}
+
+	@Override
+	public Map<String, Object> selectMyReview(Long userId, Long reviewId) throws Exception {
+		 Map<String, Object> param = new HashMap<>();
+		    param.put("userId", userId);
+		    param.put("reviewId", reviewId);
+		    return reviewDao.selectMyReview(param);
+		}
 }
