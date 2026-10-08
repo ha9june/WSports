@@ -31,86 +31,100 @@ import util.PageInfo;
 @WebServlet("/mypage/clubs")
 public class MypageClubs extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MypageClubs() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				//로그인 체크	
-				HttpSession session = request.getSession(false);
-				User user = (session == null) ? null : (User) session.getAttribute("user");
-				if(user==null) {
-					response.sendRedirect(request.getContextPath()+"/login");
-					return;// 로그인 경로 수정
-				}
-				long userId = user.getUserId();
-
-				// 페이지 번호 (기본 1)
-				int page = 1;
-				String sPage = request.getParameter("page");
-				if (sPage != null && !sPage.isEmpty()) {
-					try {
-						page = Integer.parseInt(sPage);
-					} catch (NumberFormatException e) {
-						page = 1;
-					}
-				}
-				String state = request.getParameter("state");
-				if (state == null || state.isEmpty()) state = "joined";
-				String status = request.getParameter("status");
-			    String sport = request.getParameter("sport");
-				PageInfo pageInfo = new PageInfo(page);
-				TeamApplicationService service = new TeamApplicationServiceImpl();
-				
-				try {
-					List<Map<String, Object>> list;
-					if ("applications".equals(state)) {
-						list = service.MypageMyTeamList(pageInfo, userId, status, sport);   // 가입 신청 (승인 대기)
-					} else {
-						list = service.MypageJoinedTeamList(pageInfo, userId, status, sport);       // 가입한 팀 (승인)
-					}
-			        request.setAttribute("match", list);
-			        request.setAttribute("pageInfo", pageInfo);
-			        request.setAttribute("status", status);
-			        request.setAttribute("sport", sport);
-			        request.setAttribute("state", state);
-					request.getRequestDispatcher("/jsp/mypage/myPageMyTeam.jsp").forward(request, response);
-				} catch (Exception e) {
-					e.printStackTrace();
-					request.setAttribute("err", "개인 경기 목록 조회 오류");
-				}
+	public MypageClubs() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
+
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 response.setContentType("text/plain; charset=UTF-8");
-		    PrintWriter out = response.getWriter();
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 로그인 체크
+		HttpSession session = request.getSession(false);
+		User user = (session == null) ? null : (User) session.getAttribute("user");
+		if (user == null) {
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;// 로그인 경로 수정
+		}
+		long userId = user.getUserId();
 
-		    HttpSession session = request.getSession(false);
-		    User user = (session == null) ? null : (User) session.getAttribute("user");
-		    if (user == null) {
-		        out.print("login");
-		        return;
-		    }
-		    long userId = user.getUserId();
+		// 페이지 번호 (기본 1)
+		int page = 1;
+		String sPage = request.getParameter("page");
+		if (sPage != null && !sPage.isEmpty()) {
+			try {
+				page = Integer.parseInt(sPage);
+			} catch (NumberFormatException e) {
+				page = 1;
+			}
+		}
+		String state = request.getParameter("state");
+		if (state == null || state.isEmpty())
+			state = "joined";
+		String status = request.getParameter("status");
+		String sport = request.getParameter("sport");
+		PageInfo pageInfo = new PageInfo(page);
+		TeamApplicationService service = new TeamApplicationServiceImpl();
 
-		    TeamApplicationService service = new TeamApplicationServiceImpl();
-		    try {
-		        Long applicationId = Long.parseLong(request.getParameter("applicationId"));
-		        service.cancelTeamApplication(userId, applicationId);
-		        out.print("ok"); // jsp한테 ok 보냄
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		        out.print("fail"); //jsp한테 fail 보냄
-		    }
-    }
+		try {
+			List<Map<String, Object>> list;
+			if ("applications".equals(state)) {
+				list = service.MypageMyTeamList(pageInfo, userId, status, sport); // 가입 신청 (승인 대기)
+			} else {
+				list = service.MypageJoinedTeamList(pageInfo, userId, status, sport); // 가입한 팀 (승인)
+			}
+			request.setAttribute("match", list);
+			request.setAttribute("pageInfo", pageInfo);
+			request.setAttribute("status", status);
+			request.setAttribute("sport", sport);
+			request.setAttribute("state", state);
+			request.getRequestDispatcher("/jsp/mypage/myPageMyTeam.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("err", "개인 경기 목록 조회 오류");
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.setContentType("text/plain; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+
+		HttpSession session = request.getSession(false);
+		User user = (session == null) ? null : (User) session.getAttribute("user");
+		if (user == null) {
+			out.print("login");
+			return;
+		}
+		long userId = user.getUserId();
+		String action = request.getParameter("action");
+		TeamApplicationService service = new TeamApplicationServiceImpl();
+		try {
+			if ("cancel".equals(action)) {
+				Long applicationId = Long.parseLong(request.getParameter("applicationId"));
+				service.MypageMyTeamCancelApplication(userId, applicationId);
+				out.print("ok"); 
+			} else if ("leave".equals(action)) {
+				Long teamId = Long.parseLong(request.getParameter("teamId"));
+				 int cnt = service.MypageMyTeamJoinCancelApplication(userId, teamId);
+				out.print(cnt > 0 ? "ok" : "fail");
+			} else {
+				out.print("fail");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			out.print("fail"); // jsp한테 fail 보냄
+		}
+	}
 }

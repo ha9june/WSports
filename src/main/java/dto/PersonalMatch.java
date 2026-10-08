@@ -55,7 +55,6 @@ public class PersonalMatch {
 
     
     private boolean favorite;
-
     public boolean isFavorite() {
     	return favorite;
     }
