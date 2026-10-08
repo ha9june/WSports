@@ -22,6 +22,7 @@ import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 import util.AlertUtil;
+import util.CheckUtil;
 
 /**
  * Servlet implementation class MatchEditForm
@@ -46,12 +47,20 @@ public class MatchEditForm extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long psersonalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
+		User user = CheckUtil.getLoginUser(request);
+		if (user == null) {
+		    response.sendRedirect(request.getContextPath() + "/auth/login");
+		    return;
+		}
+		
+		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 		
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		try {
-			
-			PersonalMatch pMatch = service.getPersmalMatchDetail(psersonalMatchId);
+			PersonalMatch pm = new PersonalMatch();
+			pm.setUserId(user.getUserId());
+			pm.setPersonalMatchId(personalMatchId);
+			PersonalMatch pMatch = service.getPersmalMatchDetail(pm);
 			System.out.println(pMatch);
 			request.setAttribute("personalMatch", pMatch);
 			request.getRequestDispatcher("/jsp/match/personalMatchEdit.jsp").forward(request, response);;			
@@ -65,15 +74,16 @@ public class MatchEditForm extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-	    if (user == null) {
-	        response.sendRedirect(request.getContextPath() + "/auth/login");
-	        return;
-	    }
-    	PersonalMatchService service = new PersonalMatchServiceImpl();
+		User user = CheckUtil.getLoginUser(request);
+		if (user == null) {
+		    response.sendRedirect(request.getContextPath() + "/auth/login");
+		    return;
+		}
 
 	    
+    	PersonalMatchService service = new PersonalMatchServiceImpl();
+
+
 	    String uploadPath = (String) request.getServletContext().getAttribute("uploadPath");
 	    String realPath = request.getServletContext().getRealPath(uploadPath);
 	    
@@ -84,10 +94,14 @@ public class MatchEditForm extends HttpServlet {
 			AlertUtil.back(response, "잘못된 요청입니다.");
 			return;
 		}
+		PersonalMatch pm0 = new PersonalMatch();
+		pm0.setUserId(user.getUserId());
+		pm0.setPersonalMatchId(personalMatchId);
+
 	    
 	    PersonalMatch origin = null;
 		try {
-			origin = service.getPersmalMatchDetail(personalMatchId);
+			origin = service.getPersmalMatchDetail(pm0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
