@@ -150,7 +150,7 @@ $(function(){
 	    page++;
 	    teamMatchList(page);
 	});
-	
+	 
 	// FAB 클릭: 팀장/부팀장 여부 확인 후 이동 또는 모달
 	$(document).on('click', '.fab', function (e) {
 	    var isLogin = ${not empty sessionScope.user};
