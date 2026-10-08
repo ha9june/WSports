@@ -14,4 +14,6 @@ public interface ReviewDao {
 	 Integer selectReviewListCnt(Map<String,Object>param)throws Exception;
 	 List<Map<String, Object>> selectMypageReviewList(Map<String, Object> param)throws Exception;
 	 Integer selectMypageReviewListCnt(Map<String,Object>param)throws Exception;
+	 int updateMypageReview(Map<String, Object> param) throws Exception;
+	 
 }

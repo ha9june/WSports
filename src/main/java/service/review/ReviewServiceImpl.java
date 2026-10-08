@@ -144,7 +144,6 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
-		Integer cnt = reviewDao.selectReviewListCnt(param);
 
 		
 		// 전체 게시글 수
@@ -169,5 +168,27 @@ public class ReviewServiceImpl implements ReviewService {
 		param.put("row",(pageInfo.getCurPage() - 1) * 5);
 						
 		return reviewDao.selectMypageReviewList(param);
+	}
+
+	@Override
+	public int modifyMypageReview(Long userId, Long reviewId, String title, String content, String image)
+			throws Exception {
+		Map<String, Object> param = new HashMap<>();
+	    param.put("userId", userId);
+	    param.put("reviewId", reviewId);
+	    param.put("title", title);
+	    param.put("content", content);
+	    param.put("image", image);      // null이면 이미지는 변경 안 됨
+	    return reviewDao.updateMypageReview(param);
+	}
+
+
+	@Override
+	public int deleteMypageReview(Long userId, Long reviewId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+	    param.put("userId", userId);
+	    param.put("reviewId", reviewId);
+	    param.put("deleted", 1);        // 서버에서 고정 (클라이언트 값 사용 금지)
+	    return reviewDao.updateMypageReview(param);
 	}
 }

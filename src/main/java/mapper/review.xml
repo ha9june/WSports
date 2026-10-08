@@ -155,19 +155,18 @@
 			AND r.user_id = #{userId}
 		</if>
 	</select>
-	<update id="updateMyReview">
+	<update id="updateMypageReview">
 		UPDATE review
-		SET title = #{title}, content =
-		#{content}, image = #{image}, updated_at
-		= NOW()
-		WHERE review_id =
-		#{reviewId} AND user_id = #{userId} AND deleted = 0
-	</update>
-
-	<update id="deleteMyReview">
-		UPDATE review
-		SET deleted = 1, updated_at = NOW()
-		WHERE review_id = #{reviewId} AND user_id = #{userId} AND deleted = 0
+    <set>
+        <if test="title != null">title = #{title},</if>
+        <if test="content != null">content = #{content},</if>
+        <if test="image != null">image = #{image},</if>
+        <if test="deleted != null">deleted = #{deleted},</if>
+        updated_at = NOW()
+    </set>
+    WHERE review_id = #{reviewId}
+      AND user_id = #{userId}
+      AND deleted = 0
 	</update>
 
 

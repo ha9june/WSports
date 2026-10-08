@@ -15,6 +15,7 @@ public interface ReviewService {
 	List<Review>getReviewList(Long userId)throws Exception;
 	List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status) throws Exception;
 	List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId)throws Exception;
-	
-
+	int modifyMypageReview(Long userId, Long reviewId, String title, String content, String image) throws Exception;
+	int deleteMypageReview(Long userId, Long reviewId) throws Exception; 
+	String fileUpload(String uploadPath, Part file) throws Exception;
 }

@@ -91,4 +91,20 @@ public class ReviewDaoImpl implements ReviewDao {
 	        throw e;
 	    }
 	}
+
+	@Override
+	public int updateMypageReview(Map<String, Object> param) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        int cnt = sqlSession.update("mapper.review.updateMypageReview", param);
+	        sqlSession.commit();
+	        return cnt;
+	    } catch (Exception e) {
+	        sqlSession.rollback();
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        sqlSession.close();
+	    }
+	}
 }
