@@ -241,7 +241,7 @@
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
 			<c:forEach var="m" items="${match}">
 				<div class="act-card"
-					data-href="${ctx}/jsp/team/teamMatchDetail.jsp?state=completed">
+					data-href="${ctx}/team-match/detail/view?teamMatchId=${m.teamMatchId}">
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">
@@ -305,7 +305,7 @@
 						</div>
 						<div class="btns">
 							<a class="btn btn-primary btn-xs"
-								href="${ctx}/jsp/team/teamMatchParticipants.jsp">참가자 확인</a>
+								href="${ctx}/team-match/participants/list?teamMatchId=${m.teamMatchId}">참가팀 확인</a>
 						</div>
 					</div>
 				</div>
