@@ -121,9 +121,9 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 	@Override
 
-	public PersonalMatch getPersmalMatchDetail(Long personalMatchId) throws Exception {
+	public PersonalMatch getPersmalMatchDetail(PersonalMatch personalMatch) throws Exception {
 		// TODO Auto-generated method stub
-		return personalMatchDao.selectPersonalMatch(personalMatchId);
+		return personalMatchDao.selectPersonalMatch(personalMatch);
 	}
 
 	@Override
