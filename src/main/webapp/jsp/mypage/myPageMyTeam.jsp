@@ -24,16 +24,32 @@
 	margin-right: 16px;
 	flex-shrink: 0;
 }
+
 .sport-circle img {
 	width: 44px;
 	height: 44px;
 	object-fit: contain;
 }
-.sc-football   { background-color: #dcf5e7; }
-.sc-basketball { background-color: #ffe3d1; }
-.sc-tennis     { background-color: #dbeafe; }
-.sc-badminton  { background-color: #e6e0ff; }
-.sc-default    { background-color: #e5e7eb; }
+
+.sc-football {
+	background-color: #dcf5e7;
+}
+
+.sc-basketball {
+	background-color: #ffe3d1;
+}
+
+.sc-tennis {
+	background-color: #dbeafe;
+}
+
+.sc-badminton {
+	background-color: #e6e0ff;
+}
+
+.sc-default {
+	background-color: #e5e7eb;
+}
 </style>
 <div class="work-inner" style="width: 100%; max-width: 1000px;">
 	<h1 class="section-title">내 팀</h1>
@@ -188,7 +204,7 @@
 									</c:if>
 									<hr>
 									<button type="button" class="danger btn-leave"
-										data-team-id="${m.teamId}">탈퇴하기</button>
+										data-team-id="${m.teamId}">팀 탈퇴</button>
 								</div>
 							</div>
 						</div>
@@ -197,21 +213,20 @@
 			</div>
 		</c:otherwise>
 	</c:choose>
-</div>
-
-<!-- 탈퇴 모달 -->
+	<!-- 탈퇴 모달 -->
 <div class="modal" id="leaveModal" role="dialog" aria-modal="true">
 	<div class="modal-card">
 		<h2 class="modal-title">팀에서 탈퇴할까요?</h2>
 		<p class="modal-desc">탈퇴 후에는 팀 경기 신청과 팀원 전용 기능을 이용할 수 없습니다. 다시
 			활동하려면 가입 신청을 다시 해야 해요.</p>
+		<input type="hidden" id="leaveTeamId">
 		<div class="modal-actions">
 			<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
 			<button type="button" class="btn btn-danger" id="confirmLeave">탈퇴</button>
 		</div>
 	</div>
 </div>
-
+</div>
 <!-- 신청 취소 모달 -->
 <div class="modal" id="cancelApplyModal" role="dialog" aria-modal="true">
 	<div class="modal-card">
@@ -226,61 +241,67 @@
 </div>
 
 <script>
-	$(function() {
-		var targetId = null;
-		// 드롭다운 토글
-		$('[data-dropdown-toggle]').on('click', function(e) {
-			e.stopPropagation();
-			var $dd = $(this).closest('.dropdown');
-			$('.dropdown').not($dd).removeClass('is-open');
-			$dd.toggleClass('is-open');
-		});
-		$(document).on('click', function() {
-			$('.dropdown').removeClass('is-open');
-		});
+$(function() {
+	var targetId = null;
 
-		// 신청 취소
-		$('.btn-cancel').on('click', function(e) {
-			e.stopPropagation();
-			targetId = $(this).data('id');
-			$('#cancelApplyModal').addClass('is-open');
-		});
-		$('#confirmCancel').on('click', function() {
-			$.post('${ctx}/mypage/clubs', {
-				applicationId : targetId
-			}, function(res) {
-				res = res.trim();
-				if (res === 'ok') {
-					showToast('가입 신청을 취소했어요.');
-					location.reload();
-				} else if (res === 'login') {
-					showToast('로그인이 필요합니다.');
-				} else {
-					showToast('취소할 수 없는 신청이에요.');
-				}
-			});
-		});
-		// 팀 탈퇴
-		$('.btn-leave').on('click', function(e) {
-			e.stopPropagation();
-			targetId = $(this).data('team-id');
-			$('#leaveModal').addClass('is-open');
-		});
-		$('#confirmLeave').on('click', function() {
-			$.post('${ctx}/mypage/clubs/leave', {
-				teamId : targetId
-			}, function(res) {
-				res = res.trim();
-				if (res === 'ok') {
-					showToast('팀에서 탈퇴했어요.');
-					location.reload();
-				} else if (res === 'login') {
-					showToast('로그인이 필요합니다.');
-				} else {
-					showToast('탈퇴할 수 없어요. 팀장은 탈퇴할 수 없습니다.');
-				}
-			});
+	// 드롭다운 토글
+	$('[data-dropdown-toggle]').on('click', function(e) {
+		e.stopPropagation();
+		var $dd = $(this).closest('.dropdown');
+		$('.dropdown').not($dd).removeClass('is-open');
+		$dd.toggleClass('is-open');
+	});
+	$(document).on('click', function() {
+		$('.dropdown').removeClass('is-open');
+	});
+
+	// 신청 취소
+	$('.btn-cancel').on('click', function(e) {
+		e.stopPropagation();
+		targetId = $(this).data('id');
+		$('#cancelApplyModal').addClass('is-open');
+	});
+	$('#confirmCancel').on('click', function() {
+		$.post('${ctx}/mypage/clubs', {
+			action : 'cancel',
+			applicationId : targetId
+		}, function(res) {
+			res = res.trim();
+			if (res === 'ok') {
+				showToast('가입 신청을 취소했어요.');
+				location.reload();
+			} else if (res === 'login') {
+				showToast('로그인이 필요합니다.');
+			} else {
+				showToast('취소할 수 없는 신청이에요.');
+			}
 		});
 	});
+
+	// 팀 탈퇴: 메뉴의 "팀 탈퇴" 클릭 시 모달 열기
+	$(document).on('click', '.btn-leave', function(e) {
+		e.stopPropagation();
+		$('#leaveTeamId').val($(this).data('team-id'));
+		$('#leaveModal').addClass('is-open');
+	});
+
+	// 팀 탈퇴: 모달의 "탈퇴" 확정
+	$('#confirmLeave').on('click', function() {
+		$.post('${ctx}/mypage/clubs', {
+			action : 'leave',
+			teamId : $('#leaveTeamId').val()
+		}, function(res) {
+			res = res.trim();
+			if (res === 'ok') {
+				showToast('팀에서 탈퇴했어요.');
+				location.reload();
+			} else if (res === 'login') {
+				location.href = '${ctx}/login';
+			} else {
+				showToast('탈퇴 처리에 실패했어요.');
+			}
+		});
+	});
+});
 </script>
 <%@ include file="/jsp/common/footer.jsp"%>

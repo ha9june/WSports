@@ -6,17 +6,20 @@
 		parameterType="teamapplication">
 		insert into team_application
 
-		(user_id, team_id, message, status, applied_at) values (#{userId}, #{teamId}, #{message}, '승인 대기', now())
+		(user_id, team_id, message,
+		status, applied_at) values (#{userId}, #{teamId}, #{message}, '승인 대기',
+		now())
 
 	</insert>
 
-	
-	<select id="selectTeamApplication" parameterType="Map" resultType="teamapplication">
-		select * 
-		from team_application 
+
+	<select id="selectTeamApplication" parameterType="Map"
+		resultType="teamapplication">
+		select *
+		from team_application
 		where user_id = #{userId} and team_id = #{teamId} and status = '승인 대기'
 		order by applied_at desc
-    	limit 1
+		limit 1
 	</select>
 
 	<select id="selectTeamApplicationByApplicationId"
@@ -26,39 +29,40 @@
 		where
 		application_id = #{applicationId}
 	</select>
-	
-	<select id="selectTeamApplicationList" parameterType="Long" resultType="teamapplication">
-		 select a.application_id, a.user_id, a.team_id, a.message, a.applied_at,
-		           u.nickname, u.profile_image, u.preferred_region1,
-		           case t.sport
-		               when '축구/풋살' then u.soccer_skill
-		               when '농구'      then u.basketball_skill
-		               when '테니스'    then u.tennis_skill
-		               when '배드민턴'  then u.badminton_skill
-		           end as skill
-		    from team_application a
-		    join user u on u.user_id = a.user_id
-		    join team t on t.team_id = a.team_id
-		    where a.team_id = #{teamId} and a.status = '승인 대기'
-		    order by a.applied_at
-		   </select>
+
+	<select id="selectTeamApplicationList" parameterType="Long"
+		resultType="teamapplication">
+		select a.application_id, a.user_id, a.team_id, a.message, a.applied_at,
+		u.nickname, u.profile_image, u.preferred_region1,
+		case t.sport
+		when '축구/풋살' then u.soccer_skill
+		when '농구' then u.basketball_skill
+		when '테니스' then u.tennis_skill
+		when '배드민턴' then u.badminton_skill
+		end as skill
+		from team_application a
+		join user u on u.user_id = a.user_id
+		join team t on t.team_id = a.team_id
+		where a.team_id = #{teamId} and a.status = '승인 대기'
+		order by a.applied_at
+	</select>
 
 	<update id="updateTeamApplicationApprove" parameterType="Map">
 
-	    update team_application
-	    set status = '승인', processed_at = now()
-	    where application_id = #{applicationId}
-	      and team_id = #{teamId}
-	      and status = '승인 대기'
+		update team_application
+		set status = '승인', processed_at = now()
+		where application_id = #{applicationId}
+		and team_id = #{teamId}
+		and status = '승인 대기'
 
 	</update>
 
 	<update id="updateTeamApplicationReject" parameterType="Map">
-	    update team_application
-	    set status = '거절', processed_at = now(), rejection_reason = #{reason}
-	    where application_id = #{applicationId}
-	      and team_id = #{teamId}
-	      and status = '승인 대기'
+		update team_application
+		set status = '거절', processed_at = now(), rejection_reason = #{reason}
+		where application_id = #{applicationId}
+		and team_id = #{teamId}
+		and status = '승인 대기'
 	</update>
 	<select id="selectMypageMyTeamList" parameterType="Map"
 		resultType="Map">
@@ -107,29 +111,25 @@
 		a.message AS description,
 		t.team_name AS teamName,
 		t.sport
-		from
-		team_application a
-		join team t on t.team_id = a.team_id
-		where a.user_id
-		= #{userId} and a.status = '승인'
+		FROM team_user tu
+		JOIN team t ON t.team_id = tu.team_id
+		JOIN team_application a ON a.team_id = tu.team_id
+		AND a.user_id = tu.user_id
+		WHERE tu.user_id = #{userId}
+		AND tu.withdrawn = 0
 		<if test="sport != null and sport != ''">
 			AND t.sport = #{sport}
 		</if>
-		<if test="status != null and status != ''">
-			AND a.status = #{status}
-		</if>
 		ORDER BY a.applied_at DESC, a.application_id DESC
-		LIMIT #{size}
-		OFFSET
-		#{offset}
+		LIMIT #{size} OFFSET #{offset}
 	</select>
 
 	<select id="selectMypageJoinedTeamCnt" parameterType="Map"
 		resultType="int">
 		select count(*)
-		from team_application a
-		where a.user_id = #{userId} and
-		a.status = '승인'
+		from team_user a
+		where a.user_id = #{userId} 
+		AND a.withdrawn = 0
 		<if test="sport != null and sport != ''">
 			AND t.sport = #{sport}
 		</if>
@@ -138,11 +138,19 @@
 		</if>
 	</select>
 	<update id="updateMypageMyTeam">
-	update team_application
-	set status = #{status}
-	where application_id = #{applicationId}
-	and user_id=#{userId}
-	and status = '승인 대기'
+		update team_application
+		set status = #{status}
+		where application_id = #{applicationId}
+		and user_id=#{userId}
+		and status = '승인 대기'
+	</update>
+	<update id="updateMypageJoinTeam">
+		update team_user 
+		set withdrawn= true,
+		withdrawn_at = Now()
+		where user_id = #{userId}
+		AND team_id = #{teamId}
+		AND withdrawn = '0'
 	</update>
 
 </mapper>

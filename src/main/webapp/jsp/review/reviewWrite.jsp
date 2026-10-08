@@ -77,7 +77,7 @@
 			</div>
 
 			<div class="form-actions">
-				<a class="btn btn-outline" href="${ctx}/jsp/review/reviewList.jsp">취소</a>
+				<a class="btn btn-outline" href="${ctx}/review/list">취소</a>
 				<button type="submit" class="btn btn-primary">등록</button>
 			</div>
 		</div>

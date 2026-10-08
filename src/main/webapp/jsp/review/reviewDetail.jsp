@@ -55,7 +55,7 @@
   <div class="modal-card sm">
     <h2 class="modal-title">후기를 삭제할까요?</h2>
     <p class="modal-desc">삭제한 후기와 댓글은 복구할 수 없어요.</p>
-    <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>취소</button><a class="btn btn-danger" href="${ctx}/jsp/mypage/myPageReview.jsp?state=deleted">삭제</a></div>
+    <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>취소</button><a class="btn btn-danger" href="${ctx}/jsp/mypage/reviewList.jsp?state=deleted">삭제</a></div>
   </div>
 </div>
 <%@ include file="/jsp/common/footer.jsp" %>

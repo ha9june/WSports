@@ -8,11 +8,96 @@
 .detail-top h1 { font-size: 28px; font-weight: 700; line-height: 1.3; }
 .detail-top .admin-del { margin-left: 4px; }
 .host-inline { display: flex; align-items: center; gap: 10px; margin-top: 14px; position: relative; }
-.host-inline .avatar { width: 28px; height: 28px; }
+.host-inline .avatar { width: 38px; height: 38px; }
 .host-inline a strong { font-size: 13px; color: var(--ds-brand); display: block; }
 .host-inline small { font-size: 10px; color: var(--ds-text-2); }
 .host-inline .hover-card { display: none; position: absolute; left: 36px; top: 34px; z-index: 20; }
 .host-inline:hover .hover-card { display: block; }
+
+#activePhoto {
+	max-width: 744px;   /* 팀 상세 사진 폭과 비슷하게, 필요하면 조정 */
+}
+
+.detail-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 360px;
+	gap: 24px;
+	align-items: start;
+}
+.detail-left {
+	grid-column: 1;
+	grid-row: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+.detail-side {
+	grid-column: 2;
+	grid-row: 1;   /* 항상 첫 줄 = 맨 위 */
+}
+
+#activePhoto .main-photo {
+	width: 100%;
+	aspect-ratio: 16 / 9;      /* 원하는 비율로 변경: 4/3, 3/2 등 */
+	overflow: hidden;
+	border-radius: 16px;
+	background: #1f2328;
+}
+#activePhoto .main-photo img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;         /* 여백 없이 꽉 채우고 넘치는 부분은 잘라냄 */
+	display: block;
+}
+
+#activePhoto .thumbs img.subImg {
+	width: 96px;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.info-row dd a.team-link {
+	color: #1677ff;
+	font-weight: 500;          /* 700 → 500 */
+	text-decoration: none;     /* 평소엔 밑줄 없음 */
+}
+.info-row dd a.team-link:hover {
+	color: #0b5ed7;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.info-row dd a.team-link {
+	color: #1677ff;
+	font-weight: 700;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.info-row dd a.team-link:hover {
+	color: #0b5ed7;
+}
+.sport-chip.football {
+	color: var(--sport-football-fg);
+	background: var(--sport-football-bg);
+	border-color: color-mix(in srgb, var(--sport-football-fg) 45%, transparent);
+}
+.sport-chip.basketball {
+	color: var(--sport-basketball-fg);
+	background: var(--sport-basketball-bg);
+	border-color: color-mix(in srgb, var(--sport-basketball-fg) 45%, transparent);
+}
+.sport-chip.tennis {
+	color: var(--sport-tennis-fg);
+	background: var(--sport-tennis-bg);
+	border-color: color-mix(in srgb, var(--sport-tennis-fg) 45%, transparent);
+}
+.sport-chip.badminton {
+	color: var(--sport-badminton-fg);
+	background: var(--sport-badminton-bg);
+	border-color: color-mix(in srgb, var(--sport-badminton-fg) 45%, transparent);
+}
 
 /* 프로필 호버 카드 (DS / Inline Profile Hover) */
 .hover-card { width: 340px; padding: 18px 20px; border-radius: var(--r-12); background: #fff; box-shadow: var(--shadow-pop); border: 1px solid var(--ds-border-subtle); }
@@ -95,3 +180,8 @@
 .person-row { display: flex; align-items: center; gap: 14px; padding: 12px 18px; border: 1px solid var(--ds-border); border-radius: var(--r-8); background: #fff; font-size: 13px; }
 .person-row strong { flex: 1; }
 .person-row .lv { font-size: 11px; color: var(--ds-text-2); margin-right: 16px; }
+
+.pill.pill-lg.bd.pill-success { border: 1px solid var(--ds-success-bd); }
+.pill.pill-lg.bd.pill-info    { border: 1px solid var(--ds-info-bd); }
+.pill.pill-lg.bd.pill-danger  { border: 1px solid var(--ds-danger-bd); }
+.pill.pill-lg.bd.pill-neutral { border: 1px solid var(--ds-border); }

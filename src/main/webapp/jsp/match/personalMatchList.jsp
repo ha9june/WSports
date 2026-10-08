@@ -327,9 +327,9 @@
 			</select>
 		    <input type="text"
 		           id="periodPicker"
-		           class="input"
-		           placeholder="날짜 선택"
-		           style="width:220px">
+		           class="input" 
+		           placeholder="날짜 선택 "  
+		           style="width:220px;">
 		    <input type="hidden" id="startDate" name="startDate">
 		    <input type="hidden" id="endDate" name="endDate">
 			<input class="input keyword" name="keyword" placeholder="제목 또는 내용 키워드 검색">			

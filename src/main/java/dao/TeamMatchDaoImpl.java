@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
 import dto.TeamMatch;
+import dto.TeamSearchCondition;
 
 public class TeamMatchDaoImpl implements TeamMatchDao {
 
@@ -74,12 +75,22 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 	}
 
 	@Override
-	public TeamMatch selectTeamMatch(Long teamMatchId, Long userId) throws Exception {
+	public TeamMatch selectTeamMatchUser(Long teamMatchId, Long userId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("teamMatchId", teamMatchId);
 		param.put("userId", userId);
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
-			return sqlSession.selectOne("mapper.teammatch.selectTeamMatch", param);
+			return sqlSession.selectOne("mapper.teammatch.selectTeamMatchUser", param);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Override
+	public TeamMatch selectTeamMatchNotUser(Long teamMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectOne("mapper.teammatch.selectTeamMatchNotUser", teamMatchId);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -112,5 +123,25 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			sqlSession.close();
 		}
 		
+	}
+
+	@Override
+	public List<TeamMatch> selectTeamMatchListForSearch(TeamSearchCondition teamSearchCondition) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatch.selectTeamMatchListForSearch", teamSearchCondition);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
+
+	@Override
+	public int selectTeamMatchListForSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectOne("mapper.teammatch.selectTeamMatchListForSearchCnt", teamSearchCondition);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
 	}
 }

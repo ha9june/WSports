@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import dto.TeamMatch;
+import dto.TeamSearchCondition;
 
 public interface TeamMatchDao {
 	List<TeamMatch> selectTeamMatchList (Long teamId) throws Exception;
@@ -12,7 +13,11 @@ public interface TeamMatchDao {
 	List<String>selectMyPageTeamMatchDates(Map<String,Object>param)throws Exception;
 
 	Long insertTeamMatch(TeamMatch teamMatch) throws Exception;
-	TeamMatch selectTeamMatch(Long teamMatchId, Long userId) throws Exception;
+	TeamMatch selectTeamMatchUser(Long teamMatchId, Long userId) throws Exception;
+	TeamMatch selectTeamMatchNotUser(Long teamMatchId) throws Exception;
+	
+	List<TeamMatch> selectTeamMatchListForSearch(TeamSearchCondition teamSearchCondition) throws Exception;
+	int selectTeamMatchListForSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception;
 	
 
 	//관리자 경기수 세기 - 팀

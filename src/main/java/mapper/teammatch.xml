@@ -107,7 +107,7 @@
 	 where status = '종료'
 	</select>
 	
-	<select id="selectTeamMatch" parameterType="Map" resultType="teammatch">
+	<select id="selectTeamMatchUser" parameterType="Map" resultType="teammatch">
 		select tm.team_match_id, tm.title, tm.content, tm.user_id, tm.team_id, tm.created_at,
 		       tm.match_date, tm.sport, tm.start_time, tm.end_time,
 		       tm.place_name, tm.address, tm.latitude, tm.longitude,
@@ -150,6 +150,45 @@
 		where tm.team_match_id = #{teamMatchId}
 		  and coalesce(tm.deleted, 0) = 0
 	</select>
+	
+	<select id="selectTeamMatchNotUser" parameterType="Long" resultType="teammatch">
+		select tm.team_match_id, tm.title, tm.content, tm.user_id, tm.team_id, tm.created_at,
+		       tm.match_date, tm.sport, tm.start_time, tm.end_time,
+		       tm.place_name, tm.address, tm.latitude, tm.longitude,
+		       tm.participation_fee, tm.fee, tm.deadline,
+		       tm.skill_intro, tm.skill_beginner, tm.skill_intermediate, tm.skill_advanced,
+		       tm.age_20s, tm.age_30s, tm.age_40s, tm.age_50s, tm.age_60_plus,
+		       tm.gender, tm.match_people,
+		       tm.image1, tm.image2, tm.image3, tm.image4, tm.image5,
+		       tm.status, tm.region,
+		       t.team_name          as team_name,
+		       u.nickname           as host_nickname,
+		       u.profile_image      as host_profile_image,
+		       u.bio                as host_bio,
+		       u.preferred_region1  as host_region1,
+		       u.preferred_region2  as host_region2,
+		       u.preferred_region3  as host_region3,
+		       tu.team_role         as host_role,
+		       case tm.sport
+		           when '축구/풋살' then u.soccer_skill
+		           when '농구'      then u.basketball_skill
+		           when '테니스'    then u.tennis_skill
+		           when '배드민턴'  then u.badminton_skill
+		       end as host_skill,
+		   (select round(avg(r.score), 1) from user_rating r where r.receiver_user_id = tm.user_id) as host_rating,
+	       (select count(*)               from user_rating r where r.receiver_user_id = tm.user_id) as host_rating_count,
+	       (select round(avg(tr.score), 1) from team_rating tr where tr.team_id = tm.team_id) as team_rating,
+	       (select count(*)                from team_rating tr where tr.team_id = tm.team_id) as team_rating_count
+		from team_match tm
+		join team t on t.team_id = tm.team_id
+		join user u on u.user_id = tm.user_id
+		left join team_user tu
+		       on tu.team_id = tm.team_id
+		      and tu.user_id = tm.user_id
+		      and tu.withdrawn = 0
+		where tm.team_match_id = #{teamMatchId}
+		  and coalesce(tm.deleted, 0) = 0
+	</select>
 
 	<select id="selectExpiredRecruiting" resultType="teammatch">
 		select team_match_id, team_id, user_id, title
@@ -164,5 +203,169 @@
 		  and coalesce(deleted, 0) = 0
 	</update>
 	
+	<select id="selectTeamMatchListForSearch" parameterType="teamsearchcondition" resultType="teammatch">
+	    select tm.*,
+	    <choose>
+            <when test="userId != null">
+                exists (
+                    select 1 from favorite f
+                    where f.user_id = #{userId}
+                      and f.match_id = tm.team_match_id
+                      and f.match_type = 'Team'
+                ) as favorite
+            </when>
+            <otherwise>
+                false as favorite
+            </otherwise>
+        </choose>
+    	from team_match tm
+	    where coalesce(deleted, 0) = 0
+		AND status = '모집중'
+
+	    <if test="sports != null and sports.length > 0">
+	        AND sport IN
+	        <foreach collection="sports" item="s" open="(" separator="," close=")">#{s}</foreach>
+	    </if>
 	
+	    <if test="regions != null and regions.length > 0">
+	        AND region IN
+	        <foreach collection="regions" item="r" open="(" separator="," close=")">#{r}</foreach>
+	    </if>
+		<if test="gender != null and gender != '성별 무관'">
+		    AND (gender = #{gender} OR gender = '성별 무관')
+		</if>
+	    <if test="days != null and days.length > 0">
+	        AND DAYOFWEEK(match_date) IN
+	        <foreach collection="days" item="d" open="(" separator="," close=")">
+	            <choose>
+	                <when test="d == '일'">1</when>
+	                <when test="d == '월'">2</when>
+	                <when test="d == '화'">3</when>
+	                <when test="d == '수'">4</when>
+	                <when test="d == '목'">5</when>
+	                <when test="d == '금'">6</when>
+	                <when test="d == '토'">7</when>
+	                <otherwise>0</otherwise>
+	            </choose>
+	        </foreach>
+	    </if>
+	    <if test="skills != null and skills.length > 0">
+	        AND (
+	        <foreach collection="skills" item="s" separator=" OR ">
+	            <choose>
+	                <when test="s == '입문'">skill_intro = true</when>
+	                <when test="s == '초급'">skill_beginner = true</when>
+	                <when test="s == '중급'">skill_intermediate = true</when>
+	                <when test="s == '상급'">skill_advanced = true</when>
+	                <otherwise>1 = 0</otherwise>
+	            </choose>
+	        </foreach>
+	        )
+	    </if>
+	    <if test="ages != null and ages.length > 0">
+	        AND (
+	            age_60_plus = true
+	            <foreach collection="ages" item="a">
+	                <choose>
+	                    <when test="a == '20대'">OR age_20s = true</when>
+	                    <when test="a == '30대'">OR age_30s = true</when>
+	                    <when test="a == '40대'">OR age_40s = true</when>
+	                    <when test="a == '50대 이상'">OR age_50s = true</when>
+	                </choose>
+	            </foreach>
+	        )
+	    </if>
+	    <if test="matchPeople != null and matchPeople.length > 0">
+	        AND match_people IN
+	        <foreach collection="matchPeople" item="p" open="(" separator="," close=")">#{p}</foreach>
+	    </if>
+	    <if test="startDate != null">
+	        AND match_date &gt;= #{startDate}
+	    </if>
+	    <if test="endDate != null">
+	        AND match_date &lt;= #{endDate}
+	    </if>
+	    <if test="keyword != null">
+	        AND (title LIKE CONCAT('%', #{keyword}, '%')
+	          OR content LIKE CONCAT('%', #{keyword}, '%'))
+	    </if>
+	
+	    order by created_at desc, team_match_id desc
+	    limit #{offset}, 5
+	</select>
+	
+	<select id="selectTeamMatchListForSearchCnt" parameterType="teamsearchcondition" resultType="int">
+	    select count(*)
+    	from team_match
+	    where coalesce(deleted, 0) = 0
+		AND status = '모집중'
+
+	    <if test="sports != null and sports.length > 0">
+	        AND sport IN
+	        <foreach collection="sports" item="s" open="(" separator="," close=")">#{s}</foreach>
+	    </if>
+	
+	    <if test="regions != null and regions.length > 0">
+	        AND region IN
+	        <foreach collection="regions" item="r" open="(" separator="," close=")">#{r}</foreach>
+	    </if>
+		<if test="gender != null and gender != '성별 무관'">
+		    AND (gender = #{gender} OR gender = '성별 무관')
+		</if>
+	    <if test="days != null and days.length > 0">
+	        AND DAYOFWEEK(match_date) IN
+	        <foreach collection="days" item="d" open="(" separator="," close=")">
+	            <choose>
+	                <when test="d == '일'">1</when>
+	                <when test="d == '월'">2</when>
+	                <when test="d == '화'">3</when>
+	                <when test="d == '수'">4</when>
+	                <when test="d == '목'">5</when>
+	                <when test="d == '금'">6</when>
+	                <when test="d == '토'">7</when>
+	                <otherwise>0</otherwise>
+	            </choose>
+	        </foreach>
+	    </if>
+	    <if test="skills != null and skills.length > 0">
+	        AND (
+	        <foreach collection="skills" item="s" separator=" OR ">
+	            <choose>
+	                <when test="s == '입문'">skill_intro = true</when>
+	                <when test="s == '초급'">skill_beginner = true</when>
+	                <when test="s == '중급'">skill_intermediate = true</when>
+	                <when test="s == '상급'">skill_advanced = true</when>
+	                <otherwise>1 = 0</otherwise>
+	            </choose>
+	        </foreach>
+	        )
+	    </if>
+	    <if test="ages != null and ages.length > 0">
+	        AND (
+	            age_60_plus = true
+	            <foreach collection="ages" item="a">
+	                <choose>
+	                    <when test="a == '20대'">OR age_20s = true</when>
+	                    <when test="a == '30대'">OR age_30s = true</when>
+	                    <when test="a == '40대'">OR age_40s = true</when>
+	                    <when test="a == '50대 이상'">OR age_50s = true</when>
+	                </choose>
+	            </foreach>
+	        )
+	    </if>
+	    <if test="matchPeople != null and matchPeople.length > 0">
+	        AND match_people IN
+	        <foreach collection="matchPeople" item="p" open="(" separator="," close=")">#{p}</foreach>
+	    </if>
+	    <if test="startDate != null">
+	        AND match_date &gt;= #{startDate}
+	    </if>
+	    <if test="endDate != null">
+	        AND match_date &lt;= #{endDate}
+	    </if>
+	    <if test="keyword != null">
+	        AND (title LIKE CONCAT('%', #{keyword}, '%')
+	          OR content LIKE CONCAT('%', #{keyword}, '%'))
+	    </if>
+	</select>
 </mapper>
