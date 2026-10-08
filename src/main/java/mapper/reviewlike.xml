@@ -2,5 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.reviewlike">
-
+	<select id="selectReviewLikeCnt" resultType="map">
+		SELECT review_id AS reviewId, COUNT(*) AS cnt
+		FROM review_like
+		GROUP BY review_id
+	</select>
 </mapper>

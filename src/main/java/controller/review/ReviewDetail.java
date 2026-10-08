@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class ReviewDetail
  */
-@WebServlet("/review/list")
+@WebServlet("/review/detail")
 public class ReviewDetail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -26,7 +26,7 @@ public class ReviewDetail extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/review/reviewList.jsp").forward(request, response);
+		request.getRequestDispatcher("/jsp/review/reviewDetail.jsp").forward(request, response);
 	}
 
 	/**

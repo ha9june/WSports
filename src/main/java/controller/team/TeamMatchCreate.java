@@ -189,7 +189,7 @@ public class TeamMatchCreate extends HttpServlet {
             teamMatchParticipant.setStatus("결제대기");
             
             teamMatchParticipantService.maekTeamMatchParticipant(teamMatchParticipant);
-            response.sendRedirect(request.getContextPath() + "/team-match/detail?teamMatchId=" + teamMatchId);
+            response.sendRedirect(request.getContextPath() + "/team-match/detail/view?teamMatchId=" + teamMatchId);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", "팀 경기 생성중 에러 발생");

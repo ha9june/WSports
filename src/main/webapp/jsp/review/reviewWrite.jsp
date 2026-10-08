@@ -24,7 +24,7 @@
 	<form class="rail" action="${ctx}/review/create" method="post"
 		enctype="multipart/form-data">
 		<nav class="breadcrumb">
-			<a href="${ctx}/jsp/review/reviewList.jsp">후기</a><span class="sep">›</span><span>작성</span>
+			<a href="${ctx}/review/create">후기</a><span class="sep"></span><span>작성</span>
 		</nav>
 		<div class="page-head">
 			<h1 class="page-title">후기 작성</h1>
@@ -41,14 +41,12 @@
 						<input type="hidden" name="matchNo" value="${param.matchNo}">
 					</c:when>
 					<c:otherwise>
-						<option value="${m.matchType}:${m.matchId}">${m.title}</option>
 						<select class="select" id="matchNo" name="matchNo"
 							style="width: 420px" required>
 							<option value="">참여한 경기를 선택하세요</option>
 							<c:forEach var="m" items="${myMatches}">
 								<option value="${m.matchType}:${m.matchId}">${m.title}</option>
 							</c:forEach>
-							<p>디버그: ${myMatches}</p>
 						</select>
 					</c:otherwise>
 				</c:choose>
@@ -72,48 +70,74 @@
 				<div class="photo-upload">
 					<label class="photo-add"><span class="plus">+</span>사진 추가 <input
 						type="file" id="photos" name="photos"
-						accept="image/png,image/jpeg" multiple> </label>
+						accept="image/png,image/jpeg" multiple hidden> </label>
 					<div id="photoPreviewList"></div>
 				</div>
 				<p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
 			</div>
 
 			<div class="form-actions">
-				<a class="btn btn-outline" href="${ctx}/review/write">취소</a>
+				<a class="btn btn-outline" href="${ctx}/jsp/review/reviewList.jsp">취소</a>
 				<button type="submit" class="btn btn-primary">등록</button>
 			</div>
 		</div>
 	</form>
-
 	<script>
-		document
-				.getElementById("photos")
-				.addEventListener(
-						"change",
-						function() {
-							var list = document
-									.getElementById("photoPreviewList");
-							list.innerHTML = "";
-							if (this.files.length > 5) {
-								alert("사진은 최대 5장까지 첨부할 수 있어요.");
-								this.value = ""; // 초과 시 선택 취소 (전송도 5장 초과 방지)
-								return;
-							}
-							Array
-									.from(this.files)
-									.forEach(
-											function(file) {
-												var reader = new FileReader();
-												reader.onload = function(e) {
-													var img = document
-															.createElement("img");
-													img.src = e.target.result;
-													img.style.cssText = "width:80px;height:72px;object-fit:cover;";
-													list.appendChild(img);
-												};
-												reader.readAsDataURL(file);
-											});
+		(function() {
+			var MAX = 5;
+			var selected = [];
+			var input = document.getElementById("photos");
+			var list = document.getElementById("photoPreviewList");
+
+			input.addEventListener("change", function() {
+				var incoming = Array.from(input.files);
+				if (selected.length + incoming.length > MAX) {
+					alert("사진은 최대 5장까지 첨부할 수 있어요.");
+				}
+				incoming.forEach(function(f) {
+					if (selected.length < MAX)
+						selected.push(f);
+				});
+				render();
+			});
+
+			function render() {
+				// 서버로 전송될 파일 목록을 누적본으로 교체
+				var dt = new DataTransfer();
+				selected.forEach(function(f) {
+					dt.items.add(f);
+				});
+				input.files = dt.files;
+
+				list.innerHTML = "";
+				selected
+						.forEach(function(file, idx) {
+							var wrap = document.createElement("div");
+							wrap.style.cssText = "display:inline-block;position:relative;margin:4px;";
+
+							var img = document.createElement("img");
+							img.style.cssText = "width:80px;height:72px;object-fit:cover;border-radius:8px;";
+							var reader = new FileReader();
+							reader.onload = function(e) {
+								img.src = e.target.result;
+							};
+							reader.readAsDataURL(file);
+
+							var del = document.createElement("button");
+							del.type = "button";
+							del.textContent = "×";
+							del.style.cssText = "position:absolute;top:2px;right:2px;width:20px;height:20px;border:0;border-radius:50%;cursor:pointer;";
+							del.onclick = function() {
+								selected.splice(idx, 1);
+								render();
+							};
+
+							wrap.appendChild(img);
+							wrap.appendChild(del);
+							list.appendChild(wrap);
 						});
+			}
+		})();
 	</script>
 </main>
 <%@ include file="/jsp/common/footer.jsp"%>

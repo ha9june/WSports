@@ -1,4 +1,5 @@
 package dto;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /** 후기 */
@@ -15,6 +16,21 @@ public class Review {
     private Boolean deleted;          // 삭제 여부
     private LocalDateTime createdAt;  // 작성 일시
     private LocalDateTime updatedAt;  // 수정 일시
+    
+    
+    private LocalDate matchDate;   // 조회용
+    public LocalDate getMatchDate() { return matchDate; }
+    public void setMatchDate(LocalDate matchDate) { this.matchDate = matchDate; }
+    
+    private int likeCount;
+    private int commentCount;
+
+    public int getLikeCount() { return likeCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+    public int getCommentCount() { return commentCount; }
+    public void setCommentCount(int commentCount) { this.commentCount = commentCount; }
+    
+    
     
     
     public Review() {

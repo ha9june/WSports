@@ -45,6 +45,19 @@ public class TeamMatch {
     private String image5;              // 이미지 5
     private String status;              // 매치 상태
     private String region;              // 지역
+    
+    //디비에서 가져오는 값
+    private String teamName;
+    private Double teamRating;
+    private Integer teamRatingCount;
+    private String hostNickname;
+    private String hostProfileImage;
+    private String hostBio;
+    private String hostRegion1, hostRegion2, hostRegion3;
+    private String hostRole;
+    private String hostSkill;
+    private Double hostRating;        // 평가가 없으면 null이어야 해서 래퍼 타입
+    private Integer hostRatingCount;
 
     private boolean favorite;
 
@@ -55,53 +68,7 @@ public class TeamMatch {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public TeamMatch(Long teamMatchId, String title, String content, Long userId, Long teamId, LocalDateTime createdAt,
-			LocalDate matchDate, String sport, LocalTime startTime, LocalTime endTime, String placeName, String address,
-			BigDecimal latitude, BigDecimal longitude, Integer participationFee, Integer fee, LocalDateTime deadline,
-			Boolean skillIntro, Boolean skillBeginner, Boolean skillIntermediate, Boolean skillAdvanced, Boolean age20s,
-			Boolean age30s, Boolean age40s, Boolean age50s, Boolean age60Plus, String gender, Integer matchPeople,
-			Boolean deleted, LocalDateTime updatedAt, LocalDateTime deletedAt, String image1, String image2,
-			String image3, String image4, String image5, String status, String region) {
-		super();
-		this.teamMatchId = teamMatchId;
-		this.title = title;
-		this.content = content;
-		this.userId = userId;
-		this.teamId = teamId;
-		this.createdAt = createdAt;
-		this.matchDate = matchDate;
-		this.sport = sport;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.placeName = placeName;
-		this.address = address;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.participationFee = participationFee;
-		this.fee = fee;
-		this.deadline = deadline;
-		this.skillIntro = skillIntro;
-		this.skillBeginner = skillBeginner;
-		this.skillIntermediate = skillIntermediate;
-		this.skillAdvanced = skillAdvanced;
-		this.age20s = age20s;
-		this.age30s = age30s;
-		this.age40s = age40s;
-		this.age50s = age50s;
-		this.age60Plus = age60Plus;
-		this.gender = gender;
-		this.matchPeople = matchPeople;
-		this.deleted = deleted;
-		this.updatedAt = updatedAt;
-		this.deletedAt = deletedAt;
-		this.image1 = image1;
-		this.image2 = image2;
-		this.image3 = image3;
-		this.image4 = image4;
-		this.image5 = image5;
-		this.status = status;
-		this.region = region;
-	}
+
 	public Long getTeamMatchId() {
 		return teamMatchId;
 	}
@@ -330,6 +297,84 @@ public class TeamMatch {
 	public void setRegion(String region) {
 		this.region = region;
 	}
+	public String getTeamName() {
+		return teamName;
+	}
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+	public Double getTeamRating() {
+		return teamRating;
+	}
+	public void setTeamRating(Double teamRating) {
+		this.teamRating = teamRating;
+	}
+	public String getHostNickname() {
+		return hostNickname;
+	}
+	public void setHostNickname(String hostNickname) {
+		this.hostNickname = hostNickname;
+	}
+	public String getHostProfileImage() {
+		return hostProfileImage;
+	}
+	public void setHostProfileImage(String hostProfileImage) {
+		this.hostProfileImage = hostProfileImage;
+	}
+	public String getHostBio() {
+		return hostBio;
+	}
+	public void setHostBio(String hostBio) {
+		this.hostBio = hostBio;
+	}
+	public String getHostRegion1() {
+		return hostRegion1;
+	}
+	public void setHostRegion1(String hostRegion1) {
+		this.hostRegion1 = hostRegion1;
+	}
+	public String getHostRegion2() {
+		return hostRegion2;
+	}
+	public void setHostRegion2(String hostRegion2) {
+		this.hostRegion2 = hostRegion2;
+	}
+	public String getHostRegion3() {
+		return hostRegion3;
+	}
+	public void setHostRegion3(String hostRegion3) {
+		this.hostRegion3 = hostRegion3;
+	}
+	public String getHostRole() {
+		return hostRole;
+	}
+	public void setHostRole(String hostRole) {
+		this.hostRole = hostRole;
+	}
+	public String getHostSkill() {
+		return hostSkill;
+	}
+	public void setHostSkill(String hostSkill) {
+		this.hostSkill = hostSkill;
+	}
+	public Double getHostRating() {
+		return hostRating;
+	}
+	public void setHostRating(Double hostRating) {
+		this.hostRating = hostRating;
+	}
+	public Integer getHostRatingCount() {
+		return hostRatingCount;
+	}
+	public void setHostRatingCount(Integer hostRatingCount) {
+		this.hostRatingCount = hostRatingCount;
+	}
+	public Integer getTeamRatingCount() {
+		return teamRatingCount;
+	}
+	public void setTeamRatingCount(Integer teamRatingCount) {
+		this.teamRatingCount = teamRatingCount;
+	}
 	@Override
 	public String toString() {
 		return "TeamMatch [teamMatchId=" + teamMatchId + ", title=" + title + ", content=" + content + ", userId="
@@ -342,8 +387,14 @@ public class TeamMatch {
 				+ age50s + ", age60Plus=" + age60Plus + ", gender=" + gender + ", matchPeople=" + matchPeople
 				+ ", deleted=" + deleted + ", updatedAt=" + updatedAt + ", deletedAt=" + deletedAt + ", image1="
 				+ image1 + ", image2=" + image2 + ", image3=" + image3 + ", image4=" + image4 + ", image5=" + image5
-				+ ", status=" + status + ", region=" + region + "]";
+				+ ", status=" + status + ", region=" + region + ", teamName=" + teamName + ", teamRating=" + teamRating
+				+ ", teamRatingCount=" + teamRatingCount + ", hostNickname=" + hostNickname + ", hostProfileImage="
+				+ hostProfileImage + ", hostBio=" + hostBio + ", hostRegion1=" + hostRegion1 + ", hostRegion2="
+				+ hostRegion2 + ", hostRegion3=" + hostRegion3 + ", hostRole=" + hostRole + ", hostSkill=" + hostSkill
+				+ ", hostRating=" + hostRating + ", hostRatingCount=" + hostRatingCount + ", favorite=" + favorite
+				+ "]";
 	}
+
     
     
 }
