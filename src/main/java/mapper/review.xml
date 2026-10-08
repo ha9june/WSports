@@ -93,16 +93,6 @@
 		WHERE r.deleted = '0'
 		ORDER BY r.created_at DESC
 	</select>
-	<select id="selectLikeCounts" resultType="map">
-		SELECT review_id AS reviewId, COUNT(*) AS cnt
-		FROM review_like
-		GROUP BY review_id
-	</select>
-
-	<select id="selectLikedReviewIds" parameterType="long"
-		resultType="long">
-		SELECT review_id FROM review_like WHERE user_id = #{userId}
-	</select>
 
 
 

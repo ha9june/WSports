@@ -19,7 +19,7 @@ import service.payment.PaymentServiceImpl;
 @WebServlet("/info")
 public class PaymentDetailController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    //결제 내역 상세 조회
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -31,7 +31,8 @@ public class PaymentDetailController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 		String paymentKey = request.getParameter("paymentKey");
         
 		try {
@@ -39,30 +40,32 @@ public class PaymentDetailController extends HttpServlet {
 			String matchType = request.getParameter("matchType");
 			
 			////////////////////////////////paymentKey 만으로 찾아야 하는 상황
-			/*Object payment = paymentService.getPersonalPaymentByPaymentKey(paymentKey);
+			Object payment = paymentService.getPersonalPaymentByPaymentKey(paymentKey);
 			boolean isTeam = false;
 			if (payment == null) {
 				payment = paymentService.getTeamPaymentByPaymentKey(paymentKey);
 				isTeam = true;
-			}*/ 
+			} 
 			//////////////////////////////
-			Object payment;
-			boolean isTeam = "team".equals(matchType);
+//			Object payment;
+//			boolean isTeam = "team".equals(matchType);
 
 	        // DB 조회
 			if (isTeam) {
 				payment = paymentService.getTeamPaymentByPaymentKey(paymentKey);
+				request.setAttribute("match", paymentService.getTeamPaymentMatch(paymentKey));
 			} else {
 				payment = paymentService.getPersonalPaymentByPaymentKey(paymentKey);
+				request.setAttribute("match", paymentService.getPersonalPaymentMatch(paymentKey));
 			}
 			request.setAttribute("payment", payment);
 			request.setAttribute("isTeam", isTeam);
 	        
-	        request.getRequestDispatcher("/paymentDetail.jsp").forward(request, response);
+	        request.getRequestDispatcher("/jsp/payment/paymentDetail.jsp").forward(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "결제 내역 조회 오류");
-			request.getRequestDispatcher("/paymentDetail.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/payment/paymentDetail.jsp").forward(request, response);
 		}
 	}
 }

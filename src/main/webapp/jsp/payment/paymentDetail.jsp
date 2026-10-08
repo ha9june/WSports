@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   결제 상세 / 영수증 (paymentDetail.jsp) - 담당: 임태균
    state : paid(결제 완료) | refunded(환불 완료)
@@ -19,29 +20,29 @@
 	<div class="page-head row">
     	<div>
     		<h1 class="page-title md">결제 상세</h1>
-    		<p class="page-desc">주문번호 MATCHON-20260912-0007</p>
+    		<p class="page-desc">주문번호 ${payment.paymentKey}</p>
     	</div>
     	<span class="pill pill-lg ${isRefund ? 'pill-danger bd' : 'pill-success bd'}">${isRefund ? '환불 완료' : '결제 완료'}</span>
   	</div>
   	<section class="receipt">
-		<h2 class="sub-title">${isRefund ? '망원 배드민턴 번개' : '주말 실내 농구 같이 하실 분'} <span class="tag-sm">개인 경기</span></h2>
-    	<p class="t-12 t-2 mt-8">${isRefund ? '9/13 (일) 10:00 · 서울 마포구 망원체육관' : '9/27 (일) 14:00 · 서울 성동구 실내체육관'}</p>
+		<h2 class="sub-title">${payment.orderName} <span class="tag-sm">개인 경기</span></h2>
+    	<p class="t-12 t-2 mt-8">${match.title}  ${match.matchDate}  ${match.placeName}</p>
     	<hr class="divider">
     	<div class="ln">
     		<span>참가비</span>
-    		<span>${isRefund ? '7,000' : '8,000'}원</span>
+    		<span><fmt:formatNumber value="${payment.totalAmount}" pattern="#,###"/>원</span>
     	</div>
     	<div class="ln">
     		<span>수수료</span>
-    		<span>${isRefund ? '560' : '640'}원</span>
+    		<span><fmt:formatNumber value="${payment.totalAmount*0.08}" pattern="#,###"/>원</span>
     	</div>
     	<div class="ln">
     		<span>결제 수단</span>
-    		<span>국민카드 ****1234 (일시불)</span>
+    		<span>${payment.cardCompany}</span><span>  ${payment.cardNumber}  ${payment.paymentMethod}</span>
     	</div>
     	<div class="ln">
     		<span>결제 일시</span>
-    		<span>2026.09.12 09:41</span>
+    		<span>${fn:replace(fn:substring(payment.approvedAt, 0, 16), 'T', ' ')}</span>
     	</div>
     	<c:if test="${isRefund}">
       		<div class="ln">
@@ -55,7 +56,7 @@
 		</c:if>
     	<div class="ln total">
     		<span>${isRefund ? '환불 금액' : '결제 금액'}</span>
-    		<b class="${isRefund ? 't-danger' : ''}">${isRefund ? '−7,560' : '8,640'}원</b>
+    		<b class="${isRefund ? 't-danger' : ''}">${isRefund ? '' : ''}<fmt:formatNumber value="${payment.totalAmount}" pattern="#,###"/>원</b>
     	</div>
 	</section>
 	<div class="form-actions">
