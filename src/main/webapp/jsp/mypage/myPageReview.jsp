@@ -18,29 +18,30 @@
 <p class="section-desc">내가 작성한 후기와 연결된 경기를 확인하고 수정하거나 삭제할 수 있어요.</p>
 
 <div class="act-head t-11">
-  <span class="t-2">작성한 후기 ${totalCnt}개</span>
+  <span class="t-2">작성한 후기 ${r.reviewId}개</span>
   <span class="t-2">${pageInfo.curPage} / ${pageInfo.allPage} 페이지</span>
 </div>
 
 <c:if test="${empty Review}">
   <p style="text-align:center; color:#9ca3af; padding:40px 0;">작성한 후기가 없어요.</p>
 </c:if>
-
 <c:forEach var="r" items="${Review}">
   <div class="my-review" data-href="${ctx}/review/detail?id=${r.reviewId}">
-    <div>
-      <p class="cat"><c:out value="${r.matchTitle}"/></p>
-      <strong><c:out value="${r.title}"/></strong>
-      <p><c:out value="${r.matchType}"/></p>
-      <p><c:out value="${r.content}"/></p>
-    </div>
-    <div class="aside">
-      <time>${r.createdAt}</time>
-      <a class="btn btn-primary btn-sm" href="${ctx}/review/modify?id=${r.reviewId}">수정</a>
-      <button type="button" class="btn btn-danger btn-sm btn-review-delete"
-              data-id="${r.reviewId}">삭제</button>
-    </div>
+  <div>
+    <p class="cat"><c:out value="${r.sport}"/></p>
+    <strong><c:out value="${r.title}"/></strong>
+    <p>연결 경기 · <c:out value="${r.matchTitle}"/></p>
+    <p><c:out value="${r.content}"/></p>
+    ♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}
   </div>
+  
+  <div class="aside">
+    <time>${r.createdAt}</time>
+    <a class="btn btn-primary btn-sm" href="${ctx}/review/modify?id=${r.reviewId}">수정</a>
+    <button type="button" class="btn btn-danger btn-sm btn-review-delete"
+            data-id="${r.reviewId}">삭제</button>
+  </div>
+</div>
 </c:forEach>
 
 <c:if test="${pageInfo.allPage > 1}">
