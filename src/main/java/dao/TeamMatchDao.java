@@ -18,6 +18,7 @@ public interface TeamMatchDao {
 	
 	List<TeamMatch> selectTeamMatchListForSearch(TeamSearchCondition teamSearchCondition) throws Exception;
 	int selectTeamMatchListForSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception;
+	int updateStatusToClosed(Long teamMatchId) throws Exception;
 	
 
 	//관리자 경기수 세기 - 팀

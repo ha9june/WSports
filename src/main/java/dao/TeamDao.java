@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+import java.util.Map;
 
 import dto.Team;
 import dto.TeamSearchCondition;
@@ -14,6 +15,7 @@ public interface TeamDao {
 	int updateTeam(Team team) throws Exception;
 
 	List<Team> selectTeamInfoByUserManager(Long userId) throws Exception;
+	List<Team> selectTeamInfoByUserManagerSport(Long userId, String sport) throws Exception;
 
 	//관리자 팀수 세기
 	Long selectTeamCnt() throws Exception;

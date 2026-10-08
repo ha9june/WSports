@@ -134,19 +134,16 @@
 		where team_match_id = #{matchId}
 	</select>
 	
-	<insert id="insertPaidTeamParticipant" parameterType="map">
+	<insert id="insertTeamPaymentParticipant" parameterType="map">
 		insert into team_match_participant (
 			user_id, team_match_id, team_id, status, payment_id, attendance, applied_at
 		) values (
-			#{userId}, #{matchId},(
-				select team_id from team_user
-				where user_id = #{user_id} and team_role = '주장' and withdrawn = 0
-				limit 1), 
+			#{userId}, #{matchId}, #{teamId}, 
 				'결제완료', #{paymentId}, 0, now()
 			)
 	</insert>
 	<!-- 중복 참가 확인 (결제한 회원이 주장인 팀 기준) -->
-	<select id="selectTeamJoinedCnt" parameterType="map" resultType="int">
+	<select id="selectTeamJoinCnt" parameterType="map" resultType="int">
 		select count(*)
 		from team_match_participant
 		where team_match_id = #{matchId}

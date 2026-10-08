@@ -1,6 +1,8 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -106,6 +108,19 @@ public class TeamDaoImpl implements TeamDao {
 	public List<Team> selectNowTeamList(TeamSearchCondition condition) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
 			return sqlSession.selectList("mapper.team.selectNowTeamList");
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<Team> selectTeamInfoByUserManagerSport(Long userId, String sport) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("sport", sport);
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.team.selectTeamInfoByUserManagerSport", param);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw e;
