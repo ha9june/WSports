@@ -11,12 +11,77 @@ public class TeamSearchCondition {
     private String[] regions;
     private String keyword;
     private String sort;
+    
+    private String[] ages;        // 나이대 (20대, 30대 ...)
+    private String[] matchPeople; // 경기 인원 (2, 3, 5 ...)
+    private String startDate;     // 경기 시작일
+    private String endDate;       // 경기 종료일
+    private Long userId; //로그인 유저 비회원은 널
+    
+
+    
+    //메인 추천선택용
+  	private String SearchType;
+    
 	public TeamSearchCondition() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public String[] getAges() {
+		return ages;
+	}
+
+	public void setAges(String[] ages) {
+		this.ages = ages;
+	}
+
+	public String[] getMatchPeople() {
+		return matchPeople;
+	}
+
+	public void setMatchPeople(String[] matchPeople) {
+		this.matchPeople = matchPeople;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	@Override
+	public String toString() {
+		return "TeamSearchCondition [offset=" + offset + ", sports=" + Arrays.toString(sports) + ", gender=" + gender
+				+ ", days=" + Arrays.toString(days) + ", skills=" + Arrays.toString(skills) + ", regions="
+				+ Arrays.toString(regions) + ", keyword=" + keyword + ", sort=" + sort + ", ages="
+				+ Arrays.toString(ages) + ", matchPeople=" + Arrays.toString(matchPeople) + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", userId=" + userId + ", SearchType=" + SearchType + "]";
+	}
+
 	public TeamSearchCondition(int offset, String[] sports, String gender, String[] days, String[] skills,
-			String[] regions, String keyword, String sort) {
+			String[] regions, String keyword, String sort, String[] ages, String[] matchPeople, String startDate,
+			String endDate, Long userId, String searchType) {
 		super();
 		this.offset = offset;
 		this.sports = sports;
@@ -26,13 +91,14 @@ public class TeamSearchCondition {
 		this.regions = regions;
 		this.keyword = keyword;
 		this.sort = sort;
+		this.ages = ages;
+		this.matchPeople = matchPeople;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.userId = userId;
+		SearchType = searchType;
 	}
-	@Override
-	public String toString() {
-		return "TeamSearchCondition [offset=" + offset + ", sports=" + Arrays.toString(sports) + ", gender=" + gender
-				+ ", days=" + Arrays.toString(days) + ", skills=" + Arrays.toString(skills) + ", regions="
-				+ Arrays.toString(regions) + ", keyword=" + keyword + ", sort=" + sort + "]";
-	}
+
 	public int getOffset() {
 		return offset;
 	}
@@ -81,6 +147,13 @@ public class TeamSearchCondition {
 	public void setSort(String sort) {
 		this.sort = sort;
 	}
+	public String getSearchType() {
+		return SearchType;
+	}
+	public void setSearchType(String searchType) {
+		SearchType = searchType;
+	}
+	
 	
 	
     

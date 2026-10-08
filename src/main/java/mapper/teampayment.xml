@@ -69,4 +69,87 @@
 		where approved_at >= #{startDate}
 		and approved_at &lt; #{endDate} + interval 1 day
 	</select>
+	
+	<!-- 팀 경기 결제 내역 -->
+	<insert id="insertTeamPaymentHistory" parameterType="TeamPayment" useGeneratedKeys="true" keyProperty="paymentId" keyColumn="payment_id">
+	INSERT INTO team_payment (
+            order_id,
+            payment_key,
+            order_name,
+            payment_status,
+            payment_method,
+            total_amount,
+            balance,
+            currency,
+            card_company,
+            card_number,
+            installment_months,
+            easy_payment_provider,
+            receipt_url,
+            requested_at,
+            approved_at,
+            raw_response
+        ) VALUES (
+            #{orderId},
+            #{paymentKey},
+            #{orderName},
+            #{paymentStatus},
+            #{paymentMethod},
+            #{totalAmount},
+            #{balance},
+            #{currency},
+            #{cardCompany},
+            #{cardNumber},
+            #{installmentMonths},
+            #{easyPaymentProvider},
+            #{receiptUrl},
+            #{requestedAt},
+            #{approvedAt},
+            #{rawResponse}
+        )		
+	</insert>
+	<!-- 결제 내역 -->
+	<select id="selectTeamPaymentHistory" parameterType="String" resultType="TeamPayment">
+		select * from team_payment where payment_key=#{paymentKey}
+	</select>
+	<!-- 검증 -->
+	<select id="selectTeamMatchTotalAmount" parameterType="int" resultType="int">
+    	select participation_fee + fee
+    	from team_match
+    	where team_match_id = #{matchId}
+	</select>
+	
+	<!-- 결제 키로 팀 경기 정보 조회 -->
+	<select id="selectTeamPaymentMatch" parameterType="String" resultType="teamMatch">
+		SELECT m.*
+		FROM team_payment tp
+		JOIN team_match_participant p ON p.payment_id = tp.payment_id
+		JOIN team_match m ON m.team_match_id = p.team_match_id
+		WHERE tp.payment_key = #{paymentKey}
+	</select>
+	<!-- 팀 경기 한 건 조회 (결제 페이지 용) -->
+	<select id="selectTeamMatch" parameterType="Long" resultType="teamMatch">
+		select *
+		from team_match
+		where team_match_id = #{matchId}
+	</select>
+	
+	<insert id="insertTeamPaymentParticipant" parameterType="map">
+		insert into team_match_participant (
+			user_id, team_match_id, team_id, status, payment_id, attendance, applied_at
+		) values (
+			#{userId}, #{matchId}, #{teamId}, 
+				'결제완료', #{paymentId}, 0, now()
+			)
+	</insert>
+	<!-- 중복 참가 확인 (결제한 회원이 주장인 팀 기준) -->
+	<select id="selectTeamJoinCnt" parameterType="map" resultType="int">
+		select count(*)
+		from team_match_participant
+		where team_match_id = #{matchId}
+		and status = '결제완료'
+		and team_id = (select team_id from team_user
+		               where user_id = #{userId} and team_role = '주장' and withdrawn = 0
+		               limit 1)
+	</select>
 </mapper>

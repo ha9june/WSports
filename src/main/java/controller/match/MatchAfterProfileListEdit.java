@@ -6,21 +6,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import dto.User;
 
 /**
- * Servlet implementation class PersonalMatchParticipation
+ * Servlet implementation class MatchAfterProfileListEdit
  */
-@WebServlet("/match/detail/participation")
-public class PersonalMatchParticipation extends HttpServlet {
+@WebServlet("/match/after/profile/list/edit")
+public class MatchAfterProfileListEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PersonalMatchParticipation() {
+    public MatchAfterProfileListEdit() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,24 +26,15 @@ public class PersonalMatchParticipation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-	    if (user == null) {
-	        response.sendRedirect(request.getContextPath() + "/auth/login");
-	        return;
-	    }
-	    
-		Long num = Long.parseLong(request.getParameter("num"));
-
-		
-	
+		// TODO Auto-generated method stub
+		request.getRequestDispatcher("/jsp/match/personalMatchAfterProfileListEdit.jsp").forward(request, response);;			
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//doGet(request, response);
+		// TODO Auto-generated method stub
 	}
 
 }

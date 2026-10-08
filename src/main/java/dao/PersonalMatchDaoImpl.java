@@ -66,18 +66,6 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		}
 	}
 
-	@Override
-	public List<PersonalMatch> selectMyPageCreatedPersonalMatchsportList(Map<String, Object> param) throws Exception {
-		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			System.out.println("dao"+sqlSession.selectList("mapper.personalmatch.selectMyPageCreatedPersonalMatchsportList", param).toString());
-			return sqlSession.selectList("mapper.personalmatch.selectMyPageCreatedPersonalMatchsportList", param);
-			
-		} catch (Exception e) {
-			throw e;
-		}
-		
-	
-	}
 	public PersonalMatch selectPersonalMatch(Long personaMatchId) throws Exception {
 
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {

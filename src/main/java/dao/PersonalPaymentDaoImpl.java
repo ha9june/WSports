@@ -1,10 +1,13 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.PersonalMatch;
+import dto.PersonalPayment;
 
 public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 	//총 매출
@@ -95,6 +98,61 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+	
+	//결제내역 선택
+	@Override
+	public PersonalPayment selectPersonalPaymentHistory(String paymentKey) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalpayment.selectPersonalPaymentHistory", paymentKey);
+		}
+	}
+	//검증
+	@Override
+	public Integer selectPersonalMatchTotalAmount(Integer matchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalpayment.selectPersonalMatchTotalAmount", matchId);
+		}
+	}
+	//결제 내역 + 참가자 등록
+	@Override
+	public void insertPersonalPaymentParticipant(PersonalPayment personalPayment, Long userId, Long matchId) throws Exception {
+		System.out.println("[결제저장] 호출됨 userId=" + userId + ", matchId=" + matchId);
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.personalpayment.insertPersonalPaymentHistory", personalPayment);
+			System.out.println("[결제저장] 생성된 paymentId=" + personalPayment.getPaymentId());
+			Map<String, Object> param = new HashMap<>();
+			param.put("userId", userId);
+			param.put("matchId", matchId);
+			param.put("paymentId", personalPayment.getPaymentId());
+			sqlSession.insert("mapper.personalpayment.insertPaidParticipant", param);
+
+			sqlSession.commit();
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		
+	}
+	//경기정보 가져오기
+	@Override
+	public PersonalMatch selectPersonalPaymentMatch(String paymentKey) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalpayment.selectPersonalPaymentMatch", paymentKey);
+		}
+	}
+	//중복 참가 확인
+	@Override
+	public Integer selectPersonalJoinCnt(Long userId, Long matchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			Map<String, Object> param = new HashMap<>();
+			param.put("userId", userId);
+			param.put("matchId", matchId);
+			return sqlSession.selectOne("mapper.personalpayment.selectJoinedCnt", param);
 		}
 	}
 

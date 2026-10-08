@@ -10,12 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.google.gson.Gson;
-
 import dto.PersonalMatch;
+import dto.Review;
+import dto.Team;
+import dto.TeamSearchCondition;
 import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
+import service.review.ReviewService;
+import service.review.ReviewServiceImpl;
+import service.team.TeamService;
+import service.team.TeamServiceImpl;
 import util.MatchSearchInfo;
 
 /**
@@ -43,30 +48,50 @@ public class HomeMain extends HttpServlet {
 		
 
 		
-		PersonalMatchService service = new PersonalMatchServiceImpl();
+		PersonalMatchService matchService = new PersonalMatchServiceImpl();
+		TeamService teamService = new TeamServiceImpl();
+		ReviewService reviewService = new ReviewServiceImpl();
 		try {
 			
 			MatchSearchInfo searchInfo = new MatchSearchInfo();
+			TeamSearchCondition condition = new TeamSearchCondition();
 			if(user!=null) {
-				searchInfo.setSearchType("RECOMAND");
-				searchInfo.setRegions(new String[] {
-				    user.getPreferredRegion1(),
-				    user.getPreferredRegion2(),
-				    user.getPreferredRegion3()
-				});
-				searchInfo.setSports(new String[] {
-				    user.getPreferredSport1(),
+				
+				String[] preferredSports = new String[] {
+					user.getPreferredSport1(),
 				    user.getPreferredSport2(),
 				    user.getPreferredSport3()
-				});
+				};
+				searchInfo.setSearchType("RECOMAND");
+				searchInfo.setRegions(new String[] {
+						user.getPreferredRegion1(),
+					    user.getPreferredRegion2(),
+					    user.getPreferredRegion3()
+					});
+				searchInfo.setSports(preferredSports);
+				searchInfo.setUserId(user.getUserId());
+				
+				
+				condition.setSearchType("RECOMAND");
+				condition.setSports(preferredSports);
+				
+				
 			}else {
 				searchInfo.setSearchType("POPULAR");
+				condition.setSearchType("NEW");
 			}
 
-			List<PersonalMatch> nowMatchList = service.getNowMatchList(searchInfo);
-			System.out.println(nowMatchList);
+			List<PersonalMatch> nowMatchList = matchService.getNowMatchList(searchInfo);
+			List<Team> nowTeamList = teamService.getNowTeamList(condition);
+			List<Review> nowReviewList = reviewService.getNowReviewList();
 
-			request.setAttribute("nList", nowMatchList);
+			System.out.println(nowMatchList);
+			System.out.println(nowTeamList);
+			System.out.println(nowReviewList);
+			
+			request.setAttribute("nMList", nowMatchList);
+			request.setAttribute("nTList", nowTeamList);
+			request.setAttribute("nRList", nowReviewList);
 			request.getRequestDispatcher("/jsp/home/main.jsp").forward(request, response);
 
 		} catch (Exception e) {

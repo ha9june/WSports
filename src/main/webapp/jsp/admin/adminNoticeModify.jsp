@@ -29,7 +29,13 @@
 	</div>
 	<div class="field mt-24">
 		<label class="field-label" for="nType">유형</label>
-		<input class="input" id="nType" name="type" value="${detail.type}" required>
+		<select class="notice-type" id="nType" name="type">
+			<option value="공지">공지</option>
+			<option value="정책">정책</option>
+			<option value="점검">점검</option>
+			<option value="이벤트">이벤트</option>
+			<option value="업데이트">업데이트</option>
+		</select>
 	</div>
 	<div class="field mt-24">
 		<label class="field-label" for="nBody">공지 내용</label>
@@ -41,5 +47,11 @@
 	</div>
 </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function(){
+	$("#nType").val('${detail.type}');
+});
+</script>
 </main></div>
 <%@ include file="/jsp/common/footer.jsp" %>

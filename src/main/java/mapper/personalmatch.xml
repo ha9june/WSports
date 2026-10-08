@@ -5,15 +5,22 @@
 	<select id="selectNowPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-		m.*,
-		COUNT(p.participant_id) AS current_people
-		FROM personal_match
-		m
+			m.*,
+			COUNT(p.participant_id) AS current_people,
+			CASE
+	            WHEN f.match_id IS NOT NULL THEN 1
+	            ELSE 0
+	        END AS favorite
+		FROM personal_match m
 		LEFT JOIN
-		personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
+			personal_match_participant p
+			ON m.personal_match_id = p.personal_match_id
+		LEFT JOIN favorite f
+	        ON f.match_id = m.personal_match_id
+	        AND f.match_type = 'PERSONAL'
+	        AND f.user_id = #{userId}
 		WHERE 1=1
+		AND m.status ='모집중'
 		<if test="searchType == 'RECOMAND'">
 			<if test="sports != null and sports.length > 0">
 				AND m.sport IN
@@ -42,7 +49,6 @@
 			<when test="searchType == 'END'">
 				ORDER BY m.deadline ASC
 			</when>
-
 			<when test="searchType == 'NEW'">
 				ORDER BY m.created_at DESC
 			</when>
@@ -54,14 +60,21 @@
 	<select id="selectNormalPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-		m.*,
-		COUNT(p.participant_id) AS current_people
-		FROM personal_match
-		m
+			m.*,
+			COUNT(p.participant_id) AS current_people,
+			CASE
+	            WHEN f.match_id IS NOT NULL THEN 1
+	            ELSE 0
+	        END AS favorite
+		FROM personal_match m
 		LEFT JOIN
-		personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
+			personal_match_participant p
+			ON m.personal_match_id =
+			p.personal_match_id
+		LEFT JOIN favorite f
+	        ON f.match_id = m.personal_match_id
+	        AND f.match_type = 'PERSONAL'
+	        AND f.user_id = #{userId}
 
 		WHERE 1=1
 
@@ -154,14 +167,22 @@
 	<select id="selectMapPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-		m.*,
-		COUNT(p.participant_id) AS current_people
+			m.*,
+			COUNT(p.participant_id) AS current_people,
+			CASE
+	            WHEN f.match_id IS NOT NULL THEN 1
+	            ELSE 0
+	        END AS favorite
 		FROM personal_match
 		m
 		LEFT JOIN
-		personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
+			personal_match_participant p
+			ON m.personal_match_id =
+			p.personal_match_id
+		LEFT JOIN favorite f
+	        ON f.match_id = m.personal_match_id
+	        AND f.match_type = 'PERSONAL'
+	        AND f.user_id = #{userId}
 
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
 		AND m.longitude BETWEEN #{minLng} AND #{maxLng}

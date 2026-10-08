@@ -2,20 +2,26 @@ package service.team;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Part;
 
+import dao.FavoriteDao;
 import dao.TeamDao;
 import dao.TeamDaoImpl;
 import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
 import dto.TeamMatch;
+import dto.TeamSearchCondition;
 
 public class TeamMatchServiceImpl implements TeamMatchService {
 	
 	TeamMatchDao teamMatchDao;
 	TeamDao teamDao;
+	FavoriteDao favoriteDao;
 	
 	public TeamMatchServiceImpl() {
 		teamMatchDao = new TeamMatchDaoImpl();
@@ -50,5 +56,22 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 		teamMatchDao.insertTeamMatch(teamMatch);
 		return teamMatch.getTeamMatchId();
 	}
-	
+
+	@Override
+	public TeamMatch getTeamMatchUser(Long teamMatchId, Long userId) throws Exception {
+		return teamMatchDao.selectTeamMatchUser(teamMatchId, userId);
+	}
+	public TeamMatch getTeamMatchNotUser(Long teamMatchId) throws Exception {
+		return teamMatchDao.selectTeamMatchNotUser(teamMatchId);
+	}
+
+	@Override
+	public List<TeamMatch> getTeamMatchListSearch(TeamSearchCondition teamSearchCondition) throws Exception {
+		return teamMatchDao.selectTeamMatchListForSearch(teamSearchCondition);
+	}
+
+	@Override
+	public int getTeamMatchListSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception {
+		return teamMatchDao.selectTeamMatchListForSearchCnt(teamSearchCondition);
+	}
 }

@@ -15,22 +15,23 @@
     <nav class="breadcrumb"><a href="${ctx}/jsp/mypage/myPagePersonalMatch.jsp">내 경기</a><span class="sep">›</span><span>참가자 프로필</span></nav>
     <div class="page-head">
       <h1 class="page-title">참가자 프로필</h1>
-      <p class="page-desc">토요일 저녁 풋살 한 판! · 현재 8명 / 정원 10명 · 최소 8명</p>
+      <p class="page-desc">${personalMatch.title} · 현재 ${personalMatch.currentPeople}명 / 정원 ${personalMatch.maxPeople}명 · 최소 ${personalMatch.minPeople}명</p>
     </div>
 
-    <h2 class="section-title">토요일 저녁 풋살 한 판!</h2>
-    <p class="t-11 t-brand" style="margin:6px 0 24px">참가자 8명 / 정원 10명</p>
+    <h2 class="section-title">${personalMatch.title}</h2>
+    <p class="t-11 t-brand" style="margin:6px 0 24px">참가자 ${personalMatch.currentPeople}명 / 정원 ${personalMatch.maxPeople}명</p>
 
-    <%-- TODO: <c:forEach var="p" items="${participantList}"> --%>
     <div class="people-grid">
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>풋살초보</strong><span class="lv">중급</span><span class="rating">4.6</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>마포킥커</strong><span class="lv">초급</span><span class="rating">4.5</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>주말러너</strong><span class="lv">중급</span><span class="rating">4.6</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>수비장인</strong><span class="lv">상급</span><span class="rating">4.9</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>골키퍼K</strong><span class="lv">중급</span><span class="rating">4.9</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>유나이티드7</strong><span class="lv">중급</span><span class="rating">4.7</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>MF88</strong><span class="lv">중급</span><span class="rating">4.7</span></a>
-      <a class="person-row" href="${ctx}/jsp/member/userProfileInfo.jsp"><span class="avatar sm default"></span><strong>FC마포</strong><span class="lv">초급</span><span class="rating">4.4</span></a>
+       <c:forEach var="user" items="${userList}">
+	        <a class="person-row"
+	           href="${ctx}/jsp/member/userProfileInfo.jsp?userId=${user.userId}">
+	            <span class="avatar sm default"></span>
+	            <strong>${user.nickname}</strong>
+	            <%-- <span class="lv">${user.skill}</span> --%>
+	            <span class="rating">${user.avgRatingScore}</span>
+	            
+	        </a>
+	    </c:forEach>
     </div>
 
     <div class="form-actions"><a class="btn btn-outline btn-sm" href="${ctx}/jsp/mypage/myPagePersonalMatch.jsp">내 경기로 돌아가기</a></div>

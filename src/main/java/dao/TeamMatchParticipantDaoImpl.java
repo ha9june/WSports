@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
@@ -31,6 +33,16 @@ public class TeamMatchParticipantDaoImpl implements TeamMatchParticipantDao {
 			sqlSession.close();
 		}
 		
+	}
+
+	@Override
+	public List<Long> selectTeamMatchParticipantTeamIdList(Long teamMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatchparticipant.selectTeamMatchParticipantTeamIdList", teamMatchId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 }

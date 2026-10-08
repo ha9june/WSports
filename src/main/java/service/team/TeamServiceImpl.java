@@ -95,6 +95,16 @@ public class TeamServiceImpl implements TeamService {
 		return teamDao.selectTeamInfoByUserManager(userId);
 	}
 	
+	@Override
+	public List<Team> getNowTeamList(TeamSearchCondition condition) throws Exception {
+		return teamDao.selectNowTeamList(condition);
+	}
+	
+	@Override
+	public List<Team> getTeamInfoByUserManagerSport(Long userId, String sport) throws Exception {
+		return teamDao.selectTeamInfoByUserManagerSport(userId, sport);
+	}
+	
 	
 	
 	
@@ -215,6 +225,10 @@ public class TeamServiceImpl implements TeamService {
 		}
 		return String.join(" · ", parts);
 	}
+
+
+
+
 
 
 

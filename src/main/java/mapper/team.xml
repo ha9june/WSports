@@ -329,10 +329,57 @@
 		  and tu.withdrawn = 0;
 	</select>
 	
+	<select id="selectTeamInfoByUserManagerSport" parameterType="Map" resultType="team">
+		select t.*
+		from team_user tu
+		join team t on t.team_id = tu.team_id
+		where tu.user_id = #{userId}
+		  and t.sport = #{sport}
+		  and tu.team_role in ('CAPTAIN', 'VICE_CAPTAIN')
+		  and tu.withdrawn = 0;
+	</select>
+	
 
 	<!-- 관리자 사이드 바 팀 개수 세기 -->
 	<select id="selectTeamCnt" resultType="Long">
 		select count(*) from team
 	</select>
+	
+	<select id="selectNowTeamList" parameterType="teamsearchcondition" resultType="team">
+		SELECT
+	        t.*,
+	        COUNT(tu.team_user_id) AS current_people
+	    FROM team t
+	    LEFT JOIN team_user tu
+	        ON t.team_id = tu.team_id
+	        AND (tu.withdrawn IS NULL OR tu.withdrawn = FALSE)
+	    WHERE t.deleted = FALSE
+	    <if test="searchType == 'RECOMAND'">
+	        <if test="sports != null and sports.length > 0">
+	            AND t.sport IN
+	            <foreach collection="sports"
+	                     item="sport"
+	                     open="("
+	                     separator=","
+	                     close=")">
+	                #{sport}
+	            </foreach>
+	        </if>
+	    </if>
+	    GROUP BY t.team_id
+	    <choose>
+	        <when test="searchType == 'RECOMAND'">
+	            ORDER BY t.created_at DESC
+	        </when>
+	        <when test="searchType == 'NEW'">
+	            ORDER BY t.created_at DESC
+	        </when>
+	    </choose>
+	    LIMIT 4;
+	</select>
+	
+
+	
+	
 
 </mapper>

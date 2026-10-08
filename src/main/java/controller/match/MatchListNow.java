@@ -49,8 +49,7 @@ public class MatchListNow extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String requestType = request.getParameter("requestType");
 		String searchType = request.getParameter("searchType");
-		System.out.println(requestType);
-		System.out.println(searchType);
+
 		
 		
 		HttpSession session = request.getSession();
@@ -77,6 +76,7 @@ public class MatchListNow extends HttpServlet {
 					    user.getPreferredSport2(),
 					    user.getPreferredSport3()
 					});
+					searchInfo.setUserId(user.getUserId());
 				}       
 				List<PersonalMatch> nowMatchList = service.getNowMatchList(searchInfo);
 				

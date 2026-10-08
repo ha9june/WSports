@@ -35,4 +35,29 @@
 	        NOW()
 	    )
 	</insert>
+	<select id="selectPersonalMatchParticipantList" parameterType="Long" resultType="user">
+		SELECT
+		    u.user_id,
+		    u.nickname,
+		    p.attendance,
+		    COALESCE(AVG(r.score), 0) AS avg_rating_score
+		FROM personal_match_participant p
+		JOIN user u
+		    ON p.user_id = u.user_id
+		LEFT JOIN user_rating r
+		    ON r.receiver_user_id = u.user_id
+		WHERE p.personal_match_id = #{personalMatchId}
+		  AND (p.status IS NULL OR p.status != '취소')
+		GROUP BY
+		    u.user_id,
+		    u.nickname;
+	</select>
+	<select id="selectIsIsPersonalMatchParticipation" parameterType="map" resultType="boolean">
+		SELECT EXISTS (
+		    SELECT 1
+		    FROM personal_match_participant
+		    WHERE user_id = #{userId}
+		      AND personal_match_id = #{personalMatchId}
+		)	
+	</select>
 </mapper>

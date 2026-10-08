@@ -69,4 +69,77 @@
 		where approved_at >= #{startDate}
 		and approved_at &lt; #{endDate} + interval 1 day
 	</select>
+	
+	<!-- 개인 경기 결제 내역 -->
+	<insert id="insertPersonalPaymentHistory" parameterType="PersonalPayment" useGeneratedKeys="true" keyProperty="paymentId" keyColumn="payment_id">
+	INSERT INTO personal_payment (
+            order_id,
+            payment_key,
+            order_name,
+            payment_status,
+            payment_method,
+            total_amount,
+            balance,
+            currency,
+            card_company,
+            card_number,
+            installment_months,
+            easy_payment_provider,
+            receipt_url,
+            requested_at,
+            approved_at,
+            raw_response
+        ) VALUES (
+            #{orderId},
+            #{paymentKey},
+            #{orderName},
+            #{paymentStatus},
+            #{paymentMethod},
+            #{totalAmount},
+            #{balance},
+            #{currency},
+            #{cardCompany},
+            #{cardNumber},
+            #{installmentMonths},
+            #{easyPaymentProvider},
+            #{receiptUrl},
+            #{requestedAt},
+            #{approvedAt},
+            #{rawResponse}
+        )		
+	</insert>
+	<!-- 결제 내역 조회 -->
+	<select id="selectPersonalPaymentHistory" parameterType="String" resultType="PersonalPayment">
+		select * from personal_payment where payment_key=#{paymentKey}
+	</select>
+	<!-- 검증 -->
+	<select id="selectPersonalMatchTotalAmount" parameterType="int" resultType="int">
+    	select participation_fee + fee
+    	from personal_match
+    	where personal_match_id = #{matchId}
+	</select>
+	<!-- 결제 완료 참가자 등록 -->
+	<insert id="insertPaidParticipant" parameterType="map">
+    	INSERT INTO personal_match_participant (
+        	user_id, personal_match_id, attendance, status, payment_id, applied_at
+    	) VALUES (
+        	#{userId}, #{matchId}, 0, '결제완료', #{paymentId}, NOW()
+    	)
+	</insert>
+	<!-- 경기 정보 -->
+	<select id="selectPersonalPaymentMatch" parameterType="String" resultType="personalMatch">
+    	select m.*
+    	from personal_payment pp
+    	join personal_match_participant p on p.payment_id = pp.payment_id
+    	join personal_match m on m.personal_match_id = p.personal_match_id
+    	where pp.payment_key = #{paymentKey}
+	</select>
+	<!-- 중복 참가 확인 -->
+	<select id="selectJoinedCnt" parameterType="map" resultType="int">
+		select count(*)
+		from personal_match_participant
+		where user_id = #{userId}
+		and personal_match_id = #{matchId}
+		and (status is null or status &lt;&gt; '취소')
+	</select>
 </mapper>

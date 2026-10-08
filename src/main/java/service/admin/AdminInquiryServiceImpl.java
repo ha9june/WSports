@@ -82,6 +82,7 @@ public class AdminInquiryServiceImpl implements AdminInquiryService {
 	//문의 세부정보
 	@Override
 	public Map<String, Object> getAdminInquiryDetail(Long inquiryId) throws Exception {
+		System.out.println(inquiryId+"///세부정보 서비스");
 		return inquiryDao.selectAdminInquiryDetail(inquiryId);
 	}
 }

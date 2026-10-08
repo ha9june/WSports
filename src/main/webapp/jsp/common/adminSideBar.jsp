@@ -12,11 +12,11 @@
       		<p class="group-title">관리자(사이트) 메뉴</p>
       		<nav class="menu">
         		<a href="${ctx}/admin/revenue" class="${adminMenu eq 'revenue' ? 'is-active' : ''}">수익 관리</a>
-        		<a href="${ctx}/admin/settlement/person" class="${adminMenu eq 'settlement' ? 'is-active' : ''}">정산 관리 <span class="count-badge">5</span></a>
+        		<a href="${ctx}/admin/settlement/person" class="${adminMenu eq 'settlement' ? 'is-active' : ''}">정산 관리 <span class="count-badge">${settlementWaitCnt}</span></a>
         		<a href="${ctx}/admin/member" class="${adminMenu eq 'member' ? 'is-active' : ''}">회원 관리</a>
         		<a href="${ctx}/admin/team" class="${adminMenu eq 'team' ? 'is-active' : ''}">팀 관리</a>
-        		<a href="${ctx}/admin/report" class="${adminMenu eq 'report' ? 'is-active' : ''}">신고 관리 <span class="count-badge">7</span></a>
-       			<a href="${ctx}/admin/inquiry" class="${adminMenu eq 'inquiry' ? 'is-active' : ''}">문의 관리 <span class="count-badge">5</span></a>
+        		<a href="${ctx}/admin/report" class="${adminMenu eq 'report' ? 'is-active' : ''}">신고 관리 <span class="count-badge">${reportWaitCnt}</span></a>
+       			<a href="${ctx}/admin/inquiry" class="${adminMenu eq 'inquiry' ? 'is-active' : ''}">문의 관리 <span class="count-badge">${inquiryWaitCnt }</span></a>
         		<a href="${ctx}/admin/notice" class="${adminMenu eq 'notice' ? 'is-active' : ''}">공지 관리</a>
       		</nav>
     	</div>

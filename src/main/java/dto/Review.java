@@ -1,4 +1,5 @@
 package dto;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /** 후기 */
@@ -15,6 +16,22 @@ public class Review {
     private Boolean deleted;          // 삭제 여부
     private LocalDateTime createdAt;  // 작성 일시
     private LocalDateTime updatedAt;  // 수정 일시
+    
+    
+    private LocalDate matchDate;   // 조회용
+    private String sport; //종목
+    public LocalDate getMatchDate() { return matchDate; }
+    public void setMatchDate(LocalDate matchDate) { this.matchDate = matchDate; }
+    
+    private int likeCount;
+    private int commentCount;
+
+    public int getLikeCount() { return likeCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+    public int getCommentCount() { return commentCount; }
+    public void setCommentCount(int commentCount) { this.commentCount = commentCount; }
+    
+    
     
     
     public Review() {
@@ -108,11 +125,22 @@ public class Review {
 		this.updatedAt = updatedAt;
 	}
 	
+	public String getSport() {
+		return sport;
+	}
+	public void setSport(String sport) {
+		this.sport = sport;
+	}
 	@Override
 	public String toString() {
 		return "Review [reviewId=" + reviewId + ", userId=" + userId + ", matchType=" + matchType + ", matchId="
 				+ matchId + ", title=" + title + ", content=" + content + ", image=" + image + ", deleted=" + deleted
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", matchDate=" + matchDate + ", sport="
+				+ sport + ", likeCount=" + likeCount + ", commentCount=" + commentCount + "]";
 	}
+	
+	
+	
+	
 }
 

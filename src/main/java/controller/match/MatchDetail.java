@@ -32,12 +32,12 @@ public class MatchDetail extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long num = Long.parseLong(request.getParameter("num"));
+		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 		
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		try {
 			
-			PersonalMatch pMatch = service.getPersmalMatchDetail(num);
+			PersonalMatch pMatch = service.getPersmalMatchDetail(personalMatchId);
 			System.out.println(pMatch);
 			request.setAttribute("personalMatch", pMatch);
 			request.getRequestDispatcher("/jsp/match/personalMatchDetail.jsp").forward(request, response);;			

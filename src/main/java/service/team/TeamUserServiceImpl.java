@@ -32,6 +32,10 @@ public class TeamUserServiceImpl implements TeamUserService {
 		param.put("userId", userId);
 		return teamUserDao.selectRole(param);
 	}
+	@Override
+	public List<Long> getTeamIdListByUserId(Long userId) throws Exception {
+		return teamUserDao.selectTeamIdListByUserId(userId);
+	}
 	
 	
 
