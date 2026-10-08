@@ -121,7 +121,7 @@
     	const btn = this;
     	// 주문번호 생성 (실제 운영 시에는 서버 DB에 주문 정보를 먼저 저장하고 생성된 번호를 바인딩 권장)
     	const orderId = "ORDER_" + new Date().getTime();
-    	const query = "?matchId=${param.matchId}&matchType=${isTeam ? 'team' : 'personal'}";
+    	const query = "?matchId=${param.matchId}&matchType=${isTeam ? 'team' : 'personal'}&teamId=${empty teamId ? 0 : teamId}";
     	
       	paymentWidget.requestPayment({
         	orderId: orderId,

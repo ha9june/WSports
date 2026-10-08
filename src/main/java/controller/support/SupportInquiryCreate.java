@@ -55,7 +55,7 @@ public class SupportInquiryCreate extends HttpServlet {
 		
 		InquiryService service = new InquiryServiceImpl();
 		try {
-			service.write(inquiry);
+			service.writeInquiry(inquiry);
 			response.sendRedirect(request.getContextPath()+"/jsp/support/inquiryList.jsp");
 		} catch(Exception e) {
 			e.printStackTrace();

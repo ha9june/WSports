@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.Team;
 import dto.TeamMatch;
 import dto.User;
 import service.team.TeamMatchParticipantService;
@@ -117,6 +118,14 @@ public class TeamMatchDetailView extends HttpServlet {
 			request.setAttribute("skills", skills);
 			//일시
 			//참가비
+			
+			try {
+				List<Team> myTeamList = teamService.getTeamInfoByUserManagerSport(user.getUserId(), teamMatch.getSport());
+				request.setAttribute("myTeamList", myTeamList);
+				request.setAttribute("isMyTeamList", true);
+			}catch(Exception e) {
+				request.setAttribute("isMyTeamList", false);
+			}
 			
 			request.setAttribute("t", teamMatch);
 			request.getRequestDispatcher("/jsp/team/teamMatchDetail.jsp").forward(request, response);

@@ -144,4 +144,19 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			throw e;
 		} 
 	}
+
+	@Override
+	public int updateStatusToClosed(Long teamMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teammatch.updateStatusToClosed", teamMatchId);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
 }

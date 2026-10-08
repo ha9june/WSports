@@ -6,7 +6,6 @@
     t              : 경기 정보 (TeamMatch)
     isHost         : 글쓴이 여부
     applied        : 상대 팀으로 신청한 경기인지
-    canCancelApply : 신청 취소 가능(결제 후 30분 안, 마감 전)
     myTeamList     : 내가 팀장/부팀장인 팀 목록
   t.status : 모집중 | 모집 마감 | 경기 종료 | 인원 미달 경기 취소 | 작성자 경기 취소
 --%>
@@ -280,11 +279,11 @@ $('#thumbs').on('click', '.subImg', function() {
 										관리 기능을 사용할 수 있어요.</p>
 								</div>
 							</c:when>
-							<c:otherwise>
+							<c:when test="${isMyTeamList}">
 								<div class="side-card">
-									<h2>팀 매칭 신청</h2>
+									<h2>팀 매칭 신청</h2> 
 									<div class="field mt-16">
-										<label class="field-label" for="myTeam">내 팀 선택</label>
+										<label class="field-label" for="myTeam">내 ${t.sport} 팀 선택</label>
 										<%-- TODO: 내가 팀장/부팀장인 팀 목록 (서블릿에서 myTeamList로 전달) --%>
 										<select class="select" id="myTeam" name="teamNo">
 											<c:forEach var="mt" items="${myTeamList}">
@@ -293,13 +292,36 @@ $('#thumbs').on('click', '.subImg', function() {
 											</c:forEach>
 										</select>
 									</div>
-									<p class="note">결제하면 바로 확정돼요. 결제 후 30분 안에는 취소할 수 있고, 이후에는
-										취소와 환불이 어려워요.</p>
+									<p class="note">결제하면 바로 확정돼요. 확정 후에는 취소와 환불이 어려워요.</p>
 									<div class="actions">
-										<a class="btn btn-primary"
-											href="${ctx}/payment/team-match?teamMatchId=${t.teamMatchId}"
-											data-auth>신청하기</a>
+										<a class="btn btn-primary" id="payBtn"
+										   href="${ctx}/payment/confirm?state=teamMatch&matchId=${t.teamMatchId}"
+										   data-auth>결제하기</a>
 									</div>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<div class="side-card">
+									<c:choose>
+										<%-- 비로그인 --%>
+										<c:when test="${empty sessionScope.user}">
+											<h2>팀 매칭 신청</h2>
+											<p class="sub">로그인 후 팀장 또는 부팀장 계정으로 신청할 수 있어요.</p>
+											<div class="actions">
+												<a class="btn btn-primary" href="${ctx}/auth/login" data-auth>로그인</a>
+											</div>
+										</c:when>
+										<%-- 로그인했지만 팀장/부팀장이 아님 --%>
+										<c:otherwise>
+											<h2>팀 매칭 신청</h2>
+											<p class="sub">팀 경기는 <b>팀장 또는 부팀장</b>만 신청할 수 있어요.</p>
+											<p class="note">팀원이라면 팀장이나 부팀장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
+											<div class="actions row">
+												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀 찾기</a>
+												<a class="btn btn-outline btn-sm" href="${ctx}/team/create">팀 만들기</a>
+											</div>
+										</c:otherwise>
+									</c:choose>
 								</div>
 							</c:otherwise>
 						</c:choose>
@@ -344,14 +366,7 @@ $('#thumbs').on('click', '.subImg', function() {
 										<a class="btn btn-outline btn-sm"
 											href="${ctx}/team-match/participants?teamMatchId=${t.teamMatchId}">참가
 											팀 확인</a>
-										<c:if test="${canCancelApply}">
-											<button type="button" class="btn btn-danger btn-sm"
-												data-modal-open="applyCancelModal">신청 취소</button>
-										</c:if>
-									</div>
-									<c:if test="${not canCancelApply}">
-										<p class="note">결제 후 30분이 지나 취소와 환불이 불가해요.</p>
-									</c:if>
+										<p class="note">경기가 확정되어 취소와 환불이 불가해요.</p>
 								</div>
 							</c:when>
 							<c:otherwise>
@@ -405,20 +420,6 @@ $('#thumbs').on('click', '.subImg', function() {
 		</div>
 	</div>
 </main>
-
-<%-- 상대 팀 신청 취소 --%>
-<div class="modal" id="applyCancelModal" role="dialog" aria-modal="true">
-	<div class="modal-card">
-		<h2 class="modal-title">팀 매칭 신청을 취소할까요?</h2>
-		<p class="modal-desc">결제 후 30분 안이라 전액 환불돼요.</p>
-		<form action="${ctx}/team-match/apply/cancel" method="post"
-			class="modal-actions" style="justify-content: flex-start">
-			<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
-			<button type="button" class="btn btn-primary" data-modal-close>닫기</button>
-			<button type="submit" class="btn btn-danger">신청 취소</button>
-		</form>
-	</div>
-</div>
 
 <%-- 작성자 경기 취소 (모집중) --%>
 <div class="modal" id="hostCancelModal" role="dialog" aria-modal="true">
@@ -474,4 +475,18 @@ window.addEventListener('resize', fixMap);
 if (window.ResizeObserver) {
     new ResizeObserver(fixMap).observe(mapContainer);
 }
+
+(function () {
+	var payBtn = document.getElementById('payBtn');
+	var myTeam = document.getElementById('myTeam');
+	if (!payBtn || !myTeam) return;
+
+	var baseHref = payBtn.getAttribute('href');
+
+	function syncHref() {
+		payBtn.setAttribute('href', baseHref + '&teamId=' + encodeURIComponent(myTeam.value));
+	}
+	syncHref();                              // 처음 선택된 팀도 반영
+	myTeam.addEventListener('change', syncHref);
+})();
 </script>

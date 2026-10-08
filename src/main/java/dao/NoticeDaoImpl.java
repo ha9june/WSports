@@ -75,5 +75,28 @@ public class NoticeDaoImpl implements NoticeDao {
 			e.printStackTrace();
 			throw e;
 		}	}
-
+	@Override
+	public List<Map<String, Object>> selectPinnedNoticeList(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.notice.selectPinnedNoticeList",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	@Override
+	public List<Map<String, Object>> selectNotPinnedNoticeList(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.notice.selectNotPinnedNoticeList",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	@Override
+	public Integer selectNoticeCnt(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.notice.selectNoticeCnt",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
 }

@@ -17,7 +17,7 @@ public class InquiryServiceImpl implements InquiryService {
 	}
 	
 	@Override
-	public void write(Inquiry inquiry) throws Exception {
+	public void writeInquiry(Inquiry inquiry) throws Exception {
 		inquiryDao.insertInquiry(inquiry);
 		
 	}

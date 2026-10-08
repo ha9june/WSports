@@ -102,16 +102,17 @@ public class TeamPaymentDaoImpl implements TeamPaymentDao {
 	}
 	//결제 내역 삽입
 	@Override
-	public void insertTeamPaymentParticipant(TeamPayment teamPayment, Long userId, Long matchId) throws Exception {
+	public void insertTeamPaymentParticipant(TeamPayment teamPayment, Long userId, Long matchId, Long teamId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			sqlSession.insert("mapper.teampayment.insertTeamPaymentParticipant", teamPayment);
+			sqlSession.insert("mapper.teampayment.insertTeamPaymentHistory", teamPayment);
 			
 			Map<String, Object> param = new HashMap<>();
 			param.put("userId", userId);
 			param.put("matchId", matchId);
 			param.put("paymentId", teamPayment.getPaymentId());
-			sqlSession.insert("mapper.teampayment.insertPaidTeamParticipant", param);
+			param.put("teamId", teamId);
+			sqlSession.insert("mapper.teampayment.insertTeamPaymentParticipant", param);
 			
 			sqlSession.commit();
 		} catch(Exception e) {

@@ -5,6 +5,7 @@ public class PageInfo {
 	private Integer allPage;  //더보기 페이지
 	private Integer startPage; //시작하는 페이지
 	private Integer endPage;   //끝나는 페이지
+	private Integer totalCnt;  //총 게시물 건수
 	
 	public PageInfo() {}
 	
@@ -42,5 +43,13 @@ public class PageInfo {
 
 	public void setEndPage(Integer endPage) {
 		this.endPage = endPage;
+	}
+	
+	public Integer getTotalCnt() {
+		return totalCnt;
+	}
+
+	public void setTotalCnt(Integer totalCnt) {
+		this.totalCnt = totalCnt;
 	}
 }

@@ -62,4 +62,53 @@
 		values
 		(#{title},#{content},now(), #{isPinned},#{adminId},#{type},0,null)
 	</insert>
+	
+	<select id="selectPinnedNoticeList" parameterType="Map" resultType="Map">
+		select n.notice_id, n.title, n.content, date_format(n.created_at, '%Y.%m.%d') as created_at, n.is_pinned, n.type, 
+				n.admin_id, n.updated_at, u.nickname
+		from notice n left join user u on u.user_id = n.admin_id
+		where (n.deleted = 0 or n.deleted is null) 
+			  and n.is_pinned = 1 
+			  <if test="type!=null">
+		  	  and n.type = #{type} 
+		  	  </if>
+		  	  <if test="keyword!=null and keyword!=''">
+		  	  and (n.title like concat('%', #{keyword}, '%') 
+		  	       or n.content like concat('%', #{keyword}, '%') 
+		  	       or u.nickname like concat('%', #{keyword}, '%')) 
+		  	  </if>
+		order by n.notice_id desc
+	</select>
+	
+	<select id="selectNotPinnedNoticeList" parameterType="Map" resultType="Map">
+		select n.notice_id, n.title, n.content, date_format(n.created_at, '%Y.%m.%d') as created_at, n.is_pinned, n.type, 
+				n.admin_id, n.updated_at, u.nickname
+		from notice n left join user u on u.user_id = n.admin_id
+		where (n.deleted = 0 or n.deleted is null) 
+			  and (n.is_pinned = 0 or n.is_pinned is null) 
+			  <if test="type != null">
+		  	  and n.type = #{type}
+		  	  </if>
+		  	  <if test="keyword!=null and keyword!=''">
+		  	  and (n.title like concat('%', #{keyword}, '%') 
+		  	       or n.content like concat('%', #{keyword}, '%') 
+		  	       or u.nickname like concat('%', #{keyword}, '%')) 
+		  	  </if>
+		order by n.notice_id desc limit #{row},#{limit}
+	</select>
+	
+	<select id="selectNoticeCnt" resultType="Integer" parameterType="Map">
+		select count(*) 
+		from notice n left join user u on u.user_id = n.admin_id 
+		where (n.deleted = 0 or n.deleted is null) 
+			  and (n.is_pinned = 0 or n.is_pinned is null)
+			  <if test="type != null">
+		  	  and n.type = #{type}
+		  	  </if>
+		      <if test="keyword!=null and keyword!=''">
+		  	  and (n.title like concat('%', #{keyword}, '%') 
+		  	  or n.content like concat('%', #{keyword}, '%') 
+		  	  or u.nickname like concat('%', #{keyword}, '%')) 
+		  	  </if>
+	</select>
 </mapper>
