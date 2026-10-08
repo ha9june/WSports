@@ -9,5 +9,6 @@ public interface ReviewDao {
 	 List<Review>selectReviewablePersonal(Long userId)throws Exception;
 	 List<Review>selectReviewableTeam(Long userId)throws Exception;
 	 List<Review>selectReviewList(Long userId)throws Exception;
+	 List<Review> selectNowReviewList() throws Exception;
 	
 }

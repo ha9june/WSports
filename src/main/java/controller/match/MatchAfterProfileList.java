@@ -9,23 +9,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.PersonalMatch;
 import dto.User;
 import service.match.PersonalMatchParticipantService;
 import service.match.PersonalMatchParticipantServiceImpl;
+import service.match.PersonalMatchService;
+import service.match.PersonalMatchServiceImpl;
 import util.AlertUtil;
 import util.CheckUtil;
 
 /**
- * Servlet implementation class PersonalMatchProfile
+ * Servlet implementation class MatchDetailAfterProfileList
  */
-@WebServlet("/match/detail/profile/list")
-public class MatchDetailProfileList extends HttpServlet {
+@WebServlet("/match/after/profile/list")
+public class MatchAfterProfileList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MatchDetailProfileList() {
+    public MatchAfterProfileList() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,16 +42,20 @@ public class MatchDetailProfileList extends HttpServlet {
 		    response.sendRedirect(request.getContextPath() + "/auth/login");
 		    return;
 		}
+		
 		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 		
-		
-		PersonalMatchParticipantService service = new PersonalMatchParticipantServiceImpl();
-		
+		PersonalMatchParticipantService pmpservice = new PersonalMatchParticipantServiceImpl();
+		PersonalMatchService pservice = new PersonalMatchServiceImpl();
+
 		try {
-			List<User> userList = service.getPersonalMatchParticipantList(personalMatchId);
+			List<User> userList = pmpservice.getPersonalMatchParticipantList(personalMatchId);
+			PersonalMatch pMatch = pservice.getPersmalMatchDetail(personalMatchId);			request.setAttribute("userList", userList);
 			request.setAttribute("userList", userList);
+			request.setAttribute("personalMatch", pMatch);
 			System.out.println(userList);
-			request.getRequestDispatcher("/jsp/match/personalMatchProfileList.jsp").forward(request, response);;
+			System.out.println(pMatch);
+			request.getRequestDispatcher("/jsp/match/personalMatchAfterProfileList.jsp").forward(request, response);;			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,15 +64,14 @@ public class MatchDetailProfileList extends HttpServlet {
 		}
 		
 		
-		
-	    
-		
+
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		//doGet(request, response);
 	}
 

@@ -39,6 +39,7 @@
 		SELECT
 		    u.user_id,
 		    u.nickname,
+		    p.attendance,
 		    COALESCE(AVG(r.score), 0) AS avg_rating_score
 		FROM personal_match_participant p
 		JOIN user u

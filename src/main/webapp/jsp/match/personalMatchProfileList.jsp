@@ -15,13 +15,12 @@
     <nav class="breadcrumb"><a href="${ctx}/jsp/mypage/myPagePersonalMatch.jsp">내 경기</a><span class="sep">›</span><span>참가자 프로필</span></nav>
     <div class="page-head">
       <h1 class="page-title">참가자 프로필</h1>
-      <p class="page-desc">토요일 저녁 풋살 한 판! · 현재 8명 / 정원 10명 · 최소 8명</p>
+      <p class="page-desc">${personalMatch.title} · 현재 ${personalMatch.currentPeople}명 / 정원 ${personalMatch.maxPeople}명 · 최소 ${personalMatch.minPeople}명</p>
     </div>
 
-    <h2 class="section-title">토요일 저녁 풋살 한 판!</h2>
-    <p class="t-11 t-brand" style="margin:6px 0 24px">참가자 8명 / 정원 10명</p>
+    <h2 class="section-title">${personalMatch.title}</h2>
+    <p class="t-11 t-brand" style="margin:6px 0 24px">참가자 ${personalMatch.currentPeople}명 / 정원 ${personalMatch.maxPeople}명</p>
 
-    <%-- TODO: <c:forEach var="p" items="${participantList}"> --%>
     <div class="people-grid">
        <c:forEach var="user" items="${userList}">
 	        <a class="person-row"
