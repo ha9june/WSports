@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import dto.PersonalMatch;
 import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
@@ -25,6 +26,7 @@ import service.payment.PaymentService;
 import service.payment.PaymentServiceImpl;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
+import util.CheckUtil;
 
 /**
  * Servlet implementation class PaymentHistoryList
@@ -46,6 +48,12 @@ public class TossPaymentController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		User user = CheckUtil.getLoginUser(request);
+		if (user == null) {
+		    response.sendRedirect(request.getContextPath() + "/auth/login");
+		    return;
+		}
+		
 		String state = request.getParameter("state");
 		if(state == null || state.isEmpty()) state = "match";
 		boolean isTeam = state.startsWith("teamMatch");
@@ -89,7 +97,10 @@ public class TossPaymentController extends HttpServlet {
 				request.setAttribute("teamId", Long.parseLong(teamIdParam));
 			} else {
 				PersonalMatchService personalMatchService = new PersonalMatchServiceImpl();
-				match = personalMatchService.getPersmalMatchDetail(matchId);
+				PersonalMatch pm = new PersonalMatch();
+				pm.setUserId(user.getUserId());
+				pm.setPersonalMatchId(matchId);
+				match = personalMatchService.getPersmalMatchDetail(pm);
 				totalAmount = paymentService.getPersonalMatchTotalAmount(matchId.intValue());
 			}
 
