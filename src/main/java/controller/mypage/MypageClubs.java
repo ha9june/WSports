@@ -82,13 +82,12 @@ public class MypageClubs extends HttpServlet {
 			}
 			request.setAttribute("match", list);
 			request.setAttribute("pageInfo", pageInfo);
-			request.setAttribute("status", status);
 			request.setAttribute("sport", sport);
 			request.setAttribute("state", state);
 			request.getRequestDispatcher("/jsp/mypage/myPageMyTeam.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "개인 경기 목록 조회 오류");
+			request.setAttribute("err", "팀 경기 목록 조회 오류");
 		}
 	}
 
