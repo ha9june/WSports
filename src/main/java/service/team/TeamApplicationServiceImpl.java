@@ -178,7 +178,6 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 			throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
-		param.put("status", status);
 		param.put("sport", sport);
 
 		int size = 5;
