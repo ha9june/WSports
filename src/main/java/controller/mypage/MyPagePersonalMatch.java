@@ -1,8 +1,6 @@
 package controller.mypage;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.YearMonth;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,14 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.util.SystemPropertyUtils;
 
 import dto.PersonalMatch;
 import dto.User;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import util.PageInfo;
 import service.match.PersonalMatchService;
@@ -84,6 +79,7 @@ public class MyPagePersonalMatch extends HttpServlet {
 	        request.setAttribute("startDate", startDate);
 			request.setAttribute("endDate", endDate);
 			request.setAttribute("matchDates", service.getMyPagePersonalMatchDates(userId, status, sport));
+			
 			request.getRequestDispatcher("/jsp/mypage/myPagePersonalMatch.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
