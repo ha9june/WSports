@@ -28,34 +28,39 @@
 		<p style="text-align: center; color: #9ca3af; padding: 40px 0;">작성한
 			후기가 없어요.</p>
 	</c:if>
-	<c:forEach var="r" items="${Review}">
-		<div class="my-review"
-			data-href="${ctx}/review/detail?id=${r.reviewId}">
-			<div>
-				<p class="cat">
-					<c:out value="${r.sport}" />
-				</p>
-				<strong><c:out value="${r.title}" /></strong>
-				<p>
-					연결 경기 ·
-					<c:out value="${r.matchTitle}" />
-				</p>
-				<p>
-					<c:out value="${r.content}" />
-				</p>
-				♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}
-			</div>
+	<!-- 1. ?id= 를 ?reviewId= 로 변경하고, style="cursor:pointer;"과 onclick 이벤트를 추가합니다. -->
+<c:forEach var="r" items="${Review}">
+    <div class="my-review"
+         data-href="${ctx}/review/detail?reviewId=${r.reviewId}" 
+         style="cursor: pointer;" 
+         onclick="if(event.target.tagName !== 'BUTTON' && event.target.tagName !== 'A') location.href=this.dataset.href;">
+        
+        <div>
+            <p class="cat">
+                <c:out value="${r.sport}" />
+            </p>
+            <strong><c:out value="${r.title}" /></strong>
+            <p>
+                연결 경기 ·
+                <c:out value="${r.matchTitle}" />
+            </p>
+            <p>
+                <c:out value="${r.content}" />
+            </p>
+            ♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}
+        </div>
 
-			<div class="aside">
-				<time>${r.createdAt}</time>
-				<a class="btn btn-primary btn-sm"
-					href="${ctx}/review/edit?reviewId=${r.reviewId}">수정</a>
-				<button type="button"
-					class="btn btn-danger btn-sm btn-review-delete"
-					data-id="${r.reviewId}">삭제</button>
-			</div>
-		</div>
-	</c:forEach>
+        <div class="aside">
+            <time>${r.createdAt}</time>
+            <a class="btn btn-primary btn-sm"
+               href="${ctx}/review/edit?reviewId=${r.reviewId}">수정</a>
+            <button type="button"
+                    class="btn btn-danger btn-sm btn-review-delete"
+                    data-id="${r.reviewId}">삭제</button>
+        </div>
+    </div>
+</c:forEach>
+
 
 	<c:if test="${pageInfo.allPage > 1}">
 		<nav class="pagination">
@@ -88,27 +93,40 @@
 	</div>
 
 	<script>
-		$(function() {
-			$(document).on('click', '.btn-review-delete', function(e) {
-				e.stopPropagation(); // 카드 클릭 이동 방지
-				$('#deleteReviewId').val($(this).data('id'));
-				$('#reviewDeleteModal').addClass('is-open');
-			});
+    $(function() {
+        // [추가] 후기 리스트 카드 클릭 시 상세 페이지로 이동 처리
+        $(document).on('click', '.my-review', function(e) {
+            // 클릭된 요소가 버튼(삭제)이나 링크(수정)가 아닐 때만 이동
+            if (!$(e.target).is('button, a')) {
+                var url = $(this).data('href');
+                if (url) {
+                    location.href = url;
+                }
+            }
+        });
 
-			$('#confirmReviewDelete').on('click', function() {
-				$.post('${ctx}/mypage/reviews', {
-					action : 'delete',
-					reviewId : $('#deleteReviewId').val()
-				}, function(res) {
-					res = res.trim();
-					if (res === 'ok')
-						location.reload();
-					else if (res === 'login')
-						location.href = '${ctx}/login';
-					else
-						showToast('삭제에 실패했어요.');
-				});
+        // 기존 삭제 모달 기능 유지
+        $(document).on('click', '.btn-review-delete', function(e) {
+            e.stopPropagation(); // 카드 클릭 이동 이벤트 버블링 방지
+            $('#deleteReviewId').val($(this).data('id'));
+            $('#reviewDeleteModal').addClass('is-open');
+        });
+
+        $('#confirmReviewDelete').on('click', function() {
+			$.post('${ctx}/mypage/reviews', {
+				action : 'delete',
+				reviewId : $('#deleteReviewId').val()
+			}, function(res) {
+				res = res.trim();
+				if (res === 'ok')
+					location.reload();
+				else if (res === 'login')
+					location.href = '${ctx}/login';
+				else
+					showToast('삭제에 실패했어요.');
 			});
 		});
-	</script>
+    });
+</script>
+
 	<%@ include file="/jsp/common/footer.jsp"%>

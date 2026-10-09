@@ -11,7 +11,7 @@ public interface ReviewDao {
 	 List<Review>selectReviewableTeam(Long userId)throws Exception;
 	 List<Review>selectReviewList(Long userId)throws Exception;
 	 List<Review> selectNowReviewList() throws Exception;
-	
+	 Review selectReviewDetail(Long reviewId)throws Exception;
 	 List<Map<String, Object>> selectMainReviewList(Map<String, Object> param) throws Exception;
 	 Integer selectReviewListCnt(Map<String,Object>param)throws Exception;
 	 List<Map<String, Object>> selectMypageReviewList(Map<String, Object> param)throws Exception;

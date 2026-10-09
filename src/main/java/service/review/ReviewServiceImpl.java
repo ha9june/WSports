@@ -18,6 +18,7 @@ import dao.ReviewLikeDao;
 import dao.ReviewLikeDaoImpl;
 import dao.UserDao;
 import dao.UserDaoImpl;
+import dto.Comment;
 import dto.Review;
 import util.PageInfo;
 
@@ -207,4 +208,14 @@ public class ReviewServiceImpl implements ReviewService {
 		    param.put("reviewId", reviewId);
 		    return reviewDao.selectMyReview(param);
 		}
+
+	@Override
+	public Review getReviewDetail(Long reviewId) throws Exception {
+		return reviewDao.selectReviewDetail(reviewId);
+	}
+
+	@Override
+	public List<Comment> getCommentList(Long reviewId) throws Exception {
+		return commentDao.selectReviewComments(reviewId);
+	}
 }

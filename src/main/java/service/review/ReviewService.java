@@ -1,5 +1,6 @@
 package service.review;
 
+import dto.Comment;
 import dto.Review;
 import util.PageInfo;
 
@@ -14,6 +15,8 @@ public interface ReviewService {
 	List<Review>getReviewableMatches(long userId)throws Exception;
 	List<Review>getReviewList(Long userId)throws Exception;
 	
+	Review getReviewDetail(Long reviewId)throws Exception;
+	 List<Comment> getCommentList(Long reviewId)throws Exception;
 	List<Review> getNowReviewList() throws Exception;
 	List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status) throws Exception;
 	List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId)throws Exception;

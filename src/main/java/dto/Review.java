@@ -31,10 +31,23 @@ public class Review {
     public int getCommentCount() { return commentCount; }
     public void setCommentCount(int commentCount) { this.commentCount = commentCount; }
     
+    private String nickname;
+    private String createdAtStr;
     
     
-    
-    public Review() {
+    public String getCreatedAtStr() {
+		return createdAtStr;
+	}
+	public void setCreatedAtStr(String createdAtStr) {
+		this.createdAtStr = createdAtStr;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public Review() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

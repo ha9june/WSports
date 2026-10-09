@@ -3,9 +3,31 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.comment">
 	<select id="selectReviewCommentCnt" resultType="map">
-		SELECT review_id AS reviewId, COUNT(*) AS cnt
+		SELECT review_id
+		AS reviewId, COUNT(*) AS cnt
 		FROM `comment`
 		WHERE deleted = 0
-		GROUP BY review_id
+		GROUP BY
+		review_id
 	</select>
+	<select id="selectReviewComments" parameterType="long"
+		resultType="Comment">
+		SELECT
+		c.comment_id AS commentId,
+		c.parent_comment_id AS parentCommentId,
+		c.review_id AS reviewId,
+		c.user_id AS userId,
+		c.content AS content,
+		c.created_at AS createdAt,
+		DATE_FORMAT(c.created_at, '%m/%d %H:%i') AS createdAtStr,
+		c.updated_at AS updatedAt,
+		c.deleted AS deleted,
+		COALESCE(u.nickname, '탈퇴한 회원') AS nickname
+		FROM comment c
+		LEFT JOIN user u ON c.user_id = u.user_id
+		WHERE c.review_id = #{reviewId}
+		AND c.deleted = 0
+		ORDER BY c.comment_id ASC
+	</select>
+
 </mapper>

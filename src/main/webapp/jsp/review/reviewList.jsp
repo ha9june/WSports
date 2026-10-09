@@ -53,7 +53,7 @@
 					<div class="review-grid">
 						<c:forEach var="r" items="${g.value}">
 							<a class="review-card"
-								href="${ctx}/review/detail?id=${r.reviewId}">
+								href="${ctx}/review/detail?reviewId=${r.reviewId}">
 								<div class="thumb">
 									<c:out value="${r.title}" />
 								</div>
@@ -86,7 +86,7 @@
 				<div class="review-grid">
 					<c:forEach var="r" items="${reviewList}">
 						<a class="review-card"
-							href="${ctx}/review/detail?id=${r.reviewId}">
+							href="${ctx}/review/detail?reviewId=${r.reviewId}">
 							<div class="thumb">
 								<c:choose>
 									<c:when test="${not empty r.image}">

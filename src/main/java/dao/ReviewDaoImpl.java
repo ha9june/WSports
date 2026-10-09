@@ -141,4 +141,14 @@ public class ReviewDaoImpl implements ReviewDao {
 	        sqlSession.close();
 	    }
 	}
+
+	@Override
+	public Review selectReviewDetail(Long reviewId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectOne("mapper.review.selectReviewDetail", reviewId);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 }
