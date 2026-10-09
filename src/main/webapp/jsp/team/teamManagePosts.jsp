@@ -27,7 +27,7 @@
 		<div class="page-head" style="margin-bottom: 24px">
 			<h1 class="page-title">${infoMode ? '서울 풋살 크루' : '팀 관리'}</h1>
 			<p class="page-desc">${infoMode ? '팀원과 팀 작성글을 확인할 수 있어요.' : '가입 신청, 팀원, 팀 작성글 관리를 한 화면에서 전환합니다.'}</p>
-		</div>
+		</div> 
 		<nav class="tabs">
 					<a class="tab ${manageTab eq 'application' ? 'is-active' : ''}"
 						href="${ctx}/team/manage/applications">가입 신청</a>
