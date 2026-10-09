@@ -9,24 +9,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.Team;
+import dto.TeamMatch;
 import dto.User;
-import service.team.TeamService;
-import service.team.TeamServiceImpl;
+import service.team.TeamMatchService;
+import service.team.TeamMatchServiceImpl;
 import service.team.TeamUserService;
 import service.team.TeamUserServiceImpl;
 
 /**
- * Servlet implementation class TeamManageMembers
+ * Servlet implementation class TeamManagePosts
  */
-@WebServlet("/team/manage/members")
-public class TeamManageMembers extends HttpServlet {
+@WebServlet("/team/manage/posts")
+public class TeamManagePosts extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TeamManageMembers() {
+    public TeamManagePosts() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,33 +35,29 @@ public class TeamManageMembers extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {			
+		try {
 			User user = (User)request.getSession().getAttribute("user");
+			Long teamId = Long.parseLong(request.getParameter("teamId"));
 			if(user == null) {
-				response.sendRedirect(request.getContextPath()+"/autu/login");
+				response.sendRedirect(request.getContextPath()+"/auth/login");
 				return;
 			}
 			TeamUserService teamUserService = new TeamUserServiceImpl();
-			TeamService teamService = new TeamServiceImpl();
-			Long teamId = Long.parseLong(request.getParameter("teamId"));
 			String teamRole = teamUserService.getRole(teamId, user.getUserId());
-			if( !(teamRole.equals("CAPTAIN")  || teamRole.equals("VICE_CAPTAIN")) ) {
+			if(!(teamRole.equals("CAPTAIN") || teamRole.equals("VICE_CAPTAIN"))) {
 				request.setAttribute("error", "팀 관리는 팀장 혹은 부팀장만 이용 가능합니다.");
-				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+				request.getRequestDispatcher("/jsp/common/error.jsp");
 				return;
 			}
-			Team team = teamService.getTeam(teamId);
-			List<User> userList = teamUserService.getTeamUserList(teamId);
+			TeamMatchService teamMatchService = new TeamMatchServiceImpl();
+			List<TeamMatch> teamMatchList = teamMatchService.getTeamMatchList(teamId);
 			
-			request.setAttribute("team", team);
-			request.setAttribute("userList", userList);
+			request.setAttribute("teamMatchList", teamMatchList);
 			request.setAttribute("teamId", teamId);
 			request.setAttribute("teamRole", teamRole);
-			
-			request.getRequestDispatcher("/jsp/team/teamManageMembers.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
-			request.setAttribute("error", "팀원 관리 접속중 에러 발생");
+			request.setAttribute("error", "팀 작성글 관리 접속 중 에러 발생");
 			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 	}
