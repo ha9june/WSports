@@ -17,31 +17,30 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 <style>
 /* 본문 박스 내부의 상단 여백을 대폭 줄임 */
 .review-detail {
-    padding-top: 10px !important; /* 기존 여백을 무시하고 10px로 밀착 (원하는 만큼 조절 가능) */
+	padding-top: 10px !important; /* 기존 여백을 무시하고 10px로 밀착 (원하는 만큼 조절 가능) */
 }
 
 /* 혹시 본문 p 태그 자체에 위쪽 마진이 들어가 있을 경우를 방지 */
 .review-detail p.text {
-    margin-top: 0px !important;
-    padding-top: 0px !important;
+	margin-top: 0px !important;
+	padding-top: 0px !important;
 }
 /* 2. 이미지를 감싸는 부모 박스 (.photos) 공백 조절 및 3정렬 정렬 */
 .review-detail .photos {
-    margin-top: 8px !important;    /* 본문 글씨와 사진 사이의 간격을 밀착 (원하는 만큼 조절 가능) */
-    padding-top: 0px !important;
-    
-    display: flex !important;
-    flex-wrap: wrap !important;    /* 사진이 3개 이상일 때 다음 줄로 넘김 */
-    gap: 8px !important;           /* 사진과 사진 사이의 간격 */
+	margin-top: 8px !important; /* 본문 글씨와 사진 사이의 간격을 밀착 (원하는 만큼 조절 가능) */
+	padding-top: 0px !important;
+	display: flex !important;
+	flex-wrap: wrap !important; /* 사진이 3개 이상일 때 다음 줄로 넘김 */
+	gap: 8px !important; /* 사진과 사진 사이의 간격 */
 }
 
 /* 3. 각각의 이미지 태그 크기 제어 (3등분) */
 .review-detail .photos img {
-    /* gap 공간을 제외하고 정확히 한 줄에 3개씩 분할하기 위한 계산식 */
-    width: calc((100% - 16px) / 3) !important; 
-    height: 230px !important;      /* 사진 높이를 고정하여 균일하게 정렬 */
-    object-fit: cover !important;  /* 사진이 고정 높이에서 찌그러지지 않게 방지 */
-    border-radius: 4px;            /* 사진 모서리를 약간 둥글게 (선택사항) */
+	/* gap 공간을 제외하고 정확히 한 줄에 3개씩 분할하기 위한 계산식 */
+	width: calc(( 100% - 16px)/3) !important;
+	height: 230px !important; /* 사진 높이를 고정하여 균일하게 정렬 */
+	object-fit: cover !important; /* 사진이 고정 높이에서 찌그러지지 않게 방지 */
+	border-radius: 4px; /* 사진 모서리를 약간 둥글게 (선택사항) */
 }
 </style>
 
@@ -78,7 +77,8 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 			<c:if test="${not empty review.image}">
 				<div class="photos">
 					<c:forEach var="img" items="${fn:split(review.image, ',')}">
-						<img src="${pageContext.request.contextPath}/uploads/${img}" alt="경기 사진" />
+						<img src="${pageContext.request.contextPath}/uploads/${img}"
+							alt="경기 사진" />
 					</c:forEach>
 				</div>
 			</c:if>
@@ -99,12 +99,19 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				</c:choose>
 			</div>
 			<div class="acts">
-				<button type="button" class="fav-btn sq" data-fav data-auth
-					aria-label="좋아요">${heart}</button>
+				<div class="like-wrapper"
+					style="display: inline-flex; align-items: center; gap: 6px;">
+					<button type="button"
+						class="fav-btn sq ${isFavorite ? 'is-on' : ''}" data-fav
+						data-type="review" data-auth aria-label="좋아요">${heart}</button>
+					<span id="likeCountDisplay" class="t-14" style="font-weight: bold;">${likeCount}</span>
+				</div>
+
 				<c:choose>
 					<c:when test="${state eq 'mine'}">
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/review/modify?reviewId=${review.reviewId}">수정</a>
+							href="${ctx}/review/edit?reviewId=${review.reviewId}">수정</a>
+
 						<button type="button" class="btn btn-danger-soft btn-sm"
 							data-modal-open="deleteModal">삭제</button>
 					</c:when>
@@ -114,8 +121,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 							data-auth>신고</a>
 					</c:otherwise>
 				</c:choose>
-				<span class="btn btn-outline btn-sm">댓글
-					${fn:length(content)}</span>
+				<span class="btn btn-outline btn-sm">댓글 ${fn:length(content)}</span>
 			</div>
 		</section>
 
@@ -152,12 +158,60 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 	<div class="modal-card sm">
 		<h2 class="modal-title">후기를 삭제할까요?</h2>
 		<p class="modal-desc">삭제한 후기와 댓글은 복구할 수 없어요.</p>
-		<form method="post" action="${ctx}/review/delete"
-			class="modal-actions">
-			<input type="hidden" name="reviewId" value="${review.reviewId}">
+		<form id="deleteReviewForm" class="modal-actions">
+			<input type="hidden" id="reviewId" name="reviewId"
+				value="${review.reviewId}">
 			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
-			<button type="submit" class="btn btn-danger">삭제</button>
+			<button type="button" class="btn btn-danger" id="confirmReviewDelete">삭제</button>
 		</form>
 	</div>
 </div>
+
+<script>
+$(function() {
+    $(".review-detail .fav-btn").off("click").click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var $btn = $(this);
+        var isCurrentlyOn = $btn.hasClass("is-on");
+        
+        $.ajax({
+            url : '${ctx}/review/detail', 
+            type : 'post',
+            dataType : 'text',
+            data : { 
+                reviewId : "${review.reviewId}", 
+                heart : !isCurrentlyOn          
+            },
+            success : function(result) {
+                result = result.trim();
+                
+                var $countSpan = $("#likeCountDisplay");
+                var currentCount = parseInt($countSpan.text()) || 0;
+                
+                if (result === 'insert') {
+                    $btn.addClass("is-on");
+                    showToast("게시글에 좋아요를 눌렀어요.");
+                    $countSpan.text(currentCount + 1); 
+                }
+                else if (result === 'delete') {
+                    $btn.removeClass("is-on");
+                    showToast("게시글에 좋아요를 취소했어요.");
+                    $countSpan.text(Math.max(0, currentCount - 1)); 
+                }
+                else if (result === 'login') {
+                    showToast("로그인이 필요합니다.");
+                }
+                else {
+                    showToast("처리에 실패했습니다.");
+                }
+            },
+            error : function() {
+                showToast("서버 통신 중 오류가 발생했습니다.");
+            }
+        });
+    });
+});
+</script>
 <%@ include file="/jsp/common/footer.jsp"%>

@@ -25,7 +25,7 @@
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
 .pill-info.bd {
-	border: 1px solid var(--ds-info-bd);
+	border: 1px solid var(- -ds-info-bd);
 }
 
 .match-left img {
@@ -56,21 +56,22 @@
 }
 /* 경기 있는 날: 글자 강조 + 점 */
 .cal .flatpickr-day.has-match {
-    font-weight: 700 !important;
-    color: #1a6bff !important;
-    position: relative !important;
+	font-weight: 700 !important;
+	color: #1a6bff !important;
+	position: relative !important;
 }
+
 .cal .flatpickr-day.has-match::after {
-    content: "" !important;
-    position: absolute !important;
-    width: 5px !important;
-    height: 5px !important;
-    left: 50% !important;
-    bottom: 5px !important;
-    transform: translateX(-50%) !important;
-    border-radius: 50% !important;
-    background: #1a6bff !important;
-    display: block !important;
+	content: "" !important;
+	position: absolute !important;
+	width: 5px !important;
+	height: 5px !important;
+	left: 50% !important;
+	bottom: 5px !important;
+	transform: translateX(-50%) !important;
+	border-radius: 50% !important;
+	background: #1a6bff !important;
+	display: block !important;
 }
 
 .cal .flatpickr-calendar.inline {
@@ -111,22 +112,26 @@
 	.cal .flatpickr-day.endRange.has-match {
 	color: #fff !important;
 }
-.cal .flatpickr-day.selected,
-.cal .flatpickr-day.startRange,
-.cal .flatpickr-day.endRange {
-    border-radius: 50% !important;
+
+.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
+	{
+	border-radius: 50% !important;
 }
+
 .cal .flatpickr-day.inRange {
-    border-radius: 0 !important;
+	border-radius: 0 !important;
 }
+
 .cal .flatpickr-day.startRange:not(.endRange) {
-    border-radius: 50% 0 0 50% !important;
+	border-radius: 50% 0 0 50% !important;
 }
+
 .cal .flatpickr-day.endRange:not(.startRange) {
-    border-radius: 0 50% 50% 0 !important;
+	border-radius: 0 50% 50% 0 !important;
 }
+
 .cal .flatpickr-day.startRange.endRange {
-    border-radius: 50% !important;
+	border-radius: 50% !important;
 }
 
 /* 범위 안의 경기 있는 날 점 색 */
@@ -245,8 +250,8 @@
 			<div class="act-head"></div>
 			<c:if test="${empty match}">
 				<p class="empty-msg"
-					style="text-align: center; color: #9ca3af; padding: 60px 0;">참가 경기가
-					없습니다.</p>
+					style="text-align: center; color: #9ca3af; padding: 60px 0;">참가
+					경기가 없습니다.</p>
 			</c:if>
 
 
@@ -312,8 +317,9 @@
 									pattern="#,###" />원</span>
 							<!-- 관심경기 추가/제거 -->
 							<button type="button" class="fav-btn ${m.favorite ? 'is-on':''}"
-								data-match-id="${m.personalMatchId}" data-match-type="Personal"
-								aria-label="관심 경기">${heart}</button>
+								data-fav data-type="match" data-match-id="${m.personalMatchId}"
+								data-match-type="Personal" aria-label="관심 경기">${heart}</button>
+
 						</div>
 						<div class="btns">
 							<a class="btn btn-primary btn-xs"
