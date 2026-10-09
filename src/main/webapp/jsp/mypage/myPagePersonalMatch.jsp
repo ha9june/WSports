@@ -55,7 +55,7 @@
 /* 경기 있는 날: 글자 강조 + 점 */
 .cal .flatpickr-day.has-match {
     font-weight: 700 !important;
-    color: #ff7a29 !important;
+    color: #1a6bff !important;
     position: relative !important;
 }
 .cal .flatpickr-day.has-match::after {
@@ -67,7 +67,7 @@
     bottom: 5px !important;
     transform: translateX(-50%) !important;
     border-radius: 50% !important;
-    background: #ff7a29 !important;
+    background: #1a6bff !important;
     display: block !important;
 }
 
@@ -129,7 +129,7 @@
 
 /* 범위 안의 경기 있는 날 점 색 */
 .cal .flatpickr-day.inRange.has-match::after {
-	background: #ff7a29 !important;
+	background: #1a6bff !important;
 }
 
 /* 범위 선택 중(.startRange, .endRange)일 때는 가독성을 위해 흰색 점으로 변경 */
