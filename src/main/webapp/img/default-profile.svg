@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="기본 프로필">
+  <!-- 배경: 모서리 없이 꽉 채움 (원형 처리는 CSS의 border-radius가 담당) -->
+  <rect width="96" height="96" fill="#E6F4EC"/>
+  <!-- 머리 -->
+  <circle cx="48" cy="38" r="12" fill="#22A06B"/>
+  <!-- 몸 -->
+  <path d="M26 72c0-12 9.5-18 22-18s22 6 22 18v1c0 2.2-1.8 4-4 4H30c-2.2 0-4-1.8-4-4z" fill="#22A06B"/>
+</svg>

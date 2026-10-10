@@ -55,6 +55,8 @@ public class TeamManagePosts extends HttpServlet {
 			request.setAttribute("teamMatchList", teamMatchList);
 			request.setAttribute("teamId", teamId);
 			request.setAttribute("teamRole", teamRole);
+			
+			request.getRequestDispatcher("/jsp/team/teamManagePosts.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", "팀 작성글 관리 접속 중 에러 발생");

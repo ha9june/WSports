@@ -167,7 +167,7 @@
 					</c:choose>
 
 					<div class="myteam-card"
-						data-href="${ctx}/jsp/team/teamDetail.jsp?teamId=${m.teamId}"
+						data-href="${ctx}/team/detail/view?teamId=${m.teamId}"
 						style="display: flex; align-items: center; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff;">
 
 						<div class="sport-circle ${sportCls}">

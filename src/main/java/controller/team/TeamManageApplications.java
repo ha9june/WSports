@@ -48,7 +48,6 @@ public class TeamManageApplications extends HttpServlet {
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
 			Team team = teamService.getTeam(teamId);
 			request.setAttribute("team", team);
-			System.out.println("팀 가입신청 관리 서블릿에서 팀 콘솔에 찍기"+team);
 			
 			List<TeamApplication> taList = teamApplicationService.getApplicationList(teamId);
 			request.setAttribute("teamApplicationList", taList);

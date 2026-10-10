@@ -38,7 +38,7 @@ public class TeamManageMembers extends HttpServlet {
 		try {			
 			User user = (User)request.getSession().getAttribute("user");
 			if(user == null) {
-				response.sendRedirect(request.getContextPath()+"/autu/login");
+				response.sendRedirect(request.getContextPath()+"/auth/login");
 				return;
 			}
 			TeamUserService teamUserService = new TeamUserServiceImpl();

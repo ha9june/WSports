@@ -25,16 +25,16 @@
 				풋살 크루</a><span class="sep">›</span><span>관리</span>
 		</nav>
 		<div class="page-head" style="margin-bottom: 24px">
-			<h1 class="page-title">${infoMode ? '서울 풋살 크루' : '팀 관리'}</h1>
-			<p class="page-desc">${infoMode ? '팀원과 팀 작성글을 확인할 수 있어요.' : '가입 신청, 팀원, 팀 작성글 관리를 한 화면에서 전환합니다.'}</p>
+			<h1 class="page-title">팀 관리</h1>
+			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리를 한 화면에서 전환합니다.</p>
 		</div> 
 		<nav class="tabs">
 					<a class="tab ${manageTab eq 'application' ? 'is-active' : ''}"
-						href="${ctx}/team/manage/applications">가입 신청</a>
+						href="${ctx}/team/manage/applications?teamId=${teamId}">가입 신청</a>
 					<a class="tab ${manageTab eq 'members' ? 'is-active' : ''}"
-						href="${ctx}/team/manage/members">팀원 관리</a>
+						href="${ctx}/team/manage/members?teamId=${teamId}">팀원 관리</a>
 					<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
-						href="${ctx}/jsp/team/teamManagePosts.jsp">팀 작성글 관리</a>
+						href="${ctx}/team/manage/posts?teamId=${teamId}">팀 작성글 관리</a>
 		</nav>
 		<h2 class="sub-title">작성한 팀 매칭 글</h2>
 		<p class="section-desc" style="margin-bottom: 24px">내 팀이 작성한 상대 팀
@@ -42,7 +42,7 @@
 		<div class="post-grid">
 			<c:forEach var="tm" items="${teamMatchList}">
 				<div class="post-card"
-					data-href="${ctx}/team-match/detail/view?teamMatchId?${tm.teamMatchId}">
+					data-href="${ctx}/team-match/detail/view?teamMatchId=${tm.teamMatchId}">
 					<p class="ttl" style="margin: 0">
 						${tm.title} 
 						<c:choose>
@@ -52,7 +52,7 @@
 							<c:when test="${tm.status eq '모집 마감' or tm.status eq '경기 종료' }">
 								<span class="pill pill-info">${tm.status}</span>
 							</c:when>
-							<c:when test="${tm.status eq '인원 미달 경기 취소' or status eq '작성자 경기 취소'}">
+							<c:when test="${tm.status eq '인원 미달 경기 취소' or tm.status eq '작성자 경기 취소'}">
 								<span class="pill pill-danger">경기 취소</span>
 							</c:when>
 						</c:choose>
