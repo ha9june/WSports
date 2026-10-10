@@ -69,7 +69,7 @@ public class MypageTeamMatches extends HttpServlet {
 	    
 		try {
 			List<TeamMatch> list = service.selectMypageTeamMatchList(pageInfo,userId,status,sport,startDate,endDate);
-			request.setAttribute("match", list);
+			request.setAttribute("matchList", list);
 	        request.setAttribute("pageInfo", pageInfo);
 	        request.setAttribute("status", status);
 	        request.setAttribute("sport", sport);

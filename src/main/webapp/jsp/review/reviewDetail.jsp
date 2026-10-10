@@ -76,7 +76,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 					<small>작성자 · ${review.createdAtStr}</small>
 				</div>
 			</div>
-			<p class="mt-8" style="text-align: right;">
+			<p class="mt-8">
 				<span class="sport-chip" style="height: 26px"><c:out
 						value="${review.sport}" /></span>
 			</p>

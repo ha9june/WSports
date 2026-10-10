@@ -63,6 +63,7 @@ public class MypageMatchesSaved extends HttpServlet {
 				page = 1;
 			}
 		}
+		
 		String status = request.getParameter("status");
 		String sport = request.getParameter("sport");
 		//달력
@@ -71,13 +72,15 @@ public class MypageMatchesSaved extends HttpServlet {
 		if (startDate != null && startDate.isEmpty()) startDate = null;
 		if (endDate != null && endDate.isEmpty()) endDate = null;
 		PageInfo pageInfo = new PageInfo(page);
-		PersonalMatchService servie = new PersonalMatchServiceImpl();
+		PersonalMatchService service = new PersonalMatchServiceImpl();
 		
 		try {
-
-			List<PersonalMatch> list = servie.selectMyPageFavoriteList(pageInfo,userId,status,sport,startDate,endDate);
+			Map<String, Object> p = new HashMap<>();
+			p.put("userId", user.getUserId());
+			List<String> favDates = service.getMyPageFavoriteDates(p);
+			request.setAttribute("favDates", favDates);
+			List<Map<String, Object>> list = service.selectMyPageFavoriteList(pageInfo, userId, status, sport, startDate, endDate);
 			request.setAttribute("match", list);
-			request.setAttribute("favDates",servie.getMyPageFavoriteDates(userId, status, sport));
 			request.setAttribute("pageInfo", pageInfo);
 			request.setAttribute("status", status);
 			request.setAttribute("sport", sport);

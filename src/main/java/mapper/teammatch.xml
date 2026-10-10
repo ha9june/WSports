@@ -10,58 +10,60 @@
 	</select>
 	<select id="selectMypageTeamMatchList" parameterType="map"
 		resultType="TeamMatch">
-		select m.*, p.status AS participantStatus,
-		CASE WHEN f.favorite_id IS 
-		NULL THEN 0 ELSE 1 END AS favorite
-		from team_match_participant p
-		join team_match m 
-		on m.team_match_id = p.team_match_id
-		LEFT JOIN favorite f
-		on f.match_id = m.team_match_id
+		SELECT m.*,
+		m.match_people AS maxPeople,
+		(SELECT COUNT(*) FROM team_match_participant tp
+		WHERE tp.team_match_id = m.team_match_id
+		AND tp.status = '결제완료') AS currentPeople,
+		CASE WHEN EXISTS (
+		SELECT 1 FROM favorite f
+		WHERE f.match_id = m.team_match_id
 		AND f.user_id = #{userId}
 		AND f.match_type = 'Team'
-		WHERE p.user_id = #{userId}
-		AND p.status IN ('결제완료')
-		<if test="sport != null and sport != ''">
-			AND m.sport = #{sport}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
+		) THEN 1 ELSE 0 END AS favorite
+		FROM team_match m
+		WHERE EXISTS (
+		SELECT 1 FROM
+		team_match_participant p
+		WHERE
+		p.team_match_id = m.team_match_id
+		AND
+		p.user_id = #{userId}
+		AND p.status
+		IN ('결제완료')
+		)
+		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
+		<if test="status != null and status != ''"> AND m.status = #{status} </if>
 		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 		ORDER BY m.match_date, m.team_match_id
-		LIMIT #{size} OFFSET
-		#{offset}
+		LIMIT #{size} OFFSET #{offset}
 	</select>
 	<select id="selectMypageTeamMatchCnt" parameterType="map"
 		resultType="int">
 		SELECT COUNT(*)
-		FROM team_match_participant p
-		JOIN team_match m ON m.team_match_id = p.team_match_id
-		WHERE p.user_id = #{userId}
+		FROM team_match m
+		WHERE EXISTS (
+		SELECT 1 FROM
+		team_match_participant p
+		WHERE p.team_match_id = m.team_match_id
+		AND
+		p.user_id = #{userId}
 		AND p.status IN ('결제완료')
-		<if test="month != null and month != ''">
-			AND m.match_date &gt;= STR_TO_DATE(CONCAT(#{month},
-			'-01'), '%Y-%m-%d')
-			AND m.match_date &lt;
-			DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'),
-			'%Y-%m-%d'), INTERVAL 1
-			MONTH)
-		</if>
-		<if test="sport != null and sport != ''">
-			AND m.sport = #{sport}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
+		)
+		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
+		<if test="status != null and status != ''"> AND m.status = #{status} </if>
+		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
+		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 	</select>
 	<select id="selectMyPageTeamMatchDates" parameterType="map"
 		resultType="string">
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
-		FROM team_match_participant p
+		FROM
+		team_match_participant p
 		JOIN team_match m
-		ON m.team_match_id = p.team_match_id
+		ON m.team_match_id =
+		p.team_match_id
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료')
 		<if test="sport != null and sport != ''">
@@ -73,312 +75,391 @@
 
 	</select>
 
-	<insert id="insertTeamMatch" parameterType="teammatch" useGeneratedKeys="true" keyProperty="teamMatchId">
+	<insert id="insertTeamMatch" parameterType="teammatch"
+		useGeneratedKeys="true" keyProperty="teamMatchId">
 		insert into team_match
 		(
-			title, content, user_id, team_id, created_at,
-			match_date, sport, start_time, end_time,
-			place_name, address, latitude, longitude,
-			participation_fee, fee, deadline,
-			skill_intro, skill_beginner, skill_intermediate, skill_advanced,
-			age_20s, age_30s, age_40s, age_50s, age_60_plus,
-			gender, match_people, deleted,
-			image1, image2, image3, image4, image5,
-			status, region
+		title,
+		content, user_id, team_id, created_at,
+		match_date, sport, start_time,
+		end_time,
+		place_name, address, latitude, longitude,
+		participation_fee,
+		fee, deadline,
+		skill_intro, skill_beginner, skill_intermediate,
+		skill_advanced,
+		age_20s, age_30s, age_40s, age_50s, age_60_plus,
+		gender, match_people, deleted,
+		image1, image2, image3, image4, image5,
+		status, region
 		)
 		values
 		(
-			#{title}, #{content}, #{userId}, #{teamId}, now(),
-			#{matchDate}, #{sport}, #{startTime}, #{endTime},
-			#{placeName}, #{address}, #{latitude}, #{longitude},
-			#{participationFee}, #{fee}, #{deadline},
-			#{skillIntro}, #{skillBeginner}, #{skillIntermediate}, #{skillAdvanced},
-			#{age20s}, #{age30s}, #{age40s}, #{age50s}, #{age60Plus},
-			#{gender}, #{matchPeople}, false,
-			#{image1}, #{image2}, #{image3}, #{image4}, #{image5},
-			'모집중', #{region}
+		#{title}, #{content}, #{userId}, #{teamId},
+		now(),
+		#{matchDate}, #{sport}, #{startTime}, #{endTime},
+		#{placeName},
+		#{address}, #{latitude}, #{longitude},
+		#{participationFee}, #{fee},
+		#{deadline},
+		#{skillIntro}, #{skillBeginner}, #{skillIntermediate},
+		#{skillAdvanced},
+		#{age20s}, #{age30s}, #{age40s}, #{age50s},
+		#{age60Plus},
+		#{gender}, #{matchPeople}, false,
+		#{image1}, #{image2},
+		#{image3}, #{image4}, #{image5},
+		'모집중', #{region}
 		)
 	</insert>
 
-	
+
 	<!-- 관리자 사이드바 팀 경기수 세기 -->
 	<select id="selectMatchCntTeam" resultType="Long">
-	 select count(*) from team_match
-	 where status = '종료'
+		select count(*) from
+		team_match
+		where status = '종료'
 	</select>
-	
-	<select id="selectTeamMatchUser" parameterType="Map" resultType="teammatch">
-		select tm.team_match_id, tm.title, tm.content, tm.user_id, tm.team_id, tm.created_at,
-		       tm.match_date, tm.sport, tm.start_time, tm.end_time,
-		       tm.place_name, tm.address, tm.latitude, tm.longitude,
-		       tm.participation_fee, tm.fee, tm.deadline,
-		       tm.skill_intro, tm.skill_beginner, tm.skill_intermediate, tm.skill_advanced,
-		       tm.age_20s, tm.age_30s, tm.age_40s, tm.age_50s, tm.age_60_plus,
-		       tm.gender, tm.match_people,
-		       tm.image1, tm.image2, tm.image3, tm.image4, tm.image5,
-		       tm.status, tm.region,
-		       t.team_name          as team_name,
-		       u.nickname           as host_nickname,
-		       u.profile_image      as host_profile_image,
-		       u.bio                as host_bio,
-		       u.preferred_region1  as host_region1,
-		       u.preferred_region2  as host_region2,
-		       u.preferred_region3  as host_region3,
-		       tu.team_role         as host_role,
-		       case tm.sport
-		           when '축구/풋살' then u.soccer_skill
-		           when '농구'      then u.basketball_skill
-		           when '테니스'    then u.tennis_skill
-		           when '배드민턴'  then u.badminton_skill
-		       end as host_skill,
-		   (select round(avg(r.score), 1) from user_rating r where r.receiver_user_id = tm.user_id) as host_rating,
-	       (select count(*)               from user_rating r where r.receiver_user_id = tm.user_id) as host_rating_count,
-	       (select round(avg(tr.score), 1) from team_rating tr where tr.team_id = tm.team_id) as team_rating,
-	       (select count(*)                from team_rating tr where tr.team_id = tm.team_id) as team_rating_count,
-	       (select count(*) > 0
-			 from favorite f
-			 where f.user_id = #{userId}
-			   and f.match_type = 'Team'
-			   and f.match_id = tm.team_match_id) as favorite
+
+	<select id="selectTeamMatchUser" parameterType="Map"
+		resultType="teammatch">
+		select tm.team_match_id, tm.title, tm.content, tm.user_id,
+		tm.team_id, tm.created_at,
+		tm.match_date, tm.sport, tm.start_time,
+		tm.end_time,
+		tm.place_name, tm.address, tm.latitude, tm.longitude,
+		tm.participation_fee, tm.fee, tm.deadline,
+		tm.skill_intro,
+		tm.skill_beginner, tm.skill_intermediate, tm.skill_advanced,
+		tm.age_20s, tm.age_30s, tm.age_40s, tm.age_50s, tm.age_60_plus,
+		tm.gender, tm.match_people,
+		tm.image1, tm.image2, tm.image3, tm.image4,
+		tm.image5,
+		tm.status, tm.region,
+		t.team_name as team_name,
+		u.nickname as
+		host_nickname,
+		u.profile_image as host_profile_image,
+		u.bio as host_bio,
+		u.preferred_region1 as host_region1,
+		u.preferred_region2 as
+		host_region2,
+		u.preferred_region3 as host_region3,
+		tu.team_role as
+		host_role,
+		case tm.sport
+		when '축구/풋살' then u.soccer_skill
+		when '농구' then
+		u.basketball_skill
+		when '테니스' then u.tennis_skill
+		when '배드민턴' then
+		u.badminton_skill
+		end as host_skill,
+		(select round(avg(r.score), 1) from
+		user_rating r where r.receiver_user_id =
+		tm.user_id) as host_rating,
+		(select count(*) from user_rating r where r.receiver_user_id =
+		tm.user_id) as
+		host_rating_count,
+		(select round(avg(tr.score), 1) from
+		team_rating tr where tr.team_id =
+		tm.team_id) as team_rating,
+		(select
+		count(*) from team_rating tr where tr.team_id = tm.team_id) as
+		team_rating_count,
+		(select count(*) > 0
+		from favorite f
+		where f.user_id =
+		#{userId}
+		and f.match_type = 'Team'
+		and f.match_id = tm.team_match_id)
+		as favorite
 		from team_match tm
-		join team t on t.team_id = tm.team_id
+		join team
+		t on t.team_id = tm.team_id
+		join
+		user u on u.user_id = tm.user_id
+		left
+		join team_user tu
+		on tu.team_id =
+		tm.team_id
+		and tu.user_id = tm.user_id
+		and tu.withdrawn = 0
+		where
+		tm.team_match_id = #{teamMatchId}
+		and coalesce(tm.deleted, 0) = 0
+	</select>
+
+	<select id="selectTeamMatchNotUser" parameterType="Long"
+		resultType="teammatch">
+		select tm.team_match_id, tm.title, tm.content, tm.user_id,
+		tm.team_id, tm.created_at,
+		tm.match_date, tm.sport, tm.start_time,
+		tm.end_time,
+		tm.place_name, tm.address, tm.latitude, tm.longitude,
+		tm.participation_fee, tm.fee, tm.deadline,
+		tm.skill_intro,
+		tm.skill_beginner, tm.skill_intermediate, tm.skill_advanced,
+		tm.age_20s, tm.age_30s, tm.age_40s, tm.age_50s, tm.age_60_plus,
+		tm.gender, tm.match_people,
+		tm.image1, tm.image2, tm.image3, tm.image4,
+		tm.image5,
+		tm.status, tm.region,
+		t.team_name as team_name,
+		u.nickname as
+		host_nickname,
+		u.profile_image as host_profile_image,
+		u.bio as host_bio,
+		u.preferred_region1 as host_region1,
+		u.preferred_region2 as
+		host_region2,
+		u.preferred_region3 as host_region3,
+		tu.team_role as
+		host_role,
+		case tm.sport
+		when '축구/풋살' then u.soccer_skill
+		when '농구' then
+		u.basketball_skill
+		when '테니스' then u.tennis_skill
+		when '배드민턴' then
+		u.badminton_skill
+		end as host_skill,
+		(select round(avg(r.score), 1) from
+		user_rating r where r.receiver_user_id =
+		tm.user_id) as host_rating,
+		(select count(*) from user_rating r where r.receiver_user_id =
+		tm.user_id) as
+		host_rating_count,
+		(select round(avg(tr.score), 1) from
+		team_rating tr where tr.team_id =
+		tm.team_id) as team_rating,
+		(select
+		count(*) from team_rating tr where tr.team_id = tm.team_id) as
+		team_rating_count
+		from team_match tm
+		join team t on t.team_id =
+		tm.team_id
 		join user u on u.user_id = tm.user_id
 		left join team_user tu
-		       on tu.team_id = tm.team_id
-		      and tu.user_id = tm.user_id
-		      and tu.withdrawn = 0
+		on tu.team_id = tm.team_id
+		and tu.user_id = tm.user_id
+		and tu.withdrawn
+		= 0
 		where tm.team_match_id = #{teamMatchId}
-		  and coalesce(tm.deleted, 0) = 0
-	</select>
-	
-	<select id="selectTeamMatchNotUser" parameterType="Long" resultType="teammatch">
-		select tm.team_match_id, tm.title, tm.content, tm.user_id, tm.team_id, tm.created_at,
-		       tm.match_date, tm.sport, tm.start_time, tm.end_time,
-		       tm.place_name, tm.address, tm.latitude, tm.longitude,
-		       tm.participation_fee, tm.fee, tm.deadline,
-		       tm.skill_intro, tm.skill_beginner, tm.skill_intermediate, tm.skill_advanced,
-		       tm.age_20s, tm.age_30s, tm.age_40s, tm.age_50s, tm.age_60_plus,
-		       tm.gender, tm.match_people,
-		       tm.image1, tm.image2, tm.image3, tm.image4, tm.image5,
-		       tm.status, tm.region,
-		       t.team_name          as team_name,
-		       u.nickname           as host_nickname,
-		       u.profile_image      as host_profile_image,
-		       u.bio                as host_bio,
-		       u.preferred_region1  as host_region1,
-		       u.preferred_region2  as host_region2,
-		       u.preferred_region3  as host_region3,
-		       tu.team_role         as host_role,
-		       case tm.sport
-		           when '축구/풋살' then u.soccer_skill
-		           when '농구'      then u.basketball_skill
-		           when '테니스'    then u.tennis_skill
-		           when '배드민턴'  then u.badminton_skill
-		       end as host_skill,
-		   (select round(avg(r.score), 1) from user_rating r where r.receiver_user_id = tm.user_id) as host_rating,
-	       (select count(*)               from user_rating r where r.receiver_user_id = tm.user_id) as host_rating_count,
-	       (select round(avg(tr.score), 1) from team_rating tr where tr.team_id = tm.team_id) as team_rating,
-	       (select count(*)                from team_rating tr where tr.team_id = tm.team_id) as team_rating_count
-		from team_match tm
-		join team t on t.team_id = tm.team_id
-		join user u on u.user_id = tm.user_id
-		left join team_user tu
-		       on tu.team_id = tm.team_id
-		      and tu.user_id = tm.user_id
-		      and tu.withdrawn = 0
-		where tm.team_match_id = #{teamMatchId}
-		  and coalesce(tm.deleted, 0) = 0
+		and coalesce(tm.deleted, 0)
+		= 0
 	</select>
 
 	<select id="selectExpiredRecruiting" resultType="teammatch">
-		select team_match_id, team_id, user_id, title
-		from team_match where status = '모집중' and deadline &lt;= now() and coalesce(deleted, 0) = 0
+		select
+		team_match_id, team_id, user_id, title
+		from team_match where status =
+		'모집중' and deadline &lt;= now() and coalesce(deleted, 0) = 0
 	</select>
-	
+
 	<update id="updateStatusToNoOpponentCancel" parameterType="Long">
 		update team_match
 		set status = '인원 미달 경기 취소'
-		where team_match_id = #{teamMatchId}
-		  and status = '모집중'
-		  and coalesce(deleted, 0) = 0
+		where team_match_id =
+		#{teamMatchId}
+		and status = '모집중'
+		and coalesce(deleted, 0) = 0
 	</update>
-	
-	<select id="selectTeamMatchListForSearch" parameterType="teamsearchcondition" resultType="teammatch">
-	    select tm.*,
-	    <choose>
-            <when test="userId != null">
-                exists (
-                    select 1 from favorite f
-                    where f.user_id = #{userId}
-                      and f.match_id = tm.team_match_id
-                      and f.match_type = 'Team'
-                ) as favorite
-            </when>
-            <otherwise>
-                false as favorite
-            </otherwise>
-        </choose>
-    	from team_match tm
-	    where coalesce(deleted, 0) = 0
+
+	<select id="selectTeamMatchListForSearch"
+		parameterType="teamsearchcondition" resultType="teammatch">
+		select tm.*,
+		<choose>
+			<when test="userId != null">
+				exists (
+				select 1 from favorite f
+				where f.user_id =
+				#{userId}
+				and f.match_id = tm.team_match_id
+				and f.match_type = 'Team'
+				) as favorite
+			</when>
+			<otherwise>
+				false as favorite
+			</otherwise>
+		</choose>
+		from team_match tm
+		where coalesce(deleted, 0) = 0
 		AND status = '모집중'
 
-	    <if test="sports != null and sports.length > 0">
-	        AND sport IN
-	        <foreach collection="sports" item="s" open="(" separator="," close=")">#{s}</foreach>
-	    </if>
-	
-	    <if test="regions != null and regions.length > 0">
-	        AND region IN
-	        <foreach collection="regions" item="r" open="(" separator="," close=")">#{r}</foreach>
-	    </if>
-		<if test="gender != null and gender != '성별 무관'">
-		    AND (gender = #{gender} OR gender = '성별 무관')
+		<if test="sports != null and sports.length > 0">
+			AND sport IN
+			<foreach collection="sports" item="s" open="(" separator=","
+				close=")">#{s}</foreach>
 		</if>
-	    <if test="days != null and days.length > 0">
-	        AND DAYOFWEEK(match_date) IN
-	        <foreach collection="days" item="d" open="(" separator="," close=")">
-	            <choose>
-	                <when test="d == '일'">1</when>
-	                <when test="d == '월'">2</when>
-	                <when test="d == '화'">3</when>
-	                <when test="d == '수'">4</when>
-	                <when test="d == '목'">5</when>
-	                <when test="d == '금'">6</when>
-	                <when test="d == '토'">7</when>
-	                <otherwise>0</otherwise>
-	            </choose>
-	        </foreach>
-	    </if>
-	    <if test="skills != null and skills.length > 0">
-	        AND (
-	        <foreach collection="skills" item="s" separator=" OR ">
-	            <choose>
-	                <when test="s == '입문'">skill_intro = true</when>
-	                <when test="s == '초급'">skill_beginner = true</when>
-	                <when test="s == '중급'">skill_intermediate = true</when>
-	                <when test="s == '상급'">skill_advanced = true</when>
-	                <otherwise>1 = 0</otherwise>
-	            </choose>
-	        </foreach>
-	        )
-	    </if>
-	    <if test="ages != null and ages.length > 0">
-	        AND (
-	            age_60_plus = true
-	            <foreach collection="ages" item="a">
-	                <choose>
-	                    <when test="a == '20대'">OR age_20s = true</when>
-	                    <when test="a == '30대'">OR age_30s = true</when>
-	                    <when test="a == '40대'">OR age_40s = true</when>
-	                    <when test="a == '50대 이상'">OR age_50s = true</when>
-	                </choose>
-	            </foreach>
-	        )
-	    </if>
-	    <if test="matchPeople != null and matchPeople.length > 0">
-	        AND match_people IN
-	        <foreach collection="matchPeople" item="p" open="(" separator="," close=")">#{p}</foreach>
-	    </if>
-	    <if test="startDate != null">
-	        AND match_date &gt;= #{startDate}
-	    </if>
-	    <if test="endDate != null">
-	        AND match_date &lt;= #{endDate}
-	    </if>
-	    <if test="keyword != null">
-	        AND (title LIKE CONCAT('%', #{keyword}, '%')
-	          OR content LIKE CONCAT('%', #{keyword}, '%'))
-	    </if>
-	
-	    order by created_at desc, team_match_id desc
-	    limit #{offset}, 5
-	</select>
-	
-	<select id="selectTeamMatchListForSearchCnt" parameterType="teamsearchcondition" resultType="int">
-	    select count(*)
-    	from team_match
-	    where coalesce(deleted, 0) = 0
-		AND status = '모집중'
 
-	    <if test="sports != null and sports.length > 0">
-	        AND sport IN
-	        <foreach collection="sports" item="s" open="(" separator="," close=")">#{s}</foreach>
-	    </if>
-	
-	    <if test="regions != null and regions.length > 0">
-	        AND region IN
-	        <foreach collection="regions" item="r" open="(" separator="," close=")">#{r}</foreach>
-	    </if>
-		<if test="gender != null and gender != '성별 무관'">
-		    AND (gender = #{gender} OR gender = '성별 무관')
+		<if test="regions != null and regions.length > 0">
+			AND region IN
+			<foreach collection="regions" item="r" open="(" separator=","
+				close=")">#{r}</foreach>
 		</if>
-	    <if test="days != null and days.length > 0">
-	        AND DAYOFWEEK(match_date) IN
-	        <foreach collection="days" item="d" open="(" separator="," close=")">
-	            <choose>
-	                <when test="d == '일'">1</when>
-	                <when test="d == '월'">2</when>
-	                <when test="d == '화'">3</when>
-	                <when test="d == '수'">4</when>
-	                <when test="d == '목'">5</when>
-	                <when test="d == '금'">6</when>
-	                <when test="d == '토'">7</when>
-	                <otherwise>0</otherwise>
-	            </choose>
-	        </foreach>
-	    </if>
-	    <if test="skills != null and skills.length > 0">
-	        AND (
-	        <foreach collection="skills" item="s" separator=" OR ">
-	            <choose>
-	                <when test="s == '입문'">skill_intro = true</when>
-	                <when test="s == '초급'">skill_beginner = true</when>
-	                <when test="s == '중급'">skill_intermediate = true</when>
-	                <when test="s == '상급'">skill_advanced = true</when>
-	                <otherwise>1 = 0</otherwise>
-	            </choose>
-	        </foreach>
-	        )
-	    </if>
-	    <if test="ages != null and ages.length > 0">
-	        AND (
-	            age_60_plus = true
-	            <foreach collection="ages" item="a">
-	                <choose>
-	                    <when test="a == '20대'">OR age_20s = true</when>
-	                    <when test="a == '30대'">OR age_30s = true</when>
-	                    <when test="a == '40대'">OR age_40s = true</when>
-	                    <when test="a == '50대 이상'">OR age_50s = true</when>
-	                </choose>
-	            </foreach>
-	        )
-	    </if>
-	    <if test="matchPeople != null and matchPeople.length > 0">
-	        AND match_people IN
-	        <foreach collection="matchPeople" item="p" open="(" separator="," close=")">#{p}</foreach>
-	    </if>
-	    <if test="startDate != null">
-	        AND match_date &gt;= #{startDate}
-	    </if>
-	    <if test="endDate != null">
-	        AND match_date &lt;= #{endDate}
-	    </if>
-	    <if test="keyword != null">
-	        AND (title LIKE CONCAT('%', #{keyword}, '%')
-	          OR content LIKE CONCAT('%', #{keyword}, '%'))
-	    </if>
+		<if test="gender != null and gender != '성별 무관'">
+			AND (gender = #{gender} OR gender = '성별 무관')
+		</if>
+		<if test="days != null and days.length > 0">
+			AND DAYOFWEEK(match_date) IN
+			<foreach collection="days" item="d" open="(" separator=","
+				close=")">
+				<choose>
+					<when test="d == '일'">1</when>
+					<when test="d == '월'">2</when>
+					<when test="d == '화'">3</when>
+					<when test="d == '수'">4</when>
+					<when test="d == '목'">5</when>
+					<when test="d == '금'">6</when>
+					<when test="d == '토'">7</when>
+					<otherwise>0</otherwise>
+				</choose>
+			</foreach>
+		</if>
+		<if test="skills != null and skills.length > 0">
+			AND (
+			<foreach collection="skills" item="s" separator=" OR ">
+				<choose>
+					<when test="s == '입문'">skill_intro = true</when>
+					<when test="s == '초급'">skill_beginner = true</when>
+					<when test="s == '중급'">skill_intermediate = true</when>
+					<when test="s == '상급'">skill_advanced = true</when>
+					<otherwise>1 = 0</otherwise>
+				</choose>
+			</foreach>
+			)
+		</if>
+		<if test="ages != null and ages.length > 0">
+			AND (
+			age_60_plus = true
+			<foreach collection="ages" item="a">
+				<choose>
+					<when test="a == '20대'">OR age_20s = true</when>
+					<when test="a == '30대'">OR age_30s = true</when>
+					<when test="a == '40대'">OR age_40s = true</when>
+					<when test="a == '50대 이상'">OR age_50s = true</when>
+				</choose>
+			</foreach>
+			)
+		</if>
+		<if test="matchPeople != null and matchPeople.length > 0">
+			AND match_people IN
+			<foreach collection="matchPeople" item="p" open="("
+				separator="," close=")">#{p}</foreach>
+		</if>
+		<if test="startDate != null">
+			AND match_date &gt;= #{startDate}
+		</if>
+		<if test="endDate != null">
+			AND match_date &lt;= #{endDate}
+		</if>
+		<if test="keyword != null">
+			AND (title LIKE CONCAT('%', #{keyword}, '%')
+			OR content
+			LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+
+		order by created_at desc, team_match_id desc
+		limit #{offset}, 5
 	</select>
-	
-	<select id="selectTeamIdByMatchId" parameterType="Long" resultType="Long">
-		select team_id from team_match where team_match_id = #{matchId}
+
+	<select id="selectTeamMatchListForSearchCnt"
+		parameterType="teamsearchcondition" resultType="int">
+		select count(*)
+		from team_match
+		where coalesce(deleted, 0) = 0
+		AND status
+		= '모집중'
+
+		<if test="sports != null and sports.length > 0">
+			AND sport IN
+			<foreach collection="sports" item="s" open="(" separator=","
+				close=")">#{s}</foreach>
+		</if>
+
+		<if test="regions != null and regions.length > 0">
+			AND region IN
+			<foreach collection="regions" item="r" open="(" separator=","
+				close=")">#{r}</foreach>
+		</if>
+		<if test="gender != null and gender != '성별 무관'">
+			AND (gender = #{gender} OR gender = '성별 무관')
+		</if>
+		<if test="days != null and days.length > 0">
+			AND DAYOFWEEK(match_date) IN
+			<foreach collection="days" item="d" open="(" separator=","
+				close=")">
+				<choose>
+					<when test="d == '일'">1</when>
+					<when test="d == '월'">2</when>
+					<when test="d == '화'">3</when>
+					<when test="d == '수'">4</when>
+					<when test="d == '목'">5</when>
+					<when test="d == '금'">6</when>
+					<when test="d == '토'">7</when>
+					<otherwise>0</otherwise>
+				</choose>
+			</foreach>
+		</if>
+		<if test="skills != null and skills.length > 0">
+			AND (
+			<foreach collection="skills" item="s" separator=" OR ">
+				<choose>
+					<when test="s == '입문'">skill_intro = true</when>
+					<when test="s == '초급'">skill_beginner = true</when>
+					<when test="s == '중급'">skill_intermediate = true</when>
+					<when test="s == '상급'">skill_advanced = true</when>
+					<otherwise>1 = 0</otherwise>
+				</choose>
+			</foreach>
+			)
+		</if>
+		<if test="ages != null and ages.length > 0">
+			AND (
+			age_60_plus = true
+			<foreach collection="ages" item="a">
+				<choose>
+					<when test="a == '20대'">OR age_20s = true</when>
+					<when test="a == '30대'">OR age_30s = true</when>
+					<when test="a == '40대'">OR age_40s = true</when>
+					<when test="a == '50대 이상'">OR age_50s = true</when>
+				</choose>
+			</foreach>
+			)
+		</if>
+		<if test="matchPeople != null and matchPeople.length > 0">
+			AND match_people IN
+			<foreach collection="matchPeople" item="p" open="("
+				separator="," close=")">#{p}</foreach>
+		</if>
+		<if test="startDate != null">
+			AND match_date &gt;= #{startDate}
+		</if>
+		<if test="endDate != null">
+			AND match_date &lt;= #{endDate}
+		</if>
+		<if test="keyword != null">
+			AND (title LIKE CONCAT('%', #{keyword}, '%')
+			OR content
+			LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
 	</select>
-	
+
+	<select id="selectTeamIdByMatchId" parameterType="Long"
+		resultType="Long">
+		select team_id from team_match where team_match_id =
+		#{matchId}
+	</select>
+
 	<update id="updateStatusToClosed" parameterType="Long">
-	    update team_match
-	    set status = '모집 마감',
-	        updated_at = now()
-	    where team_match_id = #{teamMatchId}
-	      and status = '모집중'
-	      and coalesce(deleted, 0) = 0
+		update
+		team_match
+		set status = '모집 마감',
+		updated_at = now()
+		where team_match_id =
+		#{teamMatchId}
+		and status = '모집중'
+		and coalesce(deleted, 0) = 0
 	</update>
 </mapper>

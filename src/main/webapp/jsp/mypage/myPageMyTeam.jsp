@@ -17,18 +17,18 @@
 .sport-circle {
 	width: 64px;
 	height: 64px;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	margin-right: 16px;
 	flex-shrink: 0;
+	background: none !important;
+	border-radius: 0;
+	display: block;
 }
 
 .sport-circle img {
-	width: 44px;
-	height: 44px;
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
+	display: block;
 }
 
 .sc-football {
@@ -78,19 +78,19 @@
 					<c:choose>
 						<c:when test="${m.sport eq '축구/풋살'}">
 							<c:set var="sportCls" value="sc-football" />
-							<c:set var="sportImg" value="art-football.png" />
+							<c:set var="sportImg" value="team-football.png" />
 						</c:when>
 						<c:when test="${m.sport eq '농구'}">
 							<c:set var="sportCls" value="sc-basketball" />
-							<c:set var="sportImg" value="art-basketball.png" />
+							<c:set var="sportImg" value="team-basketball.png" />
 						</c:when>
 						<c:when test="${m.sport eq '테니스'}">
 							<c:set var="sportCls" value="sc-tennis" />
-							<c:set var="sportImg" value="art-tennis.png" />
+							<c:set var="sportImg" value="team-tennis.png" />
 						</c:when>
 						<c:when test="${m.sport eq '배드민턴'}">
 							<c:set var="sportCls" value="sc-badminton" />
-							<c:set var="sportImg" value="art-badminton.png" />
+							<c:set var="sportImg" value="team-badminton.png" />
 						</c:when>
 						<c:otherwise>
 							<c:set var="sportCls" value="sc-default" />
@@ -146,19 +146,19 @@
 					<c:choose>
 						<c:when test="${m.sport eq '축구/풋살'}">
 							<c:set var="sportCls" value="sc-football" />
-							<c:set var="sportImg" value="art-football.png" />
+							<c:set var="sportImg" value="team-football.png" />
 						</c:when>
 						<c:when test="${m.sport eq '농구'}">
 							<c:set var="sportCls" value="sc-basketball" />
-							<c:set var="sportImg" value="art-basketball.png" />
+							<c:set var="sportImg" value="team-basketball.png" />
 						</c:when>
 						<c:when test="${m.sport eq '테니스'}">
 							<c:set var="sportCls" value="sc-tennis" />
-							<c:set var="sportImg" value="art-tennis.png" />
+							<c:set var="sportImg" value="team-tennis.png" />
 						</c:when>
 						<c:when test="${m.sport eq '배드민턴'}">
 							<c:set var="sportCls" value="sc-badminton" />
-							<c:set var="sportImg" value="art-badminton.png" />
+							<c:set var="sportImg" value="team-badminton.png" />
 						</c:when>
 						<c:otherwise>
 							<c:set var="sportCls" value="sc-default" />

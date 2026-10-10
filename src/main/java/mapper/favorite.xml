@@ -27,53 +27,125 @@
 
 
 	<select id="selectMyPageFavoriteList" parameterType="map"
-		resultType="personalmatch">
-		SELECT m.*
+		resultType="map">
+		SELECT
+		t.matchType,
+		t.matchId,
+		t.title,
+		t.sport,
+		t.status,
+		t.matchDate,
+		t.startTime,
+		t.endTime,
+		t.placeName,
+		t.participationFee,
+		t.maxPeople,
+		t.minPeople,
+		t.currentPeople
+		FROM (
+		SELECT
+		'Personal' AS matchType,
+		m.personal_match_id AS matchId,
+		m.title,
+		m.sport,
+		m.status,
+		m.match_date AS matchDate,
+		m.start_time AS startTime,
+		m.end_time AS endTime,
+		m.place_name AS placeName,
+		m.participation_fee AS participationFee,
+		m.max_people AS maxPeople,
+		m.min_people AS minPeople,
+		(SELECT COUNT(*) FROM personal_match_participant pp WHERE
+		pp.personal_match_id = m.personal_match_id AND pp.status = '결제완료') AS
+		currentPeople
 		FROM favorite f
 		JOIN personal_match m ON m.personal_match_id = f.match_id
-		WHERE f.user_id = #{userId}
-		AND f.match_type = 'Personal'
-		<if test="sport != null and sport != ''">
-			AND m.sport = #{sport}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
-		<if test="startDate != null and startDate != ''">
-			AND m.match_date &gt;= #{startDate}
-		</if>
-		<if test="endDate != null and endDate != ''">
-			AND m.match_date &lt;= #{endDate}
-		</if>
-		ORDER BY m.match_date, m.personal_match_id
-		LIMIT #{size} OFFSET
-		#{offset}
-	</select>
-
-	<select id="selectMyPageFavoriteCnt" parameterType="map"
-		resultType="int">
-		SELECT COUNT(*)
-		FROM favorite f
-		JOIN personal_match m ON
-		m.personal_match_id = f.match_id
 		WHERE f.user_id = #{userId}
 		AND f.match_type = 'Personal'
 		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
 		<if test="status != null and status != ''"> AND m.status = #{status} </if>
 		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
-	</select>
-	
-	<select id="selectMyPageFavoriteDates" parameterType="map"
-		resultType="string">
-		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
+		UNION ALL
+		SELECT
+		'Team' AS matchType,
+		m.team_match_id AS matchId,
+		m.title,
+		m.sport,
+		m.status,
+		m.match_date AS matchDate,
+		m.start_time AS startTime,
+		m.end_time AS endTime,
+		m.place_name AS placeName,
+		m.participation_fee AS participationFee,
+		m.match_people AS maxPeople, /* 정원인 match_people을 maxPeople로 */
+		0 AS minPeople, /* 팀 매치는 최소 인원이 없으므로 반드시 0 처리 */
+		(SELECT COUNT(*) FROM team_match_participant tp WHERE tp.team_match_id =
+		m.team_match_id AND tp.status = '결제완료') AS currentPeople
 		FROM favorite f
-		JOIN personal_match m ON m.personal_match_id = f.match_id
-		WHERE
-		f.user_id = #{userId}
-		AND f.match_type = 'Personal'
+		JOIN team_match m ON m.team_match_id = f.match_id
+		WHERE f.user_id = #{userId}
+		AND f.match_type = 'Team'
 		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
 		<if test="status != null and status != ''"> AND m.status = #{status} </if>
+		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
+		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
+		) t
+		ORDER BY t.matchDate ASC, t.matchType ASC, t.matchId ASC
+		LIMIT #{size} OFFSET #{offset}
+	</select>
+
+	<select id="selectMyPageFavoriteCnt" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*) FROM (
+		SELECT 'Personal' AS matchType,
+		m.personal_match_id AS matchId,
+		m.sport, m.status, m.match_date AS
+		matchDate
+		FROM favorite f
+		JOIN personal_match
+		m ON m.personal_match_id =
+		f.match_id
+		WHERE f.user_id = #{userId} AND
+		f.match_type = 'Personal'
+
+		UNION ALL
+
+		SELECT 'Team' AS matchType,
+		m.team_match_id AS matchId,
+		m.sport, m.status, m.match_date AS matchDate
+		FROM favorite f
+		JOIN
+		team_match m
+		ON m.team_match_id = f.match_id
+		WHERE f.user_id = #{userId}
+		AND
+		f.match_type = 'Team'
+		) t
+		WHERE 1 = 1
+		<if test="sport != null and sport != ''"> AND t.sport = #{sport} </if>
+		<if test="status != null and status != ''"> AND t.status = #{status} </if>
+		<if test="startDate != null and startDate != ''"> AND t.matchDate &gt;= #{startDate} </if>
+		<if test="endDate != null and endDate != ''"> AND t.matchDate &lt;= #{endDate} </if>
+	</select>
+
+	<select id="selectMyPageFavoriteDates" parameterType="map"
+		resultType="string">
+		SELECT DISTINCT DATE_FORMAT(d, '%Y-%m-%d') FROM (
+		SELECT
+		m.match_date AS d
+		FROM favorite f JOIN personal_match m ON
+		m.personal_match_id = f.match_id
+		WHERE f.user_id = #{userId} AND
+		f.match_type = 'Personal'
+		UNION ALL
+		SELECT m.match_date AS d
+		FROM
+		favorite f JOIN team_match m ON m.team_match_id = f.match_id
+		WHERE
+		f.user_id = #{userId} AND f.match_type = 'Team'
+		) t
 	</select>
 
 

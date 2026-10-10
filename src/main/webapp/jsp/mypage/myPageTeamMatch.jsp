@@ -244,8 +244,7 @@
 			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
 		</select> <select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
-			<option value="모집중" ${status == '모집중' ? 'selected' : ''}
-				style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
+			<option value="모집중" ${status == '모집중' ? 'selected' : ''}>모집중</option>
 			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
 				마감</option>
 			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
@@ -257,7 +256,7 @@
 	<div class="act-layout">
 		<section>
 			<div class="act-head"></div>
-			<c:if test="${empty match}">
+			<c:if test="${empty matchList}">
 				<p class="empty-msg"
 					style="text-align: center; color: #9ca3af; padding: 60px 0;">내
 					팀경기가 없습니다.</p>
@@ -265,9 +264,9 @@
 
 
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
-			<c:forEach var="m" items="${match}">
+			<c:forEach var="m" items="${matchList}">
 				<div class="act-card"
-					data-href="${ctx}/jsp/team/teamMatchDetail.jsp?state=completed">
+					data-href="${ctx}/jsp/match/teamMatchDetail.jsp?teamMatchId=${m.teamMatchId}">
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">
@@ -314,8 +313,11 @@
 							<!-- 경기 장소 -->
 							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
 							<!-- 경기 최소/최대 인원 -->
-							<span><img src="${ctx}/img/icon-user-12.svg" alt="">8/10
-								· 최소 8명 <span class="cap"><i style="width: 80%"> </i> </span> </span>
+							<span><img src="${ctx}/img/icon-user-12.svg" alt="">${m.currentPeople}/${m.maxPeople}
+								<c:if test="${not empty m.minPeople}"> · 최소 ${m.minPeople}명</c:if>
+								<span class="cap"><i
+									style="width: ${m.maxPeople > 0 ? m.currentPeople * 100 / m.maxPeople : 0}%"></i></span>
+							</span>
 						</p>
 					</div>
 					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그
@@ -326,8 +328,8 @@
 									pattern="#,###" />원</span>
 							<!-- 관심경기 추가/제거 -->
 							<button type="button" class="fav-btn ${m.favorite ? 'is-on':''}"
-								data-fav data-type="match" data-match-id="${m.personalMatchId}"
-								data-match-type="Personal" aria-label="관심 경기">${heart}</button>
+								data-fav data-type="match" data-match-id="${m.teamMatchId}"
+								data-match-type="Team" aria-label="관심 경기">${heart}</button>
 
 						</div>
 						<div class="btns">
