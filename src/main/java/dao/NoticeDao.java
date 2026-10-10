@@ -22,4 +22,5 @@ public interface NoticeDao {
 	List<Map<String, Object>> selectPinnedNoticeList(Map<String, Object> param) throws Exception;
 	List<Map<String, Object>> selectNotPinnedNoticeList(Map<String, Object> param) throws Exception;
 	Integer selectNoticeCnt(Map<String, Object> param) throws Exception;
+	Map<String, Object> selectDetailNotice(Map<String, Object> param) throws Exception;
 }

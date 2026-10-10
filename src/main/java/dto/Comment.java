@@ -20,7 +20,13 @@ public class Comment {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	private String nickname;
+	public String getNickname() { return nickname; }
+	public void setNickname(String nickname) { this.nickname = nickname; }
+	private String createdAtStr;
+	public String getCreatedAtStr() { return createdAtStr; }
+	public void setCreatedAtStr(String createdAtStr) { this.createdAtStr = createdAtStr; }
 	public Comment(Long commentId, Long parentCommentId, Long reviewId, Long userId, String content,
 			LocalDateTime createdAt, LocalDateTime updatedAt, Boolean deleted) {
 		super();

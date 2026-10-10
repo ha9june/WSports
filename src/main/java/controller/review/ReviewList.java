@@ -61,9 +61,10 @@ public class ReviewList extends HttpServlet {
 
                 String status = request.getParameter("status");
                 if (status == null || status.isEmpty()) status = "ALL";
+                String keyword = request.getParameter("keyword");
 
                 PageInfo pageInfo = new PageInfo(page);
-                List<Map<String, Object>> list = service.selectMainReviewList(pageInfo, status);
+                List<Map<String, Object>> list = service.selectMainReviewList(pageInfo, status, keyword);
                 request.setAttribute("reviewList", list);
                 request.setAttribute("pageInfo", pageInfo);
             }

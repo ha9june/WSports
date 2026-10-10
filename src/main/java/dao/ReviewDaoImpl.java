@@ -43,10 +43,10 @@ public class ReviewDaoImpl implements ReviewDao {
 	}
 
 	@Override
-	public List<Review> selectReviewList(Long userId) throws Exception {
+	public List<Review> selectMainPageReviewSportList(Long userId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return sqlSession.selectList("mapper.review.selectReviewList", userId);
+			return sqlSession.selectList("mapper.review.selectMainPageReviewSportList", userId);
 		} finally {
 			sqlSession.close();
 		}
@@ -140,5 +140,31 @@ public class ReviewDaoImpl implements ReviewDao {
 	    } finally {
 	        sqlSession.close();
 	    }
+	}
+
+	@Override
+	public Review selectReviewDetail(Long reviewId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectOne("mapper.review.selectReviewDetail", reviewId);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
+
+	@Override
+	public int deleteReviewByAdmin(Long reviewId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.review.deleteReviewByAdmin", reviewId);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
 	}
 }

@@ -40,108 +40,183 @@
     font-weight: bold;
 }
 
-.act-layout { display: flex; gap: 24px; align-items: flex-start; }
-.act-layout > section { flex: 1; min-width: 0; }
-
-.act-layout > aside.cal {
-  width: 340px; flex-shrink: 0;
-  padding: 16px; background: #fff;
-  border: 1px solid #e5e7eb; border-radius: 16px;
+.act-layout {
+	display: flex;
+	gap: 24px;
+	align-items: flex-start;
 }
+
+.act-layout>section {
+	flex: 1;
+	min-width: 0;
+}
+
+.act-layout>aside.cal {
+	width: 340px;
+	flex-shrink: 0;
+	padding: 16px;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 16px;
+}
+/* 경기 있는 날: 글자 강조 + 점 */
+.cal .flatpickr-day.has-match {
+    font-weight: 700 !important;
+    color: #1a6bff !important;
+    position: relative !important;
+}
+.cal .flatpickr-day.has-match::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 5px !important;
+    height: 5px !important;
+    left: 50% !important;
+    bottom: 5px !important;
+    transform: translateX(-50%) !important;
+    border-radius: 50% !important;
+    background: #1a6bff !important;
+    display: block !important;
+}
+
 .cal .flatpickr-calendar.inline {
-  box-shadow: none; border: 0; width: 100%;
+	box-shadow: none;
+	border: 0;
+	width: 100%;
 }
-.cal .flatpickr-days, .cal .dayContainer {
-  width: 100%; min-width: 100%; max-width: 100%;
-}
-.cal .flatpickr-day { max-width: none; border-radius: 0%; }
 
-/* [선택 기간] 기본 배경 사각형 */
+.cal .flatpickr-days, .cal .dayContainer {
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+}
+
+.cal .flatpickr-day {
+	max-width: none;
+	border-radius: 0%;
+}
+
+/* [선택 기간] 범위 배경 */
 .cal .flatpickr-day.inRange {
-  background: #e8f0ff !important; 
-  border-color: #e8f0ff !important; 
-  box-shadow: none; 
-  color: #1a6bff !important;
+	background: #fff1e6 !important;
+	border-color: #fff1e6 !important;
+	box-shadow: none;
+	color: #e0600f !important;
+}
+
+/* [선택 시작/끝/단일] */
+.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
+	{
+	background: #ff7a29 !important;
+	border-color: #ff7a29 !important;
+	color: #fff !important;
+}
+
+/* 선택된 날에 경기가 있어도 글자는 흰색 유지 */
+.cal .flatpickr-day.selected.has-match, .cal .flatpickr-day.startRange.has-match,
+	.cal .flatpickr-day.endRange.has-match {
+	color: #fff !important;
 }
 .cal .flatpickr-day.selected,
 .cal .flatpickr-day.startRange,
 .cal .flatpickr-day.endRange {
-  background: #1a6bff !important; 
-  border-color: #1a6bff !important; 
-  color: #fff !important;
+    border-radius: 50% !important;
 }
-
-/* [지렁이/캡슐 모양] 시작과 끝 라운딩 */
-.cal .flatpickr-day.startRange {
-  border-top-left-radius: 50% !important;
-  border-bottom-left-radius: 50% !important;
+.cal .flatpickr-day.inRange {
+    border-radius: 0 !important;
 }
-.cal .flatpickr-day.endRange {
-  border-top-right-radius: 50% !important;
-  border-bottom-right-radius: 50% !important;
+.cal .flatpickr-day.startRange:not(.endRange) {
+    border-radius: 50% 0 0 50% !important;
+}
+.cal .flatpickr-day.endRange:not(.startRange) {
+    border-radius: 0 50% 50% 0 !important;
 }
 .cal .flatpickr-day.startRange.endRange {
-  border-radius: 50% !important;
+    border-radius: 50% !important;
 }
 
-/* 주말 줄바꿈 처리 */
-.cal .dayContainer { display: flex; flex-wrap: wrap; }
-.cal .flatpickr-day.inRange:nth-child(7n+1) { border-top-left-radius: 50%; border-bottom-left-radius: 50%; }
-.cal .flatpickr-day.inRange:nth-child(7n) { border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
-
-
-/* 경기 있는 날: 선택 여부 상관없이 365일 항상 표시 */
-.cal .flatpickr-day.has-match { 
-  font-weight: 700 !important; 
-  color: #1a6bff !important; /* 평소에도 무조건 글자를 파란색으로 */
-  position: relative !important; 
-}
-
-/* 점(•) 강제 표시 */
-.cal .flatpickr-day.has-match::after {
-  content: '' !important; 
-  position: absolute !important; 
-  bottom: 5px !important; 
-  left: 50% !important;
-  width: 5px !important; 
-  height: 5px !important; 
-  margin-left: -2.5px !important;
-  border-radius: 50% !important; 
-  background: #1a6bff !important; /* 기본 상태는 파란색 점 */
-  display: block !important; /* 강제 노출 */
+/* 범위 안의 경기 있는 날 점 색 */
+.cal .flatpickr-day.inRange.has-match::after {
+	background: #1a6bff !important;
 }
 
 /* 범위 선택 중(.startRange, .endRange)일 때는 가독성을 위해 흰색 점으로 변경 */
-.cal .flatpickr-day.startRange.has-match::after,
-.cal .flatpickr-day.endRange.has-match::after,
-.cal .flatpickr-day.selected.has-match::after { 
-  background: #ffffff !important; 
+.cal .flatpickr-day.startRange.has-match::after, .cal .flatpickr-day.endRange.has-match::after,
+	.cal .flatpickr-day.selected.has-match::after {
+	background: #ffffff !important;
 }
-
-/* 연한 파란색 범위(.inRange) 안에 있을 때는 다시 파란색 점으로 */
-.cal .flatpickr-day.inRange.has-match::after {
-  background: #1a6bff !important;
-}
-
 
 /* 하단 범례 및 카드 */
-.cal .legend { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font-size: 12px; }
-.cal .legend-dot { width: 6px; height: 6px; border-radius: 50%; background: #1a6bff; }
-.act-card { margin-bottom: 16px; }
+.cal .legend {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 10px 0 0;
+	font-size: 12px;
+}
+
+.cal .legend-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #1a6bff;
+}
+
+.act-card {
+	margin-bottom: 16px;
+}
+
 .act-card .left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    width: 90px;         
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	width: 90px;
 }
+
 .act-card .left img {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;  
+	width: 64px;
+	height: 64px;
+	object-fit: contain; /* 비율 유지하면서 칸에 맞춤 */
 }
-.list-head { display: flex; align-items: center; margin-bottom: 12px; }
-.btn-reset { margin-left: auto; }
+
+.list-head {
+	display: flex;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.btn-reset {
+	margin-left: auto;
+}
+
+.act-filters {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.act-filters .btn-reset {
+	margin-left: 0; /* 오른쪽 끝 정렬 해제 → 셀렉트 바로 옆 */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 35px; /* 셀렉트 높이에 맞추세요 */
+	padding: 0 20px;
+	border: 1px solid #111; /* 얇은 검은 테두리 */
+	border-radius: 10px; /* 셀렉트와 같은 둥글기 */
+	background: #fff;
+	color: #111;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.act-filters .btn-reset:hover {
+	background: #111;
+	color: #fff;
+}
 </style>
 
 
@@ -170,19 +245,16 @@
 				종료</option>
 			<option value="경기 취소" ${status == '경기 취소' ? 'selected' : ''}>경기
 				취소</option>
-		</select>
+		</select><a class="btn-reset" href="?">필터 초기화</a>
 	</form>
 
 
 	<div class="act-layout">
 		<section>
 			<div class="act-head"></div>
-			<div class="list-head">
-				<h2>관심경기 ${fn:length(match)}건</h2>
-				<a class="btn-reset" href="?">필터 초기화</a>
-			</div>
 			<c:if test="${empty match}">
-				<p class="empty-msg">관심 경기가 없습니다.</p>
+				<p class="empty-msg"
+					style="text-align: center; color: #9ca3af; padding: 60px 0;">관심 경기가 없습니다.</p>
 			</c:if>
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
 			<c:forEach var="m" items="${match}">
@@ -256,25 +328,31 @@
 					</div>
 				</div>
 			</c:forEach>
-			<c:set var="qs" value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
-			<nav class="pagination" style="display: flex; justify-content: center; padding: 0">
-				<c:if test="${pageInfo.curPage > 1}">
-					<a href="?page=${pageInfo.curPage - 1}${qs}">&lt;</a>
-				</c:if>
-				<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
-					var="p">
-					<a href="?page=${p}${qs}" class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
-				</c:forEach>
-				<c:if test="${pageInfo.curPage < pageInfo.allPage}">
-					<a href="?page=${pageInfo.curPage + 1}${qs}">&gt;</a>
-				</c:if>
-			</nav>
-			
+			<c:if test="${pageInfo.allPage > 1}">
+				<c:set var="qs"
+					value="&sport=${sport}&status=${status}&startDate=${startDate}&endDate=${endDate}" />
+				<nav class="pagination"
+					style="display: flex; justify-content: center; padding: 0">
+					<c:if test="${pageInfo.curPage > 1}">
+						<a href="?page=${pageInfo.curPage - 1}${qs}">&lt;</a>
+					</c:if>
+					<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
+						var="p">
+						<a href="?page=${p}${qs}"
+							class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+					</c:forEach>
+					<c:if test="${pageInfo.curPage < pageInfo.allPage}">
+						<a href="?page=${pageInfo.curPage + 1}${qs}">&gt;</a>
+					</c:if>
+				</nav>
+			</c:if>
 		</section>
 				<aside class="cal">
-				<div id="periodPicker"></div>
-				<p class="legend"><span class="legend-dot"></span> 경기 있음</p>
-			</aside>
+			<div id="periodPicker"></div>
+			<p class="legend">
+				<span class="legend-dot"></span> 경기 있음
+			</p>
+		</aside>
 
 		<%--
   마이페이지 활동 화면 공통 월 달력 (참가 경기 / 내가 만든 경기 / 관심경기 / 팀 경기)
@@ -284,33 +362,77 @@
 --%>
 		<script>
 		$(function() {
-			  var favDates = [
-				  <c:forEach var="d" items="${favDates}" varStatus="st">'${d}'${st.last ? '' : ','}</c:forEach>
-				  ];
+		    // ★ 내가 참가한 경기 날짜
+		    var favDates = [
+		    <c:forEach var="f" items="${favDates}" varStatus="st">
+		        '${f}'${st.last ? '' : ','}
+		    </c:forEach>
+		    ];
 
-			  flatpickr('#periodPicker', {
-			    inline : true,                 
-			    mode : 'range',               
-			    locale : 'ko',
-			    dateFormat : 'Y-m-d',
-			    defaultDate : '${startDate}' ? ['${startDate}', '${endDate}'] : null,
-			    onDayCreate : function(dObj, dStr, fp, dayElem) {
-				var currentFormattedDate = fp.formatDate(dayElem.dateObj, 'Y-m-d');
-				if (favDates.indexOf(currentFormattedDate) !== -1) {
-				dayElem.classList.add('has-match');
-				}
-			},
-		    	  onChange : function(selectedDates, dateStr, instance) {
-			      if (selectedDates.length === 2) {
-			      var start = instance.formatDate(selectedDates[0], 'Y-m-d');
-			      var end = instance.formatDate(selectedDates[1], 'Y-m-d');
-			        $('#startDate').val(start);
-			        $('#endDate').val(end);
-			        $('#periodForm').submit();
-			      }
-			    }
-			  });
-			});
+		    // 새로고침 후 선택 기간 복원
+		    var sd = '${startDate}', ed = '${endDate}';
+		    var initDates = (sd && sd !== 'null')
+		        ? [sd, (ed && ed !== 'null') ? ed : sd]
+		        : null;
+
+
+		    var fp = flatpickr('#periodPicker', {
+		        inline: true,
+		        mode: 'range',
+		        locale: 'ko',
+		        dateFormat: 'Y-m-d',
+		        defaultDate: initDates,
+		        onDayCreate: function(dObj, dStr, inst, dayElem) {
+		            var d = inst.formatDate(dayElem.dateObj, 'Y-m-d');
+		            if (favDates.indexOf(d) !== -1) {
+		                dayElem.classList.add('has-match');
+		            }
+		        }
+		    });
+
+		    var $cal = $(fp.calendarContainer);
+		    var dragStart = null;
+		    var dragEnd = null;
+		    var dragging = false;
+
+		    $cal.on('mousedown', '.flatpickr-day', function(e) {
+		        if ($(this).hasClass('flatpickr-disabled')) return;
+		        e.preventDefault();
+		        e.stopPropagation();
+		        dragStart = this.dateObj;
+		        dragEnd = dragStart;
+		        dragging = true;
+		        fp.setDate([dragStart], false);
+		    });
+
+		    $cal.on('mouseover', '.flatpickr-day', function() {
+		        if (!dragging) return;
+		        dragEnd = this.dateObj;
+		        var s = dragStart, t = dragEnd;
+		        if (s > t) { var tmp = s; s = t; t = tmp; }
+		        fp.setDate([s, t], false);
+		    });
+
+		    $(document).on('mouseup', function() {
+		        if (!dragging) return;
+		        dragging = false;
+
+		        var s = dragStart, t = dragEnd || dragStart;
+		        if (s > t) { var tmp = s; s = t; t = tmp; }
+
+		        var sdStr = fp.formatDate(s, 'Y-m-d');
+		        var edStr = fp.formatDate(t, 'Y-m-d');
+
+		        var params = new URLSearchParams(window.location.search);
+		        params.set('startDate', sdStr);
+		        params.set('endDate', edStr);
+		        params.set('sport', $('select[name=sport]').val() || '');
+		        params.set('status', $('select[name=status]').val() || '');
+		        params.delete('page');   // 기간 바꾸면 1페이지부터
+
+		        window.location.href = window.location.pathname + '?' + params.toString();
+		    });
+		});
 		</script>
 		<script>
 			$(function() {

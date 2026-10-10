@@ -72,6 +72,7 @@ public class MypageMatchesSaved extends HttpServlet {
 		if (endDate != null && endDate.isEmpty()) endDate = null;
 		PageInfo pageInfo = new PageInfo(page);
 		PersonalMatchService servie = new PersonalMatchServiceImpl();
+		
 		try {
 
 			List<PersonalMatch> list = servie.selectMyPageFavoriteList(pageInfo,userId,status,sport,startDate,endDate);
@@ -106,6 +107,8 @@ public class MypageMatchesSaved extends HttpServlet {
 		long userId = user.getUserId();
 		long matchId = Long.parseLong(request.getParameter("matchId"));
 		String matchType = request.getParameter("matchType");
+		String status = request.getParameter("status");
+		String sport = request.getParameter("sport");
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 
 		if (matchType == null || matchType.isEmpty()) {
