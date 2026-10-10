@@ -121,14 +121,15 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 							data-auth>신고</a>
 					</c:otherwise>
 				</c:choose>
-				<span class="btn btn-outline btn-sm">댓글 ${fn:length(content)}</span>
+				<span class="btn btn-outline btn-sm">댓글
+					${fn:length(commentList)}</span>
 			</div>
 		</section>
 
 		<section style="width: 744px; max-width: 100%" class="mt-48">
 			<h2 class="sub-title" style="margin-bottom: 14px">댓글
-				${fn:length(content)}</h2>
-			<c:forEach var="cm" items="${content}">
+				${fn:length(commentList)}</h2>
+			<c:forEach var="cm" items="${commentList}">
 				<div class="comment">
 					<span class="avatar sm default"></span> <b>${cm.nickname}</b> <span><c:out
 							value="${cm.content}" /></span> <span class="t-11 t-3">${cm.createdAtStr}</span>
@@ -138,16 +139,16 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 					</c:if>
 				</div>
 			</c:forEach>
-			<c:if test="${empty content}">
+			<c:if test="${empty commentList}">
 				<p class="t-3" style="padding: 16px 0">첫 댓글을 남겨보세요.</p>
 			</c:if>
 
 			<form class="comment-form" method="post"
-				action="${ctx}/review/comment/write">
+				action="${ctx}/review/comment">
 				<input type="hidden" name="reviewId" value="${review.reviewId}">
 				<input class="input" name="content"
 					placeholder="${empty sessionScope.user ? '로그인 후 댓글을 남길 수 있어요.' : '댓글을 입력하세요.'}"
-					${empty sessionScope.user ? 'readonly data-auth' : ''}>
+					${empty sessionScope.user ? 'readonly data-auth' : 'required'}>
 				<button type="submit" class="btn btn-primary btn-lg" data-auth>등록</button>
 			</form>
 		</section>
@@ -168,50 +169,68 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 </div>
 
 <script>
-$(function() {
-    $(".review-detail .fav-btn").off("click").click(function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        var $btn = $(this);
-        var isCurrentlyOn = $btn.hasClass("is-on");
-        
-        $.ajax({
-            url : '${ctx}/review/detail', 
-            type : 'post',
-            dataType : 'text',
-            data : { 
-                reviewId : "${review.reviewId}", 
-                heart : !isCurrentlyOn          
-            },
-            success : function(result) {
-                result = result.trim();
-                
-                var $countSpan = $("#likeCountDisplay");
-                var currentCount = parseInt($countSpan.text()) || 0;
-                
-                if (result === 'insert') {
-                    $btn.addClass("is-on");
-                    showToast("게시글에 좋아요를 눌렀어요.");
-                    $countSpan.text(currentCount + 1); 
-                }
-                else if (result === 'delete') {
-                    $btn.removeClass("is-on");
-                    showToast("게시글에 좋아요를 취소했어요.");
-                    $countSpan.text(Math.max(0, currentCount - 1)); 
-                }
-                else if (result === 'login') {
-                    showToast("로그인이 필요합니다.");
-                }
-                else {
-                    showToast("처리에 실패했습니다.");
-                }
-            },
-            error : function() {
-                showToast("서버 통신 중 오류가 발생했습니다.");
-            }
-        });
-    });
-});
+	$(function() {
+		$("#confirmReviewDelete").on("click", function() {
+			$.post('${ctx}/admin/content/review-delete',
+				{ reviewId: $("#reviewId").val() },
+				function(result) {
+					if (result.trim() === 'true') {
+						location.href = '${ctx}/review/list';
+					} else {
+						showToast("삭제에 실패했습니다.");
+					}
+				}, 'text');
+		});
+		$(".review-detail .fav-btn").off("click").click(function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var $btn = $(this);
+			var isCurrentlyOn = $btn.hasClass("is-on");
+
+			$.ajax({
+				url : '${ctx}/review/detail',
+				type : 'post',
+				dataType : 'text',
+				data : {
+					reviewId : "${review.reviewId}",
+					heart : !isCurrentlyOn
+				},
+				success : function(result) {
+					result = result.trim();
+
+					var $countSpan = $("#likeCountDisplay");
+					var currentCount = parseInt($countSpan.text()) || 0;
+
+					if (result === 'insert') {
+						$btn.addClass("is-on");
+						showToast("게시글에 좋아요를 눌렀어요.");
+						$countSpan.text(currentCount + 1);
+					} else if (result === 'delete') {
+						$btn.removeClass("is-on");
+						showToast("게시글에 좋아요를 취소했어요.");
+						$countSpan.text(Math.max(0, currentCount - 1));
+					} else if (result === 'login') {
+						showToast("로그인이 필요합니다.");
+					} else {
+						showToast("처리에 실패했습니다.");
+					}
+				},
+				error : function() {
+					showToast("서버 통신 중 오류가 발생했습니다.");
+				}
+			});
+		});
+	});
+	$(document).on("click", ".btn-del-comment", function() {
+		if (!confirm("댓글을 삭제할까요?")) return;
+		$.post('${ctx}/review/comment/delete',
+			{ commentId: $(this).data("comment-id") },
+			function(result) {
+				if (result.trim() === 'ok') location.reload();
+				else if (result.trim() === 'login') showToast("로그인이 필요합니다.");
+				else showToast("삭제에 실패했습니다.");
+			}, 'text');
+	});
 </script>
 <%@ include file="/jsp/common/footer.jsp"%>

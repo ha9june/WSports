@@ -47,6 +47,13 @@ public class Review {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
+	private String matchTitle;  // 경기명
+	private String matchInfo;   // 경기 부가정보 (없으면 빈 값)
+
+	public String getMatchTitle() { return matchTitle; }
+	public void setMatchTitle(String matchTitle) { this.matchTitle = matchTitle; }
+	public String getMatchInfo() { return matchInfo; }
+	public void setMatchInfo(String matchInfo) { this.matchInfo = matchInfo; }
 	public Review() {
 		super();
 		// TODO Auto-generated constructor stub

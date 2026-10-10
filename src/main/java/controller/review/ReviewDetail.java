@@ -56,20 +56,30 @@ public class ReviewDetail extends HttpServlet {
 				return;
 			}
 
-			// 댓글 리스트 조회
 			List<Comment> commentList = service.getCommentList(reviewId);
 
-			// 💡 [여기서 해결] 로그인한 유저 정보가 있을 때만 DB를 조회하여 좋아요 여부를 판단합니다.
 			dto.User loginUser = (dto.User) request.getSession().getAttribute("user");
 			if (loginUser != null) {
-				// 데이터 타입에 맞게 파라미터를 Long형 변수들로 정확히 전달합니다.
 				isFavorite = service.checkReviewLike(reviewId, loginUser.getUserId());
 			}
-
-			// JSP로 데이터 전송
+			// 좋아요 개수 조회
+			long likeCount = 0;
+			List<Map<String, Object>> likeCntList = service.getReviewLikeCnt();
+			if (likeCntList != null) {
+				for (Map<String, Object> map : likeCntList) {
+					Object rIdObj = map.get("reviewId");
+					if (rIdObj != null && Long.parseLong(rIdObj.toString()) == reviewId) {
+						likeCount = Long.parseLong(map.get("cnt").toString());
+						break;
+					}
+				}
+			}
+			
 			request.setAttribute("review", review);
 			request.setAttribute("commentList", commentList);
-			request.setAttribute("isFavorite", isFavorite); // 👈 JSP 화면의 ${isFavorite} 와 매핑됨
+			request.setAttribute("content", commentList);   
+			request.setAttribute("isFavorite", isFavorite);
+			request.setAttribute("likeCount", likeCount);
 
 		} catch (NumberFormatException e) {
 			response.sendRedirect(request.getContextPath() + "/review/list");

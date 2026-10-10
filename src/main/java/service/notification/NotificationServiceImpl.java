@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -121,6 +123,25 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public int getNotificationListNotConfirmCnt(Long userId) throws Exception {
 		return notificationDao.selectNotificationListNotConfirmCnt(userId);
+	}
+
+	@Override
+	public String readAndGetLink(Long notificationId, Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("notificationId", notificationId);
+		param.put("userId", userId);
+		notificationDao.updateRead(param);          // 읽음 처리
+		return notificationDao.selectLink(param);   // 이동할 링크
+	}
+
+	@Override
+	public int readAll(Long userId) throws Exception {
+		return notificationDao.updateAllRead(userId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getMyNotificationList(Long userId) throws Exception {
+		return notificationDao.selectMyNotificationList(userId);
 	}
 
 }

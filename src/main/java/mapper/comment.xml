@@ -22,12 +22,26 @@
 		DATE_FORMAT(c.created_at, '%m/%d %H:%i') AS createdAtStr,
 		c.updated_at AS updatedAt,
 		c.deleted AS deleted,
-		COALESCE(u.nickname, '탈퇴한 회원') AS nickname
+		u.nickname AS nickname
 		FROM comment c
 		LEFT JOIN user u ON c.user_id = u.user_id
 		WHERE c.review_id = #{reviewId}
 		AND c.deleted = 0
 		ORDER BY c.comment_id ASC
 	</select>
+	<insert id="insertComment" parameterType="map"
+	useGeneratedKeys="true" keyProperty="commentId">
+	INSERT INTO `comment`
+	(parent_comment_id, review_id, user_id, content, created_at, updated_at, deleted)
+	VALUES
+	(#{parentCommentId}, #{reviewId}, #{userId}, #{content}, NOW(), NOW(), 0)
+</insert>
+<update id="deleteComment" parameterType="map">
+	UPDATE `comment`
+	SET deleted = 1, updated_at = NOW()
+	WHERE comment_id = #{commentId}
+	  AND user_id = #{userId}
+	  AND deleted = 0
+</update>
 
 </mapper>

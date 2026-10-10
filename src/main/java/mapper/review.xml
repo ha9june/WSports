@@ -74,26 +74,33 @@
 		resultType="map">
 		SELECT r.review_id AS reviewId,
 		r.user_id AS userId,
-		u.nickname AS nickname,
+		u.nickname AS
+		nickname,
 		r.match_type AS matchType,
-		r.match_id AS
-		matchId,
+		r.match_id AS matchId,
 		COALESCE(pm.title, tm.title) AS matchTitle,
 		r.title AS title,
 		SUBSTRING_INDEX(r.image, ',', 1) AS image,
-		r.created_at AS createdAt
+		r.created_at AS createdAt,
+		(SELECT COUNT(*) FROM review_like l WHERE l.review_id = r.review_id)
+		AS
+		likeCount,
+		(SELECT COUNT(*) FROM comment c WHERE c.review_id =
+		r.review_id AND c.deleted
+		= 0) AS commentCount
 		FROM review r
-		JOIN `user` u ON u.user_id = r.user_id
-		LEFT JOIN
-		personal_match pm
-		ON r.match_type = 'PERSONAL' AND pm.personal_match_id
-		= r.match_id
-		LEFT JOIN team_match tm
-		ON r.match_type = 'TEAM' AND
-		tm.team_match_id = r.match_id
-		WHERE r.deleted = 0
-		ORDER BY r.created_at
-		DESC, r.review_id DESC
+		JOIN `user`
+		u ON u.user_id = r.user_id
+		LEFT JOIN personal_match pm
+		ON r.match_type =
+		'PERSONAL' AND pm.personal_match_id = r.match_id
+		LEFT JOIN team_match
+		tm
+		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id
+		WHERE
+		r.deleted = 0
+		<include refid="sportFilter" />
+		ORDER BY r.created_at DESC, r.review_id DESC
 		LIMIT #{row}, 9
 	</select>
 	<select id="selectReviewListCnt" parameterType="Map"
@@ -102,13 +109,15 @@
 		FROM review r
 		JOIN `user` u ON u.user_id =
 		r.user_id
-		LEFT JOIN personal_match pm ON r.match_type = 'PERSONAL' AND
+		LEFT
+		JOIN personal_match pm ON r.match_type = 'PERSONAL' AND
 		pm.personal_match_id = r.match_id
 		LEFT JOIN team_match tm ON
 		r.match_type = 'TEAM' AND tm.team_match_id =
 		r.match_id
 		WHERE r.deleted
 		= '0'
+		<include refid="sportFilter" />
 	</select>
 
 	<select id="selectNowReviewList" resultType="Review">
@@ -239,34 +248,96 @@
 		AND r.deleted = 0
 	</select>
 
-	<select id="selectReviewDetail" parameterType="long" resultType="Review">
-    SELECT 
-        r.review_id AS reviewId,
-        r.user_id AS userId,
-        u.nickname AS nickname,
-        r.match_type AS matchType,
-        r.match_id AS matchId,
-        r.title AS title,
-        r.content AS content,
-        r.image AS image,
-        r.deleted AS deleted,
-        r.created_at AS createdAt, 
-        DATE_FORMAT(r.created_at, '%m/%d %H:%i') AS createdAtStr, -- 👈 c.created_at에서 r.created_at으로 수정
-        r.updated_at AS updatedAt,
-        COALESCE(pm.match_date, tm.match_date) AS matchDate,
-        COALESCE(pm.sport, tm.sport) AS sport,
-        COALESCE(pm.title, tm.title) AS matchTitle,
-        (SELECT COUNT(*) FROM comment c WHERE c.review_id = r.review_id AND c.deleted = 0) AS commentCount
-    FROM review r
-    JOIN user u ON u.user_id = r.user_id
-    LEFT JOIN personal_match pm ON r.match_type = 'PERSONAL' AND pm.personal_match_id = r.match_id
-    LEFT JOIN team_match tm ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id
-    WHERE r.review_id = #{reviewId}
-      AND r.deleted = 0
-</select>
-
-
-
+	<select id="selectReviewDetail" parameterType="long"
+		resultType="Review">
+		SELECT
+		r.review_id AS reviewId,
+		r.user_id AS userId,
+		u.nickname AS nickname,
+		r.match_type AS matchType,
+		r.match_id AS
+		matchId,
+		r.title AS title,
+		r.content AS content,
+		r.image AS image,
+		r.deleted AS deleted,
+		r.created_at AS createdAt,
+		DATE_FORMAT(r.created_at, '%m/%d %H:%i') AS createdAtStr,
+		r.updated_at AS updatedAt,
+		COALESCE(pm.match_date,
+		tm.match_date) AS matchDate,
+		COALESCE(pm.sport, tm.sport) AS sport,
+		COALESCE(pm.title, tm.title) AS
+		matchTitle,
+		(SELECT COUNT(*) FROM
+		comment c WHERE c.review_id =
+		r.review_id AND c.deleted
+		= 0) AS commentCount,
+		(SELECT COUNT(*) FROM review_like l WHERE l.review_id =
+		r.review_id) AS likeCount
+		FROM review r
+		JOIN user u
+		ON u.user_id =
+		r.user_id
+		LEFT JOIN
+		personal_match pm ON r.match_type =
+		'PERSONAL' AND
+		pm.personal_match_id
+		= r.match_id
+		LEFT JOIN team_match tm
+		ON r.match_type
+		= 'TEAM' AND
+		tm.team_match_id =
+		r.match_id
+		WHERE
+		r.review_id = #{reviewId}
+		AND
+		r.deleted = 0
+	</select>
+	<sql id="sportFilter">
+		<if test="status != null and status != 'ALL'">
+			AND COALESCE(pm.sport, tm.sport) = #{status}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (r.title LIKE CONCAT('%', #{keyword}, '%')
+			OR
+			COALESCE(pm.title, tm.title) LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+	</sql>
+	<select id="selectMainPageReviewSportList" parameterType="long"
+		resultType="Review">
+		SELECT r.review_id AS reviewId,
+		r.user_id AS userId,
+		u.nickname AS nickname,
+		r.match_type AS matchType,
+		r.match_id AS
+		matchId,
+		COALESCE(pm.title, tm.title) AS matchTitle,
+		COALESCE(pm.sport,
+		tm.sport) AS sport,
+		r.title AS title,
+		r.content AS content,
+		SUBSTRING_INDEX(r.image, ',', 1) AS image,
+		r.created_at AS createdAt
+		FROM review r
+		JOIN `user` u ON u.user_id = r.user_id
+		LEFT JOIN
+		personal_match pm
+		ON r.match_type = 'PERSONAL' AND pm.personal_match_id
+		= r.match_id
+		LEFT JOIN team_match tm
+		ON r.match_type = 'TEAM' AND
+		tm.team_match_id = r.match_id
+		WHERE r.deleted = 0
+		ORDER BY r.match_type,
+		r.match_id, r.created_at DESC
+	</select>
+	<update id="deleteReviewByAdmin" parameterType="long">
+	UPDATE review
+	SET deleted = 1, deleted_at = NOW(), updated_at = NOW()
+	WHERE review_id = #{reviewId}
+	  AND deleted = 0
+</update>
 
 
 </mapper>

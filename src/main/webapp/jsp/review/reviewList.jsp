@@ -20,18 +20,30 @@
 			<p class="page-desc">경기 후기를 찾아보고 경험을 공유해보세요.</p>
 		</div>
 		<form class="review-toolbar" method="get" action="${ctx}/review/list">
-			<input type="hidden" name="state" value="${state}">
+			<input type="hidden" name="state" value="recent"> <input
+				type="hidden" name="status" id="statusInput"
+				value="${empty param.status ? 'ALL' : param.status}">
 			<div class="field">
-				<label class="field-label">검색</label><input class="input"
-					name="keyword" placeholder="제목 또는 경기명 검색">
+				<label class="field-label">검색</label> <input class="input"
+					name="keyword" value="<c:out value='${param.keyword}'/>"
+					placeholder="제목 또는 경기명 검색">
 			</div>
-			<div class="chip-group" data-select="single" data-name="sport"
-				style="margin-bottom: 8px">
-				<button type="button" class="chip neutral is-selected">전체</button>
-				<button type="button" class="chip">축구/풋살</button>
-				<button type="button" class="chip">농구</button>
-				<button type="button" class="chip">테니스</button>
-				<button type="button" class="chip">배드민턴</button>
+			<div class="chip-group" style="margin-bottom: 8px">
+				<button type="button"
+					class="chip ${empty param.status or param.status eq 'ALL' ? 'neutral is-selected' : ''}"
+					data-value="ALL">전체</button>
+				<button type="button"
+					class="chip ${param.status eq '축구/풋살' ? 'neutral is-selected' : ''}"
+					data-value="축구/풋살">축구/풋살</button>
+				<button type="button"
+					class="chip ${param.status eq '농구' ? 'neutral is-selected' : ''}"
+					data-value="농구">농구</button>
+				<button type="button"
+					class="chip ${param.status eq '테니스' ? 'neutral is-selected' : ''}"
+					data-value="테니스">테니스</button>
+				<button type="button"
+					class="chip ${param.status eq '배드민턴' ? 'neutral is-selected' : ''}"
+					data-value="배드민턴">배드민턴</button>
 			</div>
 		</form>
 
@@ -55,7 +67,15 @@
 							<a class="review-card"
 								href="${ctx}/review/detail?reviewId=${r.reviewId}">
 								<div class="thumb">
-									<c:out value="${r.title}" />
+									<c:choose>
+										<c:when test="${not empty r.image}">
+											<img src="${ctx}/uploads/${r.image}"
+												style="width: 100%; height: 100%; object-fit: cover;">
+										</c:when>
+										<c:otherwise>
+											<c:out value="${r.title}" />
+										</c:otherwise>
+									</c:choose>
 								</div>
 								<div class="body">
 									<strong><c:out value="${r.title}" /></strong>
@@ -121,8 +141,12 @@
 				<c:if test="${pageInfo.allPage > 1}">
 					<nav class="pagination"
 						style="display: flex; justify-content: center; padding: 0">
-						<c:set var="base"
-							value="${ctx}/review/list?state=${state}&keyword=${fn:escapeXml(param.keyword)}" />
+						<c:url var="base" value="/review/list">
+							<c:param name="state" value="recent" />
+							<c:param name="status"
+								value="${empty param.status ? 'ALL' : param.status}" />
+							<c:param name="keyword" value="${param.keyword}" />
+						</c:url>
 
 						<a
 							href="${pageInfo.curPage > 1 ? base.concat('&page=').concat(pageInfo.curPage - 1) : '#'}">&lt;</a>
@@ -141,6 +165,14 @@
 		</c:choose>
 	</div>
 </main>
+<script>
+	document.querySelectorAll('.review-toolbar .chip').forEach(function(chip) {
+		chip.addEventListener('click', function() {
+			document.getElementById('statusInput').value = chip.dataset.value;
+			chip.closest('form').submit();
+		});
+	});
+</script>
 <a class="fab" href="${ctx}/review/create" data-auth><span
 	class="fab-label">후기 쓰기</span><span class="fab-btn" aria-hidden="true"></span></a>
 <%@ include file="/jsp/common/footer.jsp"%>

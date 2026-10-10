@@ -18,7 +18,7 @@ public interface ReviewService {
 	Review getReviewDetail(Long reviewId)throws Exception;
 	List<Comment> getCommentList(Long reviewId)throws Exception;
 	List<Review> getNowReviewList() throws Exception;
-	List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status) throws Exception;
+	List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status, String keyword) throws Exception;
 	List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId)throws Exception;
 	int modifyMypageReview(Long userId, Long reviewId, String title, String content, String image) throws Exception;
 	int deleteMypageReview(Long userId, Long reviewId) throws Exception; 
@@ -28,5 +28,7 @@ public interface ReviewService {
 	boolean removeReviewLike(Long reviewId, Long userId) throws Exception;
 	List<Map<String, Object>> getReviewLikeCnt() throws Exception;
 	boolean checkReviewLike(Long reviewId, Long userId) throws Exception;
-
+	boolean writeComment(Long reviewId, Long userId, String content) throws Exception;
+	boolean removeComment(Long commentId, Long userId) throws Exception;
+	boolean removeReviewByAdmin(Long reviewId) throws Exception;
 }

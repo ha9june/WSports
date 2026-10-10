@@ -92,7 +92,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public List<Review> getReviewList(Long userId) throws Exception {
-		List<Review> list = reviewDao.selectReviewList(userId);
+		List<Review> list = reviewDao.selectMainPageReviewSportList(userId);
 
 		Map<Long, Integer> likeCounts = toCountMap(reviewlikeDao.selectReviewLikeCnt());
 		Map<Long, Integer> commentCounts = toCountMap(commentDao.selectReviewCommentCnt());
@@ -119,11 +119,10 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status) throws Exception {
+	public List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status, String keyword) throws Exception {
 		Map<String, Object> param = new HashMap<>();
-		// 모르는 값이면 전체
 		param.put("status", status == null ? "ALL" : status);
-		// 전체 게시글 수
+		param.put("keyword", keyword == null ? "" : keyword.trim());
 		Integer reviewCnt = reviewDao.selectReviewListCnt(param);
 
 		Integer allPage = (int) Math.ceil(reviewCnt / 9.0); // 전체 페이지 수
@@ -250,5 +249,29 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public boolean checkReviewLike(Long reviewId, Long userId) throws Exception {
 		return reviewlikeDao.checkReviewLike(reviewId, userId) > 0;
+	}
+
+	@Override
+	public boolean writeComment(Long reviewId, Long userId, String content) throws Exception {
+		if (content == null || content.trim().isEmpty()) return false;
+		Map<String, Object> param = new HashMap<>();
+		param.put("reviewId", reviewId);
+		param.put("userId", userId);
+		param.put("content", content.trim());
+		param.put("parentCommentId", null);
+		return commentDao.insertComment(param) > 0;
+	}
+
+	@Override
+	public boolean removeComment(Long commentId, Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("commentId", commentId);
+		param.put("userId", userId);
+		return commentDao.deleteComment(param) > 0;
+	}
+
+	@Override
+	public boolean removeReviewByAdmin(Long reviewId) throws Exception {
+		return reviewDao.deleteReviewByAdmin(reviewId) > 0;
 	}
 }
