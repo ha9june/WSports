@@ -24,4 +24,6 @@
 		from team_match_participant
 		where team_match_id = #{teamMatchId} and status = '결제완료'
 	</select>
+	
+
 </mapper>

@@ -334,7 +334,7 @@
 						</div>
 						<div class="btns">
 							<a class="btn btn-primary btn-xs"
-								href="${ctx}/jsp/team/teamMatchParticipants.jsp">참가자 확인</a>
+								href="${ctx}/team-match/participants/list?teamMatchId=${m.teamMatchId}">참가팀 확인</a>
 						</div>
 					</div>
 				</div>
@@ -474,6 +474,6 @@
 				});
 			});
 		</script>
-	</div>
+	</div> 
 </div>
 <%@ include file="/jsp/common/footer.jsp"%>

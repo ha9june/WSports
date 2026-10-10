@@ -36,6 +36,10 @@ public class TeamUserServiceImpl implements TeamUserService {
 	public List<Long> getTeamIdListByUserId(Long userId) throws Exception {
 		return teamUserDao.selectTeamIdListByUserId(userId);
 	}
+	@Override
+	public int modifyTeamUserRole(Long teamId, Long userId, String role) throws Exception {
+		return teamUserDao.updateTeamUserRole(teamId, userId, role);
+	}
 	
 	
 
