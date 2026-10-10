@@ -1,5 +1,8 @@
 package dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
@@ -86,6 +89,27 @@ public class UserDaoImpl implements UserDao {
 			sqlSession.close();
 		}
 	}
+	
+	// 공개프로필
+	@Override
+	public Map<String, Object> publicProfile(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.publicProfile", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	// 공개프로필 팀
+	@Override
+	public List<Map<String, Object>> publicProfileTeams(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.user.publicProfileTeams", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	
 	//관리자 인원수 세기
 	@Override
 	public Long selectUserCnt() throws Exception {

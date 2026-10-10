@@ -67,6 +67,7 @@ public class NoticeDaoImpl implements NoticeDao {
 			return result;
 		}
 	}
+	
 	@Override
 	public Integer updateAdminNoticeDelete(Long noticeId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -74,7 +75,9 @@ public class NoticeDaoImpl implements NoticeDao {
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-		}	}
+		}	
+	}
+	
 	@Override
 	public List<Map<String, Object>> selectPinnedNoticeList(Map<String, Object> param) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -83,6 +86,7 @@ public class NoticeDaoImpl implements NoticeDao {
 			throw e;
 		}
 	}
+	
 	@Override
 	public List<Map<String, Object>> selectNotPinnedNoticeList(Map<String, Object> param) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -91,10 +95,20 @@ public class NoticeDaoImpl implements NoticeDao {
 			throw e;
 		}
 	}
+	
 	@Override
 	public Integer selectNoticeCnt(Map<String, Object> param) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.notice.selectNoticeCnt",param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	@Override
+	public Map<String, Object> selectDetailNotice(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.notice.selectDetailNotice", param);
 		} catch(Exception e) {
 			throw e;
 		}

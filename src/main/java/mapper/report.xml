@@ -73,4 +73,10 @@
 			status = '처리완료'
 		where report_id = #{reportId}
 	</update>
+	
+	<select id="selectDetailReport" parameterType="Long" resultType="map">
+		select report_id,user_id,type,title,content,post_type,post_id,date_format(created_at,'%Y.%m.%d') as created_at,status,answer,date_format(answered_at,'%Y.%m.%d') as answered_at,admin_id,deleted
+		from report
+		where report_id=#{reportId}
+	</select>
 </mapper>

@@ -56,4 +56,11 @@ public class NoticeServiceImpl implements NoticeService {
 		selectNoticeList.addAll(noticeDao.selectNotPinnedNoticeList(param));
 		return selectNoticeList;
 	}
+
+	@Override
+	public Map<String, Object> detailNotice(Long noticeId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("noticeId", noticeId);
+		return noticeDao.selectDetailNotice(param);
+	}
 }
