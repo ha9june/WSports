@@ -150,6 +150,35 @@ $(function(){
 	    page++;
 	    teamMatchList(page);
 	});
+	 
+	// FAB 클릭: 팀장/부팀장 여부 확인 후 이동 또는 모달
+	$(document).on('click', '.fab', function (e) {
+	    var isLogin = ${not empty sessionScope.user};
+	    if (!isLogin) return;            // 비로그인: 기존 data-auth 로그인 모달 동작
+
+	    e.preventDefault();
+	    e.stopImmediatePropagation();
+
+	    var href = $(this).attr('href');
+	    $.get('${ctx}/team-match/create/check', function (result) {
+	        result = $.trim(result);
+	        if (result === 'ok') {
+	            location.href = href;
+	        } else if (result === 'noTeam') {
+	            $('#noTeamModal').addClass('is-open');
+	        } else {
+	            location.href = '${ctx}/auth/login';
+	        }
+	    }).fail(function () {
+	        showToast('잠시 후 다시 시도해 주세요.');
+	    });
+	});
+
+	// 직접 URL로 들어와 리다이렉트된 경우
+	if (new URLSearchParams(location.search).get('noTeam') === '1') {
+	    $('#noTeamModal').addClass('is-open');
+	    history.replaceState(null, '', '${ctx}/team-match/list');
+	}
 
 });
 </script>
@@ -307,6 +336,16 @@ $(function(){
 			</div>
 	</div>
 </main>
+<div class="modal" id="noTeamModal" role="dialog" aria-modal="true">
+	<div class="modal-card sm">
+		<h2 class="modal-title">팀 경기를 만들 수 없어요</h2>
+		<p class="modal-desc">팀 경기는 <b>팀장 또는 부팀장</b>만 만들 수 있어요.<br>팀을 만들거나, 팀장·부팀장에게 요청해 보세요.</p>
+		<div class="modal-actions">
+			<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
+			<a class="btn btn-primary" href="${ctx}/team/create">팀 만들기</a>
+		</div>
+	</div>
+</div>
 <a class="fab" href="${ctx}/team-match/create" data-auth><span
 	class="fab-label">상대 팀 모집</span><span class="fab-btn"
 	aria-hidden="true"></span></a>

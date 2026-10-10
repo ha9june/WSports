@@ -12,16 +12,10 @@
 <%@ include file="/jsp/common/header.jsp" %>
 <script>
 
-	const isLogin = ${sessionScope.user != null};
 
 	$(function(){
-		
-		function favBtn(item, extraClass){
-		    if(!isLogin) return "";
-		    return `<button type="button" class="fav-btn `+(extraClass||"")+(item.liked ? " is-active" : "")+`"
-		            data-id="`+item.personalMatchId+`" aria-label="관심 경기">${heart}</button>`;
-		}
-		
+	
+
 		$(document).on("click", ".fav-btn", function(e){
 		    e.preventDefault();
 		    e.stopPropagation();
@@ -79,9 +73,7 @@
 			<a class="match-card ${sportClass}" href="${ctx}/match/detail/view?personalMatchId=${match.personalMatchId}">
 			    <img class="art" src="${ctx}/img/art-${sportClass}.png" alt="">
 			    <span class="sport-tag ${sportClass}">${match.sport}</span>
-			    <c:if test="${sessionScope.user != null}">
-				    <button type="button" class="fav-btn bare ${match.favorite ? 'is-on' : ''}" data-fav data-auth data-id="${match.personalMatchId}" aria-label="관심 경기">${heart}</button>
-				</c:if>
+			    <button type="button" class="fav-btn bare ${match.favorite ? 'is-on' : ''}" data-fav data-auth data-id="${match.personalMatchId}" aria-label="관심 경기">${heart}</button>
 			    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">${sessionScope.user == null  ? '인기 경기' : '지역 · 실력 일치'}</span>
 			    <div class="body">
 			      <p class="title">${match.title}</p>
@@ -102,7 +94,7 @@
           <h2 class="section-title">팀</h2>
           <p class="section-desc">꾸준히 함께 뛸 사람들을 팀에서 만나보세요.</p>
         </div>
-        <a href="${ctx}/jsp/team/teamList.jsp">전체보기 →</a>
+        <a href="${ctx}/team/list">전체보기 →</a>
       </div>
       <div id="recomandTeamListDiv" class="team-mini-row">
     	<c:forEach var="team" items="${nTList}">
@@ -111,7 +103,7 @@
     		    team.sport eq '농구' ? 'basketball' :	
                 team.sport eq '테니스' ? 'tennis' :
                 team.sport eq '배드민턴' ? 'badminton' : ''}" />
-	    	 <a class="team-mini" href="${ctx}/jsp/team/teamDetail.jsp">
+	    	 <a class="team-mini" href="${ctx}/team/detail/view?teamId=${team.teamId}">
 	          <div class="top"><img src="${ctx}/img/team-${sportClass }.png" alt="">
 	            <div>
 		            <strong>${team.teamName}</strong>

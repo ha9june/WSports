@@ -350,7 +350,7 @@ window.addEventListener("fcmMessageReceived", function(e) {
 </head>
 
 	
-<body data-role="${empty sessionScope.user ? 'guest' : (sessionScope.user.grade eq 'Admin' ? 'admin' : 'member')}">
+<body data-role="${empty sessionScope.user ? 'guest' : (sessionScope.user.grade eq 'Admin' ? 'admin' : 'user')}">
 <header class="site-header">
 		<div class="inner">
 			<a class="logo" href="${ctx}/home/main">매치온</a>
