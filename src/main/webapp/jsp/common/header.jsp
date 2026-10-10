@@ -191,6 +191,8 @@ time {
 	<link rel="stylesheet" href="${ctx}/css/${cssName}.css">
 </c:forTokens>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="${ctx}/js/common.header.js"></script>
+<script>var ctx = '${ctx}';</script>
 <script type="text/javascript">
 window.contextPath = "${ctx}";
 </script>

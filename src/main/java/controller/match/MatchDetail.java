@@ -36,21 +36,16 @@ public class MatchDetail extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-	    if (user == null) {
-	        response.sendRedirect(request.getContextPath() + "/auth/login");
-	        return;
-	    }
-		
+
 		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
-		
-		
-		
+
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		try {
 			
 			PersonalMatch pm = new PersonalMatch();
 			pm.setPersonalMatchId(personalMatchId);
-			pm.setUserId(user.getUserId());
+			if(user!=null)
+				pm.setUserId(user.getUserId());
 			
 			PersonalMatch pMatch = service.getPersmalMatchDetail(pm);
 			System.out.println(pMatch);

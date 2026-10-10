@@ -115,20 +115,66 @@
    		// 찜(하트)
 	var fav = t.closest('[data-fav]');
 	if (fav) {
-  	e.preventDefault();
-  	e.stopPropagation();
-  	fav.classList.toggle('is-on');
-    console.log("클릭된 하트의 타입:", fav.dataset.type);
-  	var isReview = fav.dataset.type === 'review'; 
-  	var isOn = fav.classList.contains('is-on');
-  
-  	if (isReview) {
-    showToast(isOn ? '후기게시글에 좋아요를 눌렀어요.' : '후기게시글 좋아요를 취소했어요.');
-  	} else {
-    showToast(isOn ? '관심경기에 추가했습니다.' : '관심경기를 취소했습니다.');
-  }
-  return;
-}
+	  	e.preventDefault();
+	  	e.stopPropagation();
+	  	fav.classList.toggle('is-on');
+	    console.log("클릭된 하트의 타입:", fav.dataset.type);
+	  	var isReview = fav.dataset.type === 'review'; 
+	  	var isOn = fav.classList.contains('is-on');
+	  
+	  	if (isReview) {
+	    showToast(isOn ? '후기게시글에 좋아요를 눌렀어요.' : '후기게시글 좋아요를 취소했어요.');
+	  	} else {
+	    showToast(isOn ? '관심경기에 추가했습니다.' : '관심경기를 취소했습니다.');
+	  }
+	  return;
+	}
+	
+	var fav2 = t.closest('[data-fav2]');
+	if (fav2) {
+	  	e.preventDefault();
+	  	e.stopPropagation();
+	  	fav2.classList.toggle('is-on');
+	    console.log("클릭된 하트의 타입:", fav2.dataset.type);
+	  	var isReview = fav2.dataset.type === 'review'; 
+	  	var isOn = fav2.classList.contains('is-on');
+	  
+	  	if (isReview) {
+	    showToast(isOn ? '후기게시글에 좋아요를 눌렀어요.' : '후기게시글 좋아요를 취소했어요.');
+	  	} else {
+		    showToast(isOn ? '관심경기에 추가했습니다.' : '관심경기를 취소했습니다.');
+		}
+		
+		$.ajax({
+		    url: ctx + '/mypage/matches/saved',
+		    type: 'post',
+		    dataType: 'text',
+		    data: {
+		      matchId: fav2.dataset.matchId,
+		      matchType: fav2.dataset.matchType || 'Personal',
+		      heart: fav2.classList.contains('is-on')
+		    },
+		    success: function (res) {
+		      var result = res.trim();
+		      if (result === 'insert') {
+		        fav2.classList.add('is-on');
+		        showToast('관심경기에 등록되었습니다.');
+		      } else if (result === 'delete') {
+		        fav2.classList.remove('is-on');
+		        showToast('관심경기에서 제거되었습니다.');
+		      } else if (result === 'login') {
+		        showToast('로그인이 필요합니다.');
+		      }
+		    },
+		    error: function (xhr) {
+		      if (xhr.status == 401) showToast('로그인이 필요합니다.');
+		      else showToast('오류가 생겼습니다.');
+		    }
+		  });
+		
+
+	  return;
+	}
 
     
 
