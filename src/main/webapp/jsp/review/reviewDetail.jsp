@@ -61,18 +61,26 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				</c:if>
 			</div>
 			<div class="host-inline">
-				<span class="avatar default"></span>
+				<c:choose>
+					<c:when test="${not empty review.profileImage}">
+						<img class="avatar" src="${ctx}/profiles/${review.profileImage}"
+							style="object-fit: cover;" alt="프로필">
+					</c:when>
+					<c:otherwise>
+						<span class="avatar default"></span>
+					</c:otherwise>
+				</c:choose>
 				<div>
 					<a
 						href="${ctx}/jsp/member/userProfileInfo.jsp?userId=${review.userId}"><strong>${review.nickname}</strong></a>
 					<small>작성자 · ${review.createdAtStr}</small>
 				</div>
 			</div>
-			<p class="mt-8">
-				<span class="sport-chip" style="height: 26px">${review.matchType}</span>
+			<p class="mt-8" style="text-align: right;">
+				<span class="sport-chip" style="height: 26px"><c:out
+						value="${review.sport}" /></span>
 			</p>
 		</div>
-
 		<section class="review-detail" style="width: 744px; max-width: 100%">
 			<c:if test="${not empty review.image}">
 				<div class="photos">
@@ -131,8 +139,17 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				${fn:length(commentList)}</h2>
 			<c:forEach var="cm" items="${commentList}">
 				<div class="comment">
-					<span class="avatar sm default"></span> <b>${cm.nickname}</b> <span><c:out
-							value="${cm.content}" /></span> <span class="t-11 t-3">${cm.createdAtStr}</span>
+					<c:choose>
+						<c:when test="${not empty cm.profileImage}">
+							<img class="avatar sm" src="${ctx}/profiles/${cm.profileImage}"
+								style="object-fit: cover;" alt="프로필">
+						</c:when>
+						<c:otherwise>
+							<span class="avatar sm default"></span>
+						</c:otherwise>
+					</c:choose>
+					<b>${cm.nickname}</b> <span><c:out value="${cm.content}" /></span>
+					<span class="t-11 t-3">${cm.createdAtStr}</span>
 					<c:if test="${sessionScope.user.userId eq cm.userId}">
 						<button type="button" class="btn-text t-11 btn-del-comment"
 							data-comment-id="${cm.commentId}">삭제</button>
@@ -171,15 +188,15 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 <script>
 	$(function() {
 		$("#confirmReviewDelete").on("click", function() {
-			$.post('${ctx}/admin/content/review-delete',
-				{ reviewId: $("#reviewId").val() },
-				function(result) {
-					if (result.trim() === 'true') {
-						location.href = '${ctx}/review/list';
-					} else {
-						showToast("삭제에 실패했습니다.");
-					}
-				}, 'text');
+			$.post('${ctx}/admin/content/review-delete', {
+				reviewId : $("#reviewId").val()
+			}, function(result) {
+				if (result.trim() === 'true') {
+					location.href = '${ctx}/review/list';
+				} else {
+					showToast("삭제에 실패했습니다.");
+				}
+			}, 'text');
 		});
 		$(".review-detail .fav-btn").off("click").click(function(e) {
 			e.preventDefault();
@@ -223,14 +240,18 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 		});
 	});
 	$(document).on("click", ".btn-del-comment", function() {
-		if (!confirm("댓글을 삭제할까요?")) return;
-		$.post('${ctx}/review/comment/delete',
-			{ commentId: $(this).data("comment-id") },
-			function(result) {
-				if (result.trim() === 'ok') location.reload();
-				else if (result.trim() === 'login') showToast("로그인이 필요합니다.");
-				else showToast("삭제에 실패했습니다.");
-			}, 'text');
+		if (!confirm("댓글을 삭제할까요?"))
+			return;
+		$.post('${ctx}/review/comment/delete', {
+			commentId : $(this).data("comment-id")
+		}, function(result) {
+			if (result.trim() === 'ok')
+				location.reload();
+			else if (result.trim() === 'login')
+				showToast("로그인이 필요합니다.");
+			else
+				showToast("삭제에 실패했습니다.");
+		}, 'text');
 	});
 </script>
 <%@ include file="/jsp/common/footer.jsp"%>

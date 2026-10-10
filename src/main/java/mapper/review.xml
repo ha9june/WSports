@@ -254,6 +254,7 @@
 		r.review_id AS reviewId,
 		r.user_id AS userId,
 		u.nickname AS nickname,
+		u.profile_image AS profileImage,
 		r.match_type AS matchType,
 		r.match_id AS
 		matchId,
