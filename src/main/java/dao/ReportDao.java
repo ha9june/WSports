@@ -16,6 +16,8 @@ public interface ReportDao {
 	Map<String, Object> selectAdminReportDetail(Long reportId) throws Exception;
 	//관리자 사이드바 - 처리대기인 갯수
 	Integer selectAdminReportWaitCnt() throws Exception;
+	
 	List<Map<String, Object>> selectReportList(Map<String, Object> param) throws Exception;
 	Integer selectReportCnt(Map<String, Object> param) throws Exception;
+	Map<String, Object> selectDetailReport(Map<String, Object> param) throws Exception;
 }

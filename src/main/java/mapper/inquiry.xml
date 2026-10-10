@@ -74,4 +74,10 @@
 			answer_status = '답변완료'
 		where inquiry_id = #{inquiryId}
 	</update>
+	
+	<select id="selectDetailInquiry" parameterType="Long" resultType="map">
+		select inquiry_id,user_id,type,title,content,date_format(created_at,'%Y.%m.%d') as created_at,answer_status,answer,date_format(answered_at,'%Y.%m.%d') as answered_at,admin_id,deleted
+		from inquiry
+		where inquiry_id=#{inquiryId}
+	</select>
 </mapper>

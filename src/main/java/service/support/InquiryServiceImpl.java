@@ -49,4 +49,11 @@ public class InquiryServiceImpl implements InquiryService {
 		param.put("row", row-1);
 		return inquiryDao.selectInquiryList(param);
 	}
+
+	@Override
+	public Map<String, Object> detailInquiry(Long inquiryId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("inquiryId", inquiryId);
+		return inquiryDao.selectDetailInquiry(param);
+	}
 }

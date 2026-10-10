@@ -20,4 +20,5 @@ public interface InquiryDao {
 	
 	List<Map<String, Object>> selectInquiryList(Map<String, Object> param) throws Exception;
 	Integer selectInquiryCnt(Map<String, Object> param) throws Exception;
+	Map<String, Object> selectDetailInquiry(Map<String, Object> param) throws Exception;
 }

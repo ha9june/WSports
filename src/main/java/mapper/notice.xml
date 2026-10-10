@@ -111,4 +111,10 @@
 		  	  or u.nickname like concat('%', #{keyword}, '%')) 
 		  	  </if>
 	</select>
+	
+	<select id="selectDetailNotice" parameterType="Long" resultType="map">
+		select n.notice_id,n.title,n.content,date_format(n.created_at,'%Y.%m.%d') as created_at,n.admin_id,n.type,date_format(n.updated_at,'%Y.%m.%d') as updated_at,n.deleted,u.nickname
+		from notice n left join user u on u.user_id = n.admin_id
+		where n.notice_id=#{noticeId}
+	</select>
 </mapper>

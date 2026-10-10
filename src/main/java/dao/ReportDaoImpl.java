@@ -77,6 +77,7 @@ public class ReportDaoImpl implements ReportDao {
 			sqlSession.close();
 		}		
 	}
+	
 	@Override
 	public List<Map<String, Object>> selectReportList(Map<String, Object> param) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -95,4 +96,12 @@ public class ReportDaoImpl implements ReportDao {
 		}
 	}
 	
+	@Override
+	public Map<String, Object> selectDetailReport(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.report.selectDetailReport", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
 }
