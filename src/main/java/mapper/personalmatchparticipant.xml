@@ -45,6 +45,14 @@
 	    WHERE personal_match_id = #{personalMatchId}
 	    	AND user_id = #{userId}
 	</update>
+	<update id="updateAttendance" parameterType="personalMatchParticipant">
+
+	    UPDATE personal_match_participant
+	    SET
+	        attendance = #{attendance}
+	    WHERE personal_match_id = #{personalMatchId}
+	    	AND user_id = #{userId}
+	</update>
 	<select id="selectPersonalMatchParticipantList" parameterType="Long" resultType="user">
 		SELECT
 		    u.user_id,

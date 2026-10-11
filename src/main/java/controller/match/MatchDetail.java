@@ -39,10 +39,7 @@ public class MatchDetail extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = CheckUtil.getLoginUser(request);
-		if (user == null) {
-		    response.sendRedirect(request.getContextPath() + "/auth/login");
-		    return;
-		}
+
 
 		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 
@@ -64,8 +61,8 @@ public class MatchDetail extends HttpServlet {
 				map.put("userId", user.getUserId());
 				map.put("personalMatchId", personalMatchId);
 				PersonalMatchParticipant participant = pmpService.getParticipant(map);
-				if(participant != null && participant.getStatus().equals("결제완료")) {
-					applied = true;
+				if(participant != null && "결제완료".equals(participant.getStatus())) {
+				    applied = true;
 				}
 			}
 			request.setAttribute("applied",applied);

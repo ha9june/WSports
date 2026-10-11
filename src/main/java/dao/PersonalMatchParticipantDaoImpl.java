@@ -56,8 +56,23 @@ public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipant
 		} finally {
 			sqlSession.close();
 		}
-		
 	}
+	@Override
+	public void updateAttendance(PersonalMatchParticipant personalMatchParticipant) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.update("mapper.personalmatchparticipant.updateAttendance", personalMatchParticipant);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}		
+	}
+	
+	
 
 	@Override
 	public PersonalMatchParticipant selectPersonalMatchParticipation(Map<String, Object> param) throws Exception {
@@ -72,6 +87,7 @@ public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipant
 			return sqlSession.selectList("mapper.personalmatchparticipant.selectPersonalMatchParticipantList",personalMatchId);
 		}	
 	}
+
 
 
 }

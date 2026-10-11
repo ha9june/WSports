@@ -25,6 +25,10 @@ public class PersonalMatchParticipantServiceImpl implements PersonalMatchPartici
 	public void updateParticipantCancel(PersonalMatchParticipant personalMatchParticipation) throws Exception {
 		personalMatchParticipantDao.updateStatusCancel(personalMatchParticipation);
 	}
+	@Override
+	public void updateAttendacne(PersonalMatchParticipant personalMatchParticipation) throws Exception {
+		personalMatchParticipantDao.updateAttendance(personalMatchParticipation);
+	}
 
 	@Override
 	public PersonalMatchParticipant getParticipant(Map<String, Object> param) throws Exception {
@@ -35,6 +39,8 @@ public class PersonalMatchParticipantServiceImpl implements PersonalMatchPartici
 	public List<User> getPersonalMatchParticipantList(Long personalMatchId) throws Exception {
 		return personalMatchParticipantDao.selectPersonalMatchParticipantList(personalMatchId);
 	}
+
+
 
 
 

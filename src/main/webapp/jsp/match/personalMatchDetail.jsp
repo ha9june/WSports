@@ -169,7 +169,7 @@
         <h1>
         	${personalMatch.title }
         </h1>
-        <span class="pill pill-lg ${pillCls}">${personalMatch.status }</span>
+        <span class="pill pill-lg ${pillCls}">${status }</span>
         <c:if test="${role eq 'admin'}">
           <button type="button" class="btn btn-danger btn-sm admin-del" data-modal-open="adminDeleteModal">경기 삭제</button>
         </c:if>
@@ -375,13 +375,13 @@
 				<div class="side-card done">
 	              <h2>경기가 종료되었습니다</h2>
 	              <p class="sub">함께 경기한 참가자의 매너를 평가하고 후기를 남겨보세요.</p>
-	              <div class="actions">
-	              	<c:if test="${isHost}">
-	              		<a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=host">출석 체크 · 참가자 평가</a>
+	              <div class="actions">	              
+	              	<c:if test="${isHost}">	              	
+	              		<a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석 체크 · 참가자 평가</a>
 	              	</c:if>
 	              	<c:if test="${isUser and applied}">
 	              		<a class="btn btn-primary" href="${ctx}/jsp/review/reviewWrite.jsp?state=pastMatch">후기 작성</a>
-         		        <a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchAfterMatchEdit.jsp?state=participant">참가자 평가</a>
+         		        <a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 평가</a>
 	              	</c:if>
 	              </div>
 	            </div>
