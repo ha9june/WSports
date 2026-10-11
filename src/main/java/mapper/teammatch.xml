@@ -462,4 +462,42 @@
 		and status = '모집중'
 		and coalesce(deleted, 0) = 0
 	</update>
+	
+	<update id="updateTeamMatch" parameterType="teammatch">
+		update team_match
+		set title = #{title},
+		    content = #{content},
+		    match_date = #{matchDate},
+		    start_time = #{startTime},
+		    end_time = #{endTime},
+		    place_name = #{placeName},
+		    address = #{address},
+		    latitude = #{latitude},
+		    longitude = #{longitude},
+		    participation_fee = #{participationFee},
+		    fee = #{fee},
+		    deadline = #{deadline},
+		    skill_intro = #{skillIntro},
+		    skill_beginner = #{skillBeginner},
+		    skill_intermediate = #{skillIntermediate},
+		    skill_advanced = #{skillAdvanced},
+		    age_20s = #{age20s},
+		    age_30s = #{age30s},
+		    age_40s = #{age40s},
+		    age_50s = #{age50s},
+		    age_60_plus = #{age60Plus},
+		    gender = #{gender},
+		    match_people = #{matchPeople},
+		    region = #{region},
+		    image1 = #{image1},
+		    image2 = #{image2},
+		    image3 = #{image3},
+		    image4 = #{image4},
+		    image5 = #{image5},
+		    updated_at = now()
+		where team_match_id = #{teamMatchId}
+		  and user_id = #{userId}
+		  and coalesce(deleted, 0) = 0
+		  and status = '모집중'
+	</update>
 </mapper>

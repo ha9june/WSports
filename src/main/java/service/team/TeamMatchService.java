@@ -15,4 +15,5 @@ public interface TeamMatchService {
 	TeamMatch getTeamMatchNotUser(Long teamMatchId) throws Exception;
 	List<TeamMatch> getTeamMatchListSearch(TeamSearchCondition teamSearchCondition) throws Exception;
 	int getTeamMatchListSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception;
+	int modifyTeamMatch(TeamMatch teamMatch, List<String> keepImages, String realPath, List<Part> files) throws Exception;
 }

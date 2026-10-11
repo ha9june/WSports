@@ -2,10 +2,8 @@ package service.team;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.Part;
 
@@ -73,5 +71,19 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 	@Override
 	public int getTeamMatchListSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception {
 		return teamMatchDao.selectTeamMatchListForSearchCnt(teamSearchCondition);
+	}
+
+	@Override
+	public int modifyTeamMatch(TeamMatch tm, List<String> keepImages, String realPath, List<Part> files) throws Exception {
+	    List<String> finalImages = new ArrayList<>(keepImages);
+	    for (Part p : files) {
+	        finalImages.add(fileUpload(realPath, p));   // makeTeamMatch가 쓰는 저장 로직 재사용
+	    }
+	    tm.setImage1(finalImages.size() > 0 ? finalImages.get(0) : null);
+	    tm.setImage2(finalImages.size() > 1 ? finalImages.get(1) : null);
+	    tm.setImage3(finalImages.size() > 2 ? finalImages.get(2) : null);
+	    tm.setImage4(finalImages.size() > 3 ? finalImages.get(3) : null);
+	    tm.setImage5(finalImages.size() > 4 ? finalImages.get(4) : null);
+	    return teamMatchDao.updateTeamMatch(tm);
 	}
 }

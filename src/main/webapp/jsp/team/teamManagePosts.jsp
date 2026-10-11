@@ -60,7 +60,7 @@
 					<p>${tm.matchDate} (요일 가공해야됨) ${tm.startTime} ~ ${tm.endTime} · ${tm.placeName }</p>
 					<div class="acts">
 						<a class="btn btn-outline btn-xs"
-							href="${ctx}/jsp/team/teamMatchEdit.jsp">수정</a><a
+							href="${ctx}/team-match/edit?teamMatchId=${tm.teamMatchId}">수정</a><a
 							class="btn btn-primary btn-xs"
 							href="${ctx}/team-match/detail/view?teamMatchId=${tm.teamMatchId}">경기
 							상세</a>
