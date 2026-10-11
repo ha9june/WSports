@@ -28,6 +28,13 @@
 		  </if>
 	</select>
 	
+	<!-- 관리자 사이드바 전체 신고 개수 / 필터 없음-->
+	<select id="selectTotalReportCnt" resultType="Integer">
+		select count(*)
+		from report
+		where (deleted = 0 or deleted is null)
+	</select>
+	
 	<!-- 관리자 신고관리 개수 / 상태 기준 필터 -->
 	<select id="selectAdminReportCnt" parameterType="map" resultType="int">
 		select count(*)

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import service.admin.AdminMemberServiceImpl;
 import service.admin.AdminTeamServiceImpl;
 
 /**
@@ -50,7 +49,7 @@ public class AdminTeamDetail extends HttpServlet {
 			request.setAttribute("suspension", suspension);
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "회원관리 상세 목록 조회 오류");
+			request.setAttribute("err", "팀 관리 상세 목록 조회 오류");
 		}
 		request.getRequestDispatcher("/jsp/admin/adminTeamDetail.jsp").forward(request, response);
 	}
@@ -74,12 +73,11 @@ public class AdminTeamDetail extends HttpServlet {
 			else if ("permanent".equals(action)) {
 				// 영구 정지 (기간 없음)
 				service.AdminTeamPermanentPenalty(teamId, reason);
-			} else {
+			}else {
 				// 기간 정지
 				int days = Integer.parseInt(request.getParameter("days"));
 				service.AdminTeamPenalty(teamId, days, reason);
 			}
-			
 			response.getWriter().print("true");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,7 +2,6 @@ package dao;
 
 import java.util.Map;
 
-import dto.PersonalPayment;
 import dto.TeamMatch;
 import dto.TeamPayment;
 
@@ -29,5 +28,13 @@ public interface TeamPaymentDao {
 	TeamMatch selectTeamMatch(Long matchId) throws Exception;
 	//중복참가 확인
 	Integer selectTeamJoinCnt(Long userId, Long matchId) throws Exception;
+	//팀 경기 모집자, 제목
+	Map<String, Object> selectTeamMatchWriter(Long matchId) throws Exception;
 	
+	//환불 대상 조회 : 본인 결제만 조회
+	Map<String, Object> selectTeamRefundTarget(String paymentKey, Long userId) throws Exception;
+	//상대 팀 결제 수 : 모집 팀 환불 가능 여부 판단용
+	Integer selectTeamOpponentCnt(Long matchId, Long hostTeamId) throws Exception;
+	//환불 처리 : 결제 취소+참가취소+경기 상태 변경
+	void updateTeamRefund(Map<String, Object> param, boolean isHost) throws Exception;
 }

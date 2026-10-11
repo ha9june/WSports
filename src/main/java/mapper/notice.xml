@@ -60,7 +60,16 @@
 		insert into 
 		notice(title, content, created_at, is_pinned, admin_id, type, deleted, updated_at)
 		values
-		(#{title},#{content},now(), #{isPinned},#{adminId},#{type},0,null)
+		(#{title},#{content},now(), #{isPinned},#{adminId},
+		 case upper(#{type})
+		 	when 'NOTICE' then '공지'
+		 	when 'POLICY' then '정책'
+		 	when 'INSPECTION' then '점검'
+		 	when 'EVENT' then '이벤트'
+		 	when 'UPDATE' then '업데이트'
+		 	else #{type}
+		 end,
+		 0,null)
 	</insert>
 	
 	<select id="selectPinnedNoticeList" parameterType="Map" resultType="Map">

@@ -51,3 +51,7 @@
 .answer-box { margin-top: 20px; }
 .admin-title-row { display: flex; align-items: center; gap: 12px; }
 .field .notice-type{width: 100px; align-self: flex-start}
+.empty-state {width: 800px;	max-width: 100%;display: flex;flex-direction: column;align-items: center;text-align: center;gap: 8px;padding: 56px 24px;border: 1px dashed #d8dde6;border-radius: 16px;background: #fafbfd;	}
+.empty-state .empty-icon {width: 56px;height: 56px;border-radius: 50%;	display: flex;	align-items: center;justify-content: center;background: #e8f0ff;color: var(--ds-brand, #1a5cff);margin-bottom: 8px;}
+.empty-state strong { font-size: 16px; }
+.empty-state p { font-size: 13px; color: #6b7280; margin: 0 0 8px; }

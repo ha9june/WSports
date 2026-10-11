@@ -79,17 +79,19 @@
 	<div class="modal-card md">
 		<h2 class="modal-title">팀 정지</h2>
 		<div class="modal-body">
-  			<label class="field-label">정지 기간 (일)</label>
-    		<input class="input" id="days">
-    		<div class="field mt-16">
-    			<label class="field-label">사유</label>
-    			<textarea id="penaltyreason" class="textarea soft" rows="3"></textarea>
-    		</div>
+			<div class="field">
+				<label class="field-label">정지 기간 (일)</label>
+				<input class="input" id="days">
+			</div>
+			<div class="field mt-16">
+				<label class="field-label">사유</label>
+				<textarea id="penaltyreason" class="textarea soft" rows="3"></textarea>
+			</div>
 		</div>
 		<div class="modal-actions">
-  			<button type="button" class="btn btn-danger" id="applySanction">적용</button>
-  			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
-  		</div>
+			<button type="button" class="btn btn-danger" id="applySanction">적용</button>
+			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+		</div>
 	</div>
 </div>
 <div class="modal" id="scoreModal" role="dialog" aria-modal="true">
@@ -138,11 +140,11 @@ $(function(){
 	//기간 정지
 	$("#applySanction").click(function(e){
 		e.preventDefault();
-		
+
 		let teamId = '${teaminfo.team_id}';
 		let days = $("#days").val();
 		let reason = $("#penaltyreason").val();
-		
+
 		if (!days || !/^[1-9][0-9]*$/.test(days)) {
 			alert('정지 기간은 1 이상의 숫자로 입력해주세요.');
 			return;
@@ -151,7 +153,7 @@ $(function(){
 			alert('사유를 입력해주세요.');
 			return;
 		}
-		
+
 		$.ajax({
 			url:'${ctx}/admin/team/detail',
 			type:'post',
@@ -175,6 +177,7 @@ $(function(){
 			}
 		});
 	});
+	
 	//페널티 점수 조정
 	$("#applyScore").click(function(e){
 		e.preventDefault();
@@ -205,10 +208,10 @@ $(function(){
 			},
 			success:function(result) {
 				if($.trim(result) === "true") {
-					alert('제제 적용');
+					alert('제재 적용');
 					location.reload();
 				}else {
-					alert('제제 적용 실패');
+					alert('제재 적용 실패');
 				}
 			},
 			error: function(){

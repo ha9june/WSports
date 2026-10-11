@@ -148,7 +148,9 @@ public class MatchWriteForm extends HttpServlet {
 	    try {
 	    	PersonalMatchService service = new PersonalMatchServiceImpl();
             Long personalMatchId = service.createPersonalMatch(pm,parts,realPath);
-            response.sendRedirect(request.getContextPath() + "/match/detail/view?personalMatchId=" + personalMatchId);
+            
+            response.sendRedirect(request.getContextPath()+ "/payment/confirm?matchId="+personalMatchId);
+            //response.sendRedirect(request.getContextPath() + "/match/detail/view?personalMatchId=" + personalMatchId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			AlertUtil.back(response,"실패하였습니다. 관리자에게 문의하여 주세요.");

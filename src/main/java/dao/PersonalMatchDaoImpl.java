@@ -66,14 +66,13 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		}
 	}
 
-	public PersonalMatch selectPersonalMatch(PersonalMatch personalMatch) throws Exception {
 
+	public PersonalMatch selectPersonalMatch(PersonalMatch personalMatch) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personalMatch);
 		} catch (Exception e) {
 			throw e;
 		}
-
 	}
 	
 	@Override
