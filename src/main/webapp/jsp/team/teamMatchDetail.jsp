@@ -209,7 +209,7 @@ $('#thumbs').on('click', '.subImg', function() {
 								<dt>마감</dt>
 								<dd>${fn:replace(t.deadline, 'T', ' ')}</dd>
 							</div>
-							<div class="info-row">
+							<div class="info-row"> 
 								<dt>성별</dt>
 								<dd>
 									<c:out value="${t.gender}" />
