@@ -31,6 +31,7 @@ public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipant
 			throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
+
 			sqlSession.insert("mapper.personalmatchparticipant.insertOtherPersonalMatchParticipant", personalMatchParticipant);
 			sqlSession.commit();
 		} catch(Exception e) {
@@ -41,11 +42,27 @@ public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipant
 			sqlSession.close();
 		}
 	}
+	@Override
+	public void updateStatusCancel(PersonalMatchParticipant personalMatchParticipant)
+			throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.update("mapper.personalmatchparticipant.updateStatusCancel", personalMatchParticipant);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		
+	}
 
 	@Override
-	public Boolean selectisIsPersonalMatchParticipant(Map<String, Object> param) throws Exception {
+	public PersonalMatchParticipant selectPersonalMatchParticipation(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectOne("mapper.personalmatchparticipant.selectIsIsPersonalMatchParticipation", param);
+			return sqlSession.selectOne("mapper.personalmatchparticipant.selectIsPersonalMatchParticipation", param);
 		}	
 	}
 
@@ -55,4 +72,6 @@ public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipant
 			return sqlSession.selectList("mapper.personalmatchparticipant.selectPersonalMatchParticipantList",personalMatchId);
 		}	
 	}
+
+
 }

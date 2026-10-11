@@ -100,7 +100,7 @@ public class TossPaymentController extends HttpServlet {
 				PersonalMatch pm = new PersonalMatch();
 				pm.setUserId(user.getUserId());
 				pm.setPersonalMatchId(matchId);
-				match = personalMatchService.getPersmalMatchDetail(pm);
+				match = personalMatchService.getPersonalMatchDetail(pm);
 				totalAmount = paymentService.getPersonalMatchTotalAmount(matchId.intValue());
 			}
 

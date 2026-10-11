@@ -1,7 +1,7 @@
 package controller.match;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,9 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.PersonalMatch;
+import dto.PersonalMatchParticipant;
 import dto.User;
+import service.match.PersonalMatchParticipantService;
+import service.match.PersonalMatchParticipantServiceImpl;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
+import util.CheckUtil;
 
 /**
  * Servlet implementation class MatchDetail
@@ -34,12 +38,16 @@ public class MatchDetail extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
+		User user = CheckUtil.getLoginUser(request);
+		if (user == null) {
+		    response.sendRedirect(request.getContextPath() + "/auth/login");
+		    return;
+		}
 
 		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 
-		PersonalMatchService service = new PersonalMatchServiceImpl();
+		PersonalMatchService pmService = new PersonalMatchServiceImpl();
+		PersonalMatchParticipantService pmpService = new PersonalMatchParticipantServiceImpl();
 		try {
 			
 			PersonalMatch pm = new PersonalMatch();
@@ -47,13 +55,26 @@ public class MatchDetail extends HttpServlet {
 			if(user!=null)
 				pm.setUserId(user.getUserId());
 			
-			PersonalMatch pMatch = service.getPersmalMatchDetail(pm);
+
+			PersonalMatch pMatch = pmService.getPersonalMatchDetail(pm);
+			
+			Boolean applied = false;
+			if(user!=null) {
+				HashMap<String,Object> map = new HashMap<>();
+				map.put("userId", user.getUserId());
+				map.put("personalMatchId", personalMatchId);
+				PersonalMatchParticipant participant = pmpService.getParticipant(map);
+				if(participant != null && participant.getStatus().equals("결제완료")) {
+					applied = true;
+				}
+			}
+			request.setAttribute("applied",applied);
 			System.out.println(pMatch);
 			request.setAttribute("personalMatch", pMatch);
-			request.getRequestDispatcher("/jsp/match/personalMatchDetail.jsp").forward(request, response);;			
+			request.getRequestDispatcher("/jsp/match/personalMatchDetail.jsp").forward(request, response);	
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 		
 		

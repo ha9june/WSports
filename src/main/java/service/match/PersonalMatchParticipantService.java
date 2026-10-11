@@ -8,6 +8,7 @@ import dto.User;
 
 public interface PersonalMatchParticipantService {
 	void addPersonalMatchParticipant(PersonalMatchParticipant personalMatchParticipation) throws Exception;
-	Boolean isPersonalMatchParticipant(Map<String,Object> param) throws Exception;
+	void updateParticipantCancel(PersonalMatchParticipant personalMatchParticipation) throws Exception;
+	PersonalMatchParticipant getParticipant(Map<String,Object> param) throws Exception;
 	List<User> getPersonalMatchParticipantList(Long personalMatchId) throws Exception;
 }

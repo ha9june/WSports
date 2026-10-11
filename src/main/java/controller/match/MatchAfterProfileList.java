@@ -55,7 +55,7 @@ public class MatchAfterProfileList extends HttpServlet {
 			PersonalMatch pm = new PersonalMatch();
 			pm.setUserId(user.getUserId());
 			pm.setPersonalMatchId(personalMatchId);
-			PersonalMatch pMatch = pservice.getPersmalMatchDetail(pm);			
+			PersonalMatch pMatch = pservice.getPersonalMatchDetail(pm);			
 			request.setAttribute("userList", userList);
 			request.setAttribute("userList", userList);
 			request.setAttribute("personalMatch", pMatch);

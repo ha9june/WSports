@@ -20,18 +20,24 @@ public class PersonalMatchParticipantServiceImpl implements PersonalMatchPartici
 	public void addPersonalMatchParticipant(PersonalMatchParticipant personalMatchParticipation)
 			throws Exception {
 		personalMatchParticipantDao.insertOtherPersonalMatchParticipant(personalMatchParticipation);
-		
+	}
+	@Override
+	public void updateParticipantCancel(PersonalMatchParticipant personalMatchParticipation) throws Exception {
+		personalMatchParticipantDao.updateStatusCancel(personalMatchParticipation);
 	}
 
 	@Override
-	public Boolean isPersonalMatchParticipant(Map<String, Object> param) throws Exception {
-		return personalMatchParticipantDao.selectisIsPersonalMatchParticipant(param);
+	public PersonalMatchParticipant getParticipant(Map<String, Object> param) throws Exception {
+		return personalMatchParticipantDao.selectPersonalMatchParticipation(param);
 	}
 
 	@Override
 	public List<User> getPersonalMatchParticipantList(Long personalMatchId) throws Exception {
 		return personalMatchParticipantDao.selectPersonalMatchParticipantList(personalMatchId);
 	}
+
+
+
 
 
 

@@ -27,7 +27,7 @@ public interface PersonalMatchDao {
 	//매치글 인서트
 	Long insertPersonalMatch(PersonalMatch personalMatch) throws Exception;
 	Long updatePersonalMatch(PersonalMatch personalMatch) throws Exception;
-	void deletePersonalMatch(Long personaMatchId) throws Exception;
+	Long updatePersonalMatchStatue(PersonalMatch personalMatch) throws Exception;
 
 	
 	//관리자 경기수 세기 - 개인
