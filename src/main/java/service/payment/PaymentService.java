@@ -25,4 +25,6 @@ public interface PaymentService {
 	TeamMatch getTeamMatch(Long matchId) throws Exception;
 	//중복 참가 확인
 	boolean isAlreadyJoined(Long userId, Long matchId, boolean isTeam) throws Exception;
+	//개인 경기 환불
+	void refundPersonalPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
 }

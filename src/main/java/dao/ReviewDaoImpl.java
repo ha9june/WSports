@@ -33,13 +33,21 @@ public class ReviewDaoImpl implements ReviewDao {
 	@Override
 	public List<Review> selectReviewablePersonal(Long userId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
 		return sqlSession.selectList("mapper.review.selectReviewablePersonal", userId);
+		}finally {
+			sqlSession.close();
+		}
 	}
 
 	@Override
 	public List<Review> selectReviewableTeam(Long userId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
 		return sqlSession.selectList("mapper.review.selectReviewableTeam", userId);
+		}finally {
+			sqlSession.close();
+		}
 	}
 
 	@Override

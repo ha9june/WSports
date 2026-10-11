@@ -142,4 +142,38 @@
 		and personal_match_id = #{matchId}
 		and (status is null or status &lt;&gt; '취소')
 	</select>
+	<!-- 개인 경기 모집자, 제목 -->
+	<select id="selectPersonalMatchWriter" resultType="map">
+		select user_id, title
+		from personal_match
+		where personal_match_id = #{matchId}
+	</select>
+	
+	<!-- 환불 대상 조회 : 본인 결제만 조회 -->
+	<select id="selectRefundTarget" parameterType="map" resultType="map">
+		select pay.payment_id, pay.payment_status,
+			   m.personal_match_id, m.user_id, m.title, m.deadline
+		from personal_payment pay
+		join personal_match_participant p on p.payment_id = pay.payment_id
+		join personal_match m on m.personal_match_id = p.personal_match_id
+		where pay.payment_key = #{paymentKey}
+		and p.user_id = #{userId}
+	</select>
+	
+	<!-- 결제 취소 -->
+	<update id="updatePaymentCanceled" parameterType="map">
+		update personal_payment
+		set payment_status = 'CANCELED',
+			balance = 0,
+			canceled_at = #{canceledAt},
+			cancel_amount = #{cancelAmount{
+		where payment_id = #{paymentId}
+	</update>
+	<!-- 참가 취소 처리 -->
+	<update id="updateParticipantCanceled" parameterType="Long">
+		update personal_match_participant
+		set status = '취소'
+		where payment_id = #{paymentId}
+		and status = '결제완료'
+	</update>
 </mapper>

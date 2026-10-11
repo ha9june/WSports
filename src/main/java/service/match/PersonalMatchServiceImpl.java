@@ -235,12 +235,12 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
         Long personalMatchId = personalMatchDao.insertPersonalMatch(personalMatch);
         
         //개인 경기 참가지 인서트
-        PersonalMatchParticipant pmp = new PersonalMatchParticipant();
-        pmp.setUserId(personalMatch.getUserId());	
-        pmp.setPersonalMatchId(personalMatchId);
-        pmp.setAttendance(true);
-        System.out.println(pmp);
-        personalMatchParticipantDao.insertCreatorPersonalMatchParticipant(pmp);
+//        PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+//        pmp.setUserId(personalMatch.getUserId());	
+//        pmp.setPersonalMatchId(personalMatchId);
+//        pmp.setAttendance(true);
+//        System.out.println(pmp);
+//        personalMatchParticipantDao.insertCreatorPersonalMatchParticipant(pmp);
         
         return personalMatchId;
 

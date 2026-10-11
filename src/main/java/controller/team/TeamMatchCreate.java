@@ -181,15 +181,17 @@ public class TeamMatchCreate extends HttpServlet {
             teamMatch.setRegion(region);
 
             Long teamMatchId = teamMatchService.makeTeamMatch(teamMatch, realPath, files);
+            //모집 팀 결제 페이지로 이동(결제 후 참가 등록)
+            response.sendRedirect(request.getContextPath()+"/payment/confirm?state=teamMatch&matchId=" + teamMatchId+"&teamId="+teamId);
             
-            TeamMatchParticipant teamMatchParticipant = new TeamMatchParticipant();
-            teamMatchParticipant.setUserId(user.getUserId());
-            teamMatchParticipant.setTeamMatchId(teamMatchId);
-            teamMatchParticipant.setTeamId(teamId);
-            teamMatchParticipant.setStatus("결제대기");
-            
-            teamMatchParticipantService.maekTeamMatchParticipant(teamMatchParticipant);
-            response.sendRedirect(request.getContextPath() + "/team-match/detail/view?teamMatchId=" + teamMatchId);
+//            TeamMatchParticipant teamMatchParticipant = new TeamMatchParticipant();
+//            teamMatchParticipant.setUserId(user.getUserId());
+//            teamMatchParticipant.setTeamMatchId(teamMatchId);
+//            teamMatchParticipant.setTeamId(teamId);
+//            teamMatchParticipant.setStatus("결제대기");
+//            
+//            teamMatchParticipantService.maekTeamMatchParticipant(teamMatchParticipant);
+//            response.sendRedirect(request.getContextPath() + "/team-match/detail/view?teamMatchId=" + teamMatchId);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", "팀 경기 생성중 에러 발생");

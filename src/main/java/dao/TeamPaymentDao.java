@@ -29,5 +29,6 @@ public interface TeamPaymentDao {
 	TeamMatch selectTeamMatch(Long matchId) throws Exception;
 	//중복참가 확인
 	Integer selectTeamJoinCnt(Long userId, Long matchId) throws Exception;
-	
+	//팀 경기 모집자, 제목
+	Map<String, Object> selectTeamMatchWriter(Long matchId) throws Exception;
 }

@@ -160,6 +160,14 @@ public class TeamPaymentDaoImpl implements TeamPaymentDao {
 			return sqlSession.selectOne("mapper.teampayment.selectTeamJoinCnt", param);
 		}
 	}
+	//팀 경기 모집자 제목
+	@Override
+	public Map<String, Object> selectTeamMatchWriter(Long matchId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teampayment.selectTeamMatchWriter", matchId);
+		}
+
+	}
 	
 
 }

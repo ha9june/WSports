@@ -18,7 +18,10 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}finally {
+			sqlSession.close();
 		}
+		
 	}
 
 	@Override
@@ -29,6 +32,8 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}finally {
+			sqlSession.close();
 		}
 	}
 	

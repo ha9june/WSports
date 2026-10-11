@@ -22,11 +22,11 @@ public class NoticeServiceImpl implements NoticeService {
 		Map<String, Object> param = new HashMap<>();
 		param.put("keyword", keyword);
 		
-		if("NOTICE".equals(type)) param.put("type", "공지");
-		if("POLICY".equals(type)) param.put("type", "정책");
-		if("CHECK".equals(type)) param.put("type", "점검");
-		if("EVENT".equals(type)) param.put("type", "이벤트");
-		if("UPDATE".equals(type)) param.put("type", "업데이트");
+		if("NOTICE".equalsIgnoreCase(type)) param.put("type", "공지");
+		if("POLICY".equalsIgnoreCase(type)) param.put("type", "정책");
+		if("INSPECTION".equalsIgnoreCase(type)) param.put("type", "점검");
+		if("EVENT".equalsIgnoreCase(type)) param.put("type", "이벤트");
+		if("UPDATE".equalsIgnoreCase(type)) param.put("type", "업데이트");
 		
 		List<Map<String, Object>> selectPinnedNoticeList = noticeDao.selectPinnedNoticeList(param);
 		int pinnedNoticeList = selectPinnedNoticeList.size();

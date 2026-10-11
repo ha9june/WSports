@@ -152,4 +152,10 @@
 		               where user_id = #{userId} and team_role = '주장' and withdrawn = 0
 		               limit 1)
 	</select>
+	<!-- 팀 경기 모집자, 제목 -->
+	<select id="selectTeamMatchWriter" resultType="map">
+		select user_id, title, team_id
+		from team_match
+		where team_match_id = #{matchId}
+	</select>
 </mapper>

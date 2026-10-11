@@ -64,5 +64,46 @@
     	<a class="btn btn-primary" href="${ctx}/jsp/match/personalMatchDetail.jsp">경기 보기</a>
   	</div>
 </div>
+<!-- 환불 확인 모달 -->
+<div class="modal" id="refundModal" role="dialog" aria-modal="true">
+	<div class="modal-title">
+		<h2 class="modal-title">환불할까요?</h2>
+		<p class="modal-desc">
+			환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br>
+			모집 마감 전까지만 환불할 수 있어요.
+		</p>
+		<form action="post" action="{ctx}/payment/refund" id="refundForm">
+			<input type="hidden" name="paymentKey" value="${payment.paymentKey}">
+			<input type="hidden" name="matchId" value="${match.personalMatchId }"/>
+			<div class="modal-body">
+				<p>환불금액<b><fmt:formatNumber value="{payment.totalAMount}"  pattern="#,###"원/></b></p>
+				<div class="field mt-16">
+					<label class="field-label">환불사유</label>
+					<select class="select" name="cancelReason" required>
+						<option value=""></option>
+						<option>일정이 맞지 않음</option>
+						<option>개인 사정</option>
+						<option>잘못 결제함</option>
+						<option>기타</option>
+					</select>
+				</div>
+			</div>
+			<div class="modal-actions">
+				<button type="submit" class="btn btn-danger" id="refundSubmit">환불하기</button>
+				<button type="button" class="btn btn-outline" date-modal-close>취소</button>
+			</div>
+		</form>
+</div>
+<script>
+	//환불 버튼 두번 클릭 방지
+	const refundForm = documnet.getElemnetById('refundForm');
+	if(refundForm) {
+		refundForm.addEventListener('submit', function() {
+			const btn = document.getElementById('refundSubmit');
+			btn.disabled = true;
+			btn.textContent = '처리 중...';
+		});
+	}
+</script>
 </main></div>
 <%@ include file="/jsp/common/footer.jsp" %>

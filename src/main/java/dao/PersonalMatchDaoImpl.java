@@ -67,13 +67,11 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 	}
 
 	public PersonalMatch selectPersonalMatch(Long personaMatchId) throws Exception {
-
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personaMatchId);
 		} catch (Exception e) {
 			throw e;
 		}
-
 	}
 	
 	@Override

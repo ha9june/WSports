@@ -94,5 +94,15 @@ public class ReportDaoImpl implements ReportDao {
 			throw e;
 		}
 	}
+	//관리자 사이드바 - 총 신고 개수
+	@Override
+	public Integer selectTotalReportCnt() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.report.selectTotalReportCnt");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 	
 }
