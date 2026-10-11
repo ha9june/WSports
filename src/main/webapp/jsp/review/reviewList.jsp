@@ -13,6 +13,85 @@
 <c:set var="showFooter" value="true" />
 <c:set var="demoStates" value="recent:최근 후기|grouped:경기별 모아보기" />
 <%@ include file="/jsp/common/header.jsp"%>
+<style>
+.review-toolbar .search-btn {
+	height: 44px;
+	padding: 0 22px;
+	border: 1px solid #d1d5db;
+	border-radius: 10px;
+	background: #fff;
+	color: #111;
+	font-size: 14px;
+	font-weight: 600;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: background .2s, color .2s, border-color .2s;
+}
+
+.review-toolbar .search-btn:hover {
+	background: #1a6bff;
+	border-color: #1a6bff;
+	color: #fff;
+}
+
+.review-toolbar {
+	display: flex;
+	align-items: center; justify-content : space-between;
+	/* 칩은 왼쪽, 검색은 오른쪽 끝 */
+	gap: 16px;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.review-toolbar .search-box {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.review-toolbar .search-box .input {
+	width: 300px;
+	height: 44px;
+	box-sizing: border-box;
+}
+
+.review-toolbar .search-btn {
+	height: 44px; /* 입력창 높이와 동일 */
+	padding: 0 22px;
+	white-space: nowrap;
+}
+
+.review-toolbar .chip-group {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+}
+
+.review-toolbar .btn-filter-reset {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 36px;
+	margin-left: 4px;
+	padding: 0 18px;
+	border: 0;
+	border-radius: 999px;       /* 알약 모양 */
+	background: #f3f4f6;        /* 연회색 배경 */
+	color: #6b7280;             /* 회색 글자 */
+	font-size: 13px;
+	font-weight: 500;
+	text-decoration: none;      /* 밑줄 제거 */
+	white-space: nowrap;
+	cursor: pointer;
+	transition: background .2s, color .2s;
+}
+
+.review-toolbar .btn-filter-reset:hover {
+	background: #e5e7eb;
+	color: #374151;
+}
+</style>
 <main class="page">
 	<div class="rail">
 		<div class="page-head">
@@ -23,12 +102,8 @@
 			<input type="hidden" name="state" value="recent"> <input
 				type="hidden" name="status" id="statusInput"
 				value="${empty param.status ? 'ALL' : param.status}">
-			<div class="field">
-				<label class="field-label">검색</label> <input class="input"
-					name="keyword" value="<c:out value='${param.keyword}'/>"
-					placeholder="제목 또는 경기명 검색">
-			</div>
-			<div class="chip-group" style="margin-bottom: 8px">
+
+			<div class="chip-group">
 				<button type="button"
 					class="chip ${empty param.status or param.status eq 'ALL' ? 'neutral is-selected' : ''}"
 					data-value="ALL">전체</button>
@@ -44,6 +119,18 @@
 				<button type="button"
 					class="chip ${param.status eq '배드민턴' ? 'neutral is-selected' : ''}"
 					data-value="배드민턴">배드민턴</button>
+				<c:if
+					test="${(not empty param.status and param.status ne 'ALL') or not empty param.keyword}">
+					<a class="btn-filter-reset" href="${ctx}/review/list?state=recent">필터
+						초기화</a>
+				</c:if>
+			</div>
+
+			<div class="search-box">
+				<input class="input" name="keyword"
+					value="<c:out value='${param.keyword}'/>"
+					placeholder="제목 또는 경기명 검색">
+				<button type="submit" class="search-btn">검색</button>
 			</div>
 		</form>
 
