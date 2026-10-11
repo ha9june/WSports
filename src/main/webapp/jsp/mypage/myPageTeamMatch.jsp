@@ -312,12 +312,6 @@
 								~ ${m.endTime}</span>
 							<!-- 경기 장소 -->
 							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
-							<!-- 경기 최소/최대 인원 -->
-							<span><img src="${ctx}/img/icon-user-12.svg" alt="">${m.currentPeople}/${m.maxPeople}
-								<c:if test="${not empty m.minPeople}"> · 최소 ${m.minPeople}명</c:if>
-								<span class="cap"><i
-									style="width: ${m.maxPeople > 0 ? m.currentPeople * 100 / m.maxPeople : 0}%"></i></span>
-							</span>
 						</p>
 					</div>
 					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그
