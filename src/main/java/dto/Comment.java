@@ -15,7 +15,10 @@ public class Comment {
     
     
     
-    
+    private String profileImage;
+
+    public String getProfileImage() { return profileImage; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 	public Comment() {
 		super();
 		// TODO Auto-generated constructor stub

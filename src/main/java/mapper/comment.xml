@@ -22,7 +22,8 @@
 		DATE_FORMAT(c.created_at, '%m/%d %H:%i') AS createdAtStr,
 		c.updated_at AS updatedAt,
 		c.deleted AS deleted,
-		u.nickname AS nickname
+		u.nickname AS nickname,
+		u.profile_image AS profileImage
 		FROM comment c
 		LEFT JOIN user u ON c.user_id = u.user_id
 		WHERE c.review_id = #{reviewId}

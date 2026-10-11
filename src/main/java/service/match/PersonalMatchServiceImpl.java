@@ -165,25 +165,26 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	}
 
 	@Override
-	public List<PersonalMatch> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String status, String sport,
-			String startDate, String endDate) throws Exception {
+	public List<Map<String, Object>> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String status,
+			String sport, String startDate, String endDate) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		param.put("status", status);
 		param.put("sport", sport);
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
+
 		int size = 5;
 		int cnt = favoriteDao.selectMyPageFavoriteCnt(param);
+
 		Integer allPage = (int) Math.ceil(cnt / (double) size);
+		if (allPage == 0) allPage = 1;
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
+		if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
+
 		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
 		int endPage = Math.min(startPage + 9, allPage);
 
-		if (endPage < 1)
-			endPage = 1;
-		if (pageInfo.getCurPage() > endPage) {
-			pageInfo.setCurPage(endPage);
-		}
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
@@ -259,11 +260,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 
 
-	public List<String> getMyPageFavoriteDates(Long userId, String status, String sport) throws Exception {
-		Map<String, Object> param = new HashMap<>();
-		param.put("userId", userId);
-		param.put("status", status);
-		param.put("sport", sport);
+	public List<String> getMyPageFavoriteDates(Map<String, Object> param) throws Exception {
 		return favoriteDao.selectMyPageFavoriteDates(param);
 	}
 
@@ -291,6 +288,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 
 

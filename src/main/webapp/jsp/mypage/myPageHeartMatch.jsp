@@ -5,7 +5,8 @@
 <%@ page isELIgnored="false"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 <%--
@@ -22,22 +23,24 @@
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
 .pill-green {
-    color: var(--ds-success-fg);
-    background: var(--ds-success-bg);
-    border: var(--ds-success-bd);
-    font-weight: bold;
+	color: var(- -ds-success-fg);
+	background: var(- -ds-success-bg);
+	border: var(- -ds-success-bd);
+	font-weight: bold;
 }
+
 .pill-blue {
-    color: var(--ds-info-fg);
-    background: var(--ds-info-bg);
-    border:var(--ds-info-bd);
-    font-weight: bold;
+	color: var(- -ds-info-fg);
+	background: var(- -ds-info-bg);
+	border: var(- -ds-info-bd);
+	font-weight: bold;
 }
+
 .pill-red {
-    color: var(--ds-danger-fg);
-    background: var(--ds-danger-bg);
-    border:var(--ds-danger-bd);
-    font-weight: bold;
+	color: var(- -ds-danger-fg);
+	background: var(- -ds-danger-bg);
+	border: var(- -ds-danger-bd);
+	font-weight: bold;
 }
 
 .act-layout {
@@ -61,21 +64,22 @@
 }
 /* 경기 있는 날: 글자 강조 + 점 */
 .cal .flatpickr-day.has-match {
-    font-weight: 700 !important;
-    color: #1a6bff !important;
-    position: relative !important;
+	font-weight: 700 !important;
+	color: #1a6bff !important;
+	position: relative !important;
 }
+
 .cal .flatpickr-day.has-match::after {
-    content: "" !important;
-    position: absolute !important;
-    width: 5px !important;
-    height: 5px !important;
-    left: 50% !important;
-    bottom: 5px !important;
-    transform: translateX(-50%) !important;
-    border-radius: 50% !important;
-    background: #1a6bff !important;
-    display: block !important;
+	content: "" !important;
+	position: absolute !important;
+	width: 5px !important;
+	height: 5px !important;
+	left: 50% !important;
+	bottom: 5px !important;
+	transform: translateX(-50%) !important;
+	border-radius: 50% !important;
+	background: #1a6bff !important;
+	display: block !important;
 }
 
 .cal .flatpickr-calendar.inline {
@@ -116,22 +120,26 @@
 	.cal .flatpickr-day.endRange.has-match {
 	color: #fff !important;
 }
-.cal .flatpickr-day.selected,
-.cal .flatpickr-day.startRange,
-.cal .flatpickr-day.endRange {
-    border-radius: 50% !important;
+
+.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
+	{
+	border-radius: 50% !important;
 }
+
 .cal .flatpickr-day.inRange {
-    border-radius: 0 !important;
+	border-radius: 0 !important;
 }
+
 .cal .flatpickr-day.startRange:not(.endRange) {
-    border-radius: 50% 0 0 50% !important;
+	border-radius: 50% 0 0 50% !important;
 }
+
 .cal .flatpickr-day.endRange:not(.startRange) {
-    border-radius: 0 50% 50% 0 !important;
+	border-radius: 0 50% 50% 0 !important;
 }
+
 .cal .flatpickr-day.startRange.endRange {
-    border-radius: 50% !important;
+	border-radius: 50% !important;
 }
 
 /* 범위 안의 경기 있는 날 점 색 */
@@ -225,8 +233,9 @@
 	<h1 class="section-title">관심경기</h1>
 	<p class="section-desc">관심 표시한 경기를 종목, 상태와 월별 달력으로 확인하세요.</p>
 	<form class="act-filters" method="get" id="periodForm">
-  <input type="hidden" name="startDate" id="startDate" value="${startDate}">
-  <input type="hidden" name="endDate" id="endDate" value="${endDate}">
+		<input type="hidden" name="startDate" id="startDate"
+			value="${startDate}"> <input type="hidden" name="endDate"
+			id="endDate" value="${endDate}">
 
 		<!-- 경기 종목별 리스트 검색 -->
 		<select class="select" name="sport" onchange="this.form.submit()">
@@ -237,8 +246,7 @@
 			<option value="배드민턴" ${sport == '배드민턴' ? 'selected' : ''}>배드민턴</option>
 		</select> <select class="select" name="status" onchange="this.form.submit()">
 			<option value="">전체 상태</option>
-			<option value="모집중" ${status == '모집중' ? 'selected' : ''}
-				style="background-color: #e6f7ed; color: #1f874c; font-weight: bold;">모집중</option>
+			<option value="모집중" ${status == '모집중' ? 'selected' : ''}>모집중</option>
 			<option value="모집 마감" ${status == '모집 마감' ? 'selected' : ''}>모집
 				마감</option>
 			<option value="경기 종료" ${status == '경기 종료' ? 'selected' : ''}>경기
@@ -254,12 +262,22 @@
 			<div class="act-head"></div>
 			<c:if test="${empty match}">
 				<p class="empty-msg"
-					style="text-align: center; color: #9ca3af; padding: 60px 0;">관심 경기가 없습니다.</p>
+					style="text-align: center; color: #9ca3af; padding: 60px 0;">관심
+					경기가 없습니다.</p>
 			</c:if>
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
 			<c:forEach var="m" items="${match}">
-				<div class="act-card"
-					data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
+				<c:choose>
+					<c:when test="${m.matchType eq 'Team'}">
+						<c:set var="detailUrl"
+							value="${ctx}/jsp/match/teamMatchDetail.jsp?teamMatchId=${m.matchId}" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="detailUrl"
+							value="${ctx}/jsp/match/personalMatchDetail.jsp?personalMatchId=${m.matchId}" />
+					</c:otherwise>
+				</c:choose>
+				<div class="act-card" data-href="${detailUrl}">
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">
@@ -294,36 +312,44 @@
 							</c:otherwise>
 						</c:choose>
 					</div>
-					<!-- 경기 제목 -->
 					<div class="main">
 						<strong>${m.title}</strong>
-						<!-- 경기날짜 -->
-						<p class="meta">
+						<p class="meta" style="margin-bottom: 6px;">
 							<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${m.matchDate}</span>
-							<!-- 경기 날짜 / 시간 -->
 							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${m.startTime}
-								~ ${m.endTime}</span>
-							<!-- 경기 장소 -->
-							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
-							<!-- 경기 최소/최대 인원 -->
-							<span><img src="${ctx}/img/icon-user-12.svg" alt="">8/10
-								· 최소 8명 <span class="cap"><i style="width: 80%"> </i> </span> </span>
+								~ ${m.endTime}</span> <span><img
+								src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
+						</p>
+						<p class="meta"
+							style="display: flex; align-items: center; gap: 8px; margin: 0;">
+							<span
+								style="display: inline-flex; align-items: center; gap: 4px;">
+								<img src="${ctx}/img/icon-user-12.svg" alt="">
+								${m.currentPeople}/${m.maxPeople} <c:if
+									test="${m.matchType eq 'Personal' and m.minPeople > 0}"> · 최소 ${m.minPeople}명</c:if>
+							</span>
+
+							<c:if test="${m.maxPeople > 0}">
+								<span class="progress-container"
+									style="display: inline-block; width: 60px; height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
+									<span class="progress-bar"
+									style="display: block; height: 100%; background: #111; width: ${m.currentPeople / m.maxPeople * 100}%;"></span>
+								</span>
+							</c:if>
 						</p>
 					</div>
-					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그
-		      					pattern="#,###" 출력형식(5,000)-->
+
+
 					<div class="aside">
 						<div class="top">
 							<span><fmt:formatNumber value="${m.participationFee}"
 									pattern="#,###" />원</span>
-							<!-- 관심경기 제거 -->
 							<button type="button" class="fav-btn is-on"
-								data-match-id="${m.personalMatchId}" data-match-type="Personal"
+								data-match-id="${m.matchId}" data-match-type="${m.matchType}"
 								aria-label="관심 경기">${heart}</button>
 						</div>
 						<div class="btns">
-							<a class="btn btn-primary btn-xs"
-								href="${ctx}/jsp/match/personalMatchProfileList.jsp">참가자 확인</a>
+							<a class="btn btn-primary btn-xs" href="${detailUrl}">상세 보기</a>
 						</div>
 					</div>
 				</div>
@@ -347,7 +373,7 @@
 				</nav>
 			</c:if>
 		</section>
-				<aside class="cal">
+		<aside class="cal">
 			<div id="periodPicker"></div>
 			<p class="legend">
 				<span class="legend-dot"></span> 경기 있음

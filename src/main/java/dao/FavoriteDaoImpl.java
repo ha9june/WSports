@@ -49,7 +49,7 @@ public class FavoriteDaoImpl implements FavoriteDao {
 	}
 
 	@Override
-	public List<PersonalMatch> selectMyPageFavoriteList(Map<String, Object> param) throws Exception {
+	public List<Map<String, Object>> selectMyPageFavoriteList(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.favorite.selectMyPageFavoriteList", param);
 		}

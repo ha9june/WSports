@@ -25,7 +25,6 @@ public class Review {
     
     private int likeCount;
     private int commentCount;
-
     public int getLikeCount() { return likeCount; }
     public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
     public int getCommentCount() { return commentCount; }
@@ -33,8 +32,6 @@ public class Review {
     
     private String nickname;
     private String createdAtStr;
-    
-    
     public String getCreatedAtStr() {
 		return createdAtStr;
 	}
@@ -58,6 +55,9 @@ public class Review {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	private String profileImage;
+	public String getProfileImage() { return profileImage; }
+	public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 
 	public Review(String title, String content, String image) {
 		super();
