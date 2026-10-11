@@ -49,4 +49,11 @@ public class ReportServiceImpl implements ReportService {
 		param.put("row", row-1);
 		return reportDao.selectReportList(param);
 	}
+
+	@Override
+	public Map<String, Object> detailReport(Long reportId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("reportId", reportId);
+		return reportDao.selectDetailReport(param);
+	}
 }

@@ -6,7 +6,7 @@
   ============================================================
   공통 초기화 (모든 페이지 최상단에서 include)
   - ctx   : 컨텍스트 경로
-  - role  : guest | member | admin  (화면 권한)
+  - role  : guest | user | admin  (화면 권한)
   - state : 페이지별 화면 상태 (각 페이지에서 기본값 지정)
 
   [시연용] ?role=admin&state=applied 처럼 파라미터로 화면을 바꿀 수 있습니다.

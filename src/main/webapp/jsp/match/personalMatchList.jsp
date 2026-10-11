@@ -25,8 +25,12 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 
 <script>		
-	const isLogin = ${sessionScope.user != null};
 	let page =1;
+	
+	function favBtn(item, extraClass){
+	    return `<button type="button" class="fav-btn `+(extraClass||"")+(item.favorite ? " is-on" : "")+`"
+	    data-fav data-auth data-id="`+item.personalMatchId+`" aria-label="관심 경기">${heart}</button>`;
+	}
 
 	$(function(){
 		let data = {"userId":"test1","grade":"User"};
@@ -177,33 +181,6 @@
 			});
 		}
 		
-		function MapList(page){
-			$.ajax({
-				url:"${ctx}/match/list/map",
-				type:"post",
-			    dataType: "json",
-			    data: {
-			    	requestType: "ajax",
-			    	page:page,
-			    	data:data,
-			    	},
-				success:function(result){
-					console.log(result);
-
-				},
-				error:function(err){
-					console.log("err");
-					console.log(err);
-				}
-				
-			});
-		}
-		
-		function favBtn(item, extraClass){
-		    if(!isLogin) return "";
-		    return `<button type="button" class="fav-btn `+(extraClass||"")+(item.favorite ? " is-on" : "")+`"
-		    data-fav data-auth data-id="`+item.personalMatchId+`" aria-label="관심 경기">${heart}</button>`;
-		}
 
 		
 		
@@ -607,7 +584,7 @@
 	        data:data,
 	        success: function(data) {
 	            removeMarkers();
-				let html = "<h3>지도 주변 경기 4개</h3>";
+				let html = "<h3>지도 주변 경기</h3>";
 	            data.forEach(function(item) {	
 					html+= `
 			            <a href="${ctx}/match/detail/view?="`+item.personalMatchId+` 
@@ -615,6 +592,7 @@
 			            <small>`+item.sport+`</small>
 			            <strong>`+item.title+`</strong>
 		                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
+		                `+favBtn(item, "bare")+`
 			            </a>
 					`;
 	            	//마커찍기

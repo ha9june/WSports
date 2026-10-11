@@ -25,19 +25,39 @@ public class Review {
     
     private int likeCount;
     private int commentCount;
-
     public int getLikeCount() { return likeCount; }
     public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
     public int getCommentCount() { return commentCount; }
     public void setCommentCount(int commentCount) { this.commentCount = commentCount; }
     
-    
-    
-    
-    public Review() {
+    private String nickname;
+    private String createdAtStr;
+    public String getCreatedAtStr() {
+		return createdAtStr;
+	}
+	public void setCreatedAtStr(String createdAtStr) {
+		this.createdAtStr = createdAtStr;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	private String matchTitle;  // 경기명
+	private String matchInfo;   // 경기 부가정보 (없으면 빈 값)
+
+	public String getMatchTitle() { return matchTitle; }
+	public void setMatchTitle(String matchTitle) { this.matchTitle = matchTitle; }
+	public String getMatchInfo() { return matchInfo; }
+	public void setMatchInfo(String matchInfo) { this.matchInfo = matchInfo; }
+	public Review() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	private String profileImage;
+	public String getProfileImage() { return profileImage; }
+	public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 
 	public Review(String title, String content, String image) {
 		super();

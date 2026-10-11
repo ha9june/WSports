@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.PersonalMatch;
 import dto.User;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
@@ -15,6 +16,7 @@ import service.payment.PaymentService;
 import service.payment.PaymentServiceImpl;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
+import util.CheckUtil;
 
 /**
  * Servlet implementation class PaymentCompleteController
@@ -35,6 +37,12 @@ public class PaymentCompleteController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		User user = CheckUtil.getLoginUser(request);
+		if (user == null) {
+		    response.sendRedirect(request.getContextPath() + "/auth/login");
+		    return;
+		}
+		
 		String paymentKey = request.getParameter("paymentKey");
 		String matchIdParam = request.getParameter("matchId");
 		boolean isTeam = "team".equals(request.getParameter("matchType"));
@@ -57,7 +65,10 @@ public class PaymentCompleteController extends HttpServlet {
 			} else {
 				payment = paymentService.getPersonalPaymentByPaymentKey(paymentKey);
 				PersonalMatchService personalMatchService = new PersonalMatchServiceImpl();
-				match = personalMatchService.getPersmalMatchDetail(matchId);
+				PersonalMatch pm = new PersonalMatch();
+				pm.setUserId(user.getUserId());
+				pm.setPersonalMatchId(matchId);
+				match = personalMatchService.getPersmalMatchDetail(pm);
 			}
 				request.setAttribute("payment", payment);
 				request.setAttribute("match", match);

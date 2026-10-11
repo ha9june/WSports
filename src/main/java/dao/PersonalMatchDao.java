@@ -22,7 +22,7 @@ public interface PersonalMatchDao {
 
 	
 	//매치 글 조회
-	PersonalMatch selectPersonalMatch(Long personaMatchId) throws Exception;
+	PersonalMatch selectPersonalMatch(PersonalMatch personalMatch) throws Exception;
 
 	//매치글 인서트
 	Long insertPersonalMatch(PersonalMatch personalMatch) throws Exception;

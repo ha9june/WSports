@@ -65,11 +65,10 @@ public class TeamMatchCreate extends HttpServlet {
 	    
 		try {
 			List<Team> teamList = teamService.getTeamInfoByUserManager(user.getUserId());
-			if(teamList == null || teamList.isEmpty()) {
-				request.setAttribute("error", "팀장 또는 부팀장으로 있는 팀이 없어요. 팀 경기는 팀장과 부팀장만 만들 수 있어요.");
-				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
-				return; 
-			}
+		    if (teamList == null || teamList.isEmpty()) {
+		        response.sendRedirect(request.getContextPath() + "/team-match/list?noTeam=1");
+		        return;
+		    }
 			request.setAttribute("teamList", teamList);
 			request.getRequestDispatcher("/jsp/team/teamMatchMakeForm.jsp").forward(request, response);
 		}catch(Exception e) {

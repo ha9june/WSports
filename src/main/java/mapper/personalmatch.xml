@@ -341,21 +341,27 @@
 	</select>
 
 
-	<select id="selectPersonalMatch" parameterType="Long" resultType="personalMatch">
+	<select id="selectPersonalMatch" parameterType="personalMatch" resultType="personalMatch">
 		SELECT
 		m.*,
-		u.nickname,
-		COUNT(p.participant_id) AS
-		current_people
+			u.nickname,
+			COUNT(p.participant_id) AS current_people,
+		CASE
+            WHEN f.match_id IS NOT NULL THEN 1
+            ELSE 0
+        END AS favorite
 		FROM personal_match m
 		LEFT JOIN
-		personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
+			personal_match_participant p
+			ON m.personal_match_id = p.personal_match_id
 		LEFT JOIN user u
-		ON m.user_id = u.user_id
+			ON m.user_id = u.user_id
+		LEFT JOIN favorite f
+	        ON f.match_id = m.personal_match_id
+	        AND f.match_type = 'PERSONAL'
+	        AND f.user_id = #{userId}
 		WHERE
-		m.personal_match_id = #{personaMatchId}
+		m.personal_match_id = #{personalMatchId}
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at DESC;
 	</select>

@@ -45,21 +45,36 @@ public class MemberMypageEdit extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+User loginUser = (User)request.getSession().getAttribute("user");
+		
 		User user = new User();
+		user.setLoginId(loginUser.getLoginId());
 		user.setName(request.getParameter("name"));
 		user.setEmail(request.getParameter("email"));
 		user.setNickname(request.getParameter("nickname"));
 		LocalDate birthDate = LocalDate.parse(request.getParameter("birth"));
 		user.setBirthDate(birthDate);
 		user.setPhone(request.getParameter("phone"));
-		user.setBankName(request.getParameter("bank"));
-		user.setAccountNumber(request.getParameter("accountNo"));
-		user.setAccountHolder(request.getParameter("accountHolder"));
+		
+		String bank = request.getParameter("bank");
+		String accountNo = request.getParameter("accountNo");
+		String accountHolder = request.getParameter("accountHolder");
+		
+		if(bank != null && !bank.isEmpty() && !"은행 선택".equals(bank)) {
+			user.setBankName(bank);
+		}
+		if(accountNo != null && !accountNo.isEmpty()) {
+			user.setAccountNumber(accountNo);
+		}
+		if(accountHolder != null && !accountHolder.isEmpty()) {
+			user.setAccountHolder(accountHolder);
+		}
 		
 		MemberService service = new MemberServiceImpl();
 		try {
-			service.mypageEdit(user);
-			request.getRequestDispatcher("/jsp/mypage/myPageUser.jsp").forward(request, response);
+			User updateUser = service.mypageEdit(user);
+			request.getSession().setAttribute("user", updateUser);
+			response.sendRedirect(request.getContextPath()+"/member/mypage/view");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

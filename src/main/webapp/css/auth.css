@@ -28,3 +28,5 @@
 .level-list b { color: var(--ds-brand); font-weight: 500; }
 .team-inline { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; }
 .team-inline img { width: 22px; height: 22px; }
+.profile-top .meta.teams { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.team-inline img { border-radius: 50%; object-fit: cover; }

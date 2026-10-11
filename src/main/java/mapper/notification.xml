@@ -2,49 +2,128 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.notification">
-	
+
 
 	<!-- 새로운 알림 추가 -->
-	<insert id="insertNotification" parameterType="notification" useGeneratedKeys="true" keyProperty="notificationId"
-        keyColumn="notification_id">
-	insert into notification (user_id, content, is_read, created_at, title, link) 
-						values
-							(#{userId}, #{content}, 0, NOW(), #{title}, #{link})
+	<insert id="insertNotification" parameterType="notification"
+		useGeneratedKeys="true" keyProperty="notificationId"
+		keyColumn="notification_id">
+		insert into notification (user_id, content, is_read,
+		created_at, title,
+		link)
+		values
+		(#{userId}, #{content}, 0, NOW(),
+		#{title}, #{link})
 	</insert>
 	<!-- 알림 Id로 알림 조회 -->
-	<select id="selectNotification" parameterType="Long" resultType="notification">
-	    SELECT
-	        notification_id AS notificationId,
-	        user_id AS userId,
-	        content,
-	        is_read AS isRead,
-	        created_at AS createdAt,
-	        title,
-	        link
-	    FROM notification
-	    WHERE notification_id = #{notificationId}
-	
+	<select id="selectNotification" parameterType="Long"
+		resultType="notification">
+		SELECT
+		notification_id AS notificationId,
+		user_id AS userId,
+		content,
+		is_read AS isRead,
+		created_at AS createdAt,
+		title,
+		link
+		FROM
+		notification
+		WHERE notification_id = #{notificationId}
+
 	</select>
 	<!-- 특정 알림 읽음 처리 -->
 	<update id="updateNotificationIdRead" parameterType="Long">
-		update notification set is_read = true where notification_id = #{notificationId}
+		update
+		notification set is_read = true where notification_id =
+		#{notificationId}
 	</update>
 	<!-- 특정 회원의 안 읽은 알림 전체 조회 -->
-	<select id="selectNotificationList" parameterType="Long" resultType="notification">
-		select * from notification where user_id = #{userId} and COALESCE(is_read, 0) = 0
+	<select id="selectNotificationList" parameterType="Long"
+		resultType="notification">
+		select * from notification where user_id = #{userId} and
+		COALESCE(is_read, 0) = 0
 	</select>
 	<!-- 안 읽은 알림중 최신 3건 -->
-	<select id="selectNotificationListNotConfirm3" parameterType="Long" resultType="notification">
-		select * from notification 
-		where user_id = #{userId} and COALESCE(is_read, 0) = 0
-		order by created_at desc limit 3
+	<select id="selectNotificationListNotConfirm3"
+		parameterType="Long" resultType="notification">
+		select * from notification
+		where
+		user_id = #{userId} and COALESCE(is_read, 0) = 0
+		order by created_at
+		desc limit 3
 	</select>
 	<!-- 안 읽은 알림 개수 반환 -->
-	<select id="selectNotificationListNotConfirmCnt" parameterType="Long" resultType="int">
-	    select count(*)
-	    from notification
-	    where user_id = #{userId} and COALESCE(is_read, 0) = 0
+	<select id="selectNotificationListNotConfirmCnt"
+		parameterType="Long" resultType="int">
+		select count(*)
+		from notification
+		where
+		user_id = #{userId} and COALESCE(is_read, 0) = 0
 	</select>
-	
-	
+
+
+	<select id="selectMypageNotificationList" parameterType="long"
+		resultType="map">
+		SELECT notification_id AS notificationId,
+		user_id AS userId,
+		title AS title,
+		content AS content,
+		link AS link,
+		is_read AS isRead,
+		created_at AS createdAt,
+		CASE
+		WHEN DATE(created_at) = CURDATE() THEN
+		DATE_FORMAT(created_at, '%H:%i')
+		ELSE DATE_FORMAT(created_at, '%c/%d')
+		END AS createdAtStr
+		FROM notification
+		WHERE user_id = #{userId}
+		ORDER BY
+		is_read ASC, created_at DESC, notification_id DESC
+	</select>
+
+	<!-- 안 읽은 알림 개수 (헤더 종 아이콘 배지용) -->
+	<select id="selectMypageAlarmUnreadCount" parameterType="long"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM notification
+		WHERE user_id = #{userId}
+		AND is_read = 0
+	</select>
+
+	<!-- 알림 1건 읽음 처리 (본인 것만) -->
+	<update id="updateMypageNotificationRead" parameterType="map">
+		UPDATE
+		notification
+		SET is_read = 1
+		WHERE notification_id = #{notificationId}
+		AND user_id = #{userId}
+	</update>
+
+	<update id="updateMypageAllNotificationRead"
+		parameterType="long">
+		UPDATE notification
+		SET is_read = 1
+		WHERE user_id =
+		#{userId} AND is_read = 0
+	</update>
+	<update id="updateAllRead" parameterType="long">
+		UPDATE notification
+		SET is_read = 1
+		WHERE user_id = #{userId} AND COALESCE(is_read, 0) = 0
+	</update>
+	<update id="updateRead" parameterType="map">
+		UPDATE notification SET
+		is_read = 1
+		WHERE notification_id = #{notificationId} AND user_id =
+		#{userId}
+	</update>
+
+	<select id="selectLink" parameterType="map" resultType="string">
+		SELECT
+		link FROM notification
+		WHERE notification_id = #{notificationId} AND
+		user_id = #{userId}
+	</select>
+
 </mapper>

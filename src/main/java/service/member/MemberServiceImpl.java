@@ -2,6 +2,9 @@ package service.member;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Part;
 
@@ -48,5 +51,21 @@ public class MemberServiceImpl implements MemberService {
 			new File(uploadPath, oldImage).delete();
 		}
 		return userDao.selectLoginId(user.getLoginId());
+	}
+	
+	// 공개프로필
+	@Override
+	public Map<String, Object> publicProfile(Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		return userDao.publicProfile(param);
+	}
+	
+	// 공개프로필 팀
+	@Override
+	public List<Map<String, Object>> publicProfileTeams(Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		return userDao.publicProfileTeams(param);
 	}
 }

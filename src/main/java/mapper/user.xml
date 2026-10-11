@@ -48,6 +48,29 @@
 		where login_id=#{loginId}
 	</update>
 	
+	<!-- 공개프로필 -->
+	<select id="publicProfile" parameterType="Map" resultType="Map">
+		select u.user_id,u.profile_image,u.nickname,u.preferred_region1,u.preferred_region2,u.preferred_region3, 
+			   u.preferred_sport1,u.preferred_sport2,u.preferred_sport3,u.bio, 
+			   u.soccer_skill,u.basketball_skill,u.tennis_skill,u.badminton_skill, 
+			   (select ifnull(round(avg(ur.score),1),0)
+			    from user_rating ur
+			    where ur.receiver_user_id = u.user_id) as score, 
+			   (select count(*)
+			    from user_rating ur
+			    where ur.receiver_user_id = u.user_id) as rating_cnt 
+		from user u 
+		where u.user_id=#{userId}
+	</select>
+	
+	<!-- 공개프로필 팀 -->
+	<select id="publicProfileTeams" parameterType="Map" resultType="Map">
+		select t.team_id,t.team_name,t.profile_image as team_image,t.sport as team_sport
+		from team_user tu join team t on(tu.team_id=t.team_id)
+		where tu.user_id=#{userId} and ifnull(tu.withdrawn, 0)=0 and ifnull(t.deleted, 0)=0
+		order by t.team_name
+	</select>
+	
 	<!-- 관리자 사이드 바 인원수 세기 -->
 	<select id="selectUserCnt" resultType="Long">
 		select count(*) from user

@@ -59,6 +59,7 @@ public class InquiryDaoImpl implements InquiryDao {
 			throw e;
 		}
 	}
+	
 	@Override
 	public void insertInquiry(Inquiry inquiry) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
@@ -73,6 +74,7 @@ public class InquiryDaoImpl implements InquiryDao {
 			sqlSession.close();
 		}		
 	}
+	
 	@Override
 	public List<Map<String, Object>> selectInquiryList(Map<String, Object> param) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -91,4 +93,12 @@ public class InquiryDaoImpl implements InquiryDao {
 		}
 	}
 	
+	@Override
+	public Map<String, Object> selectDetailInquiry(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.inquiry.selectDetailInquiry", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
 }

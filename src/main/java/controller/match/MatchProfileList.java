@@ -45,12 +45,16 @@ public class MatchProfileList extends HttpServlet {
 		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 		
 		
+		PersonalMatch pm = new PersonalMatch();
+		pm.setUserId(user.getUserId());
+		pm.setPersonalMatchId(personalMatchId);
+		
 		PersonalMatchParticipantService pmpservice = new PersonalMatchParticipantServiceImpl();
 		PersonalMatchService pservice = new PersonalMatchServiceImpl();
 		
 		try {
 			List<User> userList = pmpservice.getPersonalMatchParticipantList(personalMatchId);
-			PersonalMatch pMatch = pservice.getPersmalMatchDetail(personalMatchId);
+			PersonalMatch pMatch = pservice.getPersmalMatchDetail(pm);
 			request.setAttribute("userList", userList);
 			request.setAttribute("personalMatch", pMatch);
 			System.out.println(userList);

@@ -119,13 +119,15 @@ public class TeamMatchDetailView extends HttpServlet {
 			//일시
 			//참가비
 			
-			try {
-				List<Team> myTeamList = teamService.getTeamInfoByUserManagerSport(user.getUserId(), teamMatch.getSport());
-				request.setAttribute("myTeamList", myTeamList);
-				request.setAttribute("isMyTeamList", true);
-			}catch(Exception e) {
-				request.setAttribute("isMyTeamList", false);
+			boolean isMyTeamList = false;
+			if (user != null) {
+			    List<Team> myTeamList = teamService.getTeamInfoByUserManagerSport(user.getUserId(), teamMatch.getSport());
+			    if (myTeamList != null && !myTeamList.isEmpty()) {
+			        request.setAttribute("myTeamList", myTeamList);
+			        isMyTeamList = true;
+			    }
 			}
+			request.setAttribute("isMyTeamList", isMyTeamList);
 			
 			request.setAttribute("t", teamMatch);
 			request.getRequestDispatcher("/jsp/team/teamMatchDetail.jsp").forward(request, response);

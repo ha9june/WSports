@@ -112,15 +112,25 @@
       return;
     }
 
-    // 찜(하트)
-    var fav = t.closest('[data-fav]');
-    if (fav) {
-      e.preventDefault();
-      e.stopPropagation();
-      fav.classList.toggle('is-on');
-      showToast(fav.classList.contains('is-on') ? '관심 경기에 추가했어요.' : '관심 경기에서 삭제했어요.');
-      return;
-    }
+   		// 찜(하트)
+	var fav = t.closest('[data-fav]');
+	if (fav) {
+  	e.preventDefault();
+  	e.stopPropagation();
+  	fav.classList.toggle('is-on');
+    console.log("클릭된 하트의 타입:", fav.dataset.type);
+  	var isReview = fav.dataset.type === 'review'; 
+  	var isOn = fav.classList.contains('is-on');
+  
+  	if (isReview) {
+    showToast(isOn ? '후기게시글에 좋아요를 눌렀어요.' : '후기게시글 좋아요를 취소했어요.');
+  	} else {
+    showToast(isOn ? '관심경기에 추가했습니다.' : '관심경기를 취소했습니다.');
+  }
+  return;
+}
+
+    
 
     // 별점 입력
     var star = t.closest('.star-input button');

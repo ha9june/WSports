@@ -54,7 +54,6 @@ public class ReviewWrite extends HttpServlet {
         try {
             List<Review> myMatches = service.getReviewableMatches(user.getUserId());
             request.setAttribute("myMatches", myMatches);
-            System.out.println(myMatches);
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/review/create?error=fail");

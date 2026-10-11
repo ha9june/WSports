@@ -1,12 +1,8 @@
 package dto;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import dao.UserDao;
 
 /** 회원 */
 public class User {

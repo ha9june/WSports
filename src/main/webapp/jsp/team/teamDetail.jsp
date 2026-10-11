@@ -345,7 +345,7 @@
 					<div class="post-grid">
 
 						<c:forEach var="match" items="${teamMatchList }">
-							<a class="post-card" href="${ctx}/jsp/team/teamMatchDetail.jsp">
+							<a class="post-card" href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
 								<p class="ttl" style="margin: 0">
 									<c:out value="${match.title }"></c:out> 
 									<span class="pill pill-success"><c:out value="${match.status }"></c:out></span>

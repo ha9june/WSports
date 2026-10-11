@@ -159,4 +159,19 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			sqlSession.close();
 		}
 	}
+
+	@Override
+	public int updateTeamMatch(TeamMatch teamMatch) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teammatch.updateTeamMatch", teamMatch);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
 }

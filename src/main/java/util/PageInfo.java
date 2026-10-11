@@ -8,7 +8,8 @@ public class PageInfo {
 	private Integer totalCnt;  //총 게시물 건수
 	
 	public PageInfo() {}
-	
+	public Integer getTotalCnt() { return totalCnt; }
+	public void setTotalCnt(Integer totalCnt) { this.totalCnt = totalCnt; }
 	public PageInfo(Integer curPage) {
 		this.curPage=curPage;
 	}
@@ -45,11 +46,4 @@ public class PageInfo {
 		this.endPage = endPage;
 	}
 	
-	public Integer getTotalCnt() {
-		return totalCnt;
-	}
-
-	public void setTotalCnt(Integer totalCnt) {
-		this.totalCnt = totalCnt;
-	}
 }

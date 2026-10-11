@@ -32,8 +32,9 @@ public interface PersonalMatchService {
 	List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception;
 	List<String>getMyPageCreatedPersonalMatchDates(Long userId, String status, String sport)throws Exception;
 	List<String>getMyPagePersonalMatchDates(Long userId, String status, String sport)throws Exception;
-	List<String>getMyPageFavoriteDates(Long userId, String status, String sport) throws Exception;
-	List<PersonalMatch>selectMyPageFavoriteList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
+	List<Map<String, Object>> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String status,
+			String sport, String startDate, String endDate) throws Exception;
+	
 	//마이페이지 관심경기 추가
 	void insertMyPageHeartMatch(Map<String,Object>param)throws Exception;
 	//마이페이지 관심경기 제거
@@ -41,8 +42,9 @@ public interface PersonalMatchService {
 	//마이페이지 관심경기 0,1표시
 	Boolean toggleMyPageHeartMatch(long userId,long matchId,String matchType)throws Exception;
 	Boolean isHeart(long userId,long matchId,String matchType)throws Exception;
+	List<String> getMyPageFavoriteDates(Map<String, Object> param) throws Exception;
 	//개인매치 상세글
-	PersonalMatch getPersmalMatchDetail(Long personalMatchId) throws Exception;
+	PersonalMatch getPersmalMatchDetail(PersonalMatch personalMatch) throws Exception;
 
 	Long createPersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;
 	Long updatePersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;

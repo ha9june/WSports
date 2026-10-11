@@ -36,4 +36,10 @@
 	<select id="selectTeamIdListByUserId" parameterType="Long" resultType="Long">
 		select team_id from team_user where user_id = #{userId}
 	</select>
+	
+	<select id="updateTeamUserRole" parameterType="Map">
+		update team_user set
+			team_role = #{role}
+			where team_id = #{teamId} and user_id = #{userId} and COALESCE(withdrawn, 0) = 0 
+	</select>
 </mapper>

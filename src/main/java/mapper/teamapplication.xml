@@ -17,9 +17,11 @@
 		resultType="teamapplication">
 		select *
 		from team_application
-		where user_id = #{userId} and team_id = #{teamId} and status = '승인 대기'
+		where user_id = #{userId} and
+		team_id = #{teamId} and status = '승인 대기'
 		order by applied_at desc
-		limit 1
+		limit
+		1
 	</select>
 
 	<select id="selectTeamApplicationByApplicationId"
@@ -32,34 +34,45 @@
 
 	<select id="selectTeamApplicationList" parameterType="Long"
 		resultType="teamapplication">
-		select a.application_id, a.user_id, a.team_id, a.message, a.applied_at,
+		select a.application_id, a.user_id, a.team_id, a.message,
+		a.applied_at,
 		u.nickname, u.profile_image, u.preferred_region1,
-		case t.sport
+		case
+		t.sport
 		when '축구/풋살' then u.soccer_skill
-		when '농구' then u.basketball_skill
+		when '농구' then
+		u.basketball_skill
 		when '테니스' then u.tennis_skill
-		when '배드민턴' then u.badminton_skill
+		when '배드민턴' then
+		u.badminton_skill
 		end as skill
 		from team_application a
-		join user u on u.user_id = a.user_id
+		join user u on
+		u.user_id = a.user_id
 		join team t on t.team_id = a.team_id
-		where a.team_id = #{teamId} and a.status = '승인 대기'
+		where
+		a.team_id = #{teamId} and a.status = '승인 대기'
 		order by a.applied_at
 	</select>
 
 	<update id="updateTeamApplicationApprove" parameterType="Map">
 
-		update team_application
+		update
+		team_application
 		set status = '승인', processed_at = now()
-		where application_id = #{applicationId}
+		where
+		application_id = #{applicationId}
 		and team_id = #{teamId}
-		and status = '승인 대기'
+		and status =
+		'승인 대기'
 
 	</update>
 
 	<update id="updateTeamApplicationReject" parameterType="Map">
-		update team_application
-		set status = '거절', processed_at = now(), rejection_reason = #{reason}
+		update
+		team_application
+		set status = '거절', processed_at = now(),
+		rejection_reason = #{reason}
 		where application_id = #{applicationId}
 		and team_id = #{teamId}
 		and status = '승인 대기'
@@ -104,53 +117,56 @@
 	</select>
 	<select id="selectMypageJoinedTeamList" parameterType="Map"
 		resultType="Map">
-		SELECT a.application_id AS applicationId,
-		a.team_id AS teamId,
-		a.status,
-		DATE_FORMAT(a.applied_at, '%Y-%m-%d %H:%i') AS appliedAt,
-		a.message AS description,
+		SELECT t.team_id AS teamId,
 		t.team_name AS teamName,
-		t.sport
+		t.sport AS sport,
+		t.region1 AS region,
+		DATE_FORMAT(tu.joined_at, '%Y-%m-%d') AS
+		appliedAt,
+		tu.team_role AS role
 		FROM team_user tu
-		JOIN team t ON t.team_id = tu.team_id
-		JOIN team_application a ON a.team_id = tu.team_id
-		AND a.user_id = tu.user_id
+		JOIN team t ON
+		t.team_id = tu.team_id
 		WHERE tu.user_id = #{userId}
 		AND tu.withdrawn = 0
+		AND t.deleted = 0
 		<if test="sport != null and sport != ''">
 			AND t.sport = #{sport}
 		</if>
-		ORDER BY a.applied_at DESC, a.application_id DESC
-		LIMIT #{size} OFFSET #{offset}
+		ORDER BY tu.joined_at DESC, t.team_id DESC
+		LIMIT #{size} OFFSET
+		#{offset}
 	</select>
 
 	<select id="selectMypageJoinedTeamCnt" parameterType="Map"
 		resultType="int">
-		select count(*)
-		from team_user a
-		where a.user_id = #{userId} 
-		AND a.withdrawn = 0
+		SELECT COUNT(*)
+		FROM team_user tu
+		JOIN team t ON t.team_id = tu.team_id
+		WHERE tu.user_id = #{userId}
+		AND tu.withdrawn = 0
+		AND t.deleted = 0
 		<if test="sport != null and sport != ''">
 			AND t.sport = #{sport}
-		</if>
-		<if test="status != null and status != ''">
-			AND a.status = #{status}
 		</if>
 	</select>
 	<update id="updateMypageMyTeam">
 		update team_application
 		set status = #{status}
-		where application_id = #{applicationId}
+		where
+		application_id = #{applicationId}
 		and user_id=#{userId}
-		and status = '승인 대기'
+		and status = '승인
+		대기'
 	</update>
 	<update id="updateMypageJoinTeam">
-		update team_user 
-		set withdrawn= true,
-		withdrawn_at = Now()
-		where user_id = #{userId}
+		UPDATE team_user
+		SET withdrawn = 1,
+		withdrawn_at = NOW()
+		WHERE user_id = #{userId}
 		AND team_id = #{teamId}
-		AND withdrawn = '0'
+		AND withdrawn = 0
+		AND team_role = 'MEMBER'
 	</update>
 
 </mapper>

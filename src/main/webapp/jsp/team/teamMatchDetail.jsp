@@ -209,7 +209,7 @@ $('#thumbs').on('click', '.subImg', function() {
 								<dt>마감</dt>
 								<dd>${fn:replace(t.deadline, 'T', ' ')}</dd>
 							</div>
-							<div class="info-row">
+							<div class="info-row"> 
 								<dt>성별</dt>
 								<dd>
 									<c:out value="${t.gender}" />
@@ -314,7 +314,7 @@ $('#thumbs').on('click', '.subImg', function() {
 										<%-- 로그인했지만 팀장/부팀장이 아님 --%>
 										<c:otherwise>
 											<h2>팀 매칭 신청</h2>
-											<p class="sub">팀 경기는 <b>팀장 또는 부팀장</b>만 신청할 수 있어요.</p>
+											<p class="sub">이 경기는 <b>${t.sport}</b> 종목 팀의 <b>팀장 또는 부팀장</b>만 신청할 수 있어요.</p>
 											<p class="note">팀원이라면 팀장이나 부팀장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
 											<div class="actions row">
 												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀 찾기</a>
@@ -340,8 +340,8 @@ $('#thumbs').on('click', '.subImg', function() {
 										<a class="btn btn-primary"
 											href="${ctx}/team-match/result?teamMatchId=${t.teamMatchId}">출석
 											체크</a> <a class="btn btn-outline"
-											href="${ctx}/team-match/participants?teamMatchId=${t.teamMatchId}">양
-											팀 참가자</a> <a class="btn btn-outline"
+											href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가
+											팀 확인</a> <a class="btn btn-outline"
 											href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기
 											정보 수정</a>
 									</div>
@@ -364,9 +364,10 @@ $('#thumbs').on('click', '.subImg', function() {
 									</div>
 									<div class="actions row">
 										<a class="btn btn-outline btn-sm"
-											href="${ctx}/team-match/participants?teamMatchId=${t.teamMatchId}">참가
+											href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가
 											팀 확인</a>
 										<p class="note">경기가 확정되어 취소와 환불이 불가해요.</p>
+									</div>
 								</div>
 							</c:when>
 							<c:otherwise>

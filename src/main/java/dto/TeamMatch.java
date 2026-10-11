@@ -74,6 +74,20 @@ public class TeamMatch {
 	            .getDisplayName(TextStyle.FULL, Locale.KOREAN);
 	    return day.substring(0, 1);
 	}
+	private Integer minPeople;
+	public Integer getMinPeople() {
+		return minPeople;
+	}
+	public void setMinPeople(Integer minPeople) {
+		this.minPeople = minPeople;
+	}
+	private Integer maxPeople;
+	private Integer currentPeople;
+
+	public Integer getMaxPeople() { return maxPeople; }
+	public void setMaxPeople(Integer maxPeople) { this.maxPeople = maxPeople; }
+	public Integer getCurrentPeople() { return currentPeople; }
+	public void setCurrentPeople(Integer currentPeople) { this.currentPeople = currentPeople; }
     
 	public TeamMatch() {
 		super();
