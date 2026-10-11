@@ -57,30 +57,37 @@ public class PaymentRefund extends HttpServlet {
 		
 		String paymentKey = request.getParameter("paymentKey");
 		String cancelReason = request.getParameter("cancelReason");
-		String matchId = request.getParameter("matchId");
-		if(paymentKey == null) {
-			response.getWriter().write("<script>alert('잘못된 요청입니다.'); history.back();</script>");
+		String matchType = request.getParameter("matchType"); //팀인가 개인인가
+		boolean isTeam = "team".equals(matchType);
+		
+		if(paymentKey == null || paymentKey.isEmpty()) {
+			request.getSession().setAttribute("refundMsg","잘못된 요청입니다." );
+			response.sendRedirect(request.getContextPath()+"/jsp/payment/paymentList.jsp");
 			return;
 		}
 		if (cancelReason == null || cancelReason.isBlank()) {
-			cancelReason = "참가자 환불 요청";
+			cancelReason = isTeam ? "팀 경기 환불 요청" : "참가자 환불 요청";
 		}
 		
 		//환불 후 돌아갈 결제 상세 주소
-		String backUrl = request.getContextPath() + "/payment/complete?paymentKey="+paymentKey
-				+"&matchId=" + matchId + "&matchType=personal";
 		PaymentService service = new PaymentServiceImpl();
 		try {
-			service.refundPersonalPayment(paymentKey, loginUser.getUserId(), cancelReason,  SECRET_KEY);
+			if(isTeam) {
+				service.refundTeamPayment(paymentKey, loginUser.getUserId(), cancelReason,  SECRET_KEY);
+			}else {
+				service.refundPersonalPayment(paymentKey, loginUser.getUserId(), cancelReason,  SECRET_KEY);
+			}
 			request.getSession().setAttribute("refundMsg", "환불이 완료되었습니다.");
 		}catch (IllegalStateException e) {
-			// 검증 실패 (본인 결제 아님, 모집 마감 이후 등)
+			// 검증 실패 (본인 결제 아님, 모집 마감 이후, 상대 팀 있음 등)
 			request.getSession().setAttribute("refundMsg", e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.getSession().setAttribute("refundMsg", "환불 처리 중 오류가 발생했습니다.");
 		}
-		response.sendRedirect(backUrl);
+		//결제 상세로 돌아가기
+		response.sendRedirect(request.getContextPath()+"/info?paymentKey=" + paymentKey 
+				+ "&matchType=" + (isTeam ? "team" : "personal"));
 	}
 
 }

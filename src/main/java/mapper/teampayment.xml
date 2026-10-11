@@ -4,21 +4,24 @@
 <mapper namespace="mapper.teampayment">
 	<!-- 총 매출 -->
 	<select id="totalRevenueTeam" resultType="Long">
-		select ifnull((select sum(total_amount) from team_payment),0) as totalRevenue
+		select ifnull(sum(total_amount),0) as totalRevenue
+		from team_payment
+		where payment_status = 'DONE' 
 	</select>
  
 	<!-- 총 수익 -->
 	<select id="totalProfitTeam" resultType="Long">
-		select
-		floor(ifnull((select sum(total_amount) from team_payment), 0) * 0.08)
-		as totalProfitTeam
+		select floor(ifnull(sum(total_amount), 0) * 0.08) as totalProfitTeam
+		from team_payment
+		where payment_status = 'DONE'
 	</select>
  
 	<!-- 이번달 월간 매출 -->
 	<select id="monthlyRevenueTeam" resultType="Long">
 		select ifnull(sum(total_amount), 0) as month_revenue <!-- 최종 결과 -->
 		from team_payment
-		where year(approved_at) = year(curdate())
+		where payment_status = 'DONE'
+		and year(approved_at) = year(curdate())
 		and month(approved_at) = month(curdate())
 	</select>
  
@@ -26,7 +29,8 @@
 	<select id="monthlyProfitTeam" resultType="Long">
 		select floor(ifnull(sum(total_amount), 0) * 0.08) as month_revenue <!-- 최종 결과 -->
 		from team_payment
-		where year(approved_at) = year(curdate())
+		where payment_status = 'DONE'
+		and year(approved_at) = year(curdate())
 		and month(approved_at) = month(curdate())
 	</select>
  
@@ -34,7 +38,8 @@
 	<select id="sixMonthlyRevenueTeam" resultType="Long">
 		select ifnull(sum(total_amount), 0) as month_revenue <!-- 최종 결과 -->
 		from team_payment
-		where approved_at >= date_format(curdate(), '%Y-%m-01') - interval #{n} month <!-- 숫자만 바꿔서 호출 -->
+		where payment_status = 'DONE'
+		and approved_at >= date_format(curdate(), '%Y-%m-01') - interval #{n} month <!-- 숫자만 바꿔서 호출 -->
 		and approved_at &lt; date_format(curdate(), '%Y-%m-01') - interval #{n} month + Interval 1 month<!-- 숫자만 바꿔서 호출 -->
 	</select>
  
@@ -42,7 +47,8 @@
 	<select id="sixMonthlyProfitTeam" resultType="Long">
 		select floor(ifnull(sum(total_amount), 0)*0.08) as month_revenue <!-- 최종 결과 -->
 		from team_payment
-		where approved_at >= date_format(curdate(), '%Y-%m-01') - interval #{n} month  <!-- 숫자만 바꿔서 호출 -->
+		where payment_status = 'DONE'
+		and approved_at >= date_format(curdate(), '%Y-%m-01') - interval #{n} month  <!-- 숫자만 바꿔서 호출 -->
 		and approved_at &lt; date_format(curdate(), '%Y-%m-01') - interval #{n} month + Interval 1 month<!-- 숫자만 바꿔서 호출 -->
 	</select>
  
@@ -50,7 +56,8 @@
 	<select id="selectPeriodPaymentCntTeam" resultType="Long">
 		select count(*) as period_cnt
 		from team_payment
-		where approved_at >= #{startDate}
+		where payment_status = 'DONE'
+		and approved_at >= #{startDate}
 		and approved_at &lt; #{endDate} + interval 1 day
 	</select>
  
@@ -58,7 +65,8 @@
 	<select id="selectPeriodRevenueTeam" parameterType="map" resultType="Long">
 		select ifnull(sum(total_amount), 0) as month_revenue
 		from team_payment
-		where approved_at >= #{startDate}
+		where payment_status = 'DONE'
+		and approved_at >= #{startDate}
 		and approved_at &lt; #{endDate} + interval 1 day
 	</select>
  
@@ -66,7 +74,8 @@
 	<select id="selectPeriodProfitTeam" parameterType="map" resultType="Long">
 		select floor(ifnull(sum(total_amount), 0)*0.08) as month_revenue
 		from team_payment
-		where approved_at >= #{startDate}
+		where payment_status = 'DONE'
+		and approved_at >= #{startDate}
 		and approved_at &lt; #{endDate} + interval 1 day
 	</select>
 	
@@ -133,29 +142,84 @@
 		from team_match
 		where team_match_id = #{matchId}
 	</select>
-	
+	<!-- 결제 내역 삽입 -->
 	<insert id="insertTeamPaymentParticipant" parameterType="map">
 		insert into team_match_participant (
 			user_id, team_match_id, team_id, status, payment_id, attendance, applied_at
 		) values (
-			#{userId}, #{matchId}, #{teamId}, 
-				'결제완료', #{paymentId}, 0, now()
-			)
+			#{userId}, #{matchId}, #{teamId}, '결제완료', #{paymentId}, 0, now())
 	</insert>
+	
 	<!-- 중복 참가 확인 (결제한 회원이 주장인 팀 기준) -->
 	<select id="selectTeamJoinCnt" parameterType="map" resultType="int">
 		select count(*)
 		from team_match_participant
 		where team_match_id = #{matchId}
 		and status = '결제완료'
-		and team_id = (select team_id from team_user
-		               where user_id = #{userId} and team_role = '주장' and withdrawn = 0
-		               limit 1)
+		and team_id in (select team_id from team_user
+		               where user_id = #{userId} 
+		               and team_role in ('CAPTAIN', 'VICE_CAPTAIN') 
+		               and withdrawn = 0)
 	</select>
+	
 	<!-- 팀 경기 모집자, 제목 -->
 	<select id="selectTeamMatchWriter" resultType="map">
 		select user_id, title, team_id
 		from team_match
 		where team_match_id = #{matchId}
 	</select>
+	
+	<!-- 환불 대상 조회 : 본인 결제만 조회 -->
+	<select id="selectTeamRefundTarget" parameterType="map" resultType="map">
+		select pay.payment_id, pay.payment_status,
+		       p.team_id, p.team_match_id, m.deadline
+		from team_payment pay
+		join team_match_participant p on p.payment_id = pay.payment_id
+		join team_match m on m.team_match_id = p.team_match_id
+		where pay.payment_key = #{paymentKey}
+		and p.user_id = #{userId}
+	</select>
+
+	<!-- 상대 팀 결제 수 : 모집 팀 환불 가능 여부 판단용 -->
+	<select id="selectTeamOpponentCnt" parameterType="map" resultType="int">
+		select count(*)
+		from team_match_participant
+		where team_match_id = #{matchId}
+		and team_id &lt;&gt; #{hostTeamId}
+		and status = '결제완료'
+	</select>
+
+	<!-- 결제 취소 -->
+	<update id="updateTeamPaymentCanceled" parameterType="map">
+		update team_payment
+		set payment_status = 'CANCELED',
+			balance = 0,
+			canceled_at = #{canceledAt},
+			cancel_reason = #{cancelReason},
+			cancel_amount = #{cancelAmount}
+		where payment_id = #{paymentId}
+	</update>
+
+	<!-- 참가 취소 -->
+	<update id="updateTeamParticipantCanceled" parameterType="Long">
+		update team_match_participant
+		set status = '취소',
+			cancelled_at = now()
+		where payment_id = #{paymentId}
+		and status = '결제완료'
+	</update>
+
+	<!-- 상대 팀 환불 시 경기 다시 모집중으로 -->
+	<update id="updateTeamMatchReopen" parameterType="Long">
+		update team_match
+		set status = '모집중'
+		where team_match_id = #{matchId}
+	</update>
+
+	<!-- 모집 팀 환불 시 경기 취소 -->
+	<update id="updateTeamMatchCanceled" parameterType="Long">
+		update team_match
+		set status = '취소'
+		where team_match_id = #{matchId}
+	</update>
 </mapper>
