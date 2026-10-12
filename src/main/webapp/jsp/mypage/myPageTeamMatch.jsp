@@ -273,6 +273,7 @@
 			<c:forEach var="m" items="${matchList}">
 				<div class="act-card"
 					data-href="${ctx}/match/teamMatchDetail?teamMatchId=${m.teamMatchId}">
+					data-href="${ctx}/team-match/detail/view?teamMatchId=${m.teamMatchId}">
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">

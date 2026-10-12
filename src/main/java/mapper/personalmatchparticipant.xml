@@ -70,6 +70,24 @@
 		    u.user_id,
 		    u.nickname;
 	</select>
+	<select id="selectOtherPersonalMatchParticipantList" parameterType="map" resultType="user">
+		SELECT
+		    u.user_id,
+		    u.nickname,
+		    p.attendance,
+		    COALESCE(AVG(r.score), 0) AS avg_rating_score
+		FROM personal_match_participant p
+		JOIN user u
+		    ON p.user_id = u.user_id
+		LEFT JOIN user_rating r
+		    ON r.receiver_user_id = u.user_id
+		WHERE p.personal_match_id = #{personalMatchId}
+		  AND (p.status IS NULL OR p.status != '취소')
+		  AND u.user_id != #{userId}
+		GROUP BY
+		    u.user_id,
+		    u.nickname 
+	</select>
 	<select id="selectIsPersonalMatchParticipation" parameterType="map" resultType="personalmatchparticipant">
 		    SELECT *
 		    FROM personal_match_participant

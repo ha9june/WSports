@@ -2,5 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teamrating">
-
+	<select id="selectMyTeamRating" parameterType="map" resultType="Double">
+		select score
+		from team_rating
+		where match_id = #{matchId}
+		  and team_id = #{targetTeamId}
+		  and evaluator_user_id = #{userId}
+		limit 1
+	</select>
+	
+	<update id="updateTeamRating" parameterType="map">
+		update team_rating
+		set score = #{score}, created_at = now()
+		where match_id = #{matchId}
+		  and team_id = #{targetTeamId}
+		  and evaluator_user_id = #{userId}
+	</update>
+	
+	<insert id="insertTeamRating" parameterType="map">
+		insert into team_rating (team_id, evaluator_user_id, score, created_at, match_id)
+		values (#{targetTeamId}, #{userId}, #{score}, now(), #{matchId})
+	</insert>
 </mapper>

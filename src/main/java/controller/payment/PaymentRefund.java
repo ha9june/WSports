@@ -86,8 +86,7 @@ public class PaymentRefund extends HttpServlet {
 			request.getSession().setAttribute("refundMsg", "환불 처리 중 오류가 발생했습니다.");
 		}
 		//결제 상세로 돌아가기
-		response.sendRedirect(request.getContextPath()+"/info?paymentKey=" + paymentKey 
-				+ "&matchType=" + (isTeam ? "team" : "personal"));
+		response.sendRedirect(request.getContextPath()+"/info?paymentKey=" + paymentKey + "&matchType=" + (isTeam ? "team" : "personal"));
 	}
 
 }
