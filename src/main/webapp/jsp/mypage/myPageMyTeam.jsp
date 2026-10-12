@@ -25,7 +25,7 @@
 	justify-content: center;
 	gap: 14px; /* 알약과 ⋮ 사이 간격 */
 	flex-shrink: 0;
-	min-width: 56px; /* 팀장/부팀장/팀원 알약 폭이 달라도 ⋮ 위치 고정 */
+	min-width: 56px; /* 주장/부주장/팀원 알약 폭이 달라도 ⋮ 위치 고정 */
 	margin-left: 12px;
 }
 
@@ -231,10 +231,10 @@
 								style="display: block; font-size: 16px; margin-bottom: 4px;">
 								${m.teamName} <c:choose>
 									<c:when test="${m.myRole eq 'LEADER'}">
-										<span class="role-badge leader">팀장</span>
+										<span class="role-badge leader">주장</span>
 									</c:when>
 									<c:when test="${m.myRole eq 'SUB_LEADER'}">
-										<span class="role-badge sub">부팀장</span>
+										<span class="role-badge sub">부주장</span>
 									</c:when>
 								</c:choose>
 							</strong>
@@ -317,9 +317,9 @@
 							<c:if test="${not empty m.myRole}">
 								<span class="role-pill"> <c:choose>
 										<c:when
-											test="${m.myRole eq 'CAPTAIN' or m.myRole eq 'LEADER'}">팀장</c:when>
+											test="${m.myRole eq 'CAPTAIN' or m.myRole eq 'LEADER'}">주장</c:when>
 										<c:when
-											test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">부팀장</c:when>
+											test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">부주장</c:when>
 										<c:otherwise>팀원</c:otherwise>
 									</c:choose>
 								</span>

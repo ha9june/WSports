@@ -4,7 +4,7 @@
   팀 상세 (teamDetail.jsp) - 담당: 하준수
   피그마: Club / Detail / Desktop (비가입자), Club / Detail / Member View, Club / Detail / Manager View
   ─ 하나의 JSP 로 처리 ─
-   state : public(비가입자 - 팀원/작성글 잠금, 가입 신청) | member(팀원) | manager(팀장·부팀장 - 팀 관리 버튼)
+   state : public(비가입자 - 팀원/작성글 잠금, 가입 신청) | member(팀원) | manager(주장·부주장 - 팀 관리 버튼)
    role  : guest 면 state 와 상관없이 public 화면 + 가입 신청 시 로그인 안내
    admin : 관리자는 팀 삭제 버튼 노출
   실구현 : 로그인 사용자와 팀의 관계(TEAM_MEMBER.role)로 서블릿에서 state 계산

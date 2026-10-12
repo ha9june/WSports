@@ -61,6 +61,22 @@
 				</div>
 			</c:forEach>
 		</div>
+		<c:if test="${pageInfo.allPage > 1}">
+			<nav class="pagination">
+				<c:if test="${pageInfo.curPage > 1}">
+					<a href="${ctx}/team/manage/posts?teamId=${teamId}&page=${pageInfo.curPage - 1}">‹</a>
+				</c:if>
+		
+				<c:forEach var="p" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+					<a href="${ctx}/team/manage/posts?teamId=${teamId}&page=${p}"
+						class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+				</c:forEach>
+		
+				<c:if test="${pageInfo.curPage < pageInfo.allPage}">
+					<a href="${ctx}/team/manage/posts?teamId=${teamId}&page=${pageInfo.curPage + 1}">›</a>
+				</c:if>
+			</nav>
+		</c:if>
 	</div>
 </main>
 <%@ include file="/jsp/common/footer.jsp"%>

@@ -6,7 +6,7 @@
     t              : 경기 정보 (TeamMatch)
     isHost         : 글쓴이 여부
     applied        : 상대 팀으로 신청한 경기인지
-    myTeamList     : 내가 팀장/부팀장인 팀 목록
+    myTeamList     : 내가 주장/부주장인 팀 목록
   t.status : 모집중 | 모집 마감 | 경기 종료 | 인원 미달 경기 취소 | 작성자 경기 취소
 --%>
 <c:set var="status" value="${t.status}" />
@@ -284,7 +284,7 @@ $('#thumbs').on('click', '.subImg', function() {
 									<h2>팀 매칭 신청</h2> 
 									<div class="field mt-16">
 										<label class="field-label" for="myTeam">내 ${t.sport} 팀 선택</label>
-										<%-- TODO: 내가 팀장/부팀장인 팀 목록 (서블릿에서 myTeamList로 전달) --%>
+										<%-- TODO: 내가 주장/부주장인 팀 목록 (서블릿에서 myTeamList로 전달) --%>
 										<select class="select" id="myTeam" name="teamNo">
 											<c:forEach var="mt" items="${myTeamList}">
 												<option value="${mt.teamId}"><c:out
@@ -306,16 +306,16 @@ $('#thumbs').on('click', '.subImg', function() {
 										<%-- 비로그인 --%>
 										<c:when test="${empty sessionScope.user}">
 											<h2>팀 매칭 신청</h2>
-											<p class="sub">로그인 후 팀장 또는 부팀장 계정으로 신청할 수 있어요.</p>
+											<p class="sub">로그인 후 주장 또는 부주장 계정으로 신청할 수 있어요.</p>
 											<div class="actions">
 												<a class="btn btn-primary" href="${ctx}/auth/login" data-auth>로그인</a>
 											</div>
 										</c:when>
-										<%-- 로그인했지만 팀장/부팀장이 아님 --%>
+										<%-- 로그인했지만 주장/부주장이 아님 --%>
 										<c:otherwise>
 											<h2>팀 매칭 신청</h2>
-											<p class="sub">이 경기는 <b>${t.sport}</b> 종목 팀의 <b>팀장 또는 부팀장</b>만 신청할 수 있어요.</p>
-											<p class="note">팀원이라면 팀장이나 부팀장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
+											<p class="sub">이 경기는 <b>${t.sport}</b> 종목 팀의 <b>주장 또는 부주장</b>만 신청할 수 있어요.</p>
+											<p class="note">팀원이라면 주장이나 부주장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
 											<div class="actions row">
 												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀 찾기</a>
 												<a class="btn btn-outline btn-sm" href="${ctx}/team/create">팀 만들기</a>

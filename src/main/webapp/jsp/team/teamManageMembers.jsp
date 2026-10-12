@@ -4,7 +4,7 @@
   팀 관리 - 팀원 관리 (teamManageMembers.jsp) - 담당: 하준수
   피그마: Club / Manage / Members, Club / Manage / Members — 역할 관리 흐름
           (Vice Captain Grant / Vice Revoked Toast / Member Kick / Member Action Menu / Inline Profile Hover)
-   state : default | vice(부팀장 지정 모달) | viceRevoked(해제 완료 토스트) | kick(강퇴 모달)
+   state : default | vice(부주장 지정 모달) | viceRevoked(해제 완료 토스트) | kick(강퇴 모달)
   닉네임에 마우스를 올리면 프로필 호버 카드, ⋮ 메뉴로 역할 변경·강퇴
 --%>
 <c:set var="state"
@@ -16,7 +16,7 @@
 <c:set var="activeNav" value="team" />
 <c:set var="demoRoles" value="member" />
 <c:set var="demoStates"
-	value="default:기본|vice:부팀장 지정 모달|viceRevoked:부팀장 해제 토스트|kick:강퇴 모달" />
+	value="default:기본|vice:부주장 지정 모달|viceRevoked:부주장 해제 토스트|kick:강퇴 모달" />
 <%@ include file="/jsp/common/header.jsp"%>
 <script type="text/javascript">
 	$(function() {
@@ -25,13 +25,13 @@
 				'[data-modal-open]',
 				function() {
 					var modalId = $(this).data('modal-open');
-					$('#' + modaslId + ' input[name=userId]').val(
+					$('#' + modalId + ' input[name=userId]').val(
 							$(this).data('user-id'));
 				});
 
 		// 더보기: 12명씩
 		var SHOW = 12;
-		$('.member-grids .member-card').slice(SHOW).hide();
+		$('.member-grid .member-card').slice(SHOW).hide();
 		$(document).on('click', '.btn-more', function() {
 			$('.member-grid .member-card:hidden').slice(0, SHOW).show();
 			if ($('.member-grid .member-card:hidden').length === 0) {
@@ -67,7 +67,7 @@
 		<h2 class="sub-title">팀원 ${team.currentPeople }명</h2>
 		<p class="section-desc" style="margin-bottom: 24px">팀원의 역할을 확인하고
 			관리할 수 있어요.</p>
-		<%-- TODO: <c:forEach var="m" items="${memberList}"> 팀장 본인은 메뉴 없음 --%>
+		<%-- TODO: <c:forEach var="m" items="${memberList}"> 주장 본인은 메뉴 없음 --%>
 		<div class="member-grid">
 			<c:forEach var="m" items="${userList}">
 				<div class="member-card">
@@ -120,23 +120,23 @@
 						</c:if>
 					</div>
 
-					<%-- 팀장 카드에는 메뉴 없음 --%>
+					<%-- 주장 카드에는 메뉴 없음 --%>
 					<c:if test="${m.teamRole ne 'CAPTAIN'}">
 						<div class="dropdown">
 							<button type="button" class="icon-btn" data-dropdown-toggle
 								aria-label="팀원 메뉴">⋮</button>
 							<div class="dropdown-menu">
-								<%-- 부팀장 지정/해제는 로그인한 사람이 팀장일 때만 --%>
+								<%-- 부주장 지정/해제는 로그인한 사람이 주장일 때만 --%>
 								<c:if test="${teamRole eq 'CAPTAIN'}">
 									<c:choose>
 										<c:when test="${m.teamRole eq 'VICE_CAPTAIN'}">
 											<button type="button" data-member-name="${m.nickname}"
-												data-user-id="${m.userId}" data-modal-open="viceRevokeModal">부팀장
+												data-user-id="${m.userId}" data-modal-open="viceRevokeModal">부주장
 												해제</button>
 										</c:when>
 										<c:otherwise>
 											<button type="button" data-member-name="${m.nickname}"
-												data-user-id="${m.userId}" data-modal-open="viceModal">부팀장으로
+												data-user-id="${m.userId}" data-modal-open="viceModal">부주장으로
 												지정</button>
 										</c:otherwise>
 									</c:choose>
@@ -163,14 +163,14 @@
 	<c:when test="${param.result eq 'vice'}">
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
-				showToast('부팀장으로 지정했어요.');
+				showToast('부주장으로 지정했어요.');
 			});
 		</script>
 	</c:when>
 	<c:when test="${param.result eq 'revoke'}">
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
-				showToast('부팀장 권한을 해제했어요.');
+				showToast('부주장 권한을 해제했어요.');
 			});
 		</script>
 	</c:when>
@@ -183,7 +183,7 @@
 	</c:when>
 </c:choose>
 
-<%-- 부팀장 지정 --%>
+<%-- 부주장 지정 --%>
 <div class="modal ${state eq 'vice' ? 'is-open' : ''}" id="viceModal"
 	role="dialog" aria-modal="true">
 	<form method="post" action="${ctx}/team/member/role-update">
@@ -192,9 +192,9 @@
 			name="role" value="VICE_CAPTAIN">
 		<div class="modal-card">
 			<h2 class="modal-title">
-				<span data-fill-name>풋살초보</span> 님을 부팀장으로 지정할까요?
+				<span data-fill-name>풋살초보</span> 님을 부주장으로 지정할까요?
 			</h2>
-			<p class="modal-desc">부팀장은 팀장과 함께 팀 운영 권한을 갖게 됩니다. 권한은 팀원 관리에서
+			<p class="modal-desc">부주장은 주장과 함께 팀 운영 권한을 갖게 됩니다. 권한은 팀원 관리에서
 				언제든 해제할 수 있습니다.</p>
 			<div class="modal-actions">
 				<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
@@ -204,7 +204,7 @@
 	</form>
 </div>
 
-<%-- 부팀장 해제 --%>
+<%-- 부주장 해제 --%>
 <div class="modal" id="viceRevokeModal" role="dialog" aria-modal="true">
 	<form method="post" action="${ctx}/team/member/role-update">
 		<input type="hidden" name="teamId" value="${teamId}"> <input
@@ -212,7 +212,7 @@
 			name="role" value="MEMBER">
 		<div class="modal-card">
 			<h2 class="modal-title">
-				<span data-fill-name>운동하자</span> 님의 부팀장 권한을 해제할까요?
+				<span data-fill-name>운동하자</span> 님의 부주장 권한을 해제할까요?
 			</h2>
 			<p class="modal-desc">해제하면 일반 팀원으로 변경되고 팀 관리 메뉴를 사용할 수 없습니다.</p>
 			<div class="modal-actions">
@@ -245,7 +245,7 @@
 <c:if test="${state eq 'viceRevoked'}">
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
-			showToast('운동하자 님의 부팀장 권한을 해제했어요.');
+			showToast('운동하자 님의 부주장 권한을 해제했어요.');
 		});
 	</script>
 </c:if>
