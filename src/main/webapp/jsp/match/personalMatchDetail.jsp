@@ -207,7 +207,17 @@
             
             <div class="info-row"><dt>참가 인원</dt>
 	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
-	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}"><small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small></c:if>
+	            	<c:choose>
+	            		<c:when test="${personalMatch.currentPeople >= personalMatch.minPeople}">
+	            			<small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small>
+	            		</c:when>
+	            		<c:otherwise>
+	            			<small style="color:red;">최소 진행 ${personalMatch.minPeople }명 · 미충족</small>
+	            		</c:otherwise>
+	            	</c:choose>
+	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}">
+	            		<small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small>
+            		</c:if>
 	           	</dd>
            	</div>
             <div class="info-row"><dt>마감</dt><dd>

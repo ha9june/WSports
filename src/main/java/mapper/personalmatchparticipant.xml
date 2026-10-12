@@ -95,4 +95,12 @@
 		      AND personal_match_id = #{personalMatchId}
 			
 	</select>
+	<select id="selectParticipantUserIds" parameterType="Long"
+		resultType="Long">
+		select distinct user_id
+		from personal_match_participant
+		where
+		personal_match_id = #{personalMatchId}
+		and status = '결제완료'
+	</select>
 </mapper>

@@ -71,7 +71,7 @@
         });
 
       var countEl = shell.querySelector('.filter-more .count');
-      if (countEl) countEl.textContent = '0';
+      if (countEl) countEl.textContent = '';
 
       shell.querySelectorAll('input[type=text]').forEach(function (i) {
         i.value = '';

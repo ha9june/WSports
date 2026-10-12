@@ -33,4 +33,10 @@ public interface PersonalMatchDao {
 	//관리자 경기수 세기 - 개인
 	Long selectMatchCntPersonal() throws Exception;
 	
+	//스케줄러
+	List<PersonalMatch> selectExpiredRecruiting() throws Exception;
+	List<PersonalMatch> selectFinishedMatches() throws Exception;
+	int updateStatusToNoOpponentCancel(Long personalMatchId) throws Exception;
+	int updateStatusToFinished(Long personalMatchId) throws Exception;
+
 }
