@@ -180,12 +180,20 @@
 		where payment_id = #{paymentId}
 	</update>
 	<!-- 참가 취소 처리 -->
-	<update id="updateParticipantCanceled" parameterType="Long">
+	<update id="updateParticipantCanceled" parameterType="map">
 		update personal_match_participant
 		set status = '취소',
 			cancelled_at = now(),
 			cancel_reason = #{cancelReason}
 		where payment_id = #{paymentId}
 		and status = '결제완료'
+	</update>
+	<!-- 모집자 결제 완료 시 deleted 0으로 업데이트 -->
+	<update id="updatePersonalMatchOpen" parameterType="map">
+		update personal_match
+		set deleted = 0
+		where personal_match_id = #{matchId}
+		and user_id = #{userId}
+		and deleted = 1
 	</update>
 </mapper>

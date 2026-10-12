@@ -25,6 +25,7 @@
 		AND f.user_id =
 		#{userId}
 		WHERE 1=1
+		AND m.deleted = 0
 		AND m.status ='모집중'
 		<if test="searchType == 'RECOMAND'">
 			<if test="sports != null and sports.length > 0">
@@ -79,14 +80,11 @@
 		ON m.personal_match_id =
 		p.personal_match_id
 		LEFT JOIN favorite f
-		ON f.match_id =
-		m.personal_match_id
-		AND f.match_type = 'PERSONAL'
-		AND f.user_id =
-		#{userId}
-
+	        ON f.match_id = m.personal_match_id
+	        AND f.match_type = 'PERSONAL'
+	        AND f.user_id = #{userId}
 		WHERE 1=1
-
+		AND m.deleted = 0
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
 			<foreach collection="sports" item="sport" open="("
@@ -197,8 +195,8 @@
 		#{userId}
 
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
-		AND
-		m.longitude BETWEEN #{minLng} AND #{maxLng}
+		AND m.longitude BETWEEN #{minLng} AND #{maxLng}
+		AND m.deleted = 0
 
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
@@ -383,9 +381,9 @@
 		favorite
 		FROM personal_match m
 		LEFT JOIN
-		personal_match_participant p
-		ON
-		m.personal_match_id = p.personal_match_id
+			personal_match_participant p
+			ON m.personal_match_id = p.personal_match_id
+			AND p.status = "결제완료"
 		LEFT JOIN user u
 		ON m.user_id
 		= u.user_id
@@ -394,8 +392,8 @@
 		AND
 		f.match_type = 'Personal'
 		AND f.user_id = #{userId}
-		WHERE
-		m.personal_match_id = #{personalMatchId}
+		WHERE m.personal_match_id = #{personalMatchId}
+
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at
 		DESC;
@@ -592,6 +590,7 @@
 		select count(*)
 		from personal_match
 		where status = '모집중'
+		and deleted = 0
 	</select>
 	
 	

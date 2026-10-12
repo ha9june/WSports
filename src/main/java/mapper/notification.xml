@@ -69,17 +69,19 @@
 		title AS title,
 		content AS content,
 		link AS link,
-		is_read AS isRead,
+		IF(COALESCE(is_read, 0)
+		= 0, 0, 1) AS isRead,
 		created_at AS createdAt,
 		CASE
-		WHEN DATE(created_at) = CURDATE() THEN
-		DATE_FORMAT(created_at, '%H:%i')
-		ELSE DATE_FORMAT(created_at, '%c/%d')
+		WHEN DATE(created_at)
+		= CURDATE() THEN DATE_FORMAT(created_at, '%H:%i')
+		ELSE
+		DATE_FORMAT(created_at, '%c/%d')
 		END AS createdAtStr
 		FROM notification
 		WHERE user_id = #{userId}
-		ORDER BY
-		is_read ASC, created_at DESC, notification_id DESC
+		ORDER BY COALESCE(is_read, 0) ASC, created_at
+		DESC, notification_id DESC
 	</select>
 
 	<!-- 안 읽은 알림 개수 (헤더 종 아이콘 배지용) -->
@@ -88,7 +90,7 @@
 		SELECT COUNT(*)
 		FROM notification
 		WHERE user_id = #{userId}
-		AND is_read = 0
+		AND COALESCE(is_read, 0) = 0
 	</select>
 
 	<!-- 알림 1건 읽음 처리 (본인 것만) -->
@@ -104,12 +106,13 @@
 		parameterType="long">
 		UPDATE notification
 		SET is_read = 1
-		WHERE user_id =
-		#{userId} AND is_read = 0
+		WHERE user_id = #{userId}
+		AND COALESCE(is_read, 0) = 0
 	</update>
 	<update id="updateAllRead" parameterType="long">
 		UPDATE notification
-		SET is_read = 1
+		SET
+		is_read = 1
 		WHERE user_id = #{userId} AND COALESCE(is_read, 0) = 0
 	</update>
 	<update id="updateRead" parameterType="map">

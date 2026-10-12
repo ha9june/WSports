@@ -60,7 +60,6 @@
 <%@ include file="/jsp/common/header.jsp" %>
 
 <c:set var="status" value="${personalMatch.status}" />
-<c:set var="status" value="경기 종료" />
 <c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
 <c:set var="isUser" value="${sessionScope.user.grade eq 'User'}" />
 <c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />

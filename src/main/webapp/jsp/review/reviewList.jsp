@@ -14,6 +14,16 @@
 <c:set var="demoStates" value="recent:최근 후기|grouped:경기별 모아보기" />
 <%@ include file="/jsp/common/header.jsp"%>
 <style>
+.review-toolbar .chip.is-selected {
+	background: #eef4ff;
+	border: 1px solid #1a6bff;
+	color: #1a6bff;
+	font-weight: 700;
+}
+.review-toolbar .chip:hover {
+	border-color: #1a6bff;
+	color: #1a6bff;
+}
 .review-toolbar .search-btn {
 	height: 44px;
 	padding: 0 22px;
@@ -36,7 +46,8 @@
 
 .review-toolbar {
 	display: flex;
-	align-items: center; justify-content : space-between;
+	align-items: center;
+	justify-content: space-between;
 	/* 칩은 왼쪽, 검색은 오른쪽 끝 */
 	gap: 16px;
 	flex-wrap: wrap;
@@ -76,12 +87,12 @@
 	margin-left: 4px;
 	padding: 0 18px;
 	border: 0;
-	border-radius: 999px;       /* 알약 모양 */
-	background: #f3f4f6;        /* 연회색 배경 */
-	color: #6b7280;             /* 회색 글자 */
+	border-radius: 999px; /* 알약 모양 */
+	background: #f3f4f6; /* 연회색 배경 */
+	color: #6b7280; /* 회색 글자 */
 	font-size: 13px;
 	font-weight: 500;
-	text-decoration: none;      /* 밑줄 제거 */
+	text-decoration: none; /* 밑줄 제거 */
 	white-space: nowrap;
 	cursor: pointer;
 	transition: background .2s, color .2s;
@@ -104,21 +115,18 @@
 				value="${empty param.status ? 'ALL' : param.status}">
 
 			<div class="chip-group">
+				<c:set var="st" value="${empty param.status ? 'ALL' : param.status}" />
 				<button type="button"
-					class="chip ${empty param.status or param.status eq 'ALL' ? 'neutral is-selected' : ''}"
-					data-value="ALL">전체</button>
+					class="chip ${st eq 'ALL' ? 'is-selected' : ''}" data-value="ALL">전체</button>
 				<button type="button"
-					class="chip ${param.status eq '축구/풋살' ? 'neutral is-selected' : ''}"
+					class="chip ${st eq '축구/풋살' ? 'is-selected' : ''}"
 					data-value="축구/풋살">축구/풋살</button>
 				<button type="button"
-					class="chip ${param.status eq '농구' ? 'neutral is-selected' : ''}"
-					data-value="농구">농구</button>
+					class="chip ${st eq '농구' ? 'is-selected' : ''}" data-value="농구">농구</button>
 				<button type="button"
-					class="chip ${param.status eq '테니스' ? 'neutral is-selected' : ''}"
-					data-value="테니스">테니스</button>
+					class="chip ${st eq '테니스' ? 'is-selected' : ''}" data-value="테니스">테니스</button>
 				<button type="button"
-					class="chip ${param.status eq '배드민턴' ? 'neutral is-selected' : ''}"
-					data-value="배드민턴">배드민턴</button>
+					class="chip ${st eq '배드민턴' ? 'is-selected' : ''}" data-value="배드민턴">배드민턴</button>
 				<c:if
 					test="${(not empty param.status and param.status ne 'ALL') or not empty param.keyword}">
 					<a class="btn-filter-reset" href="${ctx}/review/list?state=recent">필터
@@ -172,9 +180,10 @@
 									</p>
 									<p class="link">
 										참여 경기 ·
-										<c:out value="${r.matchType}" />
-									</p><p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
-									&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
+										<c:out value="${r.matchTitle}" />
+									</p>
+									<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
+										&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
 								</div>
 							</a>
 						</c:forEach>
@@ -213,7 +222,7 @@
 								</p>
 								<p class="link">
 									참여 경기 ·
-									<c:out value="${r.matchType}" />
+									<c:out value="${r.matchTitle}" />
 								</p>
 								<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
 									&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>

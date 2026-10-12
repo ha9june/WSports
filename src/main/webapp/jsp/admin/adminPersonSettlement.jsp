@@ -18,13 +18,6 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 
-<script>
-	//full calender 달력 api
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        // 속성, 이벤트 등 세팅
-    });
-</script>
 <div class="admin-inner">
 	<p class="eyebrow-path">관리자(사이트)</p>
 	<div class="page-head"><h1 class="page-title">정산 관리</h1>
@@ -92,7 +85,7 @@
     	</c:choose>
     	<a class="btn btn-outline btn-xs t-brand"
        href="${ctx}/admin/settlement/detail?matchId=${s.personal_match_id}&amp;matchType=personal">보기</a>
-  		</div>
+ 		</div>
 	</c:forEach>
 	<c:if test="${empty displayList}">
 		<div class="empty-state">
