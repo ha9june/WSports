@@ -118,7 +118,7 @@
 	<select id="selectMatchCntTeam" resultType="Long">
 		select count(*) 
 		from team_match
-		where status in ('모집중', '종료')
+		where status in ('모집중', '모집 마감', '경기 종료')
 	</select>
 
 	<select id="selectTeamMatchUser" parameterType="Map"
@@ -524,5 +524,23 @@
 		from team_match_participant
 		where team_match_id = #{teamMatchId}
 		  and status = '결제완료'
+	</select>
+	
+	<!-- 팀 작성글 목록 (페이징) -->
+	<select id="selectTeamPostList" parameterType="map" resultType="teammatch">
+		select team_match_id, title, status, match_date, start_time, end_time, place_name
+		from team_match
+		where team_id = #{teamId}
+		  and coalesce(deleted, 0) = 0
+		order by created_at desc, team_match_id desc
+		limit #{offset}, #{size}
+	</select>
+	
+	<!-- 팀 작성글 개수 -->
+	<select id="selectTeamPostCnt" parameterType="Long" resultType="int">
+		select count(*)
+		from team_match
+		where team_id = #{teamId}
+		  and coalesce(deleted, 0) = 0
 	</select>
 </mapper>

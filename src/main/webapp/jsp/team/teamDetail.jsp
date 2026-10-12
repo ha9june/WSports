@@ -287,10 +287,10 @@
 							<p class="section-desc">함께 활동 중인 팀원의 역할과 프로필을 확인할 수 있어요.</p>
 						</div>
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/team/teamInfoMembers.jsp">전체보기</a>
+							href="${ctx}/team/info/members?teamId=${team.teamId}">전체보기</a>
 					</div>
 					<div class="member-grid">
-						<c:forEach var="user" items="${teamUserList}">
+						<c:forEach var="user" items="${teamUserList}" end="5">
 							<c:choose>
 								<c:when test="${team.sport eq '축구/풋살'}">
 									<c:set var="userSkill" value="${user.soccerSkill}" />
@@ -340,7 +340,7 @@
 							<p class="section-desc">팀이 작성한 상대 팀 모집 글이에요.</p>
 						</div>
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/team/teamInfoPosts.jsp">전체보기</a>
+							href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기</a>
 					</div>
 					<div class="post-grid">
 
@@ -351,7 +351,7 @@
 									<span class="pill pill-success"><c:out value="${match.status }"></c:out></span>
 								</p>
 									<p><c:out value="${match.matchDate }"></c:out> 
-									(요일) 
+									(${match.dayOfWeekKorean}) 
 									<c:out value="${match.startTime }"></c:out> - 
 									<c:out value="${match.endTime }"></c:out> · 
 									<c:out value="${match.placeName }"></c:out> 
