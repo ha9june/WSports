@@ -57,7 +57,9 @@
     	</div>
 	</section>
 	<div class="form-actions">
-    	<button type="button" class="btn btn-outline" data-toast="영수증을 이메일로 보냈어요.">영수증 받기</button>
+    	<c:if test="${not empty payment.receiptUrl}">
+			<a class="btn btn-outline" href="${payment.receiptUrl}" target="_blank" rel="noopener">영수증 보기</a>
+		</c:if>
     	<c:if test="${canRefund}">
 			<button type="button" class="btn btn-outline" data-modal-open="refundModal">환불하기</button>
 		</c:if>

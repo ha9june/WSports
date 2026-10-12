@@ -149,6 +149,26 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			throw e;
 		}
 	}
-
-
+	// 스케줄러 : 마감 지난 최소 인원 미달 경기
+	@Override
+	public List<PersonalMatch> selectExpiredUnderMin() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatch.selectExpiredUnderMin");
+		}
+	}
+	// 스케줄러 : 최소 인원 미달 경기 취소
+	@Override
+	public int updateStatusToUnderMinCancel(Long matchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.personalmatch.updateStatusToUnderMinCancel", matchId);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
 }

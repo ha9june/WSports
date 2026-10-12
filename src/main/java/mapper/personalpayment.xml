@@ -196,4 +196,13 @@
 		and user_id = #{userId}
 		and deleted = 1
 	</update>
+	<!-- 스케줄러 : 경기의 결제완료 참가자 결제 목록 (자동 환불 대상) -->
+	<select id="selectPaidPaymentsByMatch" parameterType="Long" resultType="map">
+		select pay.payment_id, pay.payment_key, p.user_id
+		from personal_match_participant p
+		join personal_payment pay on pay.payment_id = p.payment_id
+		where p.personal_match_id = #{matchId}
+		and p.status = '결제완료'
+		and pay.payment_status = 'DONE'
+</select>
 </mapper>
