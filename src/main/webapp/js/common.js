@@ -108,6 +108,7 @@
         }
         chip.classList.toggle('is-selected');
       }
+      
       syncChipInput(group);
       return;
     }
@@ -215,8 +216,41 @@
     }
   });
 
+
+	/*function updateFilterCount(group) {
+	  var more = group.closest('.filter-more');
+	  if (!more) return;
+	  var countEl = more.querySelector('.count');
+	  if (!countEl) return;
+	
+	  var labels = [];
+	  more.querySelectorAll('.chip.is-selected').forEach(function (c) {
+	    labels.push(c.textContent.trim());   // 화면에 보이는 글자 (성별무관 등)
+	  });
+	  countEl.textContent = labels.length ? labels.join(', ') : '0';
+	}*/
+	function updateFilterCount(group) {
+	  var more = group.closest('.filter-more');
+	  if (!more) return;
+	  //var countEl = more.querySelector('.count');
+	  var countEl = more.querySelector('.count');
+	  if (!countEl) return;
+	
+	  countEl.innerHTML = '';   // 기존 내용 비우기
+	
+	  more.querySelectorAll('.chip.is-selected').forEach(function (c) {
+	    var dot = document.createElement('span');
+	    dot.className = 'count-dot';
+	    dot.textContent = c.textContent.trim();
+	    countEl.appendChild(dot);
+	  });
+	}
+
+
   /* 칩 선택값을 hidden input 에 콤마로 저장 (서버 전송용) */
   function syncChipInput(group) {
+	  updateFilterCount(group);
+	  
     var name = group.getAttribute('data-name');
     if (!name) return;
     var input = group.querySelector('input[type=hidden][name="' + name + '"]');
