@@ -49,7 +49,8 @@ $(function() {
 	
 	const images = [ '${t.image1}', '${t.image2}',
 		'${t.image3}', '${t.image4}',
-		'${t.image5}' ];
+		'${t.image5}' ]
+	.filter(function (image) { return image && image !== 'null'; });
 
 
 	var hasImage = images.some(function(image) {

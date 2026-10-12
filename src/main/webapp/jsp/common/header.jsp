@@ -389,7 +389,7 @@ window.addEventListener("fcmMessageReceived", function(e) {
 						</button>
 						<c:choose>
 							<c:when test="${not empty sessionScope.user.profileImage}">
-								<c:set var="headerProfileImg" value="${ctx}/uploads/${sessionScope.user.profileImage}" />
+								<c:set var="headerProfileImg" value="${ctx}/profiles/${sessionScope.user.profileImage}" />
 							</c:when>
 							<c:otherwise>
 								<c:set var="headerProfileImg" value="${ctx}/img/default-profile.svg" />

@@ -149,8 +149,8 @@
 		$('#profileImg').html('<img src="' + imageSrc + '" alt="팀 프로필 이미지">');
 
 		const images = [ '${team.activityImage1}', '${team.activityImage2}',
-				'${team.activityImage3}', '${team.activityImage4}',
-				'${team.activityImage5}' ];
+			'${team.activityImage3}', '${team.activityImage4}', '${team.activityImage5}' ]
+			.filter(function (image) { return image && image !== 'null'; });
 
 
 		var hasImage = images.some(function(image) {

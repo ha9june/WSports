@@ -208,7 +208,7 @@ $(function(){
 						<button type="button" class="btn btn-outline btn-sm"
 							data-filter-toggle>필터 더보기 +</button> 
 						<span class="count">0</span>
-						<div class="filter-panel">
+						<div class="filter-panel tm-filter">
 							<div class="chip-group" data-select="single" data-name="gender">
 							
 								<span class="chip-label">성별</span>
