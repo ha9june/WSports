@@ -27,8 +27,6 @@ public interface PaymentService {
 	boolean isAlreadyJoined(Long userId, Long matchId, boolean isTeam) throws Exception;
 	//개인 경기 환불
 	void refundPersonalPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
-	//팀 경기 환불
-	void refundTeamPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
-	//팀 경기 환불 가능 여부
-	boolean canRefundTeamPayment(String paymentKey, Long userId) throws Exception;
+	//모집 기간 내 상대 팀이 없을 때 모집 팀 결제 자동 환불 (스케줄러 용)
+	boolean autoRefundHostTeamPayment(Long matchId, String secretKey) throws Exception;
 }

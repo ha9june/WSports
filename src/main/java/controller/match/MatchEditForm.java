@@ -179,7 +179,7 @@ public class MatchEditForm extends HttpServlet {
             pm.setSkillIntermediate(levels.contains("중급"));
             pm.setSkillAdvanced(levels.contains("상급"));
             
-            pm.setDeleted(false);
+            pm.setDeleted(false); 
             pm.setStatus("모집중");
             
             System.out.println(pm);

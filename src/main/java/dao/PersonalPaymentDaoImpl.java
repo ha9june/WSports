@@ -126,6 +126,7 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 			param.put("matchId", matchId);
 			param.put("paymentId", personalPayment.getPaymentId());
 			sqlSession.insert("mapper.personalpayment.insertPaidParticipant", param);
+			sqlSession.update("mapper.personalpayment.updatePersonalMatchOpen", param); //결제 완료시 0으로 업데이트
 
 			sqlSession.commit();
 		} catch (Exception e) {
