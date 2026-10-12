@@ -10,8 +10,6 @@
 <c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
 <c:set var="pageTitle" value="경기 후 관리" />
 <c:set var="pageCss" value="match" />
-<c:set var="demoRoles" value="member" />
-<c:set var="demoStates" value="host:작성자|participant:참가자" />
 <%@ include file="/jsp/common/header.jsp" %>
 
 <main class="page">
@@ -23,16 +21,22 @@
     </div>
     <div class="tabs dark"><span class="tab is-active">출석 · 참가자 평가</span></div>
 
-    <%-- TODO: action 을 평가 저장 서블릿으로 교체 --%>
-    <form class="postgame-card" action="${ctx}/match/after/save" method="post">
+    <form class="postgame-card" action="${ctx}/match/after/profile/list/edit" method="post">
     <input type="hidden" name="personalMatchId" value="${personalMatch.personalMatchId}">
       <div class="match-summary">
         <div>
-          <p class="tags"><span class="sport-tag neutral" style="background:var(--ds-brand-subtle);color:var(--ds-brand)">풋살</span>경기 종료</p>
-          <strong>토요일 저녁 풋살 한 판!</strong>
-          <p class="meta"><span>9/19 (토) 19:00 - 21:00</span><span>서울 마포구 · 망원 풋살장</span></p>
+          <p class="tags"><span class="sport-tag neutral" style="background:var(--ds-brand-subtle);color:var(--ds-brand)">${personalMatch.sport }</span>${personalMatch.status }</p>
+          <strong>${personalMatch.title }</strong>
+          <p class="meta">
+          	<span>${personalMatch.matchDate}（${personalMatch.dayOfWeekKorean}）
+	            ${personalMatch.startTime} ～ 
+	            ${personalMatch.endTime}
+            </span>
+            <span>${personalMatch.region } · ${personalMatch.placeName }</span>
+           </p>
         </div>
-        <div class="target">평가 대상<b>3명</b></div>
+        
+        <div class="target">평가 대상<b>${userList.size() }명</b></div>
       </div>
 
       <div class="eval-head">
@@ -59,13 +63,12 @@
 		        <div><span class="att-badge">${user.attendance ? '출석' : '미출석'}</span></div>
 		      </c:otherwise>
 		    </c:choose>
-		
 		    <div class="rate star-input">
 		      <c:forEach var="i" begin="1" end="5">
-		        <button type="button" class="${i le user.avgRatingScore ? 'is-on' : ''}" aria-label="${i}점">★</button>
-		      </c:forEach>
-		      <span class="score">${user.avgRatingScore}</span>
-		      <input type="hidden" name="score_${st.index}" value="${user.avgRatingScore}">
+		      <button type="button" aria-label="${i}점">★</button>
+ 		      </c:forEach>
+		      <span class="score">0</span>
+		      <input type="hidden" name="score_${st.index}" value="0">
 		    </div>
 		
 		    <input type="hidden" name="userId_${st.index}" value="${user.userId}">

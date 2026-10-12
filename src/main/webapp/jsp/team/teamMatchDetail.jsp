@@ -389,7 +389,7 @@ $('#thumbs').on('click', '.subImg', function() {
 									<a class="btn btn-primary"
 										href="${ctx}/jsp/review/reviewWrite.jsp?state=clubMatch">후기
 										작성</a> <a class="btn btn-primary"
-										href="${ctx}/jsp/team/teamMatchResultEdit.jsp">참가 팀 평가</a>
+										href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">참가 팀 평가</a>
 								</div>
 							</c:if>
 						</div>

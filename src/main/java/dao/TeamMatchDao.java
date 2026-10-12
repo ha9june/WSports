@@ -20,8 +20,10 @@ public interface TeamMatchDao {
 	int selectTeamMatchListForSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception;
 	int updateStatusToClosed(Long teamMatchId) throws Exception;
 	int updateTeamMatch(TeamMatch teamMatch) throws Exception;
+	List<Long> selectParticipantUserIds(Long teamMatchId) throws Exception;
+	List<TeamMatch> selectTeamPostList(Long teamId, int offset, int size) throws Exception;
+	int selectTeamPostCnt (Long teamId) throws Exception;
 	
-
 	//관리자 경기수 세기 - 팀
 	Long selectMatchCntTeam() throws Exception;
 	
@@ -29,7 +31,8 @@ public interface TeamMatchDao {
 	//스케줄러
 	List<TeamMatch> selectExpiredRecruiting() throws Exception;
 	int updateStatusToNoOpponentCancel(Long teamMatchId) throws Exception;
-
+	List<TeamMatch> selectFinishedMatches() throws Exception;
+	int updateStatusToFinished(Long teamMatchId) throws Exception;
 	
 	
 	

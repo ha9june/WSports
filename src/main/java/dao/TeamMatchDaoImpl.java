@@ -174,4 +174,63 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			sqlSession.close();
 		}
 	}
+
+	@Override
+	public List<TeamMatch> selectFinishedMatches() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatch.selectFinishedMatches");
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
+
+	@Override
+	public int updateStatusToFinished(Long teamMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teammatch.updateStatusToFinished", teamMatchId);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
+	
+	@Override
+	public List<Long> selectParticipantUserIds(Long teamMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatch.selectParticipantUserIds", teamMatchId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
+
+	@Override
+	public List<TeamMatch> selectTeamPostList(Long teamId, int offset, int size) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("teamId", teamId);
+		param.put("offset", offset);
+		param.put("size", size);
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatch.selectTeamPostList", param);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
+
+	@Override
+	public int selectTeamPostCnt(Long teamId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectOne("mapper.teammatch.selectTeamPostCnt", teamId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
 }

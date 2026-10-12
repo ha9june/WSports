@@ -45,7 +45,7 @@ public class TeamManageMembers extends HttpServlet {
 			TeamService teamService = new TeamServiceImpl();
 			Long teamId = Long.parseLong(request.getParameter("teamId"));
 			String teamRole = teamUserService.getRole(teamId, user.getUserId());
-			if( !(teamRole.equals("CAPTAIN")  || teamRole.equals("VICE_CAPTAIN")) ) {
+			if( !("CAPTAIN".equals(teamRole) || "VICE_CAPTAIN".equals(teamRole)) ) {
 				request.setAttribute("error", "팀 관리는 팀장 혹은 부팀장만 이용 가능합니다.");
 				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 				return;

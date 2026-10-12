@@ -9,10 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.PageInfo;
+import dto.Team;
 import dto.TeamMatch;
 import dto.User;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
+import service.team.TeamService;
+import service.team.TeamServiceImpl;
 import service.team.TeamUserService;
 import service.team.TeamUserServiceImpl;
 
@@ -37,21 +41,33 @@ public class TeamManagePosts extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			User user = (User)request.getSession().getAttribute("user");
-			Long teamId = Long.parseLong(request.getParameter("teamId"));
 			if(user == null) {
 				response.sendRedirect(request.getContextPath()+"/auth/login");
 				return;
 			}
+			
+			TeamService teamService = new TeamServiceImpl();
+			Long teamId = Long.parseLong(request.getParameter("teamId"));
+			Team team = teamService.getTeam(teamId);
+			
 			TeamUserService teamUserService = new TeamUserServiceImpl();
 			String teamRole = teamUserService.getRole(teamId, user.getUserId());
-			if(!(teamRole.equals("CAPTAIN") || teamRole.equals("VICE_CAPTAIN"))) {
+			if(!("CAPTAIN".equals(teamRole) || "VICE_CAPTAIN".equals(teamRole))) {
 				request.setAttribute("error", "팀 관리는 팀장 혹은 부팀장만 이용 가능합니다.");
-				request.getRequestDispatcher("/jsp/common/error.jsp");
+				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 				return;
 			}
-			TeamMatchService teamMatchService = new TeamMatchServiceImpl();
-			List<TeamMatch> teamMatchList = teamMatchService.getTeamMatchList(teamId);
 			
+			int page = 1;
+			try { page = Integer.parseInt(request.getParameter("page")); } catch (Exception e) {}
+			PageInfo pageInfo = new PageInfo(page);
+			
+			TeamMatchService teamMatchService = new TeamMatchServiceImpl();
+			List<TeamMatch> teamMatchList = teamMatchService.getTeamPostList(teamId, pageInfo);
+			
+			
+			request.setAttribute("pageInfo", pageInfo);
+			request.setAttribute("team", team);
 			request.setAttribute("teamMatchList", teamMatchList);
 			request.setAttribute("teamId", teamId);
 			request.setAttribute("teamRole", teamRole);

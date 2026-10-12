@@ -14,6 +14,126 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.myteam-card {
+	position: relative;
+}
+
+.card-right {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 14px; /* 알약과 ⋮ 사이 간격 */
+	flex-shrink: 0;
+	min-width: 56px; /* 팀장/부팀장/팀원 알약 폭이 달라도 ⋮ 위치 고정 */
+	margin-left: 12px;
+}
+
+.card-right .role-pill {
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	background: #f3f4f6;
+	color: #374151;
+	white-space: nowrap;
+}
+
+.dropdown {
+	position: relative;
+}
+
+.myteam-card {
+	position: relative;
+}
+
+.role-badge {
+	display: inline-block;
+	margin-left: 6px;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	vertical-align: middle;
+}
+
+.role-badge.leader {
+	background: #fff1e6;
+	color: #e0600f;
+}
+
+.role-badge.sub {
+	background: #e8f0ff;
+	color: #1a6bff;
+}
+
+.dropdown .role-pill {
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	background: #f3f4f6;
+	color: #374151;
+	white-space: nowrap;
+}
+
+.dropdown .icon-btn {
+	width: 32px;
+	height: 32px;
+	border: 0;
+	background: transparent;
+	font-size: 20px;
+	line-height: 1;
+	cursor: pointer;
+	border-radius: 8px;
+}
+
+.dropdown .icon-btn:hover {
+	background: #f3f4f6;
+}
+
+/* 기본은 숨김 */
+.dropdown .kebab-menu {
+	display: none;
+	position: absolute;
+	top: 100%;
+	right: 0;
+	z-index: 20;
+	min-width: 160px;
+	padding: 8px 0;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* 열렸을 때만 표시 */
+.dropdown.is-open .kebab-menu {
+	display: block;
+}
+
+.dropdown .kebab-menu a {
+	display: block;
+	padding: 10px 16px;
+	font-size: 14px;
+	color: #111827;
+	text-decoration: none;
+}
+
+.dropdown .kebab-menu a:hover {
+	background: #f3f4f6;
+}
+
+.dropdown .kebab-menu a.danger {
+	color: #ef4444;
+}
+
+.dropdown .kebab-menu hr {
+	margin: 6px 0;
+	border: 0;
+	border-top: 1px solid #e5e7eb;
+}
+
 .sport-circle {
 	width: 64px;
 	height: 64px;
@@ -108,7 +228,16 @@
 						<div class="main-info"
 							style="flex: 1; min-width: 0; padding-right: 12px;">
 							<strong
-								style="display: block; font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.teamName}</strong>
+								style="display: block; font-size: 16px; margin-bottom: 4px;">
+								${m.teamName} <c:choose>
+									<c:when test="${m.myRole eq 'LEADER'}">
+										<span class="role-badge leader">팀장</span>
+									</c:when>
+									<c:when test="${m.myRole eq 'SUB_LEADER'}">
+										<span class="role-badge sub">부팀장</span>
+									</c:when>
+								</c:choose>
+							</strong>
 							<p class="meta"
 								style="font-size: 13px; color: #6b7280; margin: 0 0 6px 0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.sport}
 								· 가입 신청</p>
@@ -184,32 +313,58 @@
 							<p class="sub" style="margin: 0; font-size: 12px; color: #888;">가입일
 								${m.appliedAt}</p>
 						</div>
+						<div class="card-right" onclick="event.stopPropagation()">
+							<c:if test="${not empty m.myRole}">
+								<span class="role-pill"> <c:choose>
+										<c:when
+											test="${m.myRole eq 'CAPTAIN' or m.myRole eq 'LEADER'}">팀장</c:when>
+										<c:when
+											test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">부팀장</c:when>
+										<c:otherwise>팀원</c:otherwise>
+									</c:choose>
+								</span>
+							</c:if>
 
-						<div class="aside"
-							style="display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 48px;">
-							<span class="pill pill-neutral">${m.role eq 'MEMBER' ? '팀원' : (m.role eq 'CAPTAIN' ? '팀장' : m.role)}</span>
 							<div class="dropdown">
 								<button type="button" class="icon-btn" data-dropdown-toggle
-									aria-label="팀 메뉴">⋮</button>
-								<div class="dropdown-menu">
-									<a
-										href="${ctx}/jsp/team/teamInfoMembers.jsp?teamId=${m.teamId}">팀원
-										보기</a> <a
-										href="${ctx}/jsp/team/teamInfoPosts.jsp?teamId=${m.teamId}">팀
-										작성글 보기</a>
-									<c:if test="${m.role eq 'MEMBER'}">
-										<hr>
-										<button type="button" class="danger btn-leave"
-											data-team-id="${m.teamId}">팀 탈퇴</button>
-									</c:if>
-								</div>
-							</div>
-						</div>
-					</div>
-				</c:forEach>
-			</div>
-		</c:otherwise>
-	</c:choose>
+									aria-label="메뉴">⋮</button>
+								<div class="kebab-menu">
+									<c:choose>
+										<c:when test="${m.myRole eq 'CAPTAIN'}">
+											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+												관리</a>
+											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+												관리</a>
+											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+												작성글 관리</a>
+										</c:when>
+										<c:when test="${m.myRole eq 'VICE_CAPTAIN'}">
+											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+												관리</a>
+											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+												관리</a>
+											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+												작성글 관리</a>
+											<hr>
+											<a href="#" class="danger btn-leave"
+												data-team-id="${m.teamId}">탈퇴하기</a>
+										</c:when>
+										<c:otherwise>
+											<a href="${ctx}/team/members?teamId=${m.teamId}">팀원 보기</a>
+											<a href="${ctx}/team/posts?teamId=${m.teamId}">팀 작성글 보기</a>
+											<hr>
+											<a href="#" class="danger btn-leave"
+												data-team-id="${m.teamId}">탈퇴하기</a>
+									</c:otherwise>
+									</c:choose>        
+								</div>                
+							</div>                    
+						</div>                        
+					</div>                           
+				</c:forEach>                       
+			</div>                                   
+		</c:otherwise>                           
+	</c:choose>                        
 	<!-- 탈퇴 모달 -->
 	<div class="modal" id="leaveModal" role="dialog" aria-modal="true">
 		<div class="modal-card">

@@ -20,15 +20,24 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <script type="text/javascript">
 	$(function() {
-		// ⋮ 메뉴에서 대상 팀원을 고르면, 열리는 모달의 hidden userId를 채움
 		$(document).on(
 				'click',
 				'[data-modal-open]',
 				function() {
 					var modalId = $(this).data('modal-open');
-					$('#' + modalId + ' input[name=userId]').val(
+					$('#' + modaslId + ' input[name=userId]').val(
 							$(this).data('user-id'));
 				});
+
+		// 더보기: 12명씩
+		var SHOW = 12;
+		$('.member-grids .member-card').slice(SHOW).hide();
+		$(document).on('click', '.btn-more', function() {
+			$('.member-grid .member-card:hidden').slice(0, SHOW).show();
+			if ($('.member-grid .member-card:hidden').length === 0) {
+				$('.more-wrap').hide();
+			}
+		});
 	});
 </script>
 <main class="page">
@@ -104,6 +113,11 @@
 								<c:otherwise>실력 미설정</c:otherwise>
 							</c:choose>
 						</p>
+						<c:if test="${not empty m.joinedAt}">
+							<p class="meta" style="margin-top:2px;">
+								${fn:substring(m.joinedAt, 0, 10)} 가입
+							</p>
+						</c:if>
 					</div>
 
 					<%-- 팀장 카드에는 메뉴 없음 --%>
@@ -137,6 +151,11 @@
 				</div>
 			</c:forEach>
 		</div>
+		<c:if test="${fn:length(userList) > 12}">
+			<div class="more-wrap">
+				<button type="button" class="btn-more">↓ &nbsp;더보기</button>
+			</div>
+		</c:if>
 	</div>
 </main>
 

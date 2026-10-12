@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dto.PageInfo;
 import dto.User;
 import service.team.TeamApplicationService;
 import service.team.TeamApplicationServiceImpl;
@@ -64,7 +65,7 @@ public class TeamDetailView extends HttpServlet {
 			request.setAttribute("state", state); //팀원인지 관리자인지 신청자인지 member // manager //applicater	
 			if("member".equals(state) || "manager".equals(state)) { //팀원 혹은 팀 관리자면
 				request.setAttribute("teamUserList", teamUserService.getTeamUserList(teamId));
-				request.setAttribute("teamMatchList", teamMatchService.getTeamMatchList(teamId));
+				request.setAttribute("teamMatchList", teamMatchService.getTeamPostList(teamId, new PageInfo(1)));
 			}
 			request.getRequestDispatcher("/jsp/team/teamDetail.jsp").forward(request, response);
 			

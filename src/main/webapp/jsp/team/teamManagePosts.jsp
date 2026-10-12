@@ -21,8 +21,7 @@
 --%>
 		<nav class="breadcrumb">
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><a
-				href="${ctx}/team/detail/view?teamId=${teamId}">서울
-				풋살 크루</a><span class="sep">›</span><span>관리</span>
+				href="${ctx}/team/detail/view?teamId=${teamId}">${team.teamName }</a><span class="sep">›</span><span>관리</span>
 		</nav>
 		<div class="page-head" style="margin-bottom: 24px">
 			<h1 class="page-title">팀 관리</h1>
@@ -57,18 +56,27 @@
 							</c:when>
 						</c:choose>
 					</p>
-					<p>${tm.matchDate} (요일 가공해야됨) ${tm.startTime} ~ ${tm.endTime} · ${tm.placeName }</p>
-					<div class="acts">
-						<a class="btn btn-outline btn-xs"
-							href="${ctx}/team-match/edit?teamMatchId=${tm.teamMatchId}">수정</a><a
-							class="btn btn-primary btn-xs"
-							href="${ctx}/team-match/detail/view?teamMatchId=${tm.teamMatchId}">경기
-							상세</a>
-					</div>
+					<p>${tm.matchDate} (${tm.dayOfWeekKorean}) ${tm.startTime} ~ ${tm.endTime} · ${tm.placeName }</p>
 				</div>
 			</c:forEach>
 				
 		</div>
+		<c:if test="${pageInfo.allPage > 1}">
+			<nav class="pagination">
+				<c:if test="${pageInfo.curPage > 1}">
+					<a href="${ctx}/team/manage/posts?teamId=${teamId}&page=${pageInfo.curPage - 1}">‹</a>
+				</c:if>
+		
+				<c:forEach var="p" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+					<a href="${ctx}/team/manage/posts?teamId=${teamId}&page=${p}"
+						class="${pageInfo.curPage eq p ? 'is-active' : ''}">${p}</a>
+				</c:forEach>
+		
+				<c:if test="${pageInfo.curPage < pageInfo.allPage}">
+					<a href="${ctx}/team/manage/posts?teamId=${teamId}&page=${pageInfo.curPage + 1}">›</a>
+				</c:if>
+			</nav>
+		</c:if>
 	</div>
 </main>
 <%@ include file="/jsp/common/footer.jsp"%>

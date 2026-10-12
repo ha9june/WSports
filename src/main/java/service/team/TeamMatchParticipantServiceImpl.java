@@ -36,4 +36,14 @@ public class TeamMatchParticipantServiceImpl implements TeamMatchParticipantServ
 		return teamMatchParticipantDao.selectTeamMatchParticipantTeamIdList(teamMatchId);
 	}
 
+	@Override
+	public List<TeamMatchParticipant> getTeamMatchParticipantList(Long teamMatchId) throws Exception {
+		return teamMatchParticipantDao.selectTeamMatchParticipantList(teamMatchId);
+	}
+
+	@Override
+	public int modifyAttendance(Boolean attendance, Long teamMatchId, Long teamId) throws Exception {
+		return teamMatchParticipantDao.updateAttendance(attendance, teamMatchId, teamId);
+	}
+
 }
