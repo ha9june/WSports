@@ -180,7 +180,11 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		alarm.setContent(content);
 		alarm.setLink(link);
 		//알림 저장, 푸시 전송
-		notificationService.sendNotification(alarm);
+		try {
+			notificationService.sendNotification(alarm);
+		} catch (Exception e) {
+			e.printStackTrace(); //알림 실패해도 벌점 처리는 성공
+		}
 
 	}
 }

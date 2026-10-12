@@ -142,5 +142,50 @@
 		from team_penalty
 		where team_id=#{teamId} 
 	</select>
-	
+	<!-- 스케줄러 : 벌점 30/60점 도달했는데 해당 단계 정지를 아직 안 받은 팀 -->
+	<select id="selectAutoTeamSuspendTargets" resultType="map">
+		select t.team_id, p.score
+		from team t
+		join team_penalty p
+		on p.team_id = t.team_id
+		and p.penalty_id = (
+			select max(p2.penalty_id)
+			from team_penalty p2
+			where p2.team_id = t.team_id
+		)
+		where coalesce(t.deleted, 0) = 0
+		and p.score &gt;= 30
+		and p.score &lt; 100
+		and not exists (
+			select 1
+			from team_penalty s
+			where s.team_id = t.team_id
+			and s.suspension_start_at is not null
+			and s.score &gt;= (case when p.score &gt;= 60 then 60 else 30 end)
+		)
+	</select>
+	<!-- 스케줄러 : 벌점 100점 이상 + 영구정지 안 됨 + 검토 알림 아직 안 보낸 팀 -->
+	<select id="selectTeamReviewTargets" resultType="map">
+		select t.team_id, t.team_name, p.score
+		from team t
+		join team_penalty p
+		on p.team_id = t.team_id
+		and p.penalty_id = (
+			select max(p2.penalty_id)
+			from team_penalty p2
+			where p2.team_id = t.team_id
+		)
+		where coalesce(t.deleted, 0) = 0
+		and p.score &gt;= 100
+		and not exists (
+			select 1 from team_penalty s
+			where s.team_id = t.team_id
+			and s.permanent_suspension = 1
+		)
+		and not exists (
+			select 1 from notification n
+			where n.title = '팀 영구정지 검토 필요'
+			and n.link = concat('/admin/team/detail?teamId=', t.team_id)
+		)
+	</select>
 </mapper>

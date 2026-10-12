@@ -28,4 +28,10 @@ public interface TeamPenaltyDao {
 	void insertTeamPermanentPenalty(Map<String, Object> param) throws Exception;
 	//팀 패널티 점수 구하기
 	int selectsTeamPenaltyScore(Long teamId) throws Exception;
+	//스케줄러 : 자동 정지 대상 회원
+	List<Map<String, Object>> selectAutoTeamSuspendTargets() throws Exception;
+	//스케줄러 : 자동 정지 부여 (기록 + 정지 상태, 한 트랜잭션)
+	void insertAutoTeamSuspend(Map<String, Object> param) throws Exception;
+	//스케줄러 : 영구정지 검토 알림 대상 팀 (100점 이상)
+	List<Map<String, Object>> selectTeamReviewTargets() throws Exception;
 }
