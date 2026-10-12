@@ -132,10 +132,10 @@ public class ReviewWrite extends HttpServlet {
 		        review.setContent(content.trim());
 
 		        Long reviewId = service.writeReview(review, userId, realPath, image);
-		        response.sendRedirect(request.getContextPath()
-		                + "/jsp/review/reviewDetail.jsp?reviewId=" + reviewId + "&state=mine");
+		        response.sendRedirect(request.getContextPath() + "/review/detail?reviewId=" + reviewId);
 		}catch(Exception e) {
 			e.printStackTrace();
+			 response.sendRedirect(request.getContextPath() + "/review/create?error=fail");
 		}
 	}
 }
