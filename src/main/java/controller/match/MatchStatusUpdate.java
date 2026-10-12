@@ -51,10 +51,10 @@ public class MatchStatusUpdate extends HttpServlet {
 		
 
 		if(updateType.equals("hostCancel")) {
-			updateString="작성자 경기 취소";	
+			updateString="경기 취소";	
 		}
 		else if(updateType.equals("adminDelete")) {
-			updateString="관리자 경기 삭제";	
+			updateString="경기 취소";	
 			pm.setDeleted(true);
 		}
 		else {
