@@ -173,8 +173,8 @@
 									<p class="link">
 										참여 경기 ·
 										<c:out value="${r.matchType}" />
-									</p>
-									♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}
+									</p><p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
+									&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
 								</div>
 							</a>
 						</c:forEach>

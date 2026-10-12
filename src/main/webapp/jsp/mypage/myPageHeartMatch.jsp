@@ -322,26 +322,12 @@
 						<strong>${m.title}</strong>
 						<p class="meta" style="margin-bottom: 6px;">
 							<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${m.matchDate}</span>
-							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${m.startTime}
-								~ ${m.endTime}</span> <span><img
+							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(m.startTime, 0, 5)}
+								~ ${fn:substring(m.endTime, 0, 5)}</span> <span><img
 								src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
 						</p>
 						<p class="meta"
 							style="display: flex; align-items: center; gap: 8px; margin: 0;">
-							<span
-								style="display: inline-flex; align-items: center; gap: 4px;">
-								<img src="${ctx}/img/icon-user-12.svg" alt="">
-								${m.currentPeople}/${m.maxPeople} <c:if
-									test="${m.matchType eq 'Personal' and m.minPeople > 0}"> · 최소 ${m.minPeople}명</c:if>
-							</span>
-
-							<c:if test="${m.maxPeople > 0}">
-								<span class="progress-container"
-									style="display: inline-block; width: 60px; height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
-									<span class="progress-bar"
-									style="display: block; height: 100%; background: #111; width: ${m.currentPeople / m.maxPeople * 100}%;"></span>
-								</span>
-							</c:if>
 						</p>
 					</div>
 

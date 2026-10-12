@@ -79,8 +79,8 @@
 		m.end_time AS endTime,
 		m.place_name AS placeName,
 		m.participation_fee AS participationFee,
-		m.match_people AS maxPeople, /* 정원인 match_people을 maxPeople로 */
-		0 AS minPeople, /* 팀 매치는 최소 인원이 없으므로 반드시 0 처리 */
+		m.match_people AS maxPeople, 
+		0 AS minPeople,
 		(SELECT COUNT(*) FROM team_match_participant tp WHERE tp.team_match_id =
 		m.team_match_id AND tp.status = '결제완료') AS currentPeople
 		FROM favorite f
