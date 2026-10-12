@@ -52,7 +52,7 @@
 											src="${ctx}/uploads/${a.profileImage}" alt=""></span>
 									</c:when>
 									<c:otherwise>
-										<span class="avatar default sm"></span>
+										<span class="avatar sm"><img src="${ctx}/img/default-profile.svg" alt=""></span>
 									</c:otherwise>
 								</c:choose>
 								<strong><c:out value="${a.nickname}" /></strong>
@@ -73,6 +73,11 @@
 							data-application-id="${a.applicationId}">거절</button>
 					</div>
 				</c:forEach>
+				<c:if test="${fn:length(teamApplicationList) > 5}">
+					<div class="more-wrap">
+						<button type="button" class="btn-more">↓ &nbsp;더보기</button>
+					</div>
+				</c:if>
 			</section>
 			<aside class="status-card">
 				<h3>팀 현황</h3>
@@ -144,6 +149,16 @@
 
 		$('#approveForm').on('submit', function() {
 			$('#approveBtn').prop('disabled', true).text('승인 중...'); // 중복 클릭 방지
+		});
+		
+		// 더보기: 5건씩
+		var SHOW = 5;
+		$('.apply-row').slice(SHOW).hide();
+		$(document).on('click', '.btn-more', function() {
+			$('.apply-row:hidden').slice(0, SHOW).show();
+			if ($('.apply-row:hidden').length === 0) {
+				$('.more-wrap').hide();
+			}
 		});
 	});
 	

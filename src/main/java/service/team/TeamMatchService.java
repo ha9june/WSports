@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.Part;
 
+import dto.PageInfo;
 import dto.TeamMatch;
 import dto.TeamSearchCondition;
 
@@ -16,4 +17,8 @@ public interface TeamMatchService {
 	List<TeamMatch> getTeamMatchListSearch(TeamSearchCondition teamSearchCondition) throws Exception;
 	int getTeamMatchListSearchCnt(TeamSearchCondition teamSearchCondition) throws Exception;
 	int modifyTeamMatch(TeamMatch teamMatch, List<String> keepImages, String realPath, List<Part> files) throws Exception;
+	List<TeamMatch> getTeamPostList(Long teamId, PageInfo pafeInfo) throws Exception;
+	int getTeamPostsCnt(Long teamId) throws Exception;
+	
+
 }

@@ -46,12 +46,25 @@ public class User {
     private Double avgRatingScore;
     //추가 : 경기 후 참가 여부
     private Boolean attendance;
+    //추가 : 팀 가입 시간
+    private LocalDateTime joinedAt;
 
     
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+
+	public LocalDateTime getJoinedAt() {
+		return joinedAt;
+	}
+
+
+	public void setJoinedAt(LocalDateTime joinedAt) {
+		this.joinedAt = joinedAt;
+	}
+
 
 	@Override
 	public String toString() {
@@ -67,24 +80,56 @@ public class User {
 				+ preferredSport3 + ", bankName=" + bankName + ", accountNumber=" + accountNumber + ", accountHolder="
 				+ accountHolder + ", accountCreatedAt=" + accountCreatedAt + ", accountUpdatedAt=" + accountUpdatedAt
 				+ ", teamRole=" + teamRole + ", avgRatingScore=" + avgRatingScore + ", attendance=" + attendance
-				+ ", getUserId()=" + getUserId() + ", getLoginId()=" + getLoginId() + ", getPassword()=" + getPassword()
-				+ ", getName()=" + getName() + ", getBirthDate()=" + getBirthDate() + ", getNickname()=" + getNickname()
-				+ ", getPhone()=" + getPhone() + ", getEmail()=" + getEmail() + ", getGender()=" + getGender()
-				+ ", getCreatedAt()=" + getCreatedAt() + ", getUpdatedAt()=" + getUpdatedAt() + ", getLastLoginAt()="
-				+ getLastLoginAt() + ", getGrade()=" + getGrade() + ", getWithdrawalAt()=" + getWithdrawalAt()
-				+ ", getSuspended()=" + getSuspended() + ", getProfileImage()=" + getProfileImage() + ", getBio()="
-				+ getBio() + ", getSoccerSkill()=" + getSoccerSkill() + ", getBasketballSkill()=" + getBasketballSkill()
-				+ ", getTennisSkill()=" + getTennisSkill() + ", getBadmintonSkill()=" + getBadmintonSkill()
-				+ ", getProfileUpdatedAt()=" + getProfileUpdatedAt() + ", getPreferredRegion1()="
-				+ getPreferredRegion1() + ", getPreferredRegion2()=" + getPreferredRegion2()
-				+ ", getPreferredRegion3()=" + getPreferredRegion3() + ", getPreferredSport1()=" + getPreferredSport1()
-				+ ", getPreferredSport2()=" + getPreferredSport2() + ", getPreferredSport3()=" + getPreferredSport3()
-				+ ", getBankName()=" + getBankName() + ", getAccountNumber()=" + getAccountNumber()
-				+ ", getAccountHolder()=" + getAccountHolder() + ", getAccountCreatedAt()=" + getAccountCreatedAt()
-				+ ", getAccountUpdatedAt()=" + getAccountUpdatedAt() + ", getTeamRole()=" + getTeamRole()
-				+ ", getAvgRatingScore()=" + getAvgRatingScore() + ", getAttendance()=" + getAttendance()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
+				+ ", joinedAt=" + joinedAt + "]";
+	}
+
+
+	public User(Long userId, String loginId, String password, String name, LocalDate birthDate, String nickname,
+			String phone, String email, String gender, LocalDateTime createdAt, LocalDateTime updatedAt,
+			LocalDateTime lastLoginAt, String grade, LocalDateTime withdrawalAt, Boolean suspended, String profileImage,
+			String bio, String soccerSkill, String basketballSkill, String tennisSkill, String badmintonSkill,
+			LocalDateTime profileUpdatedAt, String preferredRegion1, String preferredRegion2, String preferredRegion3,
+			String preferredSport1, String preferredSport2, String preferredSport3, String bankName,
+			String accountNumber, String accountHolder, LocalDateTime accountCreatedAt, LocalDateTime accountUpdatedAt,
+			String teamRole, Double avgRatingScore, Boolean attendance, LocalDateTime joinedAt) {
+		super();
+		this.userId = userId;
+		this.loginId = loginId;
+		this.password = password;
+		this.name = name;
+		this.birthDate = birthDate;
+		this.nickname = nickname;
+		this.phone = phone;
+		this.email = email;
+		this.gender = gender;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.lastLoginAt = lastLoginAt;
+		this.grade = grade;
+		this.withdrawalAt = withdrawalAt;
+		this.suspended = suspended;
+		this.profileImage = profileImage;
+		this.bio = bio;
+		this.soccerSkill = soccerSkill;
+		this.basketballSkill = basketballSkill;
+		this.tennisSkill = tennisSkill;
+		this.badmintonSkill = badmintonSkill;
+		this.profileUpdatedAt = profileUpdatedAt;
+		this.preferredRegion1 = preferredRegion1;
+		this.preferredRegion2 = preferredRegion2;
+		this.preferredRegion3 = preferredRegion3;
+		this.preferredSport1 = preferredSport1;
+		this.preferredSport2 = preferredSport2;
+		this.preferredSport3 = preferredSport3;
+		this.bankName = bankName;
+		this.accountNumber = accountNumber;
+		this.accountHolder = accountHolder;
+		this.accountCreatedAt = accountCreatedAt;
+		this.accountUpdatedAt = accountUpdatedAt;
+		this.teamRole = teamRole;
+		this.avgRatingScore = avgRatingScore;
+		this.attendance = attendance;
+		this.joinedAt = joinedAt;
 	}
 
 

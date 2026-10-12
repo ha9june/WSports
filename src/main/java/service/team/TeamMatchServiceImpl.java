@@ -12,6 +12,7 @@ import dao.TeamDao;
 import dao.TeamDaoImpl;
 import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
+import dto.PageInfo;
 import dto.TeamMatch;
 import dto.TeamSearchCondition;
 
@@ -85,5 +86,28 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 	    tm.setImage4(finalImages.size() > 3 ? finalImages.get(3) : null);
 	    tm.setImage5(finalImages.size() > 4 ? finalImages.get(4) : null);
 	    return teamMatchDao.updateTeamMatch(tm);
+	}
+
+	@Override
+	public List<TeamMatch> getTeamPostList(Long teamId, PageInfo pageInfo) throws Exception {
+		final int SIZE = 8, BLOCK = 5;
+		int total = teamMatchDao.selectTeamPostCnt(teamId);
+		int allPage = Math.max(1, (int) Math.ceil(total / (double) SIZE));
+		int cur = Math.min(Math.max(pageInfo.getCurPage(), 1), allPage);
+
+		int start = (cur - 1) / BLOCK * BLOCK + 1;
+		int end = Math.min(start + BLOCK - 1, allPage);
+
+		pageInfo.setCurPage(cur);
+		pageInfo.setAllPage(allPage);
+		pageInfo.setStartPage(start);
+		pageInfo.setEndPage(end);
+
+		return teamMatchDao.selectTeamPostList(teamId, (cur - 1) * SIZE, SIZE);
+	}
+
+	@Override
+	public int getTeamPostsCnt(Long teamId) throws Exception {
+		return teamMatchDao.selectTeamPostCnt(teamId);
 	}
 }
