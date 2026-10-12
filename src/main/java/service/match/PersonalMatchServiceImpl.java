@@ -121,7 +121,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 	@Override
 
-	public PersonalMatch getPersmalMatchDetail(PersonalMatch personalMatch) throws Exception {
+	public PersonalMatch getPersonalMatchDetail(PersonalMatch personalMatch) throws Exception {
 		// TODO Auto-generated method stub
 		return personalMatchDao.selectPersonalMatch(personalMatch);
 	}
@@ -236,12 +236,13 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
         Long personalMatchId = personalMatchDao.insertPersonalMatch(personalMatch);
         
         //개인 경기 참가지 인서트
-//        PersonalMatchParticipant pmp = new PersonalMatchParticipant();
-//        pmp.setUserId(personalMatch.getUserId());	
-//        pmp.setPersonalMatchId(personalMatchId);
-//        pmp.setAttendance(true);
-//        System.out.println(pmp);
-//        personalMatchParticipantDao.insertCreatorPersonalMatchParticipant(pmp);
+        PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+        pmp.setUserId(personalMatch.getUserId());	
+        pmp.setPersonalMatchId(personalMatchId);
+        pmp.setAttendance(true);
+        pmp.setStatus("결제완료");
+        System.out.println(pmp);
+        personalMatchParticipantDao.insertCreatorPersonalMatchParticipant(pmp);
         
         return personalMatchId;
 
@@ -253,10 +254,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
         Long personalMatchId = personalMatchDao.updatePersonalMatch(personalMatch);
 		return personalMatchId;
 	}
-	@Override
-	public void deletePersmalMatchDetail(Long personalMatchId) throws Exception {
-		
-	}
+
 
 
 
@@ -287,6 +285,13 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 			String status, String sport) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	
+	
+	@Override
+	public Long updateStatue(PersonalMatch personalMatch) throws Exception {
+		return personalMatchDao.updatePersonalMatchStatue(personalMatch);
 	}
 
 

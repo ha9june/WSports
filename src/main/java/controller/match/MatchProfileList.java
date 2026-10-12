@@ -43,8 +43,6 @@ public class MatchProfileList extends HttpServlet {
 		    return;
 		}
 		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
-		
-		
 		PersonalMatch pm = new PersonalMatch();
 		pm.setUserId(user.getUserId());
 		pm.setPersonalMatchId(personalMatchId);
@@ -54,7 +52,7 @@ public class MatchProfileList extends HttpServlet {
 		
 		try {
 			List<User> userList = pmpservice.getPersonalMatchParticipantList(personalMatchId);
-			PersonalMatch pMatch = pservice.getPersmalMatchDetail(pm);
+			PersonalMatch pMatch = pservice.getPersonalMatchDetail(pm);
 			request.setAttribute("userList", userList);
 			request.setAttribute("personalMatch", pMatch);
 			System.out.println(userList);
