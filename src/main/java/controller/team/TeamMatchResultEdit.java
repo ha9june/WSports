@@ -146,7 +146,7 @@ public class TeamMatchResultEdit extends HttpServlet {
 			}
 			Long targetTeamId = isHost ? guestP.getTeamId() : hostP.getTeamId();
 			//평점 업데이트 반환 0이면 인서트
-			int result = teamRatingService.modifyTeamRating(score, teamMatchId, targetTeamId, user.getUserId());
+			int result = teamRatingService.modifyTeamRating(score, teamMatchId, targetTeamId, user.getUserId()); 
 			if(result == 0) {
 				teamRatingService.makeTeamRating(targetTeamId, user.getUserId(), score, teamMatchId);
 			}
