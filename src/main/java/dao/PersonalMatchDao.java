@@ -32,6 +32,10 @@ public interface PersonalMatchDao {
 	
 	//관리자 경기수 세기 - 개인
 	Long selectMatchCntPersonal() throws Exception;
+	//스케줄러 : 마감 지난 최소 인원 미달 경기
+	List<PersonalMatch> selectExpiredUnderMin() throws Exception;
+	//스케줄러 : 최소 인원 미달 경기 취소
+	int updateStatusToUnderMinCancel(Long matchId) throws Exception;
 	
 	//스케줄러
 	List<PersonalMatch> selectExpiredRecruiting() throws Exception;

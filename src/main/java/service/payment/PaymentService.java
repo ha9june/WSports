@@ -29,4 +29,6 @@ public interface PaymentService {
 	void refundPersonalPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
 	//모집 기간 내 상대 팀이 없을 때 모집 팀 결제 자동 환불 (스케줄러 용)
 	boolean autoRefundHostTeamPayment(Long matchId, String secretKey) throws Exception;
+	//개인경기 최소 인원 미달 자동 환불 (스케줄러 용)
+	boolean autoRefundPersonalMatch(Long matchId, String title, String secretKey) throws Exception;
 }

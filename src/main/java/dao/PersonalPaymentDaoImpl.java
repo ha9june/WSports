@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -181,6 +182,13 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 	public Map<String, Object> selectRefundTarget(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalpayment.selectRefundTarget", param);
+		}
+	}
+	//자동 환불 대상 결제 목록
+	@Override
+	public List<Map<String, Object>> selectPaidPaymentsByMatch(Long matchId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalpayment.selectPaidPaymentsByMatch", matchId);
 		}
 	}
 }
