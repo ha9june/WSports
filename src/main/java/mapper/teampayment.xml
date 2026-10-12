@@ -150,7 +150,7 @@
 			#{userId}, #{matchId}, #{teamId}, '결제완료', #{paymentId}, 0, now())
 	</insert>
 	
-	<!-- 중복 참가 확인 (결제한 회원이 주장인 팀 기준) -->
+	<!-- 중복 참가 확인 (결제한 회원이 주장,부주장인 팀 기준) -->
 	<select id="selectTeamJoinCnt" parameterType="map" resultType="int">
 		select count(*)
 		from team_match_participant
@@ -168,27 +168,6 @@
 		from team_match
 		where team_match_id = #{matchId}
 	</select>
-	
-	<!-- 환불 대상 조회 : 본인 결제만 조회 -->
-	<select id="selectTeamRefundTarget" parameterType="map" resultType="map">
-		select pay.payment_id, pay.payment_status,
-		       p.team_id, p.team_match_id, m.deadline
-		from team_payment pay
-		join team_match_participant p on p.payment_id = pay.payment_id
-		join team_match m on m.team_match_id = p.team_match_id
-		where pay.payment_key = #{paymentKey}
-		and p.user_id = #{userId}
-	</select>
-
-	<!-- 상대 팀 결제 수 : 모집 팀 환불 가능 여부 판단용 -->
-	<select id="selectTeamOpponentCnt" parameterType="map" resultType="int">
-		select count(*)
-		from team_match_participant
-		where team_match_id = #{matchId}
-		and team_id &lt;&gt; #{hostTeamId}
-		and status = '결제완료'
-	</select>
-
 	<!-- 결제 취소 -->
 	<update id="updateTeamPaymentCanceled" parameterType="map">
 		update team_payment
@@ -201,25 +180,35 @@
 	</update>
 
 	<!-- 참가 취소 -->
-	<update id="updateTeamParticipantCanceled" parameterType="Long">
+	<update id="updateTeamParticipantCanceled" parameterType="map">
 		update team_match_participant
 		set status = '취소',
-			cancelled_at = now()
+			cancelled_at = now(),
+			cancel_reason = #{cancelReason}
 		where payment_id = #{paymentId}
 		and status = '결제완료'
 	</update>
-
-	<!-- 상대 팀 환불 시 경기 다시 모집중으로 -->
-	<update id="updateTeamMatchReopen" parameterType="Long">
+	
+	<!-- 모집 팀 결제 조회 : 스케줄러 자동 환불용 -->
+	<select id="selectHostTeamPayment" parameterType="Long" resultType="map">
+		select pay.payment_id, pay.payment_key, pay.total_amount,
+			   p.user_id, m.title
+		from team_match m
+		join team_match_participant p
+			on p.team_match_id = m.team_match_id
+			and p.team_id = m.team_id
+		join team_payment pay on pay.payment_id = p.payment_id
+		where m.team_match_id = #{matchId}
+		and p.status = '결제완료'
+		and pay.payment_status = 'DONE'
+	</select>
+	
+	<!-- 주최팀 결제 완료 시 팀 경기 공개 -->
+	<update id="updateTeamMatchOpen" parameterType="map">
 		update team_match
-		set status = '모집중'
+		set deleted = 0
 		where team_match_id = #{matchId}
-	</update>
-
-	<!-- 모집 팀 환불 시 경기 취소 -->
-	<update id="updateTeamMatchCanceled" parameterType="Long">
-		update team_match
-		set status = '취소'
-		where team_match_id = #{matchId}
+		and team_id = #{teamId}
+		and deleted = 1
 	</update>
 </mapper>

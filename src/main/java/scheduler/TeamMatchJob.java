@@ -8,11 +8,15 @@ import dto.Notification;
 import dto.TeamMatch;
 import service.notification.NotificationService;
 import service.notification.NotificationServiceImpl;
+import service.payment.PaymentService;
+import service.payment.PaymentServiceImpl;
+import util.TossKey;
 
 public class TeamMatchJob {
     private TeamMatchDao teamMatchDao = new TeamMatchDaoImpl();
     private NotificationService alarmService = new NotificationServiceImpl();
-
+    private PaymentService paymentService = new PaymentServiceImpl();
+    
     public void run() { // MatchScheduler가 부르는 유일한 공개 메서드
         try {
             cancelNoOpponent();
@@ -32,6 +36,8 @@ public class TeamMatchJob {
         List<TeamMatch> expiredTeamMatchList = teamMatchDao.selectExpiredRecruiting();
         for (TeamMatch t : expiredTeamMatchList) {
             try {
+            	//모집 팀 결제 자동 환불 + 환불 알림
+            	paymentService.autoRefundHostTeamPayment(t.getTeamMatchId(), TossKey.SECRET_KEY);
                 int updated = teamMatchDao.updateStatusToNoOpponentCancel(t.getTeamMatchId());
                 if (updated > 0) {
                     notifyUser(t.getUserId(),

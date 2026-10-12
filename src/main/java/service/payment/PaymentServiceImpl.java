@@ -352,107 +352,45 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 	}
 
-	// 팀 경기 환불
+	//모집 팀 결제 자동 환불 (스케줄러 용)
+	//환불하면 true, 환불 할 결제가 없으면 false
 	@Override
-	public void refundTeamPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception {
-		// 환불 대상 조회 : 본인 결제만
-		Map<String, Object> target = teamPaymentDao.selectTeamRefundTarget(paymentKey, userId);
-		if (target == null)
-			throw new IllegalStateException("본인 결제만 환불 할 수 있습니다.");
-
-		Long matchId = ((Number) target.get("team_match_id")).longValue();
-		Long payTeamId = ((Number) target.get("team_id")).longValue();
-
-		// 경기 정보 : 모집자, 제목, 모집 팀
-		Map<String, Object> match = teamPaymentDao.selectTeamMatchWriter(matchId);
-		if (match == null)
-			throw new IllegalStateException("경기 정보를 찾을 수 없습니다.");
-
-		// 모집자
-		Long writerId = ((Number) match.get("user_id")).longValue();
-		Long hostTeamId = ((Number) match.get("team_id")).longValue();
-		boolean isHost = hostTeamId.equals(payTeamId); // 결제한 팀이 모집팀인지
-
-		// 검증
-		if ("CANCELED".equals(target.get("payment_status")))
-			throw new IllegalStateException("이미 환불된 결제입니다.");
-
-		Object deadlineObj = target.get("deadline");
-		LocalDateTime deadline = (deadlineObj instanceof Timestamp)
-				? ((Timestamp) target.get("deadline")).toLocalDateTime()
-				: (LocalDateTime) deadlineObj;
-		if (!LocalDateTime.now().isBefore(deadline)) {
-			throw new IllegalStateException("모집 마감 이후에는 환불할 수 없습니다.");
-		}
-
-		// 모집 팀은 상대 팀이 아직 없을 떄만 환불 가능
-		if (isHost && teamPaymentDao.selectTeamOpponentCnt(matchId, hostTeamId) > 0)
-			throw new IllegalStateException("상대 팀이 이미 참가해 환불할 수 없습니다.");
-		// 토스 결제 취소 (성공해야 다음 단계 진행)
+	public boolean autoRefundHostTeamPayment(Long matchId, String secretKey) throws Exception {
+		Map<String, Object> target = teamPaymentDao.selectHostTeamPayment(matchId);
+		if(target == null) return false; //결제 안했거나 이미 환불됨
+		
+		String paymentKey = (String) target.get("payment_key");
+		String reason = "모집 기간 내 상대 팀 미매칭";
+		
+		//토스 결제 취소 (성공해야 다음 단계 진행)
 		JSONObject result = cancelPayment(paymentKey, reason, secretKey);
-		// 취소 응답의 cancels 배열 마지막 항목 = 방금 한 취소
 		JSONArray cancels = result.getJSONArray("cancels");
 		JSONObject cancel = cancels.getJSONObject(cancels.length() - 1);
-
-		// DB 변경 : 결제 취소 + 참가 취소 + 경기 상태 변경
+		int cancelAmount = cancel.getInt("cancelAmount");
+		
+		//결제 취소 + 참가 취소
 		Map<String, Object> param = new HashMap<>();
-		param.put("paymentId", ((Number) target.get("payment_id")).longValue());
-		param.put("matchId", matchId);
+		param.put("paymentId", ((Number)target.get("payment_id")).longValue());
 		param.put("canceledAt", OffsetDateTime.parse(cancel.getString("canceledAt")).toLocalDateTime());
 		param.put("cancelReason", cancel.optString("cancelReason", reason));
-		param.put("cancelAmount", cancel.getInt("cancelAmount"));
-		teamPaymentDao.updateTeamRefund(param, isHost);
-
-		// 알림 : 상대팀 환불이면 모집자에게 (실패해도 환불은 유지)
-		if (!isHost) {
-			try {
-				String title = (String) match.get("title");
-				Notification alarm = new Notification();
-				alarm.setUserId(writerId);
-				alarm.setTitle("매칭 취소");
-				alarm.setContent(title + " 상대 팀이 매칭을 취소해 다시 상대 팀을 참가를 취소했습니다.");
-				alarm.setLink("/team-match/detail/view?temaMatchId=" + matchId);
-				notificationService.sendNotification(alarm);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		param.put("cancelAmount", cancelAmount);
+		teamPaymentDao.updateTeamPaymentRefund(param);
+		
+		//환불 알림 : 결제한 사람에게
+		try {
+			Long payerId = ((Number) target.get("user_id")).longValue();
+			String title = (String) target.get("title");
+			
+			Notification alarm = new Notification();
+			alarm.setUserId(payerId);
+			alarm.setTitle("참가비 환불 완료");
+			alarm.setContent("'"+ title + "' 경기가 모집 기간 내 상대 팀이 없어 결제하신 "
+					+ String.format("%,d", cancelAmount) + "원이 환불되었습니다.");
+			alarm.setLink("/team-match/detail/view?teamMatchId="+matchId);
+			notificationService.sendNotification(alarm);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-	}
-
-	// 팀 경기 환불 가능 여부
-	@Override
-	public boolean canRefundTeamPayment(String paymentKey, Long userId) throws Exception {
-		// 본인 결제인지
-		Map<String, Object> target = teamPaymentDao.selectTeamRefundTarget(paymentKey, userId);
-		if (target == null)
-			return false;
-
-		// 이미 환불됐는지
-		if ("CANCELED".equals(target.get("payment_status")))
-			return false;
-
-		// 모집 마감 전인지
-		Object deadlineObj = target.get("deadline");
-		if (deadlineObj == null)
-			return false;
-		LocalDateTime deadline = (deadlineObj instanceof Timestamp) ? ((Timestamp) deadlineObj).toLocalDateTime()
-				: (LocalDateTime) deadlineObj;
-		if (!LocalDateTime.now().isBefore(deadline))
-			return false;
-
-		// 모집 팀이면 상대 팀이 아직 없어야 함
-		Long matchId = ((Number) target.get("team_match_id")).longValue();
-		Long payTeamId = ((Number) target.get("team_id")).longValue();
-
-		Map<String, Object> match = teamPaymentDao.selectTeamMatchWriter(matchId);
-		if (match == null)
-			return false;
-
-		Long hostTeamId = ((Number) match.get("team_id")).longValue();
-		if (hostTeamId.equals(payTeamId)) {
-			return teamPaymentDao.selectTeamOpponentCnt(matchId, hostTeamId) == 0;
-		}
-		return true; // 상대 팀은 모집 마감 전이면 환불 가능
+		return true;
 	}
 }
