@@ -386,7 +386,7 @@
 <div class="modal" id="applyParticipantModal" role="dialog" aria-modal="true">
   <div class="modal-card">
     <h2 class="modal-title">경기를 참가할까요?</h2>
-    <p class="modal-desc">취소 시 환불 규정에 따라 참가비가 처리됩니다.</p>
+    <p class="modal-desc">경기 참가 버튼 클릭 시 결제 페이지로 이동합니다.</p>
     <form action="${ctx}/match/participant/update" method="post" class="modal-actions">
 		<input type="hidden" name="updateType" value="participant">
 		<input type="hidden" name="personalMatchId" value="${personalMatch.personalMatchId}">			

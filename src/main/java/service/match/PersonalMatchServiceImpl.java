@@ -241,7 +241,6 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
         pmp.setPersonalMatchId(personalMatchId);
         pmp.setAttendance(true);
         pmp.setStatus("결제완료");
-        System.out.println(pmp);
         personalMatchParticipantDao.insertCreatorPersonalMatchParticipant(pmp);
         
         return personalMatchId;
