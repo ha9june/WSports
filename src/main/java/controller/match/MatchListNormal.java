@@ -49,6 +49,7 @@ public class MatchListNormal extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
+
 		
 		String requestType = request.getParameter("requestType");
 		Integer page = Integer.parseInt(request.getParameter("page"));

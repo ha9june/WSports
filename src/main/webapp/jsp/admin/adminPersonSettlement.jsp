@@ -95,7 +95,41 @@
   		</div>
 	</c:forEach>
 	<c:if test="${empty displayList}">
-		<p class="section-desc">표시할 경기가 없습니다.</p>
+		<div class="empty-state">
+			<div class="empty-icon">
+				<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+				     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<c:choose>
+						<c:when test="${state eq 'date'}">
+							<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+						</c:when>
+						<c:otherwise>
+							<path d="M20 6 9 17l-5-5"/>
+						</c:otherwise>
+					</c:choose>
+				</svg>
+			</div>
+			<c:choose>
+				<c:when test="${state eq 'completed'}">
+					<strong>아직 지급 완료된 정산이 없어요</strong>
+					<p>정산 대기 경기를 지급 완료 처리하면 여기에 내역이 쌓입니다.</p>
+					<a class="btn btn-outline btn-sm" href="?state=all">정산 대기 보기</a>
+				</c:when>
+				<c:when test="${state eq 'date' and empty startDate}">
+					<strong>조회할 기간을 선택해 주세요</strong>
+					<p>위의 달력에서 시작일과 종료일을 고르면 해당 기간의 정산 내역이 표시됩니다.</p>
+				</c:when>
+				<c:when test="${state eq 'date'}">
+					<strong>선택한 기간에 정산 내역이 없어요</strong>
+					<p>기간을 넓혀서 다시 조회해 보세요.</p>
+				</c:when>
+				<c:otherwise>
+					<strong>처리할 정산이 없어요</strong>
+					<p>경기가 끝나면 모집자에게 지급할 정산이 여기에 표시됩니다.</p>
+					<a class="btn btn-outline btn-sm" href="?state=completed">지급 완료 내역 보기</a>
+				</c:otherwise>
+			</c:choose>
+		</div>
 	</c:if>
 </div>
 

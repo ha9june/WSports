@@ -28,12 +28,11 @@
       	</div>
 		<c:choose>
       		<c:when test="${param.matchType eq 'team'}">
-      			<a class="btn btn-primary btn-sm" href="${ctx}/team/detail/view?teamMatchId = ${matchId}">경기보기
+      			<a class="btn btn-primary btn-sm" href="${ctx}/team/detail/view?teamId=${param.matchId}">경기보기
       			</a>
       		</c:when>
-      		<!-- !!확인!! -->
       		<c:otherwise>
-      			<a class="btn btn-primary btn-sm" href="${ctx}/match/detail/view?personalMatchId = ${matchId}">경기보기
+      			<a class="btn btn-primary btn-sm" href="${ctx}/match/detail/view?personalMatchId=${param.matchId}">경기보기
       			</a>
       		</c:otherwise>
       	</c:choose>

@@ -21,18 +21,18 @@ public class TeamPayment {
     private LocalDateTime requestedAt;   // 결제 요청 일시
     private LocalDateTime approvedAt;    // 결제 승인 일시
     private String rawResponse;          // PG사 원본 응답 (JSON)
-    
-    
-    
+    private LocalDateTime canceledAt;  // 환불 일시
+    private String cancelReason;       // 환불 사유
+    private Integer cancelAmount;      // 환불 금액
 	public TeamPayment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 	public TeamPayment(Long paymentId, String orderId, String paymentKey, String orderName, String paymentStatus,
 			String paymentMethod, Integer totalAmount, Integer balance, String currency, String cardCompany,
 			String cardNumber, Integer installmentMonths, String easyPaymentProvider, String receiptUrl,
-			LocalDateTime requestedAt, LocalDateTime approvedAt, String rawResponse) {
+			LocalDateTime requestedAt, LocalDateTime approvedAt, String rawResponse, LocalDateTime canceledAt,
+			String cancelReason, Integer cancelAmount) {
 		super();
 		this.paymentId = paymentId;
 		this.orderId = orderId;
@@ -51,8 +51,10 @@ public class TeamPayment {
 		this.requestedAt = requestedAt;
 		this.approvedAt = approvedAt;
 		this.rawResponse = rawResponse;
+		this.canceledAt = canceledAt;
+		this.cancelReason = cancelReason;
+		this.cancelAmount = cancelAmount;
 	}
-	
 	public Long getPaymentId() {
 		return paymentId;
 	}
@@ -155,7 +157,24 @@ public class TeamPayment {
 	public void setRawResponse(String rawResponse) {
 		this.rawResponse = rawResponse;
 	}
-	
+	public LocalDateTime getCanceledAt() {
+		return canceledAt;
+	}
+	public void setCanceledAt(LocalDateTime canceledAt) {
+		this.canceledAt = canceledAt;
+	}
+	public String getCancelReason() {
+		return cancelReason;
+	}
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
+	}
+	public Integer getCancelAmount() {
+		return cancelAmount;
+	}
+	public void setCancelAmount(Integer cancelAmount) {
+		this.cancelAmount = cancelAmount;
+	}
 	@Override
 	public String toString() {
 		return "TeamPayment [paymentId=" + paymentId + ", orderId=" + orderId + ", paymentKey=" + paymentKey
@@ -163,9 +182,8 @@ public class TeamPayment {
 				+ ", totalAmount=" + totalAmount + ", balance=" + balance + ", currency=" + currency + ", cardCompany="
 				+ cardCompany + ", cardNumber=" + cardNumber + ", installmentMonths=" + installmentMonths
 				+ ", easyPaymentProvider=" + easyPaymentProvider + ", receiptUrl=" + receiptUrl + ", requestedAt="
-				+ requestedAt + ", approvedAt=" + approvedAt + ", rawResponse=" + rawResponse + "]";
+				+ requestedAt + ", approvedAt=" + approvedAt + ", rawResponse=" + rawResponse + ", canceledAt="
+				+ canceledAt + ", cancelReason=" + cancelReason + ", cancelAmount=" + cancelAmount + "]";
 	}
-    
-    
     
 }

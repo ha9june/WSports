@@ -66,14 +66,13 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		}
 	}
 
-	public PersonalMatch selectPersonalMatch(PersonalMatch personalMatch) throws Exception {
 
+	public PersonalMatch selectPersonalMatch(PersonalMatch personalMatch) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.personalmatch.selectPersonalMatch", personalMatch);
 		} catch (Exception e) {
 			throw e;
 		}
-
 	}
 	
 	@Override
@@ -107,19 +106,21 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			sqlSession.close();
 		}
 	}
+	
 	@Override
-	public void deletePersonalMatch(Long personaMatchId) throws Exception {
+	public Long updatePersonalMatchStatue(PersonalMatch personalMatch) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			sqlSession.update("mapper.personalmatch.deletePersonalMatch", personaMatchId);
+			sqlSession.update("mapper.personalmatch.updatePersonalMatchStatus", personalMatch);
 			sqlSession.commit();
+			return personalMatch.getPersonalMatchId();
 		} catch(Exception e) {
 			e.printStackTrace();
 			sqlSession.rollback();
 			throw e;
 		} finally {
 			sqlSession.close();
-		}		
+		}
 	}
 
 
@@ -148,4 +149,6 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			throw e;
 		}
 	}
+
+
 }

@@ -142,4 +142,5 @@
 		from team_penalty
 		where team_id=#{teamId} 
 	</select>
+	
 </mapper>

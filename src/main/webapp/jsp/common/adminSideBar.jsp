@@ -25,8 +25,8 @@
       		<div class="grid">
         		<div>회원<b><fmt:formatNumber value="${adminStats.usercnt }" pattern="#,###"/>명</b></div>
         		<div>팀<b><fmt:formatNumber value="${adminStats.teamcnt }" pattern="#,###"/>개</b></div>
-        		<div>진행 경기<b><fmt:formatNumber value="${adminStats.matchcnt }" pattern="#,###"/>건</b></div>
-        		<div>수익<b><fmt:formatNumber value="${adminStats.profit / 10000 }" pattern="#,###"/>만원</b></div>
+        		<div>모집중인 경기<b><fmt:formatNumber value="${adminStats.matchcnt }" pattern="#,###"/>건</b></div>
+        		<div>전체 신고<b><fmt:formatNumber value="${adminStats.reportcnt}" pattern="#,###"/>건</b></div>
       		</div>
     	</div>
     </aside>

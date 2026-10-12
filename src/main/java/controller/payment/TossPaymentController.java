@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,10 +36,22 @@ import util.CheckUtil;
 public class TossPaymentController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// 토스페이먼츠 테스트 시크릿 키
-    private static final String SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+    private static final String SECRET_KEY = loadSecretKey();
     /**
      * @see HttpServlet#HttpServlet()   
      */
+    
+    private static String loadSecretKey() {
+    	try (InputStream is = TossPaymentController.class.getClassLoader()
+    			.getResourceAsStream("resource/db.properties")) {   // mybatis-config.xml의 resource 경로와 같게
+    		Properties props = new Properties();
+    		props.load(is);
+    		return props.getProperty("toss.secret.key");
+    	} catch (Exception e) {
+    		throw new RuntimeException("토스 시크릿 키를 불러오지 못했습니다.", e);
+    	}
+    }
+    
     public TossPaymentController() {
         super();
         // TODO Auto-generated constructor stub
@@ -100,7 +113,7 @@ public class TossPaymentController extends HttpServlet {
 				PersonalMatch pm = new PersonalMatch();
 				pm.setUserId(user.getUserId());
 				pm.setPersonalMatchId(matchId);
-				match = personalMatchService.getPersmalMatchDetail(pm);
+				match = personalMatchService.getPersonalMatchDetail(pm);
 				totalAmount = paymentService.getPersonalMatchTotalAmount(matchId.intValue());
 			}
 
@@ -248,7 +261,7 @@ public class TossPaymentController extends HttpServlet {
 			response.getWriter().write("{\"message\":\"서버 내부 통신 오류가 발생했습니다.\"}");
 		} finally {
 			if (conn != null) {
-				conn.disconnect();
+				 conn.disconnect();
 			}
 		}
 	}

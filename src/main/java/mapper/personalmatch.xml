@@ -361,7 +361,8 @@
 	        AND f.match_type = 'PERSONAL'
 	        AND f.user_id = #{userId}
 		WHERE
-		m.personal_match_id = #{personalMatchId}
+			m.personal_match_id = #{personalMatchId}
+			AND p.status = "결제완료"
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at DESC;
 	</select>
@@ -499,17 +500,18 @@
 	        status = #{status}
 	    WHERE personal_match_id = #{personalMatchId}
 	</update>
-	
-	<update id="deletePersonalMatch" parameterType="long">
+	<update id="updatePersonalMatchStatus" parameterType="personalMatch">
 	    UPDATE personal_match
 	    SET
-	        deleted = 1,
-	        status = '삭제',
+	    	<if test="deleted != null">
+	            deleted = #{deleted},
+	            deleted_at = NOW(),
+	        </if>
+	        status = #{status},
 	        updated_at = NOW()
 	    WHERE personal_match_id = #{personalMatchId}
 	</update>
-	
-
+		
 	<select id="selectMyPagePersonalMatchDates" parameterType="map"
 		resultType="string">
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
@@ -541,7 +543,7 @@
 	<!-- 관리자 사이드 바 진행된 경기수 세기 개인 -->
 	<select id="selectMatchCntPersonal" resultType="Long">
 		select count(*) from personal_match
-		where status = '종료'
+		where status = '모집중'
 	</select>
 </mapper>
 

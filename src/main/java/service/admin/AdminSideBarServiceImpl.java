@@ -51,13 +51,15 @@ public class AdminSideBarServiceImpl implements AdminSideBarService {
 	@Override
 	public Map<String, Object> getAdminStats() throws Exception {
 		Map<String, Object> param = new HashMap<>();
+		//회원수
 		param.put("usercnt", userDao.selectUserCnt());
+		//팀수
 		param.put("teamcnt", teamDao.selectTeamCnt());
+		//모집중인 경기로 변경
 		param.put("matchcnt", personalmatchDao.selectMatchCntPersonal() 
 				+ teammatchDao.selectMatchCntTeam());
-		param.put("profit", personalPaymentDao.totalProfitPersonal()
-				+ teamPaymentDao.totalProfitTeam());
-			
+		//전체 신고 개수로 변경
+		param.put("reportcnt", reportDao.selectTotalReportCnt());
 		return param;
 	}
 	@Override

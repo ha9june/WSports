@@ -118,11 +118,9 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 	//결제 내역 + 참가자 등록
 	@Override
 	public void insertPersonalPaymentParticipant(PersonalPayment personalPayment, Long userId, Long matchId) throws Exception {
-		System.out.println("[결제저장] 호출됨 userId=" + userId + ", matchId=" + matchId);
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			sqlSession.insert("mapper.personalpayment.insertPersonalPaymentHistory", personalPayment);
-			System.out.println("[결제저장] 생성된 paymentId=" + personalPayment.getPaymentId());
 			Map<String, Object> param = new HashMap<>();
 			param.put("userId", userId);
 			param.put("matchId", matchId);
@@ -155,5 +153,33 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 			return sqlSession.selectOne("mapper.personalpayment.selectJoinedCnt", param);
 		}
 	}
-
+	//개인경기 모집자 제목
+	@Override
+	public Map<String, Object> selectPersonalMatchWriter(Long matchId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalpayment.selectPersonalMatchWriter", matchId);
+		}
+	}
+	//결제 취소
+	@Override
+	public void updateRefund(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			try {
+				sqlSession.update("mapper.personalpayment.updatePaymentCanceled", param);
+				sqlSession.update("mapper.personalpayment.updateParticipantCanceled", param);
+				//commit 해야 db 들어감
+				sqlSession.commit();
+			} catch (Exception e) {
+				sqlSession.rollback();
+				throw e;
+			} 
+		}
+	}
+	//환불 대상 조회
+	@Override
+	public Map<String, Object> selectRefundTarget(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalpayment.selectRefundTarget", param);
+		}
+	}
 }
