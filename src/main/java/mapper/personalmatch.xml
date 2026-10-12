@@ -5,20 +5,25 @@
 	<select id="selectNowPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-			m.*,
-			COUNT(p.participant_id) AS current_people,
-			CASE
-	            WHEN f.match_id IS NOT NULL THEN 1
-	            ELSE 0
-	        END AS favorite
-		FROM personal_match m
+		m.*,
+		COUNT(p.participant_id) AS current_people,
+		CASE
+		WHEN
+		f.match_id IS NOT NULL THEN 1
+		ELSE 0
+		END AS favorite
+		FROM personal_match
+		m
 		LEFT JOIN
-			personal_match_participant p
-			ON m.personal_match_id = p.personal_match_id
+		personal_match_participant p
+		ON m.personal_match_id =
+		p.personal_match_id
 		LEFT JOIN favorite f
-	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'PERSONAL'
-	        AND f.user_id = #{userId}
+		ON f.match_id =
+		m.personal_match_id
+		AND f.match_type = 'PERSONAL'
+		AND f.user_id =
+		#{userId}
 		WHERE 1=1
 		AND m.status ='모집중'
 		<if test="searchType == 'RECOMAND'">
@@ -60,21 +65,25 @@
 	<select id="selectNormalPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-			m.*,
-			COUNT(p.participant_id) AS current_people,
-			CASE
-	            WHEN f.match_id IS NOT NULL THEN 1
-	            ELSE 0
-	        END AS favorite
-		FROM personal_match m
+		m.*,
+		COUNT(p.participant_id) AS current_people,
+		CASE
+		WHEN
+		f.match_id IS NOT NULL THEN 1
+		ELSE 0
+		END AS favorite
+		FROM personal_match
+		m
 		LEFT JOIN
-			personal_match_participant p
-			ON m.personal_match_id =
-			p.personal_match_id
+		personal_match_participant p
+		ON m.personal_match_id =
+		p.personal_match_id
 		LEFT JOIN favorite f
-	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'PERSONAL'
-	        AND f.user_id = #{userId}
+		ON f.match_id =
+		m.personal_match_id
+		AND f.match_type = 'PERSONAL'
+		AND f.user_id =
+		#{userId}
 
 		WHERE 1=1
 
@@ -167,25 +176,29 @@
 	<select id="selectMapPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-			m.*,
-			COUNT(p.participant_id) AS current_people,
-			CASE
-	            WHEN f.match_id IS NOT NULL THEN 1
-	            ELSE 0
-	        END AS favorite
+		m.*,
+		COUNT(p.participant_id) AS current_people,
+		CASE
+		WHEN
+		f.match_id IS NOT NULL THEN 1
+		ELSE 0
+		END AS favorite
 		FROM personal_match
 		m
 		LEFT JOIN
-			personal_match_participant p
-			ON m.personal_match_id =
-			p.personal_match_id
+		personal_match_participant p
+		ON m.personal_match_id =
+		p.personal_match_id
 		LEFT JOIN favorite f
-	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'PERSONAL'
-	        AND f.user_id = #{userId}
+		ON f.match_id =
+		m.personal_match_id
+		AND f.match_type = 'PERSONAL'
+		AND f.user_id =
+		#{userId}
 
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
-		AND m.longitude BETWEEN #{minLng} AND #{maxLng}
+		AND
+		m.longitude BETWEEN #{minLng} AND #{maxLng}
 
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
@@ -259,19 +272,27 @@
 		FROM personal_match_participant p
 		JOIN personal_match m
 		ON m.personal_match_id = p.personal_match_id
-		LEFT JOIN favorite f ON f.match_id = m.personal_match_id
-		AND f.user_id = #{userId}
+		LEFT
+		JOIN favorite f
+		ON f.match_id = m.personal_match_id
+		AND f.user_id =
+		#{userId}
 		AND f.match_type = 'Personal'
 		WHERE p.user_id = #{userId}
-		AND p.status IN ('결제완료')
+		AND
+		p.status IN ('결제완료', '취소')
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
 		<if test="status != null and status != ''">
 			AND m.status = #{status}
 		</if>
-		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
-		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
+		<if test="startDate != null and startDate != ''">
+			AND m.match_date &gt;= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND m.match_date &lt;= #{endDate}
+		</if>
 		ORDER BY m.match_date DESC, m.personal_match_id DESC
 		LIMIT #{size}
 		OFFSET #{offset}
@@ -284,16 +305,21 @@
 		FROM personal_match_participant p
 		JOIN personal_match m
 		ON m.personal_match_id = p.personal_match_id
-		WHERE p.user_id = #{userId}
-		AND p.status IN ('결제완료')
+		WHERE p.user_id =
+		#{userId}
+		AND p.status IN ('결제완료', '취소')
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
 		<if test="status != null and status != ''">
 			AND m.status = #{status}
 		</if>
-		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
-		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
+		<if test="startDate != null and startDate != ''">
+			AND m.match_date &gt;= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND m.match_date &lt;= #{endDate}
+		</if>
 	</select>
 
 	<!-- 내가만든 경기 목록 조회 -->
@@ -307,7 +333,8 @@
 		ON f.match_id =
 		m.personal_match_id
 		AND f.user_id = #{userId}
-		AND f.match_type ='Personal'
+		AND f.match_type
+		='Personal'
 		WHERE m.user_id = #{userId}
 		AND m.deleted = '0'
 		<if test="sport != null and sport != ''">
@@ -329,7 +356,8 @@
 		SELECT COUNT(*)
 		FROM personal_match m
 		WHERE m.user_id = #{userId}
-		AND m.deleted = '0'
+		AND
+		m.deleted = '0'
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -341,188 +369,208 @@
 	</select>
 
 
-	<select id="selectPersonalMatch" parameterType="personalMatch" resultType="personalMatch">
+	<select id="selectPersonalMatch" parameterType="personalMatch"
+		resultType="personalMatch">
 		SELECT
 		m.*,
-			u.nickname,
-			COUNT(p.participant_id) AS current_people,
+		u.nickname,
+		COUNT(p.participant_id) AS
+		current_people,
 		CASE
-            WHEN f.match_id IS NOT NULL THEN 1
-            ELSE 0
-        END AS favorite
+		WHEN f.match_id IS NOT NULL THEN 1
+		ELSE 0
+		END AS
+		favorite
 		FROM personal_match m
 		LEFT JOIN
-			personal_match_participant p
-			ON m.personal_match_id = p.personal_match_id
+		personal_match_participant p
+		ON
+		m.personal_match_id = p.personal_match_id
 		LEFT JOIN user u
-			ON m.user_id = u.user_id
+		ON m.user_id
+		= u.user_id
 		LEFT JOIN favorite f
-	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'Personal'
-	        AND f.user_id = #{userId}
+		ON f.match_id = m.personal_match_id
+		AND
+		f.match_type = 'Personal'
+		AND f.user_id = #{userId}
 		WHERE
-			m.personal_match_id = #{personalMatchId}
+		m.personal_match_id = #{personalMatchId}
 		GROUP BY m.personal_match_id
-		ORDER BY m.created_at DESC;
+		ORDER BY m.created_at
+		DESC;
 	</select>
-	
-	<insert id="insertPersonalMatch" parameterType="personalMatch" useGeneratedKeys="true" keyProperty="personalMatchId">
+
+	<insert id="insertPersonalMatch" parameterType="personalMatch"
+		useGeneratedKeys="true" keyProperty="personalMatchId">
 		INSERT INTO personal_match (
-		        user_id,
-		        sport,
-		        title,
-		        address,
-		        region,
-		        place_name,
-		        match_date,
-		        start_time,
-		        end_time,
-		        latitude,
-		        longitude,
-		        participation_fee,
-		        fee,
-		        min_people,
-		        max_people,
-		        deadline,
-		        gender,
-		        age_20s,
-		        age_30s,
-		        age_40s,
-		        age_50s,
-		        age_60_plus,
-		        skill_intro,
-		        skill_beginner,
-		        skill_intermediate,
-		        skill_advanced,
-		        content,
-		        image,
-		        image1,
-		        image2,
-		        image3,
-		        image4,
-		        image5,
-		        created_at,
-		        updated_at,
-		        deleted,
-		        status
-		    )
-		    VALUES (
-		        #{userId},
-		        #{sport},
-		        #{title},
-		        #{address},
-		        #{region},
-		        #{placeName},
-		        #{matchDate},
-		        #{startTime},
-		        #{endTime},
-		        #{latitude},
-		        #{longitude},
-		        #{participationFee},
-		        #{fee},
-		        #{minPeople},
-		        #{maxPeople},
-		        #{deadline},
-		        #{gender},
-		        #{age20s},
-		        #{age30s},
-		        #{age40s},
-		        #{age50s},
-		        #{age60Plus},
-		        #{skillIntro},
-		        #{skillBeginner},
-		        #{skillIntermediate},
-		        #{skillAdvanced},
-		        #{content},
-		        #{image1},
-		        #{image1},
-		        #{image2},
-		        #{image3},
-		        #{image4},
-		        #{image5},
-		        NOW(),
-		        NOW(),
-		        #{deleted},
-		        #{status}
-		    )
+		user_id,
+		sport,
+		title,
+		address,
+		region,
+		place_name,
+		match_date,
+		start_time,
+		end_time,
+		latitude,
+		longitude,
+		participation_fee,
+		fee,
+		min_people,
+		max_people,
+		deadline,
+		gender,
+		age_20s,
+		age_30s,
+		age_40s,
+		age_50s,
+		age_60_plus,
+		skill_intro,
+		skill_beginner,
+		skill_intermediate,
+		skill_advanced,
+		content,
+		image,
+		image1,
+		image2,
+		image3,
+		image4,
+		image5,
+		created_at,
+		updated_at,
+		deleted,
+		status
+		)
+		VALUES (
+		#{userId},
+		#{sport},
+		#{title},
+		#{address},
+		#{region},
+		#{placeName},
+		#{matchDate},
+		#{startTime},
+		#{endTime},
+		#{latitude},
+		#{longitude},
+		#{participationFee},
+		#{fee},
+		#{minPeople},
+		#{maxPeople},
+		#{deadline},
+		#{gender},
+		#{age20s},
+		#{age30s},
+		#{age40s},
+		#{age50s},
+		#{age60Plus},
+		#{skillIntro},
+		#{skillBeginner},
+		#{skillIntermediate},
+		#{skillAdvanced},
+		#{content},
+		#{image1},
+		#{image1},
+		#{image2},
+		#{image3},
+		#{image4},
+		#{image5},
+		NOW(),
+		NOW(),
+		#{deleted},
+		#{status}
+		)
 	</insert>
-	
+
 	<update id="updatePersonalMatch" parameterType="personalMatch">
 
-	    UPDATE personal_match
-	    SET
-	        sport = #{sport},
-	        title = #{title},
-	        address = #{address},
-	        region = #{region},
-	        place_name = #{placeName},
-	        match_date = #{matchDate},
-	        start_time = #{startTime},
-	        end_time = #{endTime},
-	        latitude = #{latitude},
-	        longitude = #{longitude},
-	        participation_fee = #{participationFee},
-	        fee = #{fee},
-	        min_people = #{minPeople},
-	        max_people = #{maxPeople},
-	        deadline = #{deadline},
-	        gender = #{gender},
-	        age_20s = #{age20s},
-	        age_30s = #{age30s},
-	        age_40s = #{age40s},
-	        age_50s = #{age50s},
-	        age_60_plus = #{age60Plus},
-	        skill_intro = #{skillIntro},
-	        skill_beginner = #{skillBeginner},
-	        skill_intermediate = #{skillIntermediate},
-	        skill_advanced = #{skillAdvanced},
-	        content = #{content},
-	        <if test="image1 != null">
-	            image = #{image1},
-	            image1 = #{image1},
-	        </if>
-	        <if test="image2 != null">
-	            image2 = #{image2},
-	        </if>
-	        <if test="image3 != null">
-	            image3 = #{image3},
-	        </if>
-	        <if test="image4 != null">
-	            image4 = #{image4},
-	        </if>
-	
-	        <if test="image5 != null">
-	            image5 = #{image5},
-	        </if>
-	        updated_at = NOW(),
-	        deleted = #{deleted},
-	        status = #{status}
-	    WHERE personal_match_id = #{personalMatchId}
+		UPDATE personal_match
+		SET
+		sport = #{sport},
+		title = #{title},
+		address =
+		#{address},
+		region = #{region},
+		place_name = #{placeName},
+		match_date =
+		#{matchDate},
+		start_time = #{startTime},
+		end_time = #{endTime},
+		latitude
+		= #{latitude},
+		longitude = #{longitude},
+		participation_fee =
+		#{participationFee},
+		fee = #{fee},
+		min_people = #{minPeople},
+		max_people
+		= #{maxPeople},
+		deadline = #{deadline},
+		gender = #{gender},
+		age_20s =
+		#{age20s},
+		age_30s = #{age30s},
+		age_40s = #{age40s},
+		age_50s = #{age50s},
+		age_60_plus = #{age60Plus},
+		skill_intro = #{skillIntro},
+		skill_beginner
+		= #{skillBeginner},
+		skill_intermediate = #{skillIntermediate},
+		skill_advanced = #{skillAdvanced},
+		content = #{content},
+		<if test="image1 != null">
+			image = #{image1},
+			image1 = #{image1},
+		</if>
+		<if test="image2 != null">
+			image2 = #{image2},
+		</if>
+		<if test="image3 != null">
+			image3 = #{image3},
+		</if>
+		<if test="image4 != null">
+			image4 = #{image4},
+		</if>
+
+		<if test="image5 != null">
+			image5 = #{image5},
+		</if>
+		updated_at = NOW(),
+		deleted = #{deleted},
+		status = #{status}
+		WHERE
+		personal_match_id = #{personalMatchId}
 	</update>
-	<update id="updatePersonalMatchStatus" parameterType="personalMatch">
-	    UPDATE personal_match
-	    SET
-	    	<if test="deleted != null">
-	            deleted = #{deleted},
-	            deleted_at = NOW(),
-	        </if>
-	        status = #{status},
-	        updated_at = NOW()
-	    WHERE personal_match_id = #{personalMatchId}
+	<update id="updatePersonalMatchStatus"
+		parameterType="personalMatch">
+		UPDATE personal_match
+		SET
+		<if test="deleted != null">
+			deleted = #{deleted},
+			deleted_at = NOW(),
+		</if>
+		status = #{status},
+		updated_at = NOW()
+		WHERE personal_match_id =
+		#{personalMatchId}
 	</update>
-		
+
 	<select id="selectMyPagePersonalMatchDates" parameterType="map"
 		resultType="string">
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
-		FROM
-		personal_match_participant p
+		FROM personal_match_participant p
 		JOIN personal_match m
-		ON
-		m.personal_match_id = p.personal_match_id
+		ON m.personal_match_id = p.personal_match_id
 		WHERE p.user_id = #{userId}
-		AND p.status IN ('결제완료')
-		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
-		<if test="status != null and status != ''"> AND m.status = #{status} </if>
+		AND p.status IN ('결제완료', '취소')
+		<if test="sport != null and sport != ''">
+			AND m.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
 	</select>
 	<select id="selectMyPageCreatedPersonalMatchDates"
 		parameterType="map" resultType="string">
@@ -538,10 +586,11 @@
 			AND m.status = #{status}
 		</if>
 	</select>
-	
+
 	<!-- 관리자 사이드 바 진행된 경기수 세기 개인 -->
 	<select id="selectMatchCntPersonal" resultType="Long">
-		select count(*) from personal_match
+		select count(*)
+		from personal_match
 		where status = '모집중'
 	</select>
 </mapper>
