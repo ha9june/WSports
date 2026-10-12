@@ -322,8 +322,23 @@
 
 						</div>
 						<div class="btns">
-							<a class="btn btn-primary btn-xs"
-								href="${ctx}/jsp/match/personalMatchProfileList.jsp">참가자 확인</a>
+							<c:choose>
+								<c:when test="${m.status eq '경기 취소'}">
+								</c:when>
+								<c:when test="${m.status eq '경기 종료'}">
+									<a class="btn btn-outline btn-xs"
+										href="${ctx}/review/create?matchNo=PERSONAL:${m.personalMatchId}"
+										onclick="event.stopPropagation()">후기 작성</a>
+									<a class="btn btn-primary btn-xs"
+										href="${ctx}/personal-match/rating?personalMatchId=${m.personalMatchId}"
+										onclick="event.stopPropagation()">참가자 평가</a>
+								</c:when>
+								<c:otherwise>
+									<a class="btn btn-primary btn-xs"
+										href="${ctx}/personal-match/participants/list?personalMatchId=${m.personalMatchId}"
+										onclick="event.stopPropagation()">참가자 확인</a>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</div>
 				</div>

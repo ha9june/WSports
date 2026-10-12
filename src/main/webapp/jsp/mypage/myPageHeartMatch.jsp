@@ -22,6 +22,12 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.act-card .aside .btns {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+}
+
 .pill-green {
 	color: var(- -ds-success-fg);
 	background: var(- -ds-success-bg);
@@ -316,26 +322,12 @@
 						<strong>${m.title}</strong>
 						<p class="meta" style="margin-bottom: 6px;">
 							<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${m.matchDate}</span>
-							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${m.startTime}
-								~ ${m.endTime}</span> <span><img
+							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(m.startTime, 0, 5)}
+								~ ${fn:substring(m.endTime, 0, 5)}</span> <span><img
 								src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
 						</p>
 						<p class="meta"
 							style="display: flex; align-items: center; gap: 8px; margin: 0;">
-							<span
-								style="display: inline-flex; align-items: center; gap: 4px;">
-								<img src="${ctx}/img/icon-user-12.svg" alt="">
-								${m.currentPeople}/${m.maxPeople} <c:if
-									test="${m.matchType eq 'Personal' and m.minPeople > 0}"> · 최소 ${m.minPeople}명</c:if>
-							</span>
-
-							<c:if test="${m.maxPeople > 0}">
-								<span class="progress-container"
-									style="display: inline-block; width: 60px; height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
-									<span class="progress-bar"
-									style="display: block; height: 100%; background: #111; width: ${m.currentPeople / m.maxPeople * 100}%;"></span>
-								</span>
-							</c:if>
 						</p>
 					</div>
 
@@ -349,7 +341,21 @@
 								aria-label="관심 경기">${heart}</button>
 						</div>
 						<div class="btns">
-							<a class="btn btn-primary btn-xs" href="${detailUrl}">상세 보기</a>
+							<c:choose>
+								<%-- 경기 종료: 후기 작성 / 팀 평가 --%>
+								<c:when test="${m.status eq '경기 종료'}">
+									<a class="btn btn-outline btn-xs"
+										href="${ctx}/review/create?matchNo=${fn:toUpperCase(m.matchType) eq 'Team' ? 'Team' : 'Personal'}:${m.matchId}"
+										onclick="event.stopPropagation()">후기 작성</a>
+									<a class="btn btn-primary btn-xs"
+										href="${ctx}/${fn:toUpperCase(m.matchType) eq 'TEAM' ? 'team-match' : 'personal-match'}/rating?matchId=${m.matchId}"
+										onclick="event.stopPropagation()">경기 팀 평가</a>
+								</c:when>
+								<%-- 그 외: 기존 버튼 --%>
+								<c:otherwise>
+									<a class="btn btn-primary btn-xs" href="${detailUrl}">상세 보기</a>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</div>
 				</div>

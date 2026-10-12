@@ -53,10 +53,11 @@
 .member-card .info:hover .hover-card { display: block; }
 .post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
 .post-card { display: block; padding: 18px 20px; border: 1px solid var(--ds-border); border-radius: var(--r-8); background: #fff; }
-.post-card .ttl { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; }
-.post-card p { font-size: 11px; color: var(--ds-text-2); margin-top: 12px; }
+.post-card .ttl { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; color: var(--ds-text);}
+.post-card p { font-size: 12px; color: var(--ds-text-2); margin-top: 12px; }
 .post-card .acts { display: flex; gap: 8px; margin-top: 14px; }
-
+.post-card[data-href] { cursor: pointer; }
+.post-card[data-href]:hover { border-color: #1677ff; }
 .btn-join:disabled { background: var(--ds-border-subtle); color: var(--ds-text-3); cursor: not-allowed; }
 .btn-join:disabled:hover { background: var(--ds-border-subtle); }
 
@@ -141,6 +142,8 @@
 .tm-row .left {
 	gap: 10px;
 }
+
+
 .tm-row .main { flex: 1; min-width: 0; }
 .tm-row strong { font-size: 18px; }
 .tm-row .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 11px; color: var(--ds-text-2); margin-top: 8px; }

@@ -15,6 +15,171 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 <c:set var="activeNav" value="review" />
 <%@ include file="/jsp/common/header.jsp"%>
 <style>
+.cmt-title {
+	display: flex !important;
+	align-items: center;
+	gap: 6px;
+	margin: 0 0 12px !important;
+	font-size: 18px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.cmt-count {
+	color: #1a6bff;
+}
+
+.cmt-list {
+	display: flex !important;
+	flex-direction: column;
+	gap: 8px;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.cmt-item {
+	position: relative;
+	display: flex !important;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 14px 16px !important;
+	border: 1px solid #eef0f3 !important;
+	border-radius: 14px !important;
+	background: #fff;
+}
+
+.cmt-item:hover {
+	background: #f9fafb;
+}
+
+.cmt-avatar {
+	flex-shrink: 0;
+	width: 40px !important;
+	height: 40px !important;
+	border-radius: 50% !important;
+	object-fit: cover;
+	display: block;
+}
+
+.cmt-avatar-default {
+	background: #dcf5e7;
+}
+
+.cmt-body {
+	flex: 1;
+	min-width: 0;
+	padding-right: 130px; /* 날짜+삭제 자리 */
+}
+
+.cmt-name {
+	display: flex !important;
+	align-items: center;
+	gap: 6px;
+	line-height: 1.3;
+}
+
+.cmt-nick {
+	font-size: 14px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.cmt-writer {
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: #e8f0ff;
+	font-size: 11px;
+	font-weight: 700;
+	color: #1a6bff;
+}
+
+.cmt-text {
+	white-space: normal;
+	word-break: break-all;
+}
+
+.cmt-side {
+	position: absolute;
+	top: 14px;
+	right: 16px;
+	display: flex !important;
+	align-items: center;
+	gap: 8px;
+	white-space: nowrap;
+}
+
+.cmt-time {
+	font-size: 12px;
+	color: #9ca3af;
+}
+
+/* 삭제 버튼: 후기 삭제와 같은 연핑크 스타일 */
+.cmt-del {
+	padding: 3px 12px !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	background: #fdecec !important;
+	font-size: 12px;
+	font-weight: 600;
+	color: #e5484d !important;
+	cursor: pointer;
+	transition: background .15s;
+}
+
+.cmt-del:hover {
+	background: #fbd5d5 !important;
+}
+
+.cmt-empty {
+	margin: 0 !important;
+	padding: 28px 0;
+	text-align: center;
+	font-size: 14px;
+	color: #9ca3af;
+	background: #f9fafb;
+	border-radius: 14px;
+}
+
+.cmt-form {
+	display: flex;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+.cmt-input {
+	flex: 1;
+	min-width: 0;
+	height: 46px;
+	padding: 0 16px;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	background: #f9fafb;
+	font-size: 14px;
+	box-sizing: border-box;
+}
+
+.cmt-input:focus {
+	outline: 0;
+	border-color: #1a6bff;
+	background: #fff;
+	box-shadow: 0 0 0 3px rgba(26, 107, 255, 0.12);
+}
+
+.cmt-submit {
+	height: 46px;
+	padding: 0 24px;
+	border: 0;
+	border-radius: 12px;
+	background: #1a6bff;
+	font-size: 14px;
+	font-weight: 700;
+	color: #fff;
+	cursor: pointer;
+}
+
+.cmt-submit:hover {
+	background: #1558d6;
+}
 /* 본문 박스 내부의 상단 여백을 대폭 줄임 */
 .review-detail {
 	padding-top: 10px !important; /* 기존 여백을 무시하고 10px로 밀착 (원하는 만큼 조절 가능) */
@@ -43,7 +208,6 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 	border-radius: 4px; /* 사진 모서리를 약간 둥글게 (선택사항) */
 }
 </style>
-
 <main class="page">
 	<div class="rail">
 		<nav class="breadcrumb">
@@ -51,6 +215,10 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 		</nav>
 
 		<div class="detail-top" style="margin-bottom: 16px">
+			<p style="margin: 0 0 8px">
+				<span class="sport-chip" style="height: 26px"><c:out
+						value="${review.sport}" /></span>
+			</p>
 			<div class="title-row" style="margin-top: 0">
 				<h1>
 					<c:out value="${review.title}" />
@@ -61,25 +229,22 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				</c:if>
 			</div>
 			<div class="host-inline">
-				<c:choose>
-					<c:when test="${not empty review.profileImage}">
-						<img class="avatar" src="${ctx}/profiles/${review.profileImage}"
-							style="object-fit: cover;" alt="프로필">
-					</c:when>
-					<c:otherwise>
-						<span class="avatar default"></span>
-					</c:otherwise>
-				</c:choose>
+				<p class="mt-8">
+					<c:choose>
+						<c:when test="${not empty review.profileImage}">
+							<img class="avatar" src="${ctx}/profiles/${review.profileImage}"
+								style="object-fit: cover;" alt="프로필">
+						</c:when>
+						<c:otherwise>
+							<span class="avatar default"></span>
+						</c:otherwise>
+					</c:choose>
 				<div>
 					<a
 						href="${ctx}/jsp/member/userProfileInfo.jsp?userId=${review.userId}"><strong>${review.nickname}</strong></a>
 					<small>작성자 · ${review.createdAtStr}</small>
 				</div>
 			</div>
-			<p class="mt-8">
-				<span class="sport-chip" style="height: 26px"><c:out
-						value="${review.sport}" /></span>
-			</p>
 		</div>
 		<section class="review-detail" style="width: 744px; max-width: 100%">
 			<c:if test="${not empty review.image}">
@@ -98,76 +263,98 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				<c:choose>
 					<c:when test="${review.matchType eq 'TEAM'}">
 						<a
-							href="${ctx}/jsp/match/teamMatchDetail.jsp?teamMatchId=${review.matchId}">${review.title}</a>
+							href="${ctx}/jsp/match/teamMatchDetail.jsp?teamMatchId=${review.matchId}"><c:out
+								value="${review.matchTitle}" /></a>
 					</c:when>
 					<c:otherwise>
 						<a
-							href="${ctx}/jsp/match/personalMatchDetail.jsp?personalMatchId=${review.matchId}">${review.title}</a>
+							href="${ctx}/jsp/match/personalMatchDetail.jsp?personalMatchId=${review.matchId}"><c:out
+								value="${review.matchTitle}" /></a>
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<div class="acts">
+			<div class="acts"
+				style="display: flex; align-items: center; gap: 8px;">
 				<div class="like-wrapper"
 					style="display: inline-flex; align-items: center; gap: 6px;">
+
 					<button type="button"
 						class="fav-btn sq ${isFavorite ? 'is-on' : ''}" data-fav
 						data-type="review" data-auth aria-label="좋아요">${heart}</button>
 					<span id="likeCountDisplay" class="t-14" style="font-weight: bold;">${likeCount}</span>
 				</div>
 
-				<c:choose>
-					<c:when test="${state eq 'mine'}">
-						<a class="btn btn-outline btn-sm"
-							href="${ctx}/review/edit?reviewId=${review.reviewId}">수정</a>
-
-						<button type="button" class="btn btn-danger-soft btn-sm"
-							data-modal-open="deleteModal">삭제</button>
-					</c:when>
-					<c:otherwise>
-						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/support/reportWrite.jsp?targetType=review&targetNo=${review.reviewId}"
-							data-auth>신고</a>
-					</c:otherwise>
-				</c:choose>
 				<span class="btn btn-outline btn-sm">댓글
 					${fn:length(commentList)}</span>
-			</div>
-		</section>
 
-		<section style="width: 744px; max-width: 100%" class="mt-48">
-			<h2 class="sub-title" style="margin-bottom: 14px">댓글
-				${fn:length(commentList)}</h2>
-			<c:forEach var="cm" items="${commentList}">
-				<div class="comment">
+				<div style="margin-left: auto; display: flex; gap: 8px;">
 					<c:choose>
-						<c:when test="${not empty cm.profileImage}">
-							<img class="avatar sm" src="${ctx}/profiles/${cm.profileImage}"
-								style="object-fit: cover;" alt="프로필">
+						<c:when test="${state eq 'mine'}">
+							<a class="btn btn-outline btn-sm"
+								href="${ctx}/review/edit?reviewId=${review.reviewId}">수정</a>
+							<button type="button" class="btn btn-danger-soft btn-sm"
+								data-modal-open="deleteModal">삭제</button>
 						</c:when>
 						<c:otherwise>
-							<span class="avatar sm default"></span>
+							<a class="btn btn-outline btn-sm"
+								href="${ctx}/jsp/support/reportWrite.jsp?targetType=review&targetNo=${review.reviewId}"
+								data-auth>신고</a>
 						</c:otherwise>
 					</c:choose>
-					<b>${cm.nickname}</b> <span><c:out value="${cm.content}" /></span>
-					<span class="t-11 t-3">${cm.createdAtStr}</span>
-					<c:if test="${sessionScope.user.userId eq cm.userId}">
-						<button type="button" class="btn-text t-11 btn-del-comment"
-							data-comment-id="${cm.commentId}">삭제</button>
-					</c:if>
 				</div>
-			</c:forEach>
-			<c:if test="${empty commentList}">
-				<p class="t-3" style="padding: 16px 0">첫 댓글을 남겨보세요.</p>
-			</c:if>
+			</div>
 
-			<form class="comment-form" method="post"
-				action="${ctx}/review/comment">
-				<input type="hidden" name="reviewId" value="${review.reviewId}">
-				<input class="input" name="content"
-					placeholder="${empty sessionScope.user ? '로그인 후 댓글을 남길 수 있어요.' : '댓글을 입력하세요.'}"
-					${empty sessionScope.user ? 'readonly data-auth' : 'required'}>
-				<button type="submit" class="btn btn-primary btn-lg" data-auth>등록</button>
-			</form>
+			<section style="width: 744px; max-width: 100%" class="mt-48">
+				<h2 class="cmt-title">
+					댓글 <span class="cmt-count">${fn:length(commentList)}</span>
+				</h2>
+
+				<div class="cmt-list">
+					<c:forEach var="cm" items="${commentList}">
+						<div class="cmt-item">
+							<c:choose>
+								<c:when test="${not empty cm.profileImage}">
+									<img class="cmt-avatar"
+										src="${ctx}/profiles/${cm.profileImage}" alt="프로필">
+								</c:when>
+								<c:otherwise>
+									<span class="cmt-avatar cmt-avatar-default"></span>
+								</c:otherwise>
+							</c:choose>
+
+							<div class="cmt-body">
+								<div class="cmt-name">
+									<b class="cmt-nick"><c:out value="${cm.nickname}" /></b>
+									<c:if test="${review.userId eq cm.userId}">
+										<span class="cmt-writer">작성자</span>
+									</c:if>
+								</div>
+								<p class="cmt-text"><c:out value="${cm.content}" /></p>
+							</div>
+
+							<div class="cmt-side">
+								<span class="cmt-time">${cm.createdAtStr}</span>
+								<c:if test="${sessionScope.user.userId eq cm.userId}">
+									<button type="button" class="cmt-del btn-del-comment"
+										data-comment-id="${cm.commentId}">삭제</button>
+								</c:if>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+
+				<c:if test="${empty commentList}">
+					<p class="cmt-empty">아직 댓글이 없어요. 첫 댓글을 남겨보세요.</p>
+				</c:if>
+
+				<form class="cmt-form" method="post" action="${ctx}/review/comment">
+					<input type="hidden" name="reviewId" value="${review.reviewId}">
+					<input class="cmt-input" name="content" autocomplete="off"
+						placeholder="${empty sessionScope.user ? '로그인 후 댓글을 남길 수 있어요.' : '댓글을 입력하세요.'}"
+						${empty sessionScope.user ? 'readonly data-auth' : 'required'}>
+					<button type="submit" class="cmt-submit" data-auth>등록</button>
+				</form>
+			</section>
 		</section>
 	</div>
 </main>

@@ -20,11 +20,19 @@
 	</insert>
 	
 	<select id="selectTeamUserList" parameterType="Long" resultType="user">
-		select u.*, tu.team_role 
+		select u.*, tu.team_role, tu.joined_at as joinedAt
 		from team_user tu
-		JOIN user u
-		ON u.user_id = tu.user_id
-		where team_id = #{teamId} and COALESCE(withdrawn_at, false) = false
+		join user u on u.user_id = tu.user_id
+		where tu.team_id = #{teamId}
+		  and coalesce(tu.withdrawn, 0) = 0
+		order by
+			case tu.team_role
+				when 'CAPTAIN' then 1
+				when 'VICE_CAPTAIN' then 2
+				else 3
+			end,
+			tu.joined_at asc,
+			tu.user_id asc
 	</select>
 	
 	<select id="selectRole" parameterType="Map" resultType="String">
