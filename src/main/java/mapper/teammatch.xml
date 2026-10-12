@@ -500,4 +500,29 @@
 		  and coalesce(deleted, 0) = 0
 		  and status = '모집중'
 	</update>
+	
+	<!-- 모집 마감 상태이고 경기 종료 시각이 지난 경기 -->
+	<select id="selectFinishedMatches" resultType="teammatch">
+		select team_match_id, team_id, user_id, title
+		from team_match
+		where status = '모집 마감'
+		  and coalesce(deleted, 0) = 0
+		  and timestamp(match_date, end_time) &lt;= now()
+	</select>
+	
+	<update id="updateStatusToFinished" parameterType="Long">
+		update team_match
+		set status = '경기 종료',
+		    updated_at = now()
+		where team_match_id = #{teamMatchId}
+		  and status = '모집 마감'
+		  and coalesce(deleted, 0) = 0
+	</update>
+	
+	<select id="selectParticipantUserIds" parameterType="Long" resultType="Long">
+		select distinct user_id
+		from team_match_participant
+		where team_match_id = #{teamMatchId}
+		  and status = '결제완료'
+	</select>
 </mapper>

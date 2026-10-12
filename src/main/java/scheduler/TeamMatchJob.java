@@ -46,7 +46,26 @@ public class TeamMatchJob {
         }
     }
 
-    private void finishMatches() throws Exception {} // 경기 끝 시각 지남 → 경기종료
+    private void finishMatches() throws Exception {
+    	List<TeamMatch> list = teamMatchDao.selectFinishedMatches();   // selectFinishedMatches
+    	for (TeamMatch t : list) {
+    		try {
+    			int updated = teamMatchDao.updateStatusToFinished(t.getTeamMatchId());   // updateStatusToFinished
+    			if (updated == 1) {
+    				String title = "'" + t.getTitle() + "' 경기가 종료되었습니다.";
+    				String content = "출석체크 확인 및 경기 매너 평가를 부탁드립니다.";
+    				String link = "/team-match/detail/view?teamMatchId=" + t.getTeamMatchId();
+
+    				for (Long uid : teamMatchDao.selectParticipantUserIds(t.getTeamMatchId())) {
+    					notifyUser(uid, title, content, link);
+    				}
+    			}
+    		} catch (Exception e) {
+    			System.err.println("[TeamMatchJob] 경기 종료 처리 실패 teamMatchId=" + t.getTeamMatchId());
+    			e.printStackTrace();   // 한 경기 실패가 나머지를 막지 않게
+    		}
+    	}
+    }
 
     private void notifyUser(Long userId, String title, String content, String link) {
         try {

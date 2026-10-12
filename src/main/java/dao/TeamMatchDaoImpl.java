@@ -174,4 +174,39 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			sqlSession.close();
 		}
 	}
+
+	@Override
+	public List<TeamMatch> selectFinishedMatches() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatch.selectFinishedMatches");
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
+
+	@Override
+	public int updateStatusToFinished(Long teamMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.teammatch.updateStatusToFinished", teamMatchId);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
+	
+	@Override
+	public List<Long> selectParticipantUserIds(Long teamMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.teammatch.selectParticipantUserIds", teamMatchId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+	}
 }

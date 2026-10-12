@@ -358,3 +358,37 @@
 	border-color: #1677ff;
 	box-shadow: 0 0 0 3px rgba(22, 119, 255, .12);
 }
+
+.postgame-card .match-summary .meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 16px;
+	margin-top: 6px;
+}
+.postgame-card .match-summary .meta > span {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 5px;
+	width: auto;
+	flex: 0 0 auto;
+}
+.postgame-card .match-summary .meta > span > img {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	flex: 0 0 auto;
+	margin: 0;
+}
+
+.postgame-card .eval-row .att-view {
+	display: flex;
+	align-items: center;
+}
+.postgame-card .eval-row .att-view .pill {
+	display: inline-flex;
+	width: auto;
+	padding: 4px 14px;
+	flex: 0 0 auto;
+}
