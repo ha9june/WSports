@@ -182,7 +182,9 @@
 	<!-- 참가 취소 처리 -->
 	<update id="updateParticipantCanceled" parameterType="Long">
 		update personal_match_participant
-		set status = '취소'
+		set status = '취소',
+			cancelled_at = now(),
+			cancel_reason = #{cancelReason}
 		where payment_id = #{paymentId}
 		and status = '결제완료'
 	</update>
