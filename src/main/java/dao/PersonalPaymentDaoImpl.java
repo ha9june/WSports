@@ -166,7 +166,7 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
 			try {
 				sqlSession.update("mapper.personalpayment.updatePaymentCanceled", param);
-				sqlSession.update("mapper.personalpayment.insertPaidParticipant", param);
+				sqlSession.update("mapper.personalpayment.updateParticipantCanceled", param);
 				//commit 해야 db 들어감
 				sqlSession.commit();
 			} catch (Exception e) {
