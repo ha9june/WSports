@@ -35,7 +35,7 @@
 	</form>
 	
 	<div style="width:fit-content; max-width:100%">
-    	<div class="tbl-head" style="grid-template-columns:70px 70px 100px 100px 200px 100px 100px;
+    	<div class="tbl-head" style="grid-template-columns:70px 120px 100px 100px 200px 100px 100px;
     	justify-self: start; justify-items: center; padding-left: 0px">
     		<span>신고번호</span>
     		<span>신고날짜</span>
@@ -47,10 +47,10 @@
     	</div>
 		<c:forEach var="r" items="${reportlist}">
 			<div class="tbl-row" href="${ctx}/admin/report/detail?reportId=${r.report_id}"
-		   	style="grid-template-columns: 70px 70px 100px 100px 200px 100px 100px; 
+		   	style="grid-template-columns: 70px 120px 100px 100px 200px 100px 100px; 
 		   	justify-items: center; padding-left: 0px">
 				<span>${r.report_id }</span>
-				<b><fmt:formatDate value="${r.created_at}" pattern="M/dd" /></b>
+				<b><fmt:formatDate value="${r.created_at}" pattern="yyyy/MM/dd" /></b>
 				<span>${r.type}</span>
 				<span>${r.nickname}</span>
 				<span>${r.title}</span>
