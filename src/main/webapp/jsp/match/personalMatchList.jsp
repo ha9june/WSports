@@ -94,7 +94,7 @@
 						      `+item.region+`
 						      </p>
 						      <p class="price">
-						      	`+item.participationFee+`원
+						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
 						      </p>
 						    </div>
 						    <p class="count">
@@ -153,20 +153,25 @@
 					    }else if(item.sport == "테니스"){
 					    	sportsType="tennis";
 					    }
-					    					    
+					    				    
 						
 						html+=`
 							<a class="match-row" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
-				            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
+				            <div class="left"><span class="pill pill-success bd">`+item.status+`</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
 				            <div class="main">
 				              <p class="title">
 				              `+item.title+`
 				              </p>
 				              <div class="meta">
-				                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">8/10 &nbsp; 최소 8명 <span class="cap"><i style="width:80%"></i></span></span>
+				                <span class="it people">
+				                	<img src="${ctx}/img/icon-person.svg" alt="">`+item.currentPeople+`/`+item.maxPeople+` &nbsp; 최소 8명 
+				                	<span class="cap">
+				                		<i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i>
+			                		</span>
+			                	</span>
 				                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">`+FormatDate(item.matchDate, item.startTime)+`</span>
-				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 마포구</span>
-				                <span class="price">10,000원</span>
+				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">`+item.region+`</span>
+				                <span class="price">`+Number(item.participationFee).toLocaleString('ko-KR')+`원</span>
 				                `+favBtn(item)+`
 				              </div>
 				            </div>
@@ -310,7 +315,11 @@
             </div>
             <div class="filter-more">
               <button type="button" class="btn btn-outline btn-sm" data-filter-toggle>필터 더보기 +</button>
-              <span class="count">0</span>
+              <span class="count">
+              0
+              </span>
+              <span class="newCount">
+              </span>
               <div class="filter-panel">
                 <div class="chip-group" data-select="single" data-name="gender">
                   <span class="chip-label">성별</span>
