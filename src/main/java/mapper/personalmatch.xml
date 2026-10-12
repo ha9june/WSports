@@ -5,13 +5,13 @@
 	<select id="selectNowPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-		m.*,
-		COUNT(p.participant_id) AS current_people,
-		CASE
-		WHEN
-		f.match_id IS NOT NULL THEN 1
-		ELSE 0
-		END AS favorite
+			m.*,
+			COUNT(p.participant_id) AS current_people,
+			CASE
+			WHEN
+			f.match_id IS NOT NULL THEN 1
+			ELSE 0
+			END AS favorite
 		FROM personal_match
 		m
 		LEFT JOIN
@@ -19,11 +19,9 @@
 		ON m.personal_match_id =
 		p.personal_match_id
 		LEFT JOIN favorite f
-		ON f.match_id =
-		m.personal_match_id
-		AND f.match_type = 'PERSONAL'
-		AND f.user_id =
-		#{userId}
+		ON f.match_id = m.personal_match_id
+		AND f.match_type = 'Personal'
+		AND f.user_id = #{userId}
 		WHERE 1=1
 		AND m.deleted = 0
 		AND m.status ='모집중'
@@ -81,7 +79,7 @@
 		p.personal_match_id
 		LEFT JOIN favorite f
 	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'PERSONAL'
+	        AND f.match_type = 'Personal'
 	        AND f.user_id = #{userId}
 		WHERE 1=1
 		AND m.deleted = 0
@@ -600,7 +598,9 @@
 			personal_match_id, user_id, title
 		from personal_match 
 		where 
-			status = '모집중' and deadline &lt;= now() and coalesce(deleted, 0) = 0
+			status = '모집중' 
+			and deadline &lt;= now() 
+			and coalesce(deleted, 0) = 0
 	</select>
 	<!-- 스케줄러 모집마감 && 경기 종료 시간지남 조회 -->
 	<select id="selectFinishedMatches" resultType="personalMatch">
@@ -617,9 +617,10 @@
 			personal_match
 		set 
 			status = '인원 미달 경기 취소'
-		where personal_match_id = #{personalMatchId}
-		and status = '모집중'
-		and coalesce(deleted, 0) = 0
+		where 
+			personal_match_id = #{personalMatchId}
+			and status = '모집중'
+			and coalesce(deleted, 0) = 0
 	</update>
 	<update id="updateStatusToFinished" parameterType="Long">
 		update

@@ -31,7 +31,7 @@ public class PersonalMatchJob {
         }
     }
     
-    private void cancelNoOpponent() throws Exception { // 마감 지남 + 상대 없음 → 경기취소
+    private void cancelNoOpponent() throws Exception { // 마감 지남 + 최소 인원 부족 → 경기취소
     	List<PersonalMatch> list = personalMatchDao.selectExpiredRecruiting();
     	for (PersonalMatch p : list) {
             try {
@@ -48,7 +48,7 @@ public class PersonalMatchJob {
             }
         }
     }
-    private void finishMatches() throws Exception {
+    private void finishMatches() throws Exception {	//마감상태 + 경기 시간 지남 + -> 경기 종료
     	List<PersonalMatch> list = personalMatchDao.selectExpiredRecruiting();
     	for (PersonalMatch p : list) {
             try {

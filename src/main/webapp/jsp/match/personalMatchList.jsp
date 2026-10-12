@@ -141,6 +141,11 @@
 				success:function(result){
 					let html = "";
 					let searchTypeText="";
+					
+					
+					if(result.length < 4){
+						$("#moreBtn").addClass("is-hidden");
+					}
 					result.forEach(function(item) {
 						let sportsType = "";
 					    if(item.sport == "축구/풋살" || item.sport == "축구"){
@@ -231,8 +236,7 @@
 			$(this).addClass("is-active");
 		  	$(".normalGroup").removeClass("is-hidden");
 		  	$(".mapGroup").addClass("is-hidden");
-			page=1;
-			NormalList(page, this);
+			//NormalList(page, this);
 		});
 		$("#mapBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
@@ -242,8 +246,6 @@
 		  	map.relayout();
 			searchMapMatch();
 			
-			
-
 		});
 		$("#moreBtn").on("click", function(e) {
 			NormalList(++page,this);
@@ -251,6 +253,7 @@
 
 	    $('#normalMatchSearchForm').on('submit', function(e) {
 	    	page=1;
+			$("#moreBtn").removeClass("is-hidden");
 	        e.preventDefault();
 		    NormalList(page, this);
 	    });

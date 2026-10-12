@@ -375,18 +375,8 @@
 	              <p class="note">결제된 참가비는 환불 규정에 따라 처리됩니다.</p>
 	            </div>
 	         </c:when>
-	         <c:when test="${status eq '작성자 경기 삭제'}">
-	            <div class="side-card">
-	              <span class="pill pill-danger bd">작성자 삭제</span>
-	              <p class="status-title">작성자가 경기를 삭제했어요</p>
-	              <p class="sub">호스트가 경기를 삭제했습니다. 참가자에게 취소 알림이 발송됩니다.</p>
-	              <p class="note">결제된 참가비는 환불 규정에 따라 처리됩니다.</p>
-	            </div>
-	         </c:when>
          </c:choose>    
       </aside>
-      
-      
     </div>
   </div>
 </main>
