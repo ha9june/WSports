@@ -592,6 +592,7 @@
 		where status = '모집중'
 		and deleted = 0
 	</select>
+
 	<!-- 스케줄러 : 모집 마감 지났는데 최소 인원 미달인 개인 경기 -->
 	<select id="selectExpiredUnderMin" resultType="personalMatch">
 		select m.personal_match_id, m.user_id, m.title
@@ -613,6 +614,47 @@
 		where personal_match_id = #{matchId}
 		and status = '모집중'
 		and deleted = 0
-</update>
+	</update>
+	
+	
+	<!-- 스케줄러 모집중 && 마감시간 지남 조회-->
+	<select id="selectExpiredRecruiting" resultType="personalMatch">
+		select
+			personal_match_id, user_id, title
+		from personal_match 
+		where 
+			status = '모집중' and deadline &lt;= now() and coalesce(deleted, 0) = 0
+	</select>
+	<!-- 스케줄러 모집마감 && 경기 종료 시간지남 조회 -->
+	<select id="selectFinishedMatches" resultType="personalMatch">
+		select
+			personal_match_id, user_id, title
+		from personal_match
+		where status =
+			'모집 마감'
+		and coalesce(deleted, 0) = 0
+		and timestamp(match_date, end_time) &lt;= now()
+	</select>
+	<update id="updateStatusToNoOpponentCancel" parameterType="Long">
+		update 
+			personal_match
+		set 
+			status = '인원 미달 경기 취소'
+		where personal_match_id = #{personalMatchId}
+		and status = '모집중'
+		and coalesce(deleted, 0) = 0
+	</update>
+	<update id="updateStatusToFinished" parameterType="Long">
+		update
+			personal_match
+		set 
+			status = '경기 종료',
+		updated_at = now()
+		where 
+			personal_match_id = #{personalMatchId}
+		and status = '모집 마감'
+		and coalesce(deleted, 0) = 0
+	</update>
+
 </mapper>
 

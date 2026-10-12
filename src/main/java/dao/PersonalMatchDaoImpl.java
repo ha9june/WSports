@@ -171,4 +171,51 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			sqlSession.close();
 		}
 	}
+/*
+	@Override
+	public List<PersonalMatch> selectExpiredRecruiting() throws Exception {
+		try (SqlSession Session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return Session.selectList("mapper.personalmatch.selectExpiredRecruiting");
+		}
+	}
+
+	@Override
+	public List<PersonalMatch> selectFinishedMatches() throws Exception {
+		try (SqlSession Session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return Session.selectList("mapper.personalmatch.selectFinishedMatches");
+		}
+	}
+
+	@Override
+	public int updateStatusToNoOpponentCancel(Long personalMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.personalmatch.updateStatusToNoOpponentCancel", personalMatchId);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
+
+	@Override
+	public int updateStatusToFinished(Long personalMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.personalmatch.updateStatusToFinished", personalMatchId);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
+
+*/
+
 }
