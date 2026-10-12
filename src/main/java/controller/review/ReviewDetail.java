@@ -48,7 +48,7 @@ public class ReviewDetail extends HttpServlet {
 			}
 
 			Long reviewId = Long.parseLong(reviewIdParam); // String -> Long 변환
-
+			
 			// 후기 상세 내용 조회
 			Review review = service.getReviewDetail(reviewId);
 			if (review == null) {
@@ -121,7 +121,7 @@ public class ReviewDetail extends HttpServlet {
 			Long reviewId = Long.parseLong(reviewIdParam);
 			Long userId = user.getUserId();
 			boolean isHeart = Boolean.parseBoolean(heartParam);
-
+			
 			List<Map<String, Object>> likeCntList = service.getReviewLikeCnt();
 			long likeCount = 0;
 			if (likeCntList != null) {

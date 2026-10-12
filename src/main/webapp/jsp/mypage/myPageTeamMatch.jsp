@@ -25,6 +25,12 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.act-card .aside .btns {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+}
+
 .pill-green {
 	color: var(- -ds-success-fg);
 	background: var(- -ds-success-bg);
@@ -266,7 +272,7 @@
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
 			<c:forEach var="m" items="${matchList}">
 				<div class="act-card"
-					data-href="${ctx}/team-match/detail/view?teamMatchId=${m.teamMatchId}">
+					<c:if test="${m.status ne '경기 취소'}">data-href="${ctx}/team-match/detail/view?teamMatchId=${m.teamMatchId}"</c:if>>
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">
@@ -327,8 +333,24 @@
 
 						</div>
 						<div class="btns">
-							<a class="btn btn-primary btn-xs"
-								href="${ctx}/team-match/participants/list?teamMatchId=${m.teamMatchId}">참가팀 확인</a>
+							<c:choose>
+								<c:when test="${m.status eq '경기 취소'}">
+								</c:when>
+								<c:when test="${m.status eq '경기 종료'}">
+									<a class="btn btn-outline btn-xs"
+										href="${ctx}/review/create?matchNo=TEAM:${m.teamMatchId}"
+										onclick="event.stopPropagation()">후기 작성</a>
+									<a class="btn btn-primary btn-xs"
+										href="${ctx}/team-match/rating?teamMatchId=${m.teamMatchId}"
+										onclick="event.stopPropagation()">참가 팀 평가</a>
+								</c:when>
+								<%-- 그 외: 기존 버튼 --%>
+								<c:otherwise>
+									<a class="btn btn-primary btn-xs"
+										href="${ctx}/team-match/participants/list?teamMatchId=${m.teamMatchId}"
+										onclick="event.stopPropagation()">참가팀 확인</a>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</div>
 				</div>
@@ -468,6 +490,6 @@
 				});
 			});
 		</script>
-	</div> 
+	</div>
 </div>
 <%@ include file="/jsp/common/footer.jsp"%>

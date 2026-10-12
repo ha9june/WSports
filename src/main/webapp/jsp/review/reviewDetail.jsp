@@ -43,7 +43,6 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 	border-radius: 4px; /* 사진 모서리를 약간 둥글게 (선택사항) */
 }
 </style>
-
 <main class="page">
 	<div class="rail">
 		<nav class="breadcrumb">

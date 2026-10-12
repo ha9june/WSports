@@ -12,30 +12,43 @@
 		resultType="TeamMatch">
 		SELECT m.*,
 		m.match_people AS maxPeople,
-		(SELECT COUNT(*) FROM team_match_participant tp
+		(SELECT COUNT(*)
+		FROM
+		team_match_participant tp
 		WHERE tp.team_match_id = m.team_match_id
-		AND tp.status = '결제완료') AS currentPeople,
+		AND
+		tp.status = '결제완료') AS currentPeople,
 		CASE WHEN EXISTS (
-		SELECT 1 FROM favorite f
+		SELECT 1
+		FROM
+		favorite f
 		WHERE f.match_id = m.team_match_id
 		AND f.user_id = #{userId}
 		AND f.match_type = 'Team'
 		) THEN 1 ELSE 0 END AS favorite
-		FROM team_match m
+		FROM
+		team_match m
 		WHERE EXISTS (
-		SELECT 1 FROM
-		team_match_participant p
+		SELECT 1
+		FROM team_match_participant p
 		WHERE
 		p.team_match_id = m.team_match_id
-		AND
-		p.user_id = #{userId}
+		AND p.user_id = #{userId}
 		AND p.status
-		IN ('결제완료')
+		IN ('결제완료', '취소')
 		)
-		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
-		<if test="status != null and status != ''"> AND m.status = #{status} </if>
-		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
-		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
+		<if test="sport != null and sport != ''">
+			AND m.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND m.match_date &gt;= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND m.match_date &lt;= #{endDate}
+		</if>
 		ORDER BY m.match_date, m.team_match_id
 		LIMIT #{size} OFFSET #{offset}
 	</select>
@@ -44,35 +57,41 @@
 		SELECT COUNT(*)
 		FROM team_match m
 		WHERE EXISTS (
-		SELECT 1 FROM
+		SELECT 1
+		FROM
 		team_match_participant p
 		WHERE p.team_match_id = m.team_match_id
 		AND
 		p.user_id = #{userId}
-		AND p.status IN ('결제완료')
+		AND p.status IN ('결제완료', '취소')
 		)
-		<if test="sport != null and sport != ''"> AND m.sport = #{sport} </if>
-		<if test="status != null and status != ''"> AND m.status = #{status} </if>
-		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
-		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
-	</select>
-	<select id="selectMyPageTeamMatchDates" parameterType="map"
-		resultType="string">
-		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
-		FROM
-		team_match_participant p
-		JOIN team_match m
-		ON m.team_match_id =
-		p.team_match_id
-		WHERE p.user_id = #{userId}
-		AND p.status IN ('결제완료')
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
 		<if test="status != null and status != ''">
 			AND m.status = #{status}
 		</if>
-
+		<if test="startDate != null and startDate != ''">
+			AND m.match_date &gt;= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND m.match_date &lt;= #{endDate}
+		</if>
+	</select>
+	<select id="selectMyPageTeamMatchDates" parameterType="map"
+		resultType="string">
+		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
+		FROM team_match_participant p
+		JOIN team_match m
+		ON m.team_match_id = p.team_match_id
+		WHERE p.user_id = #{userId}
+		AND p.status IN ('결제완료', '취소')
+		<if test="sport != null and sport != ''">
+			AND m.sport = #{sport}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
 	</select>
 
 	<insert id="insertTeamMatch" parameterType="teammatch"
@@ -116,9 +135,10 @@
 
 	<!-- 관리자 사이드바 팀 경기수 세기 -->
 	<select id="selectMatchCntTeam" resultType="Long">
-		select count(*) 
-		from team_match
-		where status in ('모집중', '모집 마감', '경기 종료')
+		select count(*)
+		from
+		team_match
+		where status in ('모집중')
 	</select>
 
 	<select id="selectTeamMatchUser" parameterType="Map"
@@ -462,68 +482,84 @@
 		and status = '모집중'
 		and coalesce(deleted, 0) = 0
 	</update>
-	
+
 	<update id="updateTeamMatch" parameterType="teammatch">
 		update team_match
-		set title = #{title},
-		    content = #{content},
-		    match_date = #{matchDate},
-		    start_time = #{startTime},
-		    end_time = #{endTime},
-		    place_name = #{placeName},
-		    address = #{address},
-		    latitude = #{latitude},
-		    longitude = #{longitude},
-		    participation_fee = #{participationFee},
-		    fee = #{fee},
-		    deadline = #{deadline},
-		    skill_intro = #{skillIntro},
-		    skill_beginner = #{skillBeginner},
-		    skill_intermediate = #{skillIntermediate},
-		    skill_advanced = #{skillAdvanced},
-		    age_20s = #{age20s},
-		    age_30s = #{age30s},
-		    age_40s = #{age40s},
-		    age_50s = #{age50s},
-		    age_60_plus = #{age60Plus},
-		    gender = #{gender},
-		    match_people = #{matchPeople},
-		    region = #{region},
-		    image1 = #{image1},
-		    image2 = #{image2},
-		    image3 = #{image3},
-		    image4 = #{image4},
-		    image5 = #{image5},
-		    updated_at = now()
-		where team_match_id = #{teamMatchId}
-		  and user_id = #{userId}
-		  and coalesce(deleted, 0) = 0
-		  and status = '모집중'
+		set
+		title = #{title},
+		content = #{content},
+		match_date = #{matchDate},
+		start_time = #{startTime},
+		end_time = #{endTime},
+		place_name =
+		#{placeName},
+		address = #{address},
+		latitude = #{latitude},
+		longitude =
+		#{longitude},
+		participation_fee = #{participationFee},
+		fee = #{fee},
+		deadline = #{deadline},
+		skill_intro = #{skillIntro},
+		skill_beginner =
+		#{skillBeginner},
+		skill_intermediate = #{skillIntermediate},
+		skill_advanced = #{skillAdvanced},
+		age_20s = #{age20s},
+		age_30s =
+		#{age30s},
+		age_40s = #{age40s},
+		age_50s = #{age50s},
+		age_60_plus =
+		#{age60Plus},
+		gender = #{gender},
+		match_people = #{matchPeople},
+		region =
+		#{region},
+		image1 = #{image1},
+		image2 = #{image2},
+		image3 = #{image3},
+		image4 = #{image4},
+		image5 = #{image5},
+		updated_at = now()
+		where
+		team_match_id = #{teamMatchId}
+		and user_id = #{userId}
+		and
+		coalesce(deleted, 0) = 0
+		and status = '모집중'
 	</update>
-	
+
 	<!-- 모집 마감 상태이고 경기 종료 시각이 지난 경기 -->
 	<select id="selectFinishedMatches" resultType="teammatch">
-		select team_match_id, team_id, user_id, title
+		select
+		team_match_id, team_id, user_id, title
 		from team_match
-		where status = '모집 마감'
-		  and coalesce(deleted, 0) = 0
-		  and timestamp(match_date, end_time) &lt;= now()
+		where status =
+		'모집 마감'
+		and coalesce(deleted, 0) = 0
+		and timestamp(match_date, end_time)
+		&lt;= now()
 	</select>
-	
+
 	<update id="updateStatusToFinished" parameterType="Long">
-		update team_match
+		update
+		team_match
 		set status = '경기 종료',
-		    updated_at = now()
-		where team_match_id = #{teamMatchId}
-		  and status = '모집 마감'
-		  and coalesce(deleted, 0) = 0
+		updated_at = now()
+		where team_match_id =
+		#{teamMatchId}
+		and status = '모집 마감'
+		and coalesce(deleted, 0) = 0
 	</update>
-	
-	<select id="selectParticipantUserIds" parameterType="Long" resultType="Long">
+
+	<select id="selectParticipantUserIds" parameterType="Long"
+		resultType="Long">
 		select distinct user_id
 		from team_match_participant
-		where team_match_id = #{teamMatchId}
-		  and status = '결제완료'
+		where
+		team_match_id = #{teamMatchId}
+		and status = '결제완료'
 	</select>
 	
 	<!-- 팀 작성글 목록 (페이징) -->

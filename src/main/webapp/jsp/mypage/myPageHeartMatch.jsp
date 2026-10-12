@@ -22,6 +22,12 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.act-card .aside .btns {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+}
+
 .pill-green {
 	color: var(- -ds-success-fg);
 	background: var(- -ds-success-bg);
@@ -349,7 +355,21 @@
 								aria-label="관심 경기">${heart}</button>
 						</div>
 						<div class="btns">
-							<a class="btn btn-primary btn-xs" href="${detailUrl}">상세 보기</a>
+							<c:choose>
+								<%-- 경기 종료: 후기 작성 / 팀 평가 --%>
+								<c:when test="${m.status eq '경기 종료'}">
+									<a class="btn btn-outline btn-xs"
+										href="${ctx}/review/create?matchNo=${fn:toUpperCase(m.matchType) eq 'Team' ? 'Team' : 'Personal'}:${m.matchId}"
+										onclick="event.stopPropagation()">후기 작성</a>
+									<a class="btn btn-primary btn-xs"
+										href="${ctx}/${fn:toUpperCase(m.matchType) eq 'TEAM' ? 'team-match' : 'personal-match'}/rating?matchId=${m.matchId}"
+										onclick="event.stopPropagation()">경기 팀 평가</a>
+								</c:when>
+								<%-- 그 외: 기존 버튼 --%>
+								<c:otherwise>
+									<a class="btn btn-primary btn-xs" href="${detailUrl}">상세 보기</a>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</div>
 				</div>

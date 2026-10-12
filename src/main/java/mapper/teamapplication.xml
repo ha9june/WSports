@@ -121,12 +121,10 @@
 		t.team_name AS teamName,
 		t.sport AS sport,
 		t.region1 AS region,
-		DATE_FORMAT(tu.joined_at, '%Y-%m-%d') AS
-		appliedAt,
-		tu.team_role AS role
+		DATE_FORMAT(tu.joined_at, '%Y-%m-%d') AS appliedAt,
+		tu.team_role AS myRole
 		FROM team_user tu
-		JOIN team t ON
-		t.team_id = tu.team_id
+		JOIN team t ON t.team_id = tu.team_id
 		WHERE tu.user_id = #{userId}
 		AND tu.withdrawn = 0
 		AND t.deleted = 0
@@ -134,8 +132,7 @@
 			AND t.sport = #{sport}
 		</if>
 		ORDER BY tu.joined_at DESC, t.team_id DESC
-		LIMIT #{size} OFFSET
-		#{offset}
+		LIMIT #{size} OFFSET #{offset}
 	</select>
 
 	<select id="selectMypageJoinedTeamCnt" parameterType="Map"
@@ -162,7 +159,8 @@
 	<update id="updateMypageJoinTeam">
 		UPDATE team_user
 		SET withdrawn = 1,
-		withdrawn_at = NOW()
+		withdrawn_at =
+		NOW()
 		WHERE user_id = #{userId}
 		AND team_id = #{teamId}
 		AND withdrawn = 0
