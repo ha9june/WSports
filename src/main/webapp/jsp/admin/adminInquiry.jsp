@@ -33,7 +33,7 @@
     	</div>
     </form>
     <div style="width:fit-content; max-width:100%">
-    	<div class="tbl-head" style="grid-template-columns:70px 70px 70px 100px 200px 100px 100px;
+    	<div class="tbl-head" style="grid-template-columns:70px 120px 70px 100px 300px 100px 100px;
     	justify-self: start; justify-items: center; padding-left: 0px">
     		<span>문의번호</span>
     		<span>문의날짜</span>
@@ -45,10 +45,10 @@
     	</div>
     	<c:forEach var="i" items="${inquirylist}">
 			<div class="tbl-row" href="${ctx}/admin/inquiry/detail?inquiryId=${i.inquiry_id}"
-		   	style="grid-template-columns: 70px 70px 70px 100px 200px 100px 100px; 
+		   	style="grid-template-columns: 70px 120px 70px 100px 300px 100px 100px; 
 		   	justify-items: center; padding-left: 0px">
     			<span>${i.inquiry_id }</span>
-    			<b><fmt:formatDate value="${i.created_at}" pattern="MM/dd" /></b>
+    			<b><fmt:formatDate value="${i.created_at}" pattern="yyyy.MM.dd" /></b>
     			<span>${i.type }</span>
     			<span>${i.nickname}</span>
     			<span>${i.title }</span>
