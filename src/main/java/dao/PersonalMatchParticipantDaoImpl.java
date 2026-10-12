@@ -88,6 +88,13 @@ public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipant
 		}	
 	}
 
+	@Override
+	public List<Long> selectParticipantUserIds(Long personalMatchId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatchparticipant.selectParticipantUserIds");
+		}
+	}
+
 
 
 }

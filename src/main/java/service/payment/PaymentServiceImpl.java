@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -30,6 +31,7 @@ import dto.TeamMatch;
 import dto.TeamPayment;
 import service.notification.NotificationService;
 import service.notification.NotificationServiceImpl;
+import util.CardCompany;
 
 public class PaymentServiceImpl implements PaymentService {
 	private PersonalPaymentDao personalPaymentDao;
@@ -74,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService {
 		// 3. 카드(card) 중첩 객체 처리 (카카오페이 등에서는 null)
 		if (json.has("card") && !json.isNull("card")) {
 			JSONObject card = json.getJSONObject("card");
-			personal.setCardCompany(card.optString("issuerCode", null));
+			personal.setCardCompany(CardCompany.nameOf(card.optString("issuerCode", null)));
 			personal.setCardNumber(card.optString("number", null));
 			personal.setInstallmentMonths(card.optInt("installmentPlanMonths", 0));
 		}
@@ -149,6 +151,7 @@ public class PaymentServiceImpl implements PaymentService {
 		// 카드 중첩 객체 처리
 		if (json.has("card") && !json.isNull("card")) {
 			JSONObject card = json.getJSONObject("card");
+			team.setCardCompany(CardCompany.nameOf(card.optString("issuerCode", null)));
 			team.setCardCompany(card.optString("issuerCode", null));
 			team.setCardNumber(card.optString("number", null));
 			team.setInstallmentMonths(card.optInt("installmentPlanMonths", 0));
@@ -392,5 +395,51 @@ public class PaymentServiceImpl implements PaymentService {
 			e.printStackTrace();
 		}
 		return true;
+	}
+	//개인 경기 최소 인원 미달 자동 환불 (스케줄러 용)
+	//전원 환불 성공하면 true, 한 건이라도 실패하면 false
+	@Override
+	public boolean autoRefundPersonalMatch(Long matchId, String title, String secretKey) throws Exception {
+		List<Map<String, Object>> targets = personalPaymentDao.selectPaidPaymentsByMatch(matchId);
+		String reason = "모집 기간 내 최소 인원 미달";
+		boolean allSuccess = true;
+
+		for (Map<String, Object> target : targets) {
+			try {
+				String paymentKey = (String) target.get("payment_key");
+
+				//토스 결제 취소 (성공해야 다음 단계 진행)
+				JSONObject result = cancelPayment(paymentKey, reason, secretKey);
+				JSONArray cancels = result.getJSONArray("cancels");
+				JSONObject cancel = cancels.getJSONObject(cancels.length() - 1);
+				int cancelAmount = cancel.getInt("cancelAmount");
+
+				//결제 취소 + 참가 취소
+				Map<String, Object> param = new HashMap<>();
+				param.put("paymentId", ((Number) target.get("payment_id")).longValue());
+				param.put("canceledAt", OffsetDateTime.parse(cancel.getString("canceledAt")).toLocalDateTime());
+				param.put("cancelReason", cancel.optString("cancelReason", reason));
+				param.put("cancelAmount", cancelAmount);
+				personalPaymentDao.updateRefund(param);
+
+				//환불 알림 (실패해도 환불은 유지)
+				try {
+					Notification alarm = new Notification();
+					alarm.setUserId(((Number) target.get("user_id")).longValue());
+					alarm.setTitle("참가비 환불 완료");
+					alarm.setContent("'" + title + "' 경기가 최소 인원을 채우지 못해 취소되어 결제하신 "
+							+ String.format("%,d", cancelAmount) + "원이 환불되었습니다.");
+					alarm.setLink("/match/detail/view?personalMatchId=" + matchId);
+					notificationService.sendNotification(alarm);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} catch (Exception e) {
+				//한 명 실패해도 나머지 참가자는 계속 환불
+				e.printStackTrace();
+				allSuccess = false;
+			}
+		}
+		return allSuccess;
 	}
 }

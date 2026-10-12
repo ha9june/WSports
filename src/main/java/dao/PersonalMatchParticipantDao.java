@@ -13,4 +13,8 @@ public interface PersonalMatchParticipantDao {
 	void updateAttendance(PersonalMatchParticipant personalMatchParticipant) throws Exception;
 	PersonalMatchParticipant selectPersonalMatchParticipation(Map<String,Object> param) throws Exception;
 	List<User> selectPersonalMatchParticipantList(Long personalMatchId) throws Exception;
+
+	//스케줄러 알림 발송요 아이디 가져오기
+	List<Long> selectParticipantUserIds(Long personalMatchId) throws Exception;
+
 }

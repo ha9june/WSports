@@ -7,9 +7,8 @@
    role  : guest(인기 기준 추천, 로그인 버튼) / member·admin(맞춤 추천 탭 추가)
    state : list(일반 검색) | map(지도 검색) | mapTyping(지도 검색어 입력 중) | mapPin(지도 핀 선택)
 --%>
-
 <c:set var="pageTitle" value="경기 찾기" />
-<c:set var="pageCss" value="home" />
+<c:set var="pageCss" value="home,match" />
 <c:set var="pageJs" value="home" />
 <c:set var="activeNav" value="match" />
 <c:set var="showFooter" value="true" />
@@ -142,6 +141,11 @@
 				success:function(result){
 					let html = "";
 					let searchTypeText="";
+					
+					
+					if(result.length < 4){
+						$("#moreBtn").addClass("is-hidden");
+					}
 					result.forEach(function(item) {
 						let sportsType = "";
 					    if(item.sport == "축구/풋살" || item.sport == "축구"){
@@ -232,8 +236,7 @@
 			$(this).addClass("is-active");
 		  	$(".normalGroup").removeClass("is-hidden");
 		  	$(".mapGroup").addClass("is-hidden");
-			page=1;
-			NormalList(page, this);
+			//NormalList(page, this);
 		});
 		$("#mapBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
@@ -243,8 +246,6 @@
 		  	map.relayout();
 			searchMapMatch();
 			
-			
-
 		});
 		$("#moreBtn").on("click", function(e) {
 			NormalList(++page,this);
@@ -252,6 +253,7 @@
 
 	    $('#normalMatchSearchForm').on('submit', function(e) {
 	    	page=1;
+			$("#moreBtn").removeClass("is-hidden");
 	        e.preventDefault();
 		    NormalList(page, this);
 	    });
@@ -323,15 +325,15 @@
               <div class="filter-panel">
                 <div class="chip-group" data-select="single" data-name="gender">
                   <span class="chip-label">성별</span>
+                  <button type="button" class="chip is-selected" data-value="혼성">성별무관</button>
                   <button type="button" class="chip" data-value="남성">남성</button>
                   <button type="button" class="chip" data-value="여성">여성</button>
-                  <button type="button" class="chip" data-value="혼성">성별무관</button>
                 </div>
                 <div class="chip-group" data-select="multi" data-name="ages">
                   <span class="chip-label">연령대</span>
                   <button type="button" class="chip">20대</button><button type="button" class="chip">30대</button>
                   <button type="button" class="chip">40대</button><button type="button" class="chip">50대</button>
-                  <button type="button" class="chip" data-value="60대">60대+</button>
+                  <button type="button" class="chip" data-value="60대">연령무관</button>
                 </div>
                 <div class="chip-group" data-select="multi" data-name="skills">
                   <span class="chip-label">실력</span>
