@@ -253,7 +253,7 @@
 
 			<c:forEach var="m" items="${match}">
 				<div class="act-card"
-					data-href="${ctx}/jsp/match/personalMatchDetail.jsp?state=applied">
+					data-href="${ctx}/match/detail/view?personalMatchId=${m.personalMatchId}">
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">

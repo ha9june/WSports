@@ -12,39 +12,43 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <style>
 .photo-upload .photo-preview {
-  position: relative;
-  overflow: hidden;
+	position: relative;
+	overflow: hidden;
 }
+
 .photo-upload .photo-preview img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
+
 .photo-upload .photo-remove {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(31, 41, 55, 0.75);
-  color: #fff;
-  font-size: 14px;
-  line-height: 24px;
-  text-align: center;
-  cursor: pointer;
-  z-index: 2;
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(31, 41, 55, 0.75);
+	color: #fff;
+	font-size: 14px;
+	line-height: 24px;
+	text-align: center;
+	cursor: pointer;
+	z-index: 2;
 }
+
 .photo-upload .photo-remove:hover {
-  background: rgba(31, 41, 55, 0.95);
+	background: rgba(31, 41, 55, 0.95);
 }
 </style>
 <main class="page">
 	<form class="rail" id="modifyForm" action="${ctx}/review/edit"
-		method="post" enctype="multipart/form-data">
+		method="post" enctype="multipart/form-data"
+		style="display: block; box-sizing: border-box; width: 100%; max-width: 744px; margin: 0 auto !important; padding-left: 0 !important; padding-right: 0 !important;">
 		<input type="hidden" name="reviewId" value="${review.reviewId}">
 		<nav class="breadcrumb">
 			<a href="${ctx}/review/list">후기</a><span class="sep">›</span><span>수정</span>
@@ -53,16 +57,16 @@
 			<h1 class="page-title">후기 수정</h1>
 			<p class="page-desc">작성한 후기를 수정할 수 있어요.</p>
 		</div>
-		<div style="width: 744px; max-width: 100%">
+		<div style="width: 100%;">
 			<div class="field">
 				<label class="field-label">참여 경기</label> <input class="input"
 					value="<c:out value='${review.matchTitle}'/>" readonly
-					style="width: 420px">
+					style="width: 100%">
 			</div>
 
 			<div class="field mt-24">
 				<label class="field-label" for="rvTitle">제목</label> <input
-					class="input" id="rvTitle" name="title" style="width: 420px"
+					class="input" id="rvTitle" name="title" style="width: 100%"
 					placeholder="후기 제목을 입력하세요" value="<c:out value='${review.title}'/>"
 					required>
 			</div>
