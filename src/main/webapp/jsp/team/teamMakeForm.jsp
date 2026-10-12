@@ -56,9 +56,12 @@
 		</div>
 		<div class="team-form-inner">
 			<div class="field">
-				<label class="field-label" for="teamName">팀명</label><input
-					class="input" id="teamName" name="teamName" value=""
-					placeholder="팀 이름을 입력하세요">
+				<label class="field-label" for="teamName">팀명
+					<span class="hint" id="teamNameCount">0/15</span>
+				</label>
+				<input class="input" id="teamName" name="teamName" value=""
+					maxlength="15" autocomplete="off"
+					placeholder="팀 이름을 입력하세요 (2~15자)">
 			</div>
 
 			<div class="field mt-24">
@@ -282,6 +285,12 @@
 		
 		const picked = document.querySelector(".picked");
 		
+		const teamNameInput = document.getElementById("teamName");
+		const teamNameCount = document.getElementById("teamNameCount");
+
+		teamNameInput.addEventListener("input", function() {
+			teamNameCount.textContent = teamNameInput.value.length + "/15";
+		});
 		
 		sido.addEventListener("change", function(){
 			sigungu.innerHTML = "";
@@ -428,7 +437,11 @@
 			var msg = '';
 			var $ = function (id) { return document.getElementById(id); };
 
-			if (!$('teamName').value.trim()) msg = '팀명을 입력해 주세요.';
+			var name = $('teamName').value.trim().replace(/\s+/g, ' ');
+
+			if (!name) msg = '팀명을 입력해 주세요.';
+			else if (name.length < 2 || name.length > 15) msg = '팀명은 2~15자로 입력해 주세요.';
+			else if (!/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9 ]+$/.test(name)) msg = '팀명은 한글, 영문, 숫자, 공백만 사용할 수 있어요.';
 			else if (!$('sport').value) msg = '종목을 선택해 주세요.';
 			else if (!$('days').value) msg = '활동 요일을 선택해 주세요.';
 			else if (!$('times').value) msg = '활동 시간대를 선택해 주세요.';

@@ -37,6 +37,13 @@
 	        AND evaluator_user_id = #{evaluatorUserId}
 	        AND match_id = #{matchId}
 	        AND match_type = #{matchType}
-</update>
+	</update>
+	
+	<select id="selectRatingSummaryByUserId" parameterType="long" resultType="map">
+		SELECT ROUND(AVG(score), 1) AS avgScore,
+		       COUNT(*)             AS ratingCount
+		FROM user_rating
+		WHERE receiver_user_id = #{userId}
+	</select>
 
 </mapper>

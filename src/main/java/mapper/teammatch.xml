@@ -7,6 +7,7 @@
 		select *
 		from team_match
 		where team_id = #{teamId}
+		and coalesce(deleted, 0) = 0
 	</select>
 	<select id="selectMypageTeamMatchList" parameterType="map"
 		resultType="TeamMatch">
@@ -125,7 +126,7 @@
 		#{skillAdvanced},
 		#{age20s}, #{age30s}, #{age40s}, #{age50s},
 		#{age60Plus},
-		#{gender}, #{matchPeople}, false,
+		#{gender}, #{matchPeople}, true,
 		#{image1}, #{image2},
 		#{image3}, #{image4}, #{image5},
 		'모집중', #{region}
@@ -135,10 +136,10 @@
 
 	<!-- 관리자 사이드바 팀 경기수 세기 -->
 	<select id="selectMatchCntTeam" resultType="Long">
-		select count(*)
-		from
-		team_match
+		select count(*) 
+		from team_match
 		where status in ('모집중')
+		and coalesce(deleted, 0) = 0
 	</select>
 
 	<select id="selectTeamMatchUser" parameterType="Map"
@@ -277,9 +278,9 @@
 		'모집중' and deadline &lt;= now() and coalesce(deleted, 0) = 0
 	</select>
 
-	<update id="updateStatusToNoOpponentCancel" parameterType="Long">
+	<update id="updateStatusToCancel" parameterType="Long">
 		update team_match
-		set status = '인원 미달 경기 취소'
+		set status = '경기 취소'
 		where team_match_id =
 		#{teamMatchId}
 		and status = '모집중'

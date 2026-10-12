@@ -52,8 +52,8 @@
     		</div>	
 	</form>
 
-	<div style="width: fit-content;max-width:100%">
-   		<div class="tbl-head" style="grid-template-columns:repeat(7, 100px); justify-self: start; justify-items: center; padding-left: 0px">
+	<div style="width: fit-content; max-width:100%">
+   		<div class="tbl-head" style="grid-template-columns:150px 100px 100px 100px 100px 250px 100px; justify-self: start; justify-items: center; padding-left: 0px">
    			<span>팀</span>
    			<span>주장</span>
    			<span>팀원</span>
@@ -64,7 +64,7 @@
 		</div>
 		<c:forEach var="t" items="${teamlist}">
    			<div class="tbl-body">
-  				<div class="tbl-row" style="grid-template-columns:repeat(7, 100px); justify-self: start; justify-items: center; padding-left: 0px">
+  				<div class="tbl-row" style="grid-template-columns:150px 100px 100px 100px 100px 250px 100px; justify-self: start; justify-items: center; padding-left: 0px">
    					<span>${t.team_name}</span>
    					<span>${t.nickname.nickname}</span>
    					<span>${t.membercnt}명</span>

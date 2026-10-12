@@ -30,7 +30,7 @@ public interface TeamMatchDao {
 	
 	//스케줄러
 	List<TeamMatch> selectExpiredRecruiting() throws Exception;
-	int updateStatusToNoOpponentCancel(Long teamMatchId) throws Exception;
+	int updateStatusToCancel(Long teamMatchId) throws Exception;
 	List<TeamMatch> selectFinishedMatches() throws Exception;
 	int updateStatusToFinished(Long teamMatchId) throws Exception;
 	

@@ -88,7 +88,7 @@
 					<label class="field-label">환불사유</label>
 					<select class="select" name="cancelReason" required>
 						<option>일정이 맞지 않음</option>
-						<option>개인 사정</option>
+						<option>${isTeam ? '팀 사정' : '개인 사정' }</option>
 						<option>잘못 결제함</option>
 						<option>기타</option>
 					</select>

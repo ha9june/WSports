@@ -100,10 +100,7 @@ $('#thumbs').on('click', '.subImg', function() {
 	<c:when test="${status eq '모집중'}">
 		<c:set var="pillCls" value="pill-success" /><c:set var="pillText" value="모집중" />
 	</c:when>
-	<c:when test="${status eq '모집 마감' or status eq '경기 종료'}">
-		<c:set var="pillCls" value="pill-info" /><c:set var="pillText" value="${status}" />
-	</c:when>
-	<c:when test="${status eq '인원 미달 경기 취소' or status eq '작성자 경기 취소'}">
+	<c:when test="${status eq '경기 취소'}">
 		<c:set var="pillCls" value="pill-danger" /><c:set var="pillText" value="경기 취소" />
 	</c:when>
 	<c:otherwise>
@@ -319,7 +316,7 @@ $('#thumbs').on('click', '.subImg', function() {
 											<p class="note">팀원이라면 주장이나 부주장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
 											<div class="actions row">
 												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀 찾기</a>
-												<a class="btn btn-outline btn-sm" href="${ctx}/team/create">팀 만들기</a>
+												<a class="btn btn-primary btn-sm" href="${ctx}/team/create">팀 만들기</a>
 											</div>
 										</c:otherwise>
 									</c:choose>
@@ -396,24 +393,15 @@ $('#thumbs').on('click', '.subImg', function() {
 						</div>
 					</c:when>
 
-					<%-- 인원 미달 취소 --%>
-					<c:when test="${status eq '인원 미달 경기 취소'}">
+					<%-- 경기 취소 --%>
+					<c:when test="${status eq '경기 취소'}">
 						<div class="side-card">
-							<span class="pill pill-danger bd">매칭 실패</span>
-							<p class="status-title">상대 팀을 구하지 못했어요</p>
-							<p class="sub">모집 마감까지 신청한 팀이 없어 경기가 자동 취소되었습니다.</p>
+							<span class="pill pill-danger bd">경기 취소</span>
+							<p class="status-title">경기가 취소되었습니다</p>
+							<p class="sub">이 경기는 취소되어 더 이상 신청할 수 없어요.</p>
 							<c:if test="${isHost}">
 								<p class="note">결제하신 금액은 전액 환불돼요.</p>
 							</c:if>
-						</div>
-					</c:when>
-
-					<%-- 작성자 취소 --%>
-					<c:when test="${status eq '작성자 경기 취소'}">
-						<div class="side-card">
-							<span class="pill pill-danger bd">작성자 취소</span>
-							<p class="status-title">경기가 취소되었습니다</p>
-							<p class="sub">팀 작성자가 경기를 취소했습니다.</p>
 						</div>
 					</c:when>
 

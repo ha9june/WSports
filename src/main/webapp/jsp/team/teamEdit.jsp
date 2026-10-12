@@ -1,401 +1,422 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/jsp/common/init.jsp"%>
 <%--
-  상대 팀 모집 수정 (teamMatchEdit.jsp) - 담당: 하준수
-  서블릿에서 넘기는 값
-    t           : 수정할 경기 (TeamMatch)
-    agesValue   : "20대,30대" 형식
-    skillsValue : "초급,중급" 형식
-    imageList   : 저장된 사진 파일명 목록
+  팀 정보 수정 (teamEdit.jsp) - 담당: 하준수
+  피그마: Club / Info Edit / Desktop
 --%>
-<c:set var="pageTitle" value="상대 팀 모집 수정" />
+<c:set var="pageTitle" value="팀 정보 수정" />
 <c:set var="pageCss" value="match,team" />
-<c:set var="activeNav" value="teamMatch" />
-<c:set var="demoRoles" value="member" />
+<c:set var="activeNav" value="team" />
 <%@ include file="/jsp/common/header.jsp"%>
-<script
-	src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
-<script type="text/javascript">
-	$(function() {
-		// ---------- 주소 검색 ----------
-		$('#postSearch')
-				.on(
-						'click',
-						function(e) {
-							e.preventDefault();
-							new daum.Postcode(
-									{
-										oncomplete : function(data) {
-											$('#address').val(data.roadAddress);
-											$('#lat').val('');
-											$('#lng').val('');
-											if (data.buildingName) {
-												$('#placeName').val(
-														data.buildingName);
-											} else if (!$.trim($('#placeName')
-													.val())) {
-												$('#placeName').focus();
-											}
-											new kakao.maps.services.Geocoder()
-													.addressSearch(
-															data.roadAddress,
-															function(result,
-																	status) {
-																if (status === kakao.maps.services.Status.OK) {
-																	$('#lat')
-																			.val(
-																					result[0].y);
-																	$('#lng')
-																			.val(
-																					result[0].x);
-																} else {
-																	showToast('주소의 좌표를 찾지 못했어요. 다른 주소로 다시 검색해 주세요.');
-																	$(
-																			'#address')
-																			.val(
-																					'');
-																}
-															});
-										}
-									}).open();
-						});
-
-		// ---------- 제출 검사 ----------
-		$('.form-rail').on(
-				'submit',
-				function(e) {
-					var msg = '';
-					if (!$('#address').val() || !$('#lat').val())
-						msg = '장소를 검색해 선택해 주세요.';
-					else if (!$.trim($('#placeName').val())) {
-						msg = '장소명을 입력해 주세요.';
-						$('#placeName').focus();
-					} else if (!$('select[name="startTime"]').val()
-							|| !$('select[name="endTime"]').val())
-						msg = '경기 시간을 선택해 주세요.';
-					else if (!$('#tmSize').val())
-						msg = '경기 인원을 선택해 주세요.';
-					if (msg) {
-						e.preventDefault();
-						showToast(msg);
-					}
-				});
-
-		// ---------- 사진 ----------
-		var MAX_PHOTOS = 5, MAX_SIZE = 5 * 1024 * 1024;
-		var photos = [];
-		var $photoInput = $('#photoInput');
-		var $photoBox = $('#photoBox');
-
-		function currentCount() {
-			return $photoBox.find('.photo-preview.is-saved').length
-					+ photos.length;
-		}
-		function syncPhotoInput() {
-			var dt = new DataTransfer();
-			photos.forEach(function(f) {
-				dt.items.add(f);
-			});
-			$photoInput[0].files = dt.files;
-		}
-		function refreshAddButton() {
-			$photoBox.find('.photo-add').toggle(currentCount() < MAX_PHOTOS);
-		}
-		function renderNewPhotos() {
-			$photoBox.find('.photo-preview.is-file').each(function() {
-				URL.revokeObjectURL($(this).find('img').attr('src'));
-			}).remove();
-			photos
-					.forEach(function(f, i) {
-						var $p = $('<div class="photo-preview is-file" data-index="' + i + '">'
-								+ '<img alt=""><button type="button" class="remove" aria-label="사진 삭제">✕</button></div>');
-						$p.find('img').attr('src', URL.createObjectURL(f));
-						$photoBox.append($p);
-					});
-			refreshAddButton();
-		}
-
-		$photoInput.on('change', function() {
-			Array.prototype.forEach.call(this.files, function(f) {
-				if (currentCount() >= MAX_PHOTOS) {
-					showToast('사진은 최대 ' + MAX_PHOTOS + '장까지 올릴 수 있어요.');
-					return;
-				}
-				if (!/^image\/(png|jpeg)$/.test(f.type)) {
-					showToast('JPG, PNG 이미지만 첨부할 수 있어요.');
-					return;
-				}
-				if (f.size > MAX_SIZE) {
-					showToast('사진 한 장은 5MB 이하여야 해요.');
-					return;
-				}
-				var dup = photos.some(function(p) {
-					return p.name === f.name && p.size === f.size
-							&& p.lastModified === f.lastModified;
-				});
-				if (!dup)
-					photos.push(f);
-			});
-			syncPhotoInput();
-			renderNewPhotos();
-		});
-
-		$photoBox.on('click', '.photo-preview.is-file .remove', function(e) {
-			e.stopPropagation();
-			photos.splice($(this).closest('.photo-preview').data('index'), 1);
-			syncPhotoInput();
-			renderNewPhotos();
-		});
-
-		// 저장된 사진 삭제: hidden(keepImages)도 같이 사라짐
-		$photoBox.on('click', '.photo-preview.is-saved .remove', function(e) {
-			e.stopPropagation();
-			$(this).closest('.photo-preview').remove();
-			refreshAddButton();
-		});
-		refreshAddButton();
-	});
-</script>
 <main class="page">
-	<form class="form-rail" action="${ctx}/team-match/edit" method="post"
+	<script type="text/javascript">
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					var img = document.getElementById("profileImgPreview");
+					img.src = e.target.result;
+					img.style.cssText = "display: block; width: 100%; height: 100%; object-fit: cover;";
+					document.getElementById("profilePreviewText").style.display = "none";
+				}
+				reader.readAsDataURL(input.files[0])
+			}
+		}
+
+		function previewActivity(input, previewId, textId) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					var preview = document.getElementById(previewId);
+					var text = document.getElementById(textId);
+					preview.src = e.target.result;
+					preview.style.display = "block";
+					text.style.display = "none";
+				};
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+		window.onload = function() {
+			const sido = document.getElementById("sido");
+			const sigungu = document.getElementById("sigungu");
+			const selectedRegions = [];
+			const maxRegion = document.getElementById("maxRegion");
+			const regionInputs = document.getElementById("regionInputs");
+			const picked = document.querySelector(".picked");
+
+			sido.addEventListener("change", function() {
+				sigungu.innerHTML = "";
+				if (sido.value === "서울시") {
+					sigungu.innerHTML = `
+						<option value="" selected disabled>세부 지역 선택</option>
+						<option value="강남구">강남구</option>
+						<option value="강동구">강동구</option>
+						<option value="강북구">강북구</option>
+						<option value="강서구">강서구</option>
+						<option value="관악구">관악구</option>
+						<option value="광진구">광진구</option>
+						<option value="구로구">구로구</option>
+						<option value="금천구">금천구</option>
+						<option value="노원구">노원구</option>
+						<option value="도봉구">도봉구</option>
+						<option value="동대문구">동대문구</option>
+						<option value="동작구">동작구</option>
+						<option value="마포구">마포구</option>
+						<option value="서대문구">서대문구</option>
+						<option value="서초구">서초구</option>
+						<option value="성동구">성동구</option>
+						<option value="성북구">성북구</option>
+						<option value="송파구">송파구</option>
+						<option value="양천구">양천구</option>
+						<option value="영등포구">영등포구</option>
+						<option value="용산구">용산구</option>
+						<option value="은평구">은평구</option>
+						<option value="종로구">종로구</option>
+						<option value="중구">중구</option>
+						<option value="중랑구">중랑구</option>
+					`;
+				} else if (sido.value === "경기도") {
+					sigungu.innerHTML = `
+						<option value="" selected disabled>세부 지역 선택</option>
+						<option value="고양시">고양시</option>
+						<option value="과천시">과천시</option>
+						<option value="광명시">광명시</option>
+						<option value="광주시">광주시</option>
+						<option value="구리시">구리시</option>
+						<option value="군포시">군포시</option>
+						<option value="김포시">김포시</option>
+						<option value="남양주시">남양주시</option>
+						<option value="동두천시">동두천시</option>
+						<option value="부천시">부천시</option>
+						<option value="성남시">성남시</option>
+						<option value="수원시">수원시</option>
+						<option value="시흥시">시흥시</option>
+						<option value="안산시">안산시</option>
+						<option value="안성시">안성시</option>
+						<option value="안양시">안양시</option>
+						<option value="양주시">양주시</option>
+						<option value="여주시">여주시</option>
+						<option value="오산시">오산시</option>
+						<option value="용인시">용인시</option>
+						<option value="의왕시">의왕시</option>
+						<option value="의정부시">의정부시</option>
+						<option value="이천시">이천시</option>
+						<option value="파주시">파주시</option>
+						<option value="평택시">평택시</option>
+						<option value="포천시">포천시</option>
+						<option value="하남시">하남시</option>
+						<option value="화성시">화성시</option>
+					`;
+				}
+			})
+
+			function renderRegions() {
+				picked.innerHTML = "";
+				regionInputs.innerHTML = "";
+				selectedRegions.forEach(function(region, index) {
+					picked.innerHTML +=
+						'<span class="token-chip">'
+							+ '<span>' + region + '</span>'
+							+ '<button type="button" class="deleteRegion" data-index="' + index + '">✕</button>'
+						+ '</span>';
+					regionInputs.innerHTML +=
+						'<input type="hidden" name="regions" value="' + region + '">';
+				});
+			}
+
+			// 기존 활동 지역 채우기 ("서울시 마포구 · 서울시 서대문구" 또는 쉼표 구분 모두 처리)
+			var initRegions = document.getElementById("initRegions").value;
+			if (initRegions) {
+				initRegions.split(/\s*[,·]\s*/).forEach(function(r) {
+					r = r.trim();
+					if (r && selectedRegions.length < 3) selectedRegions.push(r);
+				});
+				renderRegions();
+			}
+
+			sigungu.addEventListener("change", function() {
+				const region = sido.value + " " + sigungu.value;
+				if (selectedRegions.length >= 3) {
+					maxRegion.style.display = "";
+					return;
+				}
+				if (selectedRegions.indexOf(region) === -1) {   // 중복 선택 방지
+					selectedRegions.push(region);
+					renderRegions();
+				}
+			})
+
+			picked.addEventListener("click", function(e) {
+				if (!e.target.classList.contains("deleteRegion")) {
+					return;
+				}
+				const index = Number(e.target.dataset.index);
+				selectedRegions.splice(index, 1);
+				renderRegions();
+				maxRegion.style.display = "none";
+			});
+		}
+	</script>
+
+	<form class="form-rail" action="${ctx}/team/edit" method="post"
 		enctype="multipart/form-data">
-		<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
+		<input type="hidden" name="teamId" value="${team.teamId}">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><a
-				href="${ctx}/team-match/list">팀 매칭</a><span class="sep">›</span><span>경기
-				수정</span>
+				href="${ctx}/team/detail/view?teamId=${team.teamId}"><c:out
+					value="${team.teamName}" /></a><span class="sep">›</span><span>팀
+				정보 수정</span>
 		</nav>
 		<div class="page-head">
-			<h1 class="page-title">상대 팀 모집 수정</h1>
-			<p class="page-desc">경기 정보를 수정해 주세요.</p>
+			<h1 class="page-title">팀 정보 수정</h1>
+			<p class="page-desc">기본 정보와 소개글을 수정해보세요.</p>
 		</div>
-
 		<div class="team-form-inner">
-			<section class="form-section">
-				<h2 class="sub-title">경기 정보</h2>
-				<div class="form-row c-2">
-					<div class="field">
-						<label class="field-label strong" for="team">팀</label> <select
-							class="select" id="team" disabled>
-							<option><c:out value="${t.teamName}" /></option>
-						</select>
-					</div>
-					<div class="field">
-						<label class="field-label strong" for="sport">종목</label> <select
-							class="select" id="sport" disabled>
-							<option><c:out value="${t.sport}" /></option>
-						</select>
-					</div>
-				</div>
-				<p class="field-help">팀과 종목은 수정할 수 없어요.</p>
-				<div class="field">
-					<label class="field-label strong" for="tmTitle">제목</label> <input
-						class="input" id="tmTitle" name="title"
-						value="<c:out value='${t.title}' />" placeholder="제목" required>
-				</div>
-			</section>
+		<div class="field">
+			<label class="field-label" for="teamName">팀명
+				<span class="hint" id="teamNameCount">0/15</span>
+			</label>
+			<input class="input" id="teamName" name="teamName"
+				value="<c:out value='${team.teamName}' />"
+				maxlength="15" autocomplete="off"
+				placeholder="팀 이름을 입력하세요 (2~15자)">
+		</div>
+			<div class="field mt-24">
+				<span class="field-label strong"> 대표 사진 <span
+					class="t-11 t-2" style="font-weight: 400"> JPG, PNG · 1장 </span>
+				</span>
 
-			<section class="form-section">
-				<h2 class="sub-title">일정 및 장소</h2>
-				<div class="form-row c-2">
-					<div class="field">
-						<label class="field-label strong" for="tmDate">경기일자</label> <input
-							class="input" type="date" id="tmDate" name="matchDate"
-							value="${t.matchDate}">
+				<div class="photo-box">
+					<label class="ph" style="cursor: pointer;">
+						<c:choose>
+							<c:when test="${not empty team.profileImage}">
+								<span id="profilePreviewText" style="display: none;">사진 추가</span>
+								<img id="profileImgPreview" alt=""
+									src="${ctx}/uploads/${team.profileImage}"
+									style="display: block; width: 100%; height: 100%; object-fit: cover;">
+							</c:when>
+							<c:otherwise>
+								<span id="profilePreviewText">사진 추가</span>
+								<img id="profileImgPreview" alt=""
+									style="display: none; width: 100%; height: 100%; object-fit: cover;">
+							</c:otherwise>
+						</c:choose>
+						<input type="file" name="profileImage" accept="image/*" hidden
+						onchange="readURL(this)">
+					</label>
+
+					<div>
+						<p>팀을 대표하는 사진을 등록해주세요. 목록과 상세 화면에 표시됩니다.</p>
+						<p>사진 영역을 다시 클릭하면 다른 사진으로 변경할 수 있어요.</p>
 					</div>
-					<div class="field">
-						<span class="field-label strong">시간</span>
-						<c:set var="st" value="${fn:substring(t.startTime, 0, 5)}" />
-						<c:set var="et" value="${fn:substring(t.endTime, 0, 5)}" />
-						<div class="time-range">
-							<select class="select" name="startTime">
-								<option value="" disabled>시간 선택</option>
-								<c:forEach var="h" begin="0" end="23">
-									<c:set var="hh" value="${h < 10 ? '0' : ''}${h}" />
-									<c:set var="v1" value="${hh}:00" />
-									<c:set var="v2" value="${hh}:30" />
-									<option value="${v1}" ${st eq v1 ? 'selected' : ''}>${v1}</option>
-									<option value="${v2}" ${st eq v2 ? 'selected' : ''}>${v2}</option>
-								</c:forEach>
-							</select> <span>~</span> <select class="select" name="endTime">
-								<option value="" disabled>시간 선택</option>
-								<c:forEach var="h" begin="0" end="23">
-									<c:set var="hh" value="${h < 10 ? '0' : ''}${h}" />
-									<c:set var="v1" value="${hh}:00" />
-									<c:set var="v2" value="${hh}:30" />
-									<c:if test="${h > 0}">
-										<option value="${v1}" ${et eq v1 ? 'selected' : ''}>${v1}</option>
-									</c:if>
-									<option value="${v2}" ${et eq v2 ? 'selected' : ''}>${v2}</option>
-								</c:forEach>
-								<option value="24:00" ${et eq '24:00' ? 'selected' : ''}>24:00</option>
+				</div>
+			</div>
+
+			<div class="field mt-24">
+				<span class="field-label strong"> 활동 사진 <span
+					class="t-11 t-2" style="font-weight: 400"> JPG, PNG · 최대 5장
+				</span>
+				</span>
+
+				<div class="photo-box activity-photo-box">
+					<c:forEach var="i" begin="1" end="5">
+						<c:set var="imgProp" value="activityImage${i}" />
+						<c:set var="imgName" value="${team[imgProp]}" />
+						<label class="ph" style="cursor: pointer;">
+							<c:choose>
+								<c:when test="${not empty imgName}">
+									<span id="activityText${i}" style="display: none;">사진 추가</span>
+									<img id="activityPreview${i}" alt=""
+										src="${ctx}/uploads/${imgName}"
+										style="display: block; width: 100%; height: 100%; object-fit: cover;">
+								</c:when>
+								<c:otherwise>
+									<span id="activityText${i}">사진 추가</span>
+									<img id="activityPreview${i}" alt=""
+										style="display: none; width: 100%; height: 100%; object-fit: cover;">
+								</c:otherwise>
+							</c:choose>
+							<input type="file" name="activityImg${i}" accept="image/*" hidden
+							onchange="previewActivity(this, 'activityPreview${i}', 'activityText${i}')">
+						</label>
+					</c:forEach>
+					<div class="photo-guide">
+						<p>팀 활동 모습을 보여주는 사진을 여러 장 등록할 수 있어요.</p>
+						<p>사진 영역을 다시 클릭하면 다른 사진으로 변경할 수 있어요.</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="field mt-24">
+				<label class="field-label" for="sport">종목</label> <select
+					class="select" id="sport" name="sportCode" disabled>
+					<option value="축구/풋살" ${team.sport eq '축구/풋살' ? 'selected' : ''}>축구/풋살</option>
+					<option value="농구" ${team.sport eq '농구' ? 'selected' : ''}>농구</option>
+					<option value="테니스" ${team.sport eq '테니스' ? 'selected' : ''}>테니스</option>
+					<option value="배드민턴" ${team.sport eq '배드민턴' ? 'selected' : ''}>배드민턴</option>
+				</select>
+				<p class="field-help">종목은 팀 생성 후 변경할 수 없어요.</p>
+			</div>
+
+			<div class="field mt-24">
+				<span class="field-label strong"> 활동 요일 <span class="hint"> 복수 선택 가능 </span>
+				</span>
+				<div class="chip-group" data-select="multi" data-hidden="days">
+					<c:forTokens items="월,화,수,목,금,토,일" delims="," var="d">
+						<button type="button" data-value="${d}" class="chip">${d}</button>
+					</c:forTokens>
+				</div>
+				<input type="hidden" name="days" id="days" value="<c:out value='${team.days}' />">
+			</div>
+
+			<div class="field mt-24">
+				<span class="field-label strong"> 활동 시간대 <span class="hint"> 복수 선택 가능 </span>
+				</span>
+				<div class="chip-group" data-select="multi" data-hidden="times">
+					<button type="button" class="chip" data-value="아침 06~09시">아침 06~09시</button>
+					<button type="button" class="chip" data-value="오전 09~12시">오전 09~12시</button>
+					<button type="button" class="chip" data-value="오후 12~18시">오후 12~18시</button>
+					<button type="button" class="chip" data-value="저녁 18~22시">저녁 18~22시</button>
+					<button type="button" class="chip" data-value="야간 22~06시">야간 22~06시</button>
+				</div>
+				<input type="hidden" name="times" id="times" value="<c:out value='${team.times}' />">
+			</div>
+
+			<div class="field mt-24">
+				<span class="field-label strong"> 연령대 <span class="hint"> 복수 선택 가능 </span>
+				</span>
+				<div class="chip-group" data-select="multi" data-hidden="ages">
+					<button type="button" class="chip" data-value="20대">20대</button>
+					<button type="button" class="chip" data-value="30대">30대</button>
+					<button type="button" class="chip" data-value="40대">40대</button>
+					<button type="button" class="chip" data-value="50대 이상">50대 이상</button>
+					<button type="button" class="chip" data-value="연령 무관">연령 무관</button>
+				</div>
+				<input type="hidden" name="ages" id="ages" value="<c:out value='${team.ages}' />">
+			</div>
+
+			<div class="field mt-24">
+				<span class="field-label strong">활동 지역 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
+				<div class="region-box">
+					<div class="row2">
+						<div class="field">
+							<span class="field-label">1. 시 · 도</span><select class="select"
+								name="sido" id="sido">
+								<option value="" selected disabled>시 · 도 선택</option>
+								<option value="서울시">서울시</option>
+								<option value="경기도">경기도</option>
+							</select>
+						</div>
+						<div class="field">
+							<span class="field-label">2. 세부 지역</span><select class="select"
+								name="sigungu" id="sigungu">
+								<option value="" selected disabled>세부 지역 선택</option>
 							</select>
 						</div>
 					</div>
+					<p class="field-help mt-8">서울은 구 단위, 경기도는 시 단위로 선택합니다. 예: 마포구 /
+						성남시</p>
+					<p id="maxRegion" class="field-help mt-8"
+						style="color: red; display: none;">최대 3개까지 선택 가능합니다.</p>
+					<div class="picked"></div>
+					<div id="regionInputs"></div>
+					<input type="hidden" id="initRegions" value="<c:out value='${team.regions}' />">
 				</div>
+			</div>
 
-				<div class="field">
-					<label class="field-label strong" for="address">장소</label>
-					<div class="field-row place-row">
-						<input class="input place-address" id="address" name="address"
-							value="<c:out value='${t.address}' />" placeholder="주소를 검색하세요"
-							readonly>
-						<button type="button" id="postSearch"
-							class="btn btn-primary btn-lg">검색</button>
-						<input class="input place-name" id="placeName" name="placeName"
-							value="<c:out value='${t.placeName}' />" maxlength="100"
-							placeholder="장소명 (예: 마포 풋살장)">
-					</div>
-					<input type="hidden" id="lat" name="latitude" value="${t.latitude}">
-					<input type="hidden" id="lng" name="longitude"
-						value="${t.longitude}">
+			<div class="field mt-24">
+				<span class="field-label strong">성별</span>
+				<div class="chip-group" data-select="single" data-hidden="gender">
+					<button type="button" class="chip" data-value="남자">남자</button>
+					<button type="button" class="chip" data-value="여자">여자</button>
+					<button type="button" class="chip" data-value="성별 무관">성별 무관</button>
 				</div>
-			</section>
+				<input type="hidden" name="gender" id="gender" value="<c:out value='${team.gender}' />">
+			</div>
 
-			<section class="form-section">
-				<h2 class="sub-title">경기 설정</h2>
-				<div class="form-row c-2">
-					<div class="field">
-						<label class="field-label strong" for="tmSize">경기 인원</label> <select
-							class="select" id="tmSize" name="teamSize">
-							<option value="" disabled>인원 선택</option>
-							<option value="2" ${t.matchPeople eq 2 ? 'selected' : ''}>2
-								vs 2</option>
-							<option value="3" ${t.matchPeople eq 3 ? 'selected' : ''}>3
-								vs 3</option>
-							<option value="5" ${t.matchPeople eq 5 ? 'selected' : ''}>5
-								vs 5</option>
-							<option value="6" ${t.matchPeople eq 6 ? 'selected' : ''}>6
-								vs 6</option>
-							<option value="8" ${t.matchPeople eq 8 ? 'selected' : ''}>8
-								vs 8</option>
-							<option value="11" ${t.matchPeople eq 11 ? 'selected' : ''}>11
-								vs 11</option>
-						</select>
-					</div>
-					<div class="field">
-						<label class="field-label strong" for="tmFee">참가비</label> <input
-							class="input" id="tmFee" name="participationFee"
-							value="<fmt:formatNumber value="${t.participationFee}" pattern="#,###" />" placeholder="10,000원">
-					</div>
+			<div class="field mt-24">
+				<span class="field-label strong"> 팀 레벨 <span class="t-11 t-2"
+					style="font-weight: 400"> 대표적인 팀 실력을 선택해주세요. </span>
+				</span>
+				<div class="chip-group" data-select="single" data-hidden="skill">
+					<button type="button" class="chip" data-value="입문">입문</button>
+					<button type="button" class="chip" data-value="초급">초급</button>
+					<button type="button" class="chip" data-value="중급">중급</button>
+					<button type="button" class="chip" data-value="상급">상급</button>
 				</div>
-				<div class="form-row c-2">
-					<div class="field">
-						<label class="field-label strong" for="tmDeadline">모집 마감</label> <input
-							class="input" type="datetime-local" id="tmDeadline"
-							name="deadline" value="${fn:substring(t.deadline, 0, 16)}">
-					</div>
-				</div>
-			</section>
+				<input type="hidden" name="skill" id="skill" value="<c:out value='${team.skill}' />">
+			</div>
 
-			<section class="form-section">
-				<h2 class="sub-title">모집 조건</h2>
-				<p class="section-desc">신청 가능한 팀의 연령대, 성별, 팀 레벨을 설정하세요.</p>
-				<div class="field">
-					<span class="field-label strong">연령대 <span class="hint-gray">복수
-							선택 가능</span></span>
-					<div class="chip-group" data-select="multi" data-hidden="ages">
-						<button type="button" class="chip" data-value="20대">20대</button>
-						<button type="button" class="chip" data-value="30대">30대</button>
-						<button type="button" class="chip" data-value="40대">40대</button>
-						<button type="button" class="chip" data-value="50대 이상">50대
-							이상</button>
-						<button type="button" class="chip" data-value="연령 무관">연령
-							무관</button>
-					</div>
-					<input type="hidden" name="ages" id="ages"
-						value="<c:out value='${agesValue}' />">
-				</div>
-				<div class="field">
-					<span class="field-label strong">성별</span>
-					<div class="chip-group" data-select="single" data-hidden="gender">
-						<button type="button" class="chip" data-value="남자">남자</button>
-						<button type="button" class="chip" data-value="여자">여자</button>
-						<button type="button" class="chip" data-value="성별 무관">성별
-							무관</button>
-					</div>
-					<input type="hidden" name="gender" id="gender"
-						value="<c:out value='${t.gender}' />">
-				</div>
-				<div class="field">
-					<span class="field-label strong">팀 레벨 <span
-						class="hint-gray">복수 선택 가능</span></span>
-					<div class="chip-group" data-select="multi" data-hidden="skill">
-						<button type="button" class="chip" data-value="입문">입문</button>
-						<button type="button" class="chip" data-value="초급">초급</button>
-						<button type="button" class="chip" data-value="중급">중급</button>
-						<button type="button" class="chip" data-value="상급">상급</button>
-					</div>
-					<input type="hidden" name="skill" id="skill"
-						value="<c:out value='${skillsValue}' />">
-				</div>
-			</section>
-
-			<section class="form-section">
-				<h2 class="sub-title">상세 내용</h2>
-				<div class="field">
-					<label class="field-label strong" for="tmDesc">상세 설명</label>
-					<textarea class="textarea soft" id="tmDesc" name="content" rows="5"
-						placeholder="경기 방식, 준비물, 팀 유니폼 색상 등을 적어주세요."><c:out
-							value="${t.content}" /></textarea>
-				</div>
-				<div class="field">
-					<span class="field-label strong">사진 <span class="hint-gray">선택
-							· 최대 5장</span></span>
-					<div class="photo-upload" id="photoBox">
-						<label class="photo-add"><span class="plus">+</span>사진 추가<input
-							type="file" id="photoInput" name="photos"
-							accept="image/png,image/jpeg" multiple></label>
-						<c:forEach var="img" items="${imageList}">
-							<div class="photo-preview is-saved">
-								<img src="${ctx}/uploads/${img}" alt=""> <input
-									type="hidden" name="keepImages" value="${img}">
-								<button type="button" class="remove" aria-label="사진 삭제">✕</button>
-							</div>
-						</c:forEach>
-					</div>
-					<p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
-				</div>
-			</section>
+			<div class="field mt-24">
+				<label class="field-label strong" for="intro">팀 소개</label>
+				<textarea class="textarea" id="intro" name="intro" rows="6"
+					placeholder="모임 성격, 활동 방식, 가입 조건 등을 적어주세요."><c:out value="${team.description}" /></textarea>
+			</div>
 
 			<div class="form-actions">
 				<a class="btn btn-outline"
-					href="${ctx}/team-match/detail/view?teamMatchId=${t.teamMatchId}">취소</a>
+					href="${ctx}/team/manage/applications?teamId=${team.teamId}">취소</a>
 				<button type="submit" class="btn btn-primary">수정 완료</button>
 			</div>
 		</div>
 	</form>
-</main>
-<script>
-	// 저장된 값으로 칩 선택 상태 복원 (hidden 값 → is-selected)
-	document.querySelectorAll(".chip-group[data-hidden]").forEach(
-			function(group) {
-				var hidden = document.getElementById(group.dataset.hidden);
-				var saved = hidden.value ? hidden.value.split(/\s*[,·]\s*/)
-						: [];
-				group.querySelectorAll(".chip").forEach(function(btn) {
-					if (saved.indexOf(btn.dataset.value) !== -1) {
-						btn.classList.add("is-selected");
-					}
-				});
+	<script>
+		// 저장된 값으로 칩 선택 상태 복원 (hidden 값 → is-selected)
+		document.querySelectorAll(".chip-group[data-hidden]").forEach(function(group) {
+			var hidden = document.getElementById(group.dataset.hidden);
+			var saved = hidden.value ? hidden.value.split(/\s*[,·]\s*/) : [];
+			group.querySelectorAll(".chip").forEach(function(btn) {
+				if (saved.indexOf(btn.dataset.value) !== -1) {
+					btn.classList.add("is-selected");
+				}
 			});
+		});
 
-	// 칩 클릭 시 hidden 값 갱신
-	document.querySelectorAll(".chip-group[data-hidden]").forEach(
-			function(group) {
-				var hidden = document.getElementById(group.dataset.hidden);
-				group.addEventListener("click", function() {
-					setTimeout(function() {
-						var values = [];
-						group.querySelectorAll(".chip.is-selected").forEach(
-								function(btn) {
-									values.push(btn.dataset.value);
-								});
-						hidden.value = values.join(",");
-					}, 0);
-				});
+		// 칩 클릭 시 hidden 값 갱신 (팀 만들기와 동일)
+		document.querySelectorAll(".chip-group[data-hidden]").forEach(function(group) {
+			var hidden = document.getElementById(group.dataset.hidden);
+			group.addEventListener("click", function() {
+				setTimeout(function() {
+					var values = [];
+					group.querySelectorAll(".chip.is-selected").forEach(function(btn) {
+						values.push(btn.dataset.value);
+					});
+					hidden.value = values.join(",");
+				}, 0);
 			});
-</script>
+		});
+		
+		var teamNameInput = document.getElementById("teamName");
+		var teamNameCount = document.getElementById("teamNameCount");
+		teamNameCount.textContent = teamNameInput.value.length + "/15";
+		teamNameInput.addEventListener("input", function() {
+			teamNameCount.textContent = teamNameInput.value.length + "/15";
+		});
+		
+		document.querySelector('.form-rail').addEventListener('submit', function (e) {
+			var msg = '';
+			var $ = function (id) { return document.getElementById(id); };
+
+			var name = $('teamName').value.trim().replace(/\s+/g, ' ');
+
+			if (!name) msg = '팀명을 입력해 주세요.';
+			else if (name.length < 2 || name.length > 15) msg = '팀명은 2~15자로 입력해 주세요.';
+			else if (!/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9 ]+$/.test(name)) msg = '팀명은 한글, 영문, 숫자, 공백만 사용할 수 있어요.';
+			else if (!$('sport').value) msg = '종목을 선택해 주세요.';
+			else if (!$('days').value) msg = '활동 요일을 선택해 주세요.';
+			else if (!$('times').value) msg = '활동 시간대를 선택해 주세요.';
+			else if (!$('ages').value) msg = '연령대를 선택해 주세요.';
+			else if (!document.querySelectorAll('input[name="regions"]').length) msg = '활동 지역을 1개 이상 선택해 주세요.';
+			else if (!$('gender').value) msg = '성별을 선택해 주세요.';
+			else if (!$('skill').value) msg = '팀 레벨을 선택해 주세요.';
+			else if (!$('intro').value.trim()) msg = '팀 소개를 입력해 주세요.';
+
+			if (msg) {
+				e.preventDefault();
+				showToast(msg);
+			}
+		});
+	</script>
+</main>
 <%@ include file="/jsp/common/footer.jsp"%>

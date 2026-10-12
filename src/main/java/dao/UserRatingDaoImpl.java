@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
@@ -45,6 +47,12 @@ public class UserRatingDaoImpl implements UserRatingDao {
 		
 	}
 
+	@Override
+	public Map<String, Object> selectRatingSummaryByUserId(long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.userrating.selectRatingSummaryByUserId", userId);
+		}
+	}
 
 
 	

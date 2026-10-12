@@ -51,7 +51,7 @@
 								<span class="pill pill-info">${tm.status}</span>
 							</c:when>
 							<c:when
-								test="${tm.status eq '인원 미달 경기 취소' or tm.status eq '작성자 경기 취소'}">
+								test="${tm.status eq '경기 취소'}">
 								<span class="pill pill-danger">경기 취소</span>
 							</c:when>
 						</c:choose>
