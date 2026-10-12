@@ -17,6 +17,8 @@ import service.match.PersonalMatchParticipantService;
 import service.match.PersonalMatchParticipantServiceImpl;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
+import service.match.UserRatingService;
+import service.match.UserRatingServiceImpl;
 import util.CheckUtil;
 
 /**
@@ -77,7 +79,8 @@ public class MatchAfterSave extends HttpServlet {
 			ur.setReceiverUserId(userId);
 			ur.setEvaluatorUserId(user.getUserId());
 			ur.setScore(score);
-
+			ur.setMatchId(personalMatchId);
+			ur.setMatchType("PersonalMatch");
 			PersonalMatchParticipant pmp = new PersonalMatchParticipant();
 
 			if (isHost) {
@@ -87,23 +90,16 @@ public class MatchAfterSave extends HttpServlet {
 				pmp.setPersonalMatchId(personalMatchId);
 			}
 
-			System.out.println(userId);
-			System.out.println(attend);
-			System.out.println(score);
 
+			UserRatingService urService = new UserRatingServiceImpl();
 			
 			  try { 
-				  //updateRating 
-					// TODO: DTO에 담아 DAO로 저장
-					// dao.updateAttendance(personalMatchId, userId, "Y".equals(attend));
-					// if (score > 0) dao.saveRating(personalMatchId, loginUserId, userId, score);
-				  
-				  
+				  urService.saveUserRating(ur);
 				  if(isHost) 
 					  pmpService.updateAttendacne(pmp);
 			  }
-			  
 			  catch (Exception e) { // TODO Auto-generated catch block e.printStackTrace();
+				  e.printStackTrace();
 			  }
 
 

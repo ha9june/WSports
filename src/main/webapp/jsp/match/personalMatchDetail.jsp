@@ -251,47 +251,7 @@
             <a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
           </div>
       </div>
-      
-      
-      
-      
-      
-		<!--  
-		버튼 땡떙
-		1.관리자인 경우
-			삭제 버튼
-		
-		2. 사용자인 경우
-			2.1 작성자인 경우
-				시작 전
-					수정
-					취소(삭제) : 알림발송
-					참여자 보기
-				모집마감
-					프로필 보기
-				경기종료
-					프로필 보기
-							
-			2.2 사용자인 경우
-				시작 전
-					결제하기 버튼 
-						출석 여부 1 & 결제 완료 이면
-						
-					신청 취소 하기
-						출석 여부 0 이면 취소(신청 안했으면 검색도 안댐)
-					참여자 보기 
-					
 
-		3. 비회원인 경우
-			아무것도 안보임
-				
-
-		모집중 상태 판단
-		
-
-		
-		
-		-->      
 
       <%-- ===== 우측 패널 : 상태별 액션 ===== --%>
       <aside class="detail-side">
@@ -347,7 +307,8 @@
 			            </div>
         			</c:when>
         			<c:otherwise>
-        				
+        				<h1>너 누구야!
+        				</h1>
         			</c:otherwise>
         		</c:choose>
         	</c:when>

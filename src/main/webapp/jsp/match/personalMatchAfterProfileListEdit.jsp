@@ -59,13 +59,12 @@
 		        <div><span class="att-badge">${user.attendance ? '출석' : '미출석'}</span></div>
 		      </c:otherwise>
 		    </c:choose>
-		
 		    <div class="rate star-input">
 		      <c:forEach var="i" begin="1" end="5">
-		        <button type="button" class="${i le user.avgRatingScore ? 'is-on' : ''}" aria-label="${i}점">★</button>
-		      </c:forEach>
-		      <span class="score">${user.avgRatingScore}</span>
-		      <input type="hidden" name="score_${st.index}" value="${user.avgRatingScore}">
+		      <button type="button" aria-label="${i}점">★</button>
+ 		      </c:forEach>
+		      <span class="score">0</span>
+		      <input type="hidden" name="score_${st.index}" value="0">
 		    </div>
 		
 		    <input type="hidden" name="userId_${st.index}" value="${user.userId}">

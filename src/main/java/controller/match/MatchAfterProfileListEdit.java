@@ -1,6 +1,7 @@
 package controller.match;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -48,15 +49,13 @@ public class MatchAfterProfileListEdit extends HttpServlet {
 		pm.setPersonalMatchId(personalMatchId);
 		
 		PersonalMatchParticipantService pmpservice = new PersonalMatchParticipantServiceImpl();
-		PersonalMatchService pservice = new PersonalMatchServiceImpl();
+		PersonalMatchService pㅜervice = new PersonalMatchServiceImpl();
 		try {
-			
-			List<User> userList = pmpservice.getPersonalMatchParticipantList(personalMatchId);
-			PersonalMatch pMatch = pservice.getPersonalMatchDetail(pm);			
+
+			List<User> userList = pmpservice.getOtherPersonalMatchParticipantList(personalMatchId,user.getUserId());
+			PersonalMatch pMatch = pㅜervice.getPersonalMatchDetail(pm);			
 			request.setAttribute("userList", userList);
 			request.setAttribute("personalMatch", pMatch);
-			System.out.println(userList);
-			System.out.println(pMatch);
 			request.getRequestDispatcher("/jsp/match/personalMatchAfterProfileListEdit.jsp").forward(request, response);;			
 
 		} catch (Exception e) {

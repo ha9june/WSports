@@ -2,5 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.userrating">
+	<select id="selectUserRatingCount" parameterType="userRating" resultType="int">
+	    SELECT COUNT(*)
+	    FROM user_rating
+	    WHERE receiver_user_id = #{receiverUserId}
+	        AND evaluator_user_id = #{evaluatorUserId}
+	        AND match_id = #{matchId}
+	        AND match_type = #{matchType}
+	</select>
+	<insert id="insertUserRating" parameterType="userRating">
+		INSERT INTO user_rating(
+			receiver_user_id,
+			evaluator_user_id,
+			score,
+			match_id,
+			match_type,
+			created_at
+		)
+		VALUES (
+			#{receiverUserId},
+			#{evaluatorUserId},
+			#{score},
+			#{matchId},
+			#{matchType},
+			NOW()
+		)
+	</insert>
+	<update id="updateUserRating" parameterType="userRating">
+	    UPDATE user_rating
+	    SET
+	        score = #{score},
+	        created_at = NOW()
+	    WHERE receiver_user_id = #{receiverUserId}
+	        AND evaluator_user_id = #{evaluatorUserId}
+	        AND match_id = #{matchId}
+	        AND match_type = #{matchType}
+</update>
 
 </mapper>
