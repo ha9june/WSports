@@ -37,7 +37,7 @@
 	</form>
 	
 	<div style="width: fit-content; max-width: 100%">
-		<div class="tbl-head" style="grid-template-columns: repeat(5, 100px); justify-self: start; justify-items: center; padding-left: 0px">
+		<div class="tbl-head" style="grid-template-columns: 100px 100px 100px 100px 100px; justify-self: start; justify-items: center; padding-left: 0px">
 			<span>로그인 아이디</span> 
 			<span>닉네임</span> 
 			<span>회원 정지 상태</span> 
@@ -46,7 +46,7 @@
 		</div>
 	
 		<c:forEach var="m" items="${memberlist}">
-			<div class="settle-row"	style="grid-template-columns: repeat(5, 100px); justify-self: start; justify-items: center; padding-left: 0px">
+			<div class="tbl-row" style="grid-template-columns: 100px 100px 100px 100px 100px; justify-self: start; justify-items: center; padding-left: 0px">
 				<span>${m.login_id}</span>
 				<span>${m.nickname}</span>
 				<span class="${m.suspended ? 't-danger' : '' }">${m.suspended ? '정지' : '정상'}</span>
