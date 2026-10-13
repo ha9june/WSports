@@ -1,13 +1,12 @@
 package service.review;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.HashMap;
+
 import javax.servlet.http.Part;
 
 import dao.CommentDao;
@@ -19,6 +18,7 @@ import dao.ReviewLikeDaoImpl;
 import dao.UserDao;
 import dao.UserDaoImpl;
 import dto.Comment;
+import dto.Notification;
 import dto.Review;
 import util.PageInfo;
 
@@ -258,7 +258,7 @@ public class ReviewServiceImpl implements ReviewService {
 		param.put("reviewId", reviewId);
 		param.put("userId", userId);
 		param.put("content", content.trim());
-		param.put("parentCommentId", null);
+		param.put("parentCommentId", null);		
 		return commentDao.insertComment(param) > 0;
 	}
 

@@ -338,7 +338,7 @@
 										href="${ctx}/review/create?matchNo=PERSONAL:${m.personalMatchId}"
 										onclick="event.stopPropagation()">후기 작성</a>
 									<a class="btn btn-primary btn-xs"
-										href="${ctx}/personal-match/rating?personalMatchId=${m.personalMatchId}"
+										href="${ctx}/match/after/profile/list/edit?personalMatchId=${m.personalMatchId}"
 										onclick="event.stopPropagation()">참가 팀 평가</a>
 								</c:when>
 

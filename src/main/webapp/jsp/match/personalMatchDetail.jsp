@@ -350,7 +350,7 @@
 	              		<a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석 체크 · 참가자 평가</a>
 	              	</c:if>
 	              	<c:if test="${isUser and applied}">
-	              		<a class="btn btn-primary" href="${ctx}/jsp/review/reviewWrite.jsp?state=pastMatch">후기 작성</a>
+	              		<a class="btn btn-primary" href="${ctx}/review/create">후기 작성</a>
          		        <a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 평가</a>
 	              	</c:if>
 	              </div>
