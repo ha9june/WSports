@@ -207,7 +207,7 @@
 						style="grid-column: span 2; text-align: center; color: #9ca3af; padding: 40px 0;">신청
 						중인 팀이 없습니다.</p>
 				</c:if>
-				<c:forEach var="m" items="${match}">
+				<c:forEach var="m" items="${match}" >
 					<c:choose>
 						<c:when test="${m.sport eq '축구/풋살'}">
 							<c:set var="sportCls" value="sc-football" />

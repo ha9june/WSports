@@ -168,6 +168,7 @@
 		LIMIT
 		#{startIndex}, 4
 	</select>
+	
 	<select id="selectMapPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT

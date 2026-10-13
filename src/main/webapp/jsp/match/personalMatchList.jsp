@@ -158,7 +158,7 @@
 					    	sportsType="tennis";
 					    }
 					    				    
-						
+						/* 개인경기 리스트 */
 						html+=`
 							<a class="match-row" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
 				            <div class="left"><span class="pill pill-success bd">`+item.status+`</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>

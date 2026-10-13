@@ -14,7 +14,16 @@
     <section class="admin-card">
     	<c:set var="info" value="${detail[0]}" />	
     	<div style="display:flex; align-items:center; gap:12px; margin-bottom:20px">
-    		<span class="avatar default"></span>
+    		<span class="avatar">
+				<c:choose>
+					<c:when test="${not empty info.profile_image}">
+						<img src="${ctx}/uploads/${info.profile_image}" alt="프로필 사진">
+					</c:when>
+					<c:otherwise>
+						<img src="${ctx}/img/default-profile.svg" alt="기본 프로필 사진">
+					</c:otherwise>
+				</c:choose>
+			</span>
     		<strong style="font-size:18px">${info.login_id}</strong>
     	</div>
     	

@@ -26,55 +26,81 @@
 	<!-- 주소에 있는 status 값을 꺼내 status에 담음, 값이 없으면 ALL을 대신 넣음 -->
 	<c:set var="status" value="${empty param.status ? 'ALL' : param.status}" />
 	<form class="list-toolbar" method="get" style="flex-direction: column; align-items: flex-start; gap: 20px; margin-bottom: 24px">
-		<div style="width:860px;max-width:100%">
-    		<nav class="tabs big">
-    			<a class="tab ${status eq 'ALL' ? 'is-active' : ''}" href="?status=ALL">전체</a>
-    			<a class="tab ${status eq 'PIN' ? 'is-active' : ''}" href="?status=PIN">핀</a>
-    			<a class="tab ${status eq 'NOPIN' ? 'is-active' : ''}" href="?status=NOPIN">핀 아님</a>
-    		</nav>
-    	</div>
-    </form>
-	<div style="width:fit-content; max-width:100%">
-		<div class="tbl-head" style="grid-template-columns:70px 120px 70px 100px 300px 110px 130px;
-    	justify-self: start; justify-items: center; padding-left: 0px">
-    		<span>공지번호</span>
-    		<span>공지날짜</span>
-    		<span>공지유형</span>
-    		<span>공지작성자</span>
-    		<span>공지제목</span>
-    		<span>핀 여부</span>
-    		<span>수정,삭제</span>
-    	</div>
+		<div style="width: var(--settle-w); max-width:100%">
+			<nav class="tabs big">
+				<a class="tab ${status eq 'ALL' ? 'is-active' : ''}" href="?status=ALL">전체</a>
+				<a class="tab ${status eq 'PIN' ? 'is-active' : ''}" href="?status=PIN">핀</a>
+				<a class="tab ${status eq 'NOPIN' ? 'is-active' : ''}" href="?status=NOPIN">핀 아님</a>
+			</nav>
+		</div>
+	</form>
+	<div style="width: var(--settle-w); max-width:100%">
+		<div class="tbl-head" style="grid-template-columns: 70px minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,1.3fr) minmax(0,3.6fr) 120px 120px;
+ 			justify-items: center; padding: 0 12px; box-sizing: border-box; border: 1px solid transparent">
+			<span>공지번호</span>
+			<span>공지날짜</span>
+			<span>공지유형</span>
+			<span>공지작성자</span>
+			<span>공지제목</span>
+			<span>핀 여부</span>
+			<span>수정,삭제</span>
+		</div>
 		<c:forEach var="n" items="${noticelist}">
-			<div class="tbl-row" id="notice-${n.notice_id}" style="grid-template-columns: 70px 120px 70px 100px 300px 110px 130px; 
-			justify-items: center; align-items: center; padding-left: 0px">
-    			<span>${n.notice_id }</span>
-    			<b><fmt:formatDate value="${n.created_at}" pattern="yyyy.MM.dd" /></b>
-    			<span>${n.type }</span>
-    			<span>${n.nickname}</span>
-    			<span>${n.title }</span>
-   				<%-- 핀 고정 / 해제 --%>
+			<div class="tbl-row" id="notice-${n.notice_id}" style="grid-template-columns: 70px minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,1.3fr) minmax(0,3.6fr) 120px 120px;
+ 				justify-items: center; align-items: center; padding: 0 12px; box-sizing: border-box">
+				<span>${n.notice_id}</span>
+				<b><fmt:formatDate value="${n.created_at}" pattern="yyyy.MM.dd" /></b>
+				<span>${n.type}</span>
+				<span class="cell-ellipsis" title="${n.nickname}">${n.nickname}</span>
+				<span class="cell-ellipsis" title="${n.title}">${n.title}</span>
+				<%-- 핀 고정 / 해제 --%>
 				<button type="button" class="pill pin-btn ${n.is_pinned ? 'pill-success' : 'pill-neutral'}"
-		        data-id="${n.notice_id}" style="cursor: pointer; font-family: inherit">
-				📌 ${n.is_pinned ? '상단 고정' : '고정 안 함'}
-				</button>
-
-				<%-- 수정(상세) / 삭제 --%>
-				<div style="display:flex; gap:6px ">
+				data-id="${n.notice_id}" style="cursor: pointer; font-family: inherit">📌 ${n.is_pinned ? '상단 고정' : '고정 안 함'}</button>
+				<%-- 수정 / 삭제 --%>
+				<div style="display:flex; gap:6px">
 					<a class="btn btn-outline btn-xs" href="${ctx}/admin/notice/modify?noticeId=${n.notice_id}">수정</a>
 					<button type="button" class="btn btn-danger btn-xs delete-btn" data-id="${n.notice_id}">삭제</button>
 				</div>
 			</div>
-    	</c:forEach>
-   		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">
+		</c:forEach>
+    	<c:if test="${empty noticelist}">
+			<div class="empty-state">
+				<div class="empty-icon">
+					<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+					     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M3 11v2a2 2 0 0 0 2 2h1l5 4V5L6 9H5a2 2 0 0 0-2 2z"/><path d="M15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"/>
+					</svg>
+				</div>
+				<c:choose>
+					<c:when test="${status eq 'PIN'}">
+						<strong>상단 고정된 공지가 없어요</strong>
+						<p>공지 목록에서 📌 버튼을 누르면 상단에 고정됩니다.</p>
+						<a class="btn btn-outline btn-sm" href="?status=ALL">전체 공지 보기</a>
+					</c:when>
+					<c:when test="${status eq 'NOPIN'}">
+						<strong>고정되지 않은 공지가 없어요</strong>
+						<p>모든 공지가 상단에 고정되어 있습니다.</p>
+						<a class="btn btn-outline btn-sm" href="?status=ALL">전체 공지 보기</a>
+					</c:when>
+					<c:otherwise>
+						<strong>등록된 공지가 없어요</strong>
+						<p>공지를 작성하면 관리 목록과 사용자 공지사항 게시판에 함께 표시됩니다.</p>
+						<a class="btn btn-primary btn-sm" href="${ctx}/admin/notice/write">공지 작성</a>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</c:if>
+	</div>
+	<c:if test="${not empty noticelist}">
+   		<nav class="pagination" style="display: flex; justify-content:center; padding:0px; width: var(--settle-w); max-width:100%">
 			<a href="${pageInfo.curPage > 1 ? ctx += '/admin/notice?status=' += status += '&page=' += (pageInfo.curPage - 1) : '#'}">&lt;</a>
 			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" var="page">
 				<a href="${ctx}/admin/notice?status=${status}&amp;page=${page}" class="${pageInfo.curPage eq page ? 'is-active' : ''}">${page}</a>
 			</c:forEach>
 			<a href="${pageInfo.curPage < pageInfo.allPage ? ctx += '/admin/notice?status=' += status +=  '&page=' += (pageInfo.curPage + 1) : '#'}">&gt;</a>
 		</nav>
+		</c:if>
 	</div>
-</div>
 
 <a class="fab" href="${ctx}/admin/notice/write">
 	<span class="fab-label">공지 작성</span>

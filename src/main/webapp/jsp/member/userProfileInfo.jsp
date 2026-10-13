@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="breadcrumb"><span>사용자 프로필</span></nav>
     <section class="profile-top">
-      <span class="avatar lg ${empty publicProfile.profile_image? 'default' : ''}">
+      <span class="avatar lg">
       	<c:choose>
   			<c:when test="${not empty publicProfile.profile_image }">
   				<img class="avatar lg"
@@ -22,7 +22,7 @@
 			</c:when>
 			<c:otherwise>
 				<img class="avatar lg"
-					src="${ctx }/img/profile-default.png"
+					src="${ctx}/img/default-profile.svg"
 					alt="기본 프로필 사진">
 			</c:otherwise>
 		</c:choose>

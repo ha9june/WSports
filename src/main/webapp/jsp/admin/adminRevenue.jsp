@@ -20,15 +20,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
-
-<script>
-	//full calender 달력 api
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        // 속성, 이벤트 등 세팅
-    });
-</script>
-
 <div class="admin-inner">
 	<p class="eyebrow-path">관리자(사이트) / 수익 관리</p>
   	<div class="page-head">
@@ -72,7 +63,6 @@
     	<div class="bar-chart" role="img" 
     	aria-label="${chartList[0].month }월부터 ${chartList[5].month }월까지 월별 매출과 수익 막대 그래프">
       		<c:forEach var="m" items="${chartList}">
-        		<c:set var="v" value="${fn:split(b, '^')}" />
         		<div class="grp">
         			<div class="bars">
         				<i class="sales" style="height:${m.revenueHeight}%"
