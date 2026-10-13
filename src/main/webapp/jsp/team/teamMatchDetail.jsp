@@ -20,7 +20,7 @@
 <script type="text/javascript">
 $(function() {
 	$(".fav-btn").click(
-			function(e) {
+			function(e) { 
 				e.stopPropagation();
 				var $btn = $(this);
 				$.ajax({
