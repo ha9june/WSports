@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.TeamSettlement;
 
 public class TeamSettlementDaoImpl implements TeamSettlementDao {
 
@@ -87,7 +88,7 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 			Integer result = sqlSession.update("mapper.teamsettlement.updateTeamSettlement", param);
 			sqlSession.commit();
 			return result;
-		}
+		} 
 	}
 
 	@Override
@@ -100,4 +101,66 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 		}
 	}
 
+	// 마이페이지 개인 경기 정산 리스트
+	@Override
+	public List<Map<String, Object>> selectMypageTeamSettlementList(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teamsettlement.selectMyPageTeamSettlementList", param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;	
+		}
+	}
+
+	// 마이페이지 개인 경기 정산 리스트 페이징
+	@Override
+	public Integer selectMyPageTeamSettlementCnt(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teamsettlement.selectMyPageTeamSettlementCnt", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+
+	// 마이페이지 개인 경기 정산 리스트 총내역 조회
+	@Override
+	public Map<String, Object> selectMyPageTeamSettlementSummary(Long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectOne("mapper.teamsettlement.selectMyPageTeamSettlementSummary", userId);
+	    }
+	}
+
+	// 마이페이지 개인 경기 정산 리스트 탭별 건수 조회
+	@Override
+	public Map<String, Object> selectMyPageTeamSettlementTabCnt(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectOne("mapper.teamsettlement.selectMyPageTeamSettlementTabCnt", param);
+	    }
+	}
+
+	// 마이페이지 팀 경기 정산 리스트 팀선택 조회
+	@Override
+	public List<Map<String, Object>> selectMyPageTeamList(Long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return sqlSession.selectList("mapper.teamsettlement.selectMyPageTeamList", userId);
+	    }
+	}
+
+	@Override
+	public int insertTeamSettlement(TeamSettlement teamsettlement) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.insert("mapper.teamsettlement.insertHostSettlement", teamsettlement);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
+
 }
+

@@ -29,6 +29,23 @@ function splitValues(groupName, prefix) {
 	$('input[type=hidden][name="' + groupName + '"]').prop('disabled', true);
 }
 
+<%-- address.js가 만든 regions hidden input → preferredRegion1~3 으로 분리 저장 (서블릿: preferredRegion1~3) --%>
+function splitRegions() {
+	var values = [];
+	$('#regionInputs input[name="regions"]').each(function() {
+		values.push($(this).val());
+	});
+	
+	for (var i=0; i<3; i++) {
+		$('input[name="preferredRegion' + (i+1) + '"]').remove();
+		if (values[i]) {
+			$('<input type="hidden">').attr('name', 'preferredRegion' + (i+1)).val(values[i]).appendTo('#join-wrap');
+		}
+	}
+	<%-- 중복 전송 방지 --%>
+	$('#regionInputs input[name="regions"]').prop('disabled', true);
+}
+
 $(function () {
 	var idchecked = false;
 	var nickchecked = false;
@@ -115,7 +132,7 @@ $(function () {
 			return false;
 		}
 		splitValues('sports', 'preferredSport');
-		splitValues('regions', 'preferredRegion');
+		splitRegions();
 		return true;
 	});
 });
@@ -153,18 +170,22 @@ $(function () {
         <div class="chip-group" data-select="multi" data-max="3" data-name="sports">
           <button type="button" class="chip">축구/풋살</button><button type="button" class="chip">농구</button>
           <button type="button" class="chip">테니스</button><button type="button" class="chip">배드민턴</button></div></div>
+      
+      <%-- 주 활동 지역 : 경기 찾기와 동일한 시·도 → 시군구 선택 방식 (address.js) --%>
       <div class="field mt-24" style="width:360px"><span class="field-label">주 활동 지역 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
-        <div class="dropdown" style="display:block">
-          <button type="button" class="select" data-dropdown-toggle style="text-align:left">지역을 검색하거나 선택하세요</button>
-          <div class="dropdown-menu" style="left:0;right:auto;width:360px;padding:14px">
-            <input class="input sm" placeholder="예: 마포구, 성남시">
-            <div class="chip-group mt-16" data-select="multi" data-max="3" data-name="regions">
-              <button type="button" class="chip chip-sm">서울 마포구</button><button type="button" class="chip chip-sm">서울 영등포구</button>
-              <button type="button" class="chip chip-sm">서울 강남구</button><button type="button" class="chip chip-sm">서울 송파구</button>
-              <button type="button" class="chip chip-sm">경기 성남시</button><button type="button" class="chip chip-sm">경기 고양시</button>
-            </div>
-          </div>
+        <div class="field-row">
+          <select class="select" id="sido" aria-label="시·도">
+            <option value="">시 · 도</option>
+            <option value="서울시">서울시</option>
+            <option value="경기도">경기도</option>
+          </select>
+          <select class="select" id="sigungu" aria-label="시군구" disabled>
+            <option value="">시군구</option>
+          </select>
         </div>
+        <p id="maxRegion" class="region-max" style="display:none">최대 3개까지 선택 가능합니다.</p>
+        <div class="picked" id="pickedRegions"></div>
+        <div id="regionInputs"></div>
       </div>
     </section>
 
@@ -174,4 +195,5 @@ $(function () {
     </div>
   </form>
 </main>
+<script src="${ctx}/js/address.js"></script>
 <%@ include file="/jsp/common/footer.jsp" %>

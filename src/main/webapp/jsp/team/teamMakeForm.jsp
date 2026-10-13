@@ -10,13 +10,31 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
 	<script type="text/javascript">
+	
+		function removePhoto(e, btn) {
+			e.preventDefault();
+			e.stopPropagation();                 // label 클릭으로 파일 선택창이 열리지 않게
+			var label = btn.closest('label');
+			label.querySelector('input[type="file"]').value = '';
+			var img = label.querySelector('img');
+			img.removeAttribute('src');
+			img.style.display = 'none';
+			label.querySelector('span').style.display = '';   // '사진 추가' 문구 복원
+			btn.style.display = 'none';
+		}
+		function photoChosen(input) {            // 사진을 고르면 ✕ 표시
+			var btn = input.closest('label').querySelector('.ph-remove');
+			if (btn) btn.style.display = '';
+		}
+	
 		function readURL(input) {
 			if (input.files && input.files[0]) {
 				var reader = new FileReader();
 				reader.onload = function(e) {
 					document.getElementById("profileImgPreview").src = e.target.result;
-					document.getElementById("profileImgPreview").style.cssText = "width: 80px; height: 72px;";
+					  document.getElementById("profileImgPreview").style.cssText = "display: block; width: 100%; height: 100%; object-fit: cover;";
 					document.getElementById("profilePreviewText").style.display = "none";
+					photoChosen(input);
 				}
 				reader.readAsDataURL(input.files[0])
 			}
@@ -33,6 +51,7 @@
 					preview.src = e.target.result;
 					preview.style.display = "block";
 					text.style.display = "none";
+					photoChosen(input);
 				};
 
 				reader.readAsDataURL(input.files[0]);
@@ -78,6 +97,8 @@
 
 						<input type="file" name="profileImage" accept="image/*" hidden
 						onchange="readURL(this)">
+						<button type="button" class="ph-remove" style="display: none;"
+							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
 					</label>
 
 					<div>
@@ -100,26 +121,36 @@
 						style="display: none; width: 100%; height: 100%; object-fit: cover;">
 						<input type="file" name="activityImg1" accept="image/*" hidden
 						onchange="previewActivity(this, 'activityPreview1', 'activityText1')">
+						<button type="button" class="ph-remove" style="display: none;"
+							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
 					</label> <label class="ph" style="cursor: pointer;"> <span
 						id="activityText2">사진 추가</span> <img id="activityPreview2" alt=""
 						style="display: none; width: 100%; height: 100%; object-fit: cover;">
 						<input type="file" name="activityImg2" accept="image/*" hidden
 						onchange="previewActivity(this, 'activityPreview2', 'activityText2')">
+						<button type="button" class="ph-remove" style="display: none;"
+							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
 					</label> <label class="ph" style="cursor: pointer;"> <span
 						id="activityText3">사진 추가</span> <img id="activityPreview3" alt=""
 						style="display: none; width: 100%; height: 100%; object-fit: cover;">
 						<input type="file" name="activityImg3" accept="image/*" hidden
 						onchange="previewActivity(this, 'activityPreview3', 'activityText3')">
+						<button type="button" class="ph-remove" style="display: none;"
+							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
 					</label> <label class="ph" style="cursor: pointer;"> <span
 						id="activityText4">사진 추가</span> <img id="activityPreview4" alt=""
 						style="display: none; width: 100%; height: 100%; object-fit: cover;">
 						<input type="file" name="activityImg4" accept="image/*" hidden
 						onchange="previewActivity(this, 'activityPreview4', 'activityText4')">
+						<button type="button" class="ph-remove" style="display: none;"
+							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
 					</label> <label class="ph" style="cursor: pointer;"> <span
 						id="activityText5">사진 추가</span> <img id="activityPreview5" alt=""
 						style="display: none; width: 100%; height: 100%; object-fit: cover;">
 						<input type="file" name="activityImg5" accept="image/*" hidden
 						onchange="previewActivity(this, 'activityPreview5', 'activityText5')">
+						<button type="button" class="ph-remove" style="display: none;"
+							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
 					</label>
 					<div class="photo-guide">
 						<p>팀 활동 모습을 보여주는 사진을 여러 장 등록할 수 있어요.</p>

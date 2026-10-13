@@ -28,7 +28,7 @@
       	</div>
 		<c:choose>
       		<c:when test="${param.matchType eq 'team'}">
-      			<a class="btn btn-primary btn-sm" href="${ctx}/team/detail/view?teamId=${param.matchId}">경기보기
+      			<a class="btn btn-primary btn-sm" href="${ctx}/team-match/detail/view?teamMatchId=${param.matchId}">경기보기
       			</a>
       		</c:when>
       		<c:otherwise>

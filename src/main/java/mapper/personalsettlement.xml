@@ -79,6 +79,7 @@
 		where settlement_id = #{settlementId}
 		and settlement_status = '정산대기'
 	</update>
+
 	<!--개인경기 정산 내역 insert-->
 	<insert id="insertPersonalSettlement" parameterType="personalsettlement" useGeneratedKeys="true" keyProperty="settlementId">
 		INSERT INTO personal_settlement (
@@ -97,4 +98,78 @@
 	        #{settlementStatus},
 	    )
 	</insert>
+
+	
+	<!-- 마이페이지 개인 경기 정산 리스트 -->
+	<select id="selectMyPagePersonalSettlementList" parameterType="Map" resultType="Map">
+		select u.bank_name,u.account_number,pm.personal_match_id,
+			   date_format(pm.match_date,'%Y.%m.%d') as match_date_fmt,
+			   elt(dayofweek(pm.match_date),'일','월','화','수','목','금','토') as match_day,
+			   date_format(pm.start_time,'%H:%i') as start_time_fmt,
+			   pm.title,pm.sport,pm.region,pm.place_name,pm.status as match_status,
+			   pm.participation_fee,pm.fee,count(pmp.user_id) as participant_count,
+			   ps.settlement_status,date_format(ps.settled_at,'%c/%d') as settled_fmt
+		from personal_match pm join user u on (u.user_id=pm.user_id)
+							   left join personal_match_participant pmp on (pmp.personal_match_id=pm.personal_match_id) and pmp.status = '결제완료'
+            	    		   left join personal_settlement ps on (ps.personal_match_id=pm.personal_match_id)
+		where pm.user_id=#{userId} and pm.status='경기 종료' and pm.match_date between #{startDate} and #{endDate}
+			  and exists (select 1 from personal_match_participant p2
+            			  where p2.personal_match_id = pm.personal_match_id and p2.status = '결제완료')
+		   	  <if test="keyword != null and keyword != ''">
+  			  and pm.title like concat('%', #{keyword}, '%')
+			  </if>
+			  <if test="settlementStatus != null">
+      		  and ps.settlement_status = #{settlementStatus}
+    		  </if>
+		group by pm.personal_match_id,u.bank_name,u.account_number,pm.match_date,pm.start_time,
+				 pm.title,pm.sport,pm.region,pm.place_name,pm.status,pm.participation_fee,
+				 pm.fee,ps.settlement_status,ps.settled_at
+    	order by pm.match_date DESC, pm.start_time DESC limit #{row}, 10
+	</select>
+	
+	<!-- 마이페이지 개인 경기 정산 리스트 페이징 -->
+	<select id="selectMyPagePersonalSettlementCnt" parameterType="Map" resultType="int">
+		select count(distinct pm.personal_match_id) 
+		from personal_match pm join user u on (u.user_id=pm.user_id)
+							   left join personal_match_participant pmp on (pmp.personal_match_id=pm.personal_match_id) and pmp.status = '결제완료'
+            	    		   left join personal_settlement ps on (ps.personal_match_id=pm.personal_match_id)
+		where pm.user_id=#{userId} and pm.status='경기 종료' and pm.match_date between #{startDate} and #{endDate}
+			  and exists (select 1 from personal_match_participant p2
+            			  where p2.personal_match_id = pm.personal_match_id and p2.status = '결제완료')		
+		   	  <if test="keyword != null and keyword != ''">
+  			  and pm.title like concat('%', #{keyword}, '%')
+			  </if>
+			  <if test="settlementStatus != null">
+      		  and ps.settlement_status = #{settlementStatus}
+    		  </if>
+	</select>
+	
+	<!-- 마이페이지 개인 경기 정산 리스트 총내역 조회 -->
+	<select id="selectMyPagePersonalSettlementSummary" parameterType="long" resultType="map">
+    	select ifnull(sum(case when ps.settlement_status='정산대기' then ps.amount end),0) as wait_amount,
+        	   ifnull(sum(case when ps.settlement_status='지급완료'
+        	                        and year(ps.settled_at)=year(curdate())
+        	                        and month(ps.settled_at)=month(curdate()) then ps.amount end),0) as month_done_amount,
+        	   ifnull(sum(case when ps.settlement_status='지급완료' then ps.amount end),0) as total_done_amount,
+    	       month(curdate()) as cur_month
+ 	   from personal_settlement ps join personal_match pm on (pm.personal_match_id = ps.personal_match_id)
+ 	   where ps.user_id = #{userId} and pm.status = '경기 종료'
+			 and exists (select 1 from personal_match_participant p2
+            			 where p2.personal_match_id = pm.personal_match_id and p2.status = '결제완료') 	         
+	</select>
+	
+	<!-- 마이페이지 개인 경기 정산 리스트 탭별 건수 조회 -->
+	<select id="selectMyPagePersonalSettlementTabCnt" parameterType="Map" resultType="Map">
+	    select count(*) as all_cnt,
+ 	          count(case when ps.settlement_status='정산대기' then 1 end) as wait_cnt,
+ 	          count(case when ps.settlement_status='지급완료' then 1 end) as done_cnt
+	    from personal_match pm
+	         left join personal_settlement ps on ps.personal_match_id = pm.personal_match_id
+    	where pm.user_id=#{userId} and pm.status='경기 종료' and pm.match_date between #{startDate} and #{endDate}
+			  and exists (select 1 from personal_match_participant p2
+            			  where p2.personal_match_id = pm.personal_match_id and p2.status = '결제완료')    	
+    	<if test="keyword != null and keyword != ''">
+     	 and pm.title like concat('%', #{keyword}, '%')
+    	</if>
+	</select>
 </mapper>

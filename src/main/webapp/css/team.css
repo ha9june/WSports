@@ -403,3 +403,37 @@
   background: #fdf1f0;
   border-color: #e9a9a5;
 }
+.head-with-action { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+
+.vs-card .who { display: inline-block; font-size: 12px; font-weight: 500; padding: 3px 12px; border-radius: 99px; margin: 0; }
+.vs-card .who.host { background: #e8f1ff; color: #1457d6; }
+.vs-card .who.opp  { background: #f1f3f5; color: #495057; }
+
+.vs-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 10px 0 22px; }
+.vs-head h2 { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-link,
+.back-link {
+  flex: none;
+  color: #0b5cff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.vs-link:hover,
+.back-link:hover { text-decoration: underline; }
+
+@media (max-width: 768px) { .head-with-action { flex-direction: column; align-items: flex-start; } }
+
+.team-side .team-rating { margin: 4px 0 0; font-size: 13px; }
+
+.host-inline .host-name,
+.host-inline .host-name strong { color: var(--text-primary, #111827); }
+.host-inline .host-name:hover strong { text-decoration: underline; }
+
+.side-card.done h2 { color: var(--text-primary, #111827); }
+
+.ph { position: relative; }
+.ph-remove { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; padding: 0;
+  border: 0; border-radius: 50%; background: rgba(0,0,0,.6); color: #fff;
+  font-size: 12px; line-height: 24px; cursor: pointer; z-index: 2; }

@@ -33,6 +33,7 @@ public interface TeamMatchDao {
 	int updateStatusToCancel(Long teamMatchId) throws Exception;
 	List<TeamMatch> selectFinishedMatches() throws Exception;
 	int updateStatusToFinished(Long teamMatchId) throws Exception;
+	List<TeamMatch> selectFinishedWithoutSettlement() throws Exception;
 	
 	
 	

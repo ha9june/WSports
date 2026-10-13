@@ -1,5 +1,8 @@
 package service.payment;
 
+
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,12 +29,15 @@ import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
 import dao.TeamPaymentDao;
 import dao.TeamPaymentDaoImpl;
+import dao.UserDao;
+import dao.UserDaoImpl;
 import dto.Notification;
 import dto.PersonalMatch;
 import dto.PersonalPayment;
 import dto.PersonalSettlement;
 import dto.TeamMatch;
 import dto.TeamPayment;
+import util.PageInfo;
 import service.notification.NotificationService;
 import service.notification.NotificationServiceImpl;
 import util.CardCompany;
@@ -39,17 +45,43 @@ import util.CardCompany;
 public class PaymentServiceImpl implements PaymentService {
 	private PersonalPaymentDao personalPaymentDao;
 	private TeamPaymentDao teamPaymentDao;
+
+	// 마이페이지 결제 내역 생성
+	private UserDao userDao;	
+	
 	private NotificationService notificationService;
 	private PersonalSettlementDao personalSettlementDao;
 	
 	public PaymentServiceImpl() {
 		this.personalPaymentDao = new PersonalPaymentDaoImpl();
 		this.teamPaymentDao = new TeamPaymentDaoImpl();
+		// 마이페이지 결제 내역 생성
+		this.userDao = new UserDaoImpl();		
 		this.notificationService = new NotificationServiceImpl();
 		this.personalSettlementDao = new PersonalSettlementDaoImpl();
 	}
+	
+	// 마이페이지 결제 내역
+	private static final int PAGE_SIZE = 10;
+	private static final Map<String, String> CARD_ISSUER = new HashMap<>();
+	static {
+		// 토스페이먼츠 카드사 코드
+		CARD_ISSUER.put("11", "국민카드");   CARD_ISSUER.put("21", "하나카드");
+		CARD_ISSUER.put("41", "신한카드");   CARD_ISSUER.put("51", "삼성카드");
+		CARD_ISSUER.put("61", "현대카드");   CARD_ISSUER.put("71", "롯데카드");
+		CARD_ISSUER.put("91", "NH농협카드"); CARD_ISSUER.put("W1", "우리카드");
+		CARD_ISSUER.put("33", "우리BC카드"); CARD_ISSUER.put("31", "BC카드");
+		CARD_ISSUER.put("3K", "기업BC카드"); CARD_ISSUER.put("15", "카카오뱅크");
+		CARD_ISSUER.put("24", "토스뱅크");   CARD_ISSUER.put("3A", "케이뱅크");
+		CARD_ISSUER.put("36", "씨티카드");   CARD_ISSUER.put("37", "우체국카드");
+		CARD_ISSUER.put("34", "수협카드");   CARD_ISSUER.put("38", "새마을금고");
+		CARD_ISSUER.put("39", "저축은행");   CARD_ISSUER.put("62", "신협카드");
+		CARD_ISSUER.put("30", "KDB산업은행"); CARD_ISSUER.put("35", "전북은행");
+		CARD_ISSUER.put("42", "제주은행");   CARD_ISSUER.put("46", "광주은행");
+	}
+	
+	//결제 내역 + 참가자 등록
 
-	// 결제 내역 + 참가자 등록
 	@Override
 	public void completePersonalPayment(String responseJson, Long userId, Long matchId) throws Exception {
 		JSONObject json = new JSONObject(responseJson);
@@ -266,6 +298,71 @@ public class PaymentServiceImpl implements PaymentService {
 				: personalPaymentDao.selectPersonalJoinCnt(userId, matchId);
 		return cnt > 0;
 	}
+	
+	// 마이페이지 결제내역
+	private Map<String, Object> buildHistoryParam(String keyword, Long userId, String status, String type, String period) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("keyword", keyword == null ? null : keyword.trim());
+		param.put("status", ("PAID".equals(status) || "REFUND".equals(status)) ? status : null);
+		param.put("type", ("PERSONAL".equals(type) || "TEAM".equals(type)) ? type : null);
+ 
+		LocalDate today = LocalDate.now();
+		LocalDate start;
+		if ("6m".equals(period)) start = today.minusMonths(6);
+		else if ("year".equals(period)) start = LocalDate.of(today.getYear(), 1, 1);
+		else start = today.minusMonths(3); // 기본 3개월
+		param.put("startDate", Timestamp.valueOf(start.atStartOfDay()));
+		return param;
+	}
+	
+	//마이페이지 결재내역 페이징
+	@Override
+	public List<Map<String, Object>> MypagePaymentList(PageInfo pageInfo, String keyword, Long userId, String status,
+			String type, String period) throws Exception {
+		Map<String, Object> param = buildHistoryParam(keyword, userId, status, type, period);
+		 
+		int total = userDao.selectHistoryCount(param).intValue();
+		
+		int allPage = (int) Math.ceil(total / (double) PAGE_SIZE);
+		int cur = (total == 0) ? 1 : Math.min(Math.max(pageInfo.getCurPage(), 1), allPage);
+		int startPage = (cur - 1) / 10 * 10 + 1;
+		int endPage = Math.min(startPage + 9, allPage);
+		pageInfo.setTotalCnt(total);
+		pageInfo.setCurPage(cur);
+		pageInfo.setAllPage(allPage);
+		pageInfo.setStartPage(startPage);
+		pageInfo.setEndPage(endPage);
+ 
+		param.put("limit", PAGE_SIZE);
+		param.put("offset", (cur - 1) * PAGE_SIZE);
+		List<Map<String, Object>> list = userDao.selectHistoryList(param);
+ 
+		// 결제수단 표시 문자열 만들기 (간편결제 > 카드)
+		for (Map<String, Object> row : list) {
+			String easy = (String) row.get("easyPaymentProvider");
+			String issuer = (String) row.get("cardCompany");
+			String number = (String) row.get("cardNumber");
+			String label;
+			if (easy != null && !easy.isEmpty()) {
+				label = easy;
+			} else if (issuer != null && !issuer.isEmpty()) {
+				label = CARD_ISSUER.getOrDefault(issuer, "카드")
+						+ (number != null && !number.isEmpty() ? " " + number : "");
+			} else {
+				label = (String) row.get("paymentMethod");
+			}
+			row.put("methodLabel", label);
+		}
+		return list;
+	}
+	
+	//마이페이지 결재내역 탭 카운트
+	@Override
+	public Map<String, Object> MypagePaymentSummary(String keyword, Long userId, String status, String type,
+			String period) throws Exception {
+		return userDao.selectHistorySummary(buildHistoryParam(keyword, userId, null, null, period));
+	}
 
 	// 개인 경기 결제 취소
 	@Override
@@ -451,5 +548,60 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public Long putPersonalSettlement(PersonalSettlement ps) throws Exception {
 		return personalSettlementDao.insertPersonalSettlement(ps);
+	}
+	//팀 경기 결제 취소 : 주최팀 모집자 본인 + 상대 팀 결제 전 + 모집 마감 전
+	@Override
+	public void refundTeamPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception {
+		Map<String, Object> search = new HashMap<>();
+		search.put("paymentKey", paymentKey);
+		search.put("userId", userId);
+		//본인이 결제한 주최팀 결제만 조회됨
+		Map<String, Object> target = teamPaymentDao.selectTeamRefundTarget(search);
+		if(target == null) throw new IllegalStateException("본인이 결제한 모집팀 결제만 환불할 수 있습니다.");
+		
+		//검증 (취소 전에 전부 확인)
+		if("CANCELED".equals(target.get("payment_status")))
+			throw new IllegalStateException("이미 환불된 결제입니다.");
+		if(!"모집중".equals(target.get("status")))
+			throw new IllegalStateException("상대 팀이 이미 결제해 환불할 수 없습니다.");
+		
+		LocalDateTime deadline = ((Timestamp) target.get("deadline")).toLocalDateTime();
+		if(!LocalDateTime.now().isBefore(deadline))
+			throw new IllegalStateException("모집 마감 이후에는 환불할 수 없습니다.");
+		
+		//결제 취소(성공해야 다음 단계 진행)
+		JSONObject result = cancelPayment(paymentKey, reason, secretKey);
+		JSONArray cancels = result.getJSONArray("cancels");
+		JSONObject cancel = cancels.getJSONObject(cancels.length() -1);
+		int cancelAmount = cancel.getInt("cancelAmount");
+		
+		//DB 변경 : 결제 취소 + 참가 취소 + 경기 취소 (한 트랜잭션)
+		Long teamMatchId = ((Number) target.get("team_match_id")).longValue();
+		Map<String, Object> param = new HashMap<>();
+		param.put("paymentId", ((Number) target.get("payment_id")).longValue());
+		param.put("canceledAt", OffsetDateTime.parse(cancel.getString("canceledAt")).toLocalDateTime());
+		param.put("cancelReason", cancel.optString("cancelReason", reason));
+		param.put("cancelAmount", cancelAmount);
+		param.put("teamMatchId", teamMatchId);
+		
+		int canceled = teamPaymentDao.updateTeamHostRefund(param);
+		if(canceled == 0) {
+			//검증 직후 상대팀이 결제한 아주 드문 경우 : 환불은 완료, 경기 상태는 관리자 확인 필요
+			System.err.println("[팀 환불] 환불은 완료됐으나 경기 취소 실패(상태 확인 필요) teamMatchId=" + teamMatchId);
+		}
+		
+		//알림 : 결제한 본인에게 (실패해도 환불은 유지)
+		try {
+			String title = (String) target.get("title");
+			Notification alarm = new Notification();
+			alarm.setUserId(userId);
+			alarm.setTitle("경기 취소 및 환불 완료");
+			alarm.setContent("'" + title + "' 경기가 취소되어 결제하신"
+					+ String.format("%, d", cancelAmount)+"원이 환불되었습니다.");
+			alarm.setLink("/team-match/detail/view?teamMatchId=" + teamMatchId);
+			notificationService.sendNotification(alarm);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

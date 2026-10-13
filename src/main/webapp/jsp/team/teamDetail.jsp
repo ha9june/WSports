@@ -220,8 +220,19 @@
 					<span class="logo-ph" id="profileImg"> <%-- <img src="${ctx}/uploads/${team.profileImage }" alt="대표"> --%>
 					</span>
 					<div>
-						<h1>${team.teamName }</h1>
+						<h1><c:out value="${team.teamName}" /></h1>
 						<p>${team.sport } · 팀원 ${team.currentPeople }</p>
+						<p class="team-rating">
+							<c:choose>
+								<c:when test="${team.teamRating != null}">
+									<span class="rating">${team.teamRating}</span>
+									<span class="t-11 t-2">(${team.teamRatingCount})</span>
+								</c:when>
+								<c:otherwise>
+									<span class="t-11 t-2">평가 없음</span>
+								</c:otherwise>
+							</c:choose>
+						</p>
 					</div>
 				</div>
 				<h2>모집 조건</h2>
@@ -305,31 +316,30 @@
 									<c:set var="userSkill" value="${user.badmintonSkill}" />
 								</c:otherwise>
 							</c:choose>
-							<div class="member-card">
+						<a class="member-card" href="${ctx}/member/publicProfile/view?userId=${user.userId}">
+							<span class="avatar">
 								<c:choose>
 									<c:when test="${not empty user.profileImage}">
-										<span class="avatar"><img
-											src="${ctx}/uploads/${user.profileImage}" alt=""></span>
+										<img src="${ctx}${profilePath}/<c:out value='${user.profileImage}' />" alt=""
+											onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+											style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
 									</c:when>
 									<c:otherwise>
-										<span class="avatar default"></span>
+										<img src="${ctx}/img/default-profile.svg" alt=""
+											style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
 									</c:otherwise>
 								</c:choose>
-								<div class="info">
-									<strong><c:out value="${user.nickname}" /></strong>
-									<c:if test="${user.teamRole eq 'CAPTAIN'}">
-										<span class="pill pill-brand role">주장</span>
-									</c:if>
-									<c:if test="${user.teamRole eq 'VICE_CAPTAIN'}">
-										<span class="pill pill-brand role">부주장</span>
-									</c:if>
-									<p class="meta">
-										<c:out value="${user.preferredRegion1}" default="지역 미설정" />
-										·
-										<c:out value="${userSkill}" default="실력 미설정" />
-									</p>
-								</div>
+							</span>
+							<div class="info">
+								<strong><c:out value="${user.nickname}" /></strong>
+								<c:if test="${user.teamRole eq 'CAPTAIN'}"><span class="pill pill-brand role">주장</span></c:if>
+								<c:if test="${user.teamRole eq 'VICE_CAPTAIN'}"><span class="pill pill-brand role">부주장</span></c:if>
+								<p class="meta">
+									<c:out value="${user.preferredRegion1}" default="지역 미설정" /> ·
+									<c:out value="${userSkill}" default="실력 미설정" />
+								</p>
 							</div>
+						</a>
 						</c:forEach>
 					</div>
 				</section>

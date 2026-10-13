@@ -211,4 +211,24 @@
 		and team_id = #{teamId}
 		and deleted = 1
 	</update>
+	<!-- 팀 환불 대상 조회 : 본인 결제 + 주최팀 결제만 -->
+	<select id="selectTeamRefundTarget" parameterType="map" resultType="map">
+		select pay.payment_id, pay.payment_key, pay.payment_status,
+			   m.team_match_id, m.user_id, m.title, m.deadline, m.status
+		from team_payment pay
+		join team_match_participant p on p.payment_id = pay.payment_id
+		join team_match m on m.team_match_id = p.team_match_id
+		where pay.payment_key = #{paymentKey}
+		and p.user_id = #{userId}
+		and p.team_id = m.team_id
+	</select>
+	<!-- 주최팀 환불 시 팀 경기 취소 (상대팀 결제 전만) -->
+	<update id="updateTeamMatchHostCancel" parameterType="map">
+		update team_match
+		set status = '경기 취소',
+			updated_at = now()
+		where team_match_id = #{teamMatchId}
+		and status = '모집중'
+		and coalesce(deleted, 0) = 0
+	</update>
 </mapper>

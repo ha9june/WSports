@@ -57,7 +57,8 @@ public class AdminMember extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "정산관리 목록 조회 오류");
+			request.setAttribute("err", "회원관리 목록 조회 오류");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 		request.getRequestDispatcher("/jsp/admin/adminMember.jsp").forward(request, response);
 	}

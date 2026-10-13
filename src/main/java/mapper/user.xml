@@ -6,7 +6,15 @@
 	<select id="selectLoginId" resultType="user" parameterType="String">
 		select * from user where login_id=#{loginId}
 	</select>
+	
+	<select id="selectUserByUserId" resultType="user" parameterType="Long">
+		select * from user where user_id=#{userId}
+	</select>
 
+	<select id="selectLoginUser" resultType="user" parameterType="String">
+		select * from user where login_id=#{loginId} and withdrawal_at is null
+	</select>
+	
 	<select id="selectNickname" resultType="user" parameterType="String">
 		select * from user where nickname=#{nickname}
 	</select>
@@ -48,6 +56,22 @@
 		where login_id=#{loginId}
 	</update>
 	
+	<update id="passwordChange" parameterType="Map">
+		update user
+		set password=#{newPassword},updated_at=now()
+		where user_id=#{userId} and password=#{oldPassword} 
+	</update>
+	
+	<update id="withdraw" parameterType="Long">
+		update user u
+		set u.withdrawal_at=now()
+		where u.user_id=#{userId} and u.withdrawal_at is null
+			  and not exists (select 1 from personal_settlement ps
+			  				  where ps.user_id = u.user_id and ps.settlement_status='정산대기') 
+              and not exists (select 1 from team_settlement ts
+              			      where ts.user_id = u.user_id and ts.settlement_status='정산대기')
+	</update>	
+	
 	<!-- 공개프로필 -->
 	<select id="publicProfile" parameterType="Map" resultType="Map">
 		select u.user_id,u.profile_image,u.nickname,u.preferred_region1,u.preferred_region2,u.preferred_region3, 
@@ -85,4 +109,82 @@
 	</select>
 	
 	
-</mapper>
+
+	<!-- 마이페이지 결제 내역 -->
+	<sql id="historyUnion">
+		select 'PERSONAL' as matchType,pp.payment_id as paymentId,pp.payment_key as paymentKey,
+		       pp.order_name as orderName,pp.payment_method as paymentMethod,pp.total_amount as totalAmount,
+		       pp.card_company as cardCompany,pp.card_number as cardNumber,pp.easy_payment_provider as easyPaymentProvider,
+		       pp.receipt_url as receiptUrl,pp.approved_at as approvedAt,date_format(pp.approved_at, '%Y.%m.%d') as payDate,
+		       date_format(pp.approved_at, '%H:%i') as payTime,
+		       case when pp.payment_status in ('CANCELED','PARTIAL_CANCELED') then 1 else 0 end as refunded,
+		       case when pp.payment_status in ('CANCELED','PARTIAL_CANCELED')
+		            then pp.total_amount - ifnull(pp.balance, 0) else 0 end as refundAmount,
+		       date_format(p.cancelled_at, '%c/%e') as cancelDate,m.participation_fee as participationFee,
+		       m.fee as fee,
+		       concat(month(m.match_date), '/', day(m.match_date), ' (',
+		              elt(dayofweek(m.match_date), '일','월','화','수','목','금','토'), ') ',
+		              date_format(m.start_time, '%H:%i')) as matchSchedule,
+		       concat_ws(' ', m.region, m.place_name) as matchPlace
+		from personal_payment pp join personal_match_participant p on (p.payment_id = pp.payment_id)
+								 join personal_match m on (m.personal_match_id = p.personal_match_id)
+		where p.user_id = #{userId}
+		union all
+		select 'TEAM' as matchType,tp.payment_id,tp.payment_key,tp.order_name,tp.payment_method,
+		       tp.total_amount,tp.card_company,tp.card_number,tp.easy_payment_provider,tp.receipt_url,
+		       tp.approved_at,date_format(tp.approved_at, '%Y.%m.%d'),date_format(tp.approved_at, '%H:%i'),
+		       case when tp.payment_status in ('CANCELED','PARTIAL_CANCELED') then 1 else 0 end,
+		       case when tp.payment_status in ('CANCELED','PARTIAL_CANCELED')
+		            then tp.total_amount - ifnull(tp.balance, 0) else 0 end,
+		       date_format(p.cancelled_at, '%c/%e'),m.participation_fee,m.fee,
+		       concat(month(m.match_date), '/', day(m.match_date), ' (',
+		              elt(dayofweek(m.match_date), '일','월','화','수','목','금','토'), ') ',
+		              date_format(m.start_time, '%H:%i')),
+		       concat_ws(' ', m.region, m.place_name)
+		from team_payment tp join team_match_participant p on (p.payment_id = tp.payment_id)
+						     join team_match m on (m.team_match_id = p.team_match_id)
+		where p.user_id = #{userId}
+	</sql>
+ 
+	<!-- 마이페이지 결제 내역 검색 -->
+	<sql id="periodKeyword">
+		where h.approvedAt >= #{startDate}
+		<if test="keyword != null and keyword != ''">
+			and h.orderName like concat('%', #{keyword}, '%')
+		</if>
+	</sql>
+ 
+	<!-- 마이페이지 결제 내역 탭 -->
+	<sql id="statusType">
+		<if test="status == 'PAID'"> and h.refunded = 0 </if>
+		<if test="status == 'REFUND'"> and h.refunded = 1 </if>
+		<if test="type != null and type != ''"> and h.matchType = #{type} </if>
+	</sql>
+ 
+	<!-- 마이페이지 결제 내역 페이징 -->
+	<select id="selectHistoryCount" parameterType="map" resultType="long">
+		select count(*)
+		from (<include refid="historyUnion"/>) h
+		<include refid="periodKeyword"/>
+		<include refid="statusType"/>
+	</select>
+ 
+	<!-- 마이페이지 결제 내역 리스트 -->
+	<select id="selectHistoryList" parameterType="map" resultType="map">
+		select h.*
+		from (<include refid="historyUnion"/>) h
+		<include refid="periodKeyword"/>
+		<include refid="statusType"/>
+		order by h.approvedAt desc
+		limit #{limit} offset #{offset}
+	</select>
+ 
+	<!-- 마이페이지 결제 내역 탭 카운트 -->
+	<select id="selectHistorySummary" parameterType="map" resultType="map">
+		select count(*) as total,
+		       ifnull(sum(case when h.refunded = 0 then 1 else 0 end), 0) as paid,
+		       ifnull(sum(case when h.refunded = 1 then 1 else 0 end), 0) as refund
+		from (<include refid="historyUnion"/>) h
+		<include refid="periodKeyword"/>
+	</select>
+</mapper>	

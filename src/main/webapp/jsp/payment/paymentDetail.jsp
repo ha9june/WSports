@@ -78,8 +78,13 @@
 	<div class="modal-card md">
 		<h2 class="modal-title">환불할까요?</h2>
 		<p class="modal-desc">
-			환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br>
-			모집 마감 전까지만 환불할 수 있어요.
+			<c:if test="${isTeam }">
+				<p class="t-12 t-danger" style="margin-bottom:12px">
+				환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br>
+				모집 마감 전까지만 환불할 수 있어요.
+				</p>  
+			</c:if>
+			
 		</p>
 		<form method="post" action="${ctx}/payment/refund" id="refundForm">
 			<input type="hidden" name="paymentKey" value="${payment.paymentKey}">

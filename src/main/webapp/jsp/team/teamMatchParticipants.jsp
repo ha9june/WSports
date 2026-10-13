@@ -15,15 +15,20 @@
 			<a href="${ctx}/team-match/list">상대팀 찾기</a><span class="sep">›</span><span>참가
 				팀 확인</span>
 		</nav>
-		<div class="page-head">
-			<h1 class="page-title">참가 팀 확인</h1>
-			<p class="page-desc">경기에 참가한 우리 팀과 상대 팀의 프로필을 확인합니다.</p>
+		<div class="page-head head-with-action">
+			<div>
+				<h1 class="page-title">참가 팀 확인</h1>
+				<p class="page-desc">경기에 참가한 우리 팀과 상대 팀의 프로필을 확인합니다.</p>
+			</div>
+			<a class="back-link" href="${ctx}/team-match/detail/view?teamMatchId=${teamMatchId}">← 경기 상세로</a>
 		</div>
 		<div class="vs-grid">
 			<section class="vs-card">
-				<h2>${hostTeam.teamName}</h2>
-				<a href="${ctx}/team/detail/view?teamId=${hostTeam.teamId}">팀 상세보기</a>
-				<p class="who">모집 팀</p>
+				<p class="who host">모집 팀</p>
+				<div class="vs-head">
+					<h2><c:out value="${hostTeam.teamName}" /></h2>
+					<a class="vs-link" href="${ctx}/team/detail/view?teamId=${hostTeam.teamId}">팀 상세보기 →</a>
+				</div>
 				<div class="body">
 					<c:choose>
 							<c:when test="${not empty hostTeam.profileImage}">
@@ -67,9 +72,11 @@
 				</div>
 			</section>
 			<section class="vs-card">
-				<h2>${guestTeam.teamName}</h2>
-				<a href="${ctx}/team/detail/view?teamId=${guestTeam.teamId}">팀 상세보기</a>
-				<p class="who">상대 팀</p>
+				<p class="who opp">상대 팀</p>
+				<div class="vs-head">
+					<h2><c:out value="${guestTeam.teamName}" /></h2>
+					<a class="vs-link" href="${ctx}/team/detail/view?teamId=${guestTeam.teamId}">팀 상세보기 →</a>
+				</div>
 				<div class="body">
 					<c:choose>
 							<c:when test="${not empty guestTeam.profileImage}">
@@ -112,11 +119,6 @@
 					</dl>
 				</div>
 			</section>
-		</div>
-		<div class="form-actions">
-			<a class="btn btn-outline"
-				href="${ctx}/team-match/detail/view?teamMatchId=${teamMatchId}">경기
-				상세로</a>
 		</div>
 	</div>
 </main>

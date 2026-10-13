@@ -4,8 +4,14 @@ import java.util.List;
 
 import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
+import dao.TeamSettlementDao;
+import dao.TeamSettlementDaoImpl;
+import dao.UserDao;
+import dao.UserDaoImpl;
 import dto.Notification;
 import dto.TeamMatch;
+import dto.TeamSettlement;
+import dto.User;
 import service.notification.NotificationService;
 import service.notification.NotificationServiceImpl;
 import service.payment.PaymentService;
@@ -16,6 +22,8 @@ public class TeamMatchJob {
     private TeamMatchDao teamMatchDao = new TeamMatchDaoImpl();
     private NotificationService alarmService = new NotificationServiceImpl();
     private PaymentService paymentService = new PaymentServiceImpl();
+    private TeamSettlementDao teamSettlementDao = new TeamSettlementDaoImpl();
+    private UserDao userDao = new UserDaoImpl();
     
     public void run() { // MatchScheduler가 부르는 유일한 공개 메서드
         try {
@@ -30,6 +38,12 @@ public class TeamMatchJob {
             System.err.println("[TeamMatchJob] finishMatches 실패");
             e.printStackTrace();
         }
+    	try {
+    		fillMissingSettlements();
+    	} catch (Exception e) {
+    		System.err.println("[TeamMatchJob] fillMissingSettlements 실패");
+    		e.printStackTrace();
+    	}
     }
 
     private void cancelNoOpponent() throws Exception { // 마감 지남 + 상대 없음 → 경기취소
@@ -58,6 +72,8 @@ public class TeamMatchJob {
     		try {
     			int updated = teamMatchDao.updateStatusToFinished(t.getTeamMatchId());   // updateStatusToFinished
     			if (updated == 1) {
+    				createHostSettlement(t);
+    				
     				String title = "'" + t.getTitle() + "' 경기가 종료되었습니다.";
     				String content = "출석체크 확인 및 경기 매너 평가를 부탁드립니다.";
     				String link = "/team-match/detail/view?teamMatchId=" + t.getTeamMatchId();
@@ -85,5 +101,27 @@ public class TeamMatchJob {
             System.err.println("[TeamMatchJob] 알림 전송 실패 userId=" + userId + ", link=" + link);
             e.printStackTrace();
         }
+    }
+    
+    private void createHostSettlement(TeamMatch t) {
+    	try {
+    		User host = userDao.selectUserByUserId(t.getUserId());  // 교체: 호스트 조회
+    		TeamSettlement s = new TeamSettlement();
+    		s.setUserId(t.getUserId());                          // 교체: 호스트 getter
+    		s.setTeamMatchId(t.getTeamMatchId());
+    		s.setAccountNumber(host.getAccountNumber());         // 교체: 계좌 getter, 없으면 null
+    		s.setBankName(host.getBankName());
+    		s.setAmount(t.getParticipationFee()*2);                // 임시: 금액 정책 확정 필요
+    		teamSettlementDao.insertTeamSettlement(s);
+    	} catch (Exception e) {
+    		System.err.println("[TeamMatchJob] 정산 생성 실패 teamMatchId=" + t.getTeamMatchId());
+    		e.printStackTrace();   // 정산이 실패해도 알림 발송은 계속
+    	}
+    }
+    
+    private void fillMissingSettlements() throws Exception {
+    	for (TeamMatch t : teamMatchDao.selectFinishedWithoutSettlement()) {
+    		createHostSettlement(t);
+    	}
     }
 }

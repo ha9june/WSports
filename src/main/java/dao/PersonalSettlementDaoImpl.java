@@ -123,4 +123,40 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 		
 	}
 
+	// 마이페이지 개인 경기 정산 리스트
+	@Override
+	public List<Map<String, Object>> selectMypagePersonalSettlementList(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalsettlement.selectMyPagePersonalSettlementList", param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;	
+		}
+	}
+
+	// 마이페이지 개인 경기 정산 리스트 페이징
+	@Override
+	public Integer selectMyPagePersonalSettlementCnt(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalsettlement.selectMyPagePersonalSettlementCnt", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+
+	// 마이페이지 개인 경기 정산 리스트 총내역 조회
+	@Override
+	public Map<String, Object> selectMyPagePersonalSettlementSummary(Long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		     return sqlSession.selectOne("mapper.personalsettlement.selectMyPagePersonalSettlementSummary", userId);
+		}
+	}
+
+	// 마이페이지 개인 경기 정산 리스트 탭별 건수 조회
+	@Override
+	public Map<String, Object> selectMyPagePersonalSettlementTabCnt(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		     return sqlSession.selectOne("mapper.personalsettlement.selectMyPagePersonalSettlementTabCnt", param);
+		}
+	}
 }
