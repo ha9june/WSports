@@ -343,7 +343,7 @@ $('#thumbs').on('click', '.subImg', function() {
 									</p>
 								<div class="actions">
 									<a class="btn btn-primary"
-										href="${ctx}/team-match/result?teamMatchId=${t.teamMatchId}">출석 체크</a>
+										href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">출석 체크</a>
 									<a class="btn btn-outline"
 										href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가 팀 확인</a>
 								</div>
@@ -390,7 +390,7 @@ $('#thumbs').on('click', '.subImg', function() {
 									<a class="btn btn-primary"
 										href="${ctx}/jsp/review/reviewWrite.jsp?state=clubMatch">후기
 										작성</a> <a class="btn btn-primary"
-										href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">참가 팀 평가</a>
+										href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">출석 확인 및 참가 팀 평가</a>
 								</div>
 							</c:if>
 						</div>
