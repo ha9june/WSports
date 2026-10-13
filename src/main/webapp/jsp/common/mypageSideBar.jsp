@@ -95,7 +95,7 @@
 					class="${sideMenu eq 'support' ? 'is-active' : ''}">신고・문의사항</a>
 			</nav>
 		</div>
-		<div class="group">
+		<div class="group"> 
 			<p class="group-title">정산・결제</p>
 			<nav class="menu">
 				<a href="${ctx}/settlement/personal/list"
