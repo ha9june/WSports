@@ -107,6 +107,8 @@ public class PersonalMatchJob {
     					notifyUser(uid, title, content, link);
     				}
     				
+    				
+    				//개인경기 정산 내역 인서트
                     PersonalSettlement ps = new PersonalSettlement();
                     ps.setUserId(p.getUserId());
                     ps.setPersonalMatchId(p.getPersonalMatchId());
