@@ -407,6 +407,17 @@ window.addEventListener("fcmMessageReceived", function(e) {
 							</c:otherwise>
 						</c:choose>
 						<a class="header-profile" href="${ctx}/member/mypage/view"
+							title="마이페이지">
+							<c:choose>
+  								<c:when test="${not empty sessionScope.user.profileImage }">
+  									<img src="${ctx}${profilePath}/${sessionScope.user.profileImage}"
+  									alt="프로필 사진">
+								</c:when>
+								<c:otherwise>
+									<img src="${ctx }/img/profile-default.png"
+									alt="기본 프로필 사진">
+								</c:otherwise>
+							</c:choose>
 							title="마이페이지"> <img src="${headerProfileImg}" alt="내 프로필"
 							style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
 						</a>

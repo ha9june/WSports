@@ -42,6 +42,7 @@
 	  </a>
     </c:forEach>
     </div>
+    	<c:if test="${not empty noticeList }">
 		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">
 			<a href="${pageInfo.curPage > 1 ? ctx += '/support/notice/list?type=' += type += '&page=' += (pageInfo.curPage - 1) += '&keyword=' += keyword : '#'}">&lt;</a>
 			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" var="page">
@@ -49,6 +50,7 @@
 			</c:forEach>
 			<a href="${pageInfo.curPage < pageInfo.allPage ? ctx += '/support/notice/list?type=' += type +=  '&page=' += (pageInfo.curPage + 1) += '&keyword=' += keyword : '#'}">&gt;</a>
 		</nav>
+		</c:if>
 	</div>
 </main>
 <c:if test="${sessionScope.user.grade eq 'Admin'}">

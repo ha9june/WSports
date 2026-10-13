@@ -21,6 +21,16 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
+	public User selectLoginUser(String loginId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectLoginUser", loginId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Override
 	public User selectNickname(String nickname) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.user.selectNickname", nickname);
@@ -90,6 +100,38 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 	
+	@Override
+	public boolean withdraw(Long userId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.user.withdraw", userId);
+			sqlSession.commit();
+			return cnt > 0;
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	@Override
+	public boolean passwordChange(Map<String, Object> param) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.user.passwordChange", param);
+			sqlSession.commit();
+			return cnt > 0;
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
 	// 공개프로필
 	@Override
 	public Map<String, Object> publicProfile(Map<String, Object> param) throws Exception {
@@ -121,6 +163,30 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 
+	// 마이페이지 결제 내역 페이징
+	@Override
+	public Long selectHistoryCount(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectHistoryCount", param);
+		}
+	}
+	
+	// 마이페이지 결제 내역 리스트
+	@Override
+	public List<Map<String, Object>> selectHistoryList(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.user.selectHistoryList", param);
+		}
+	}
+	
+	// 마이페이지 결제 내역 탭수
+	@Override
+	public Map<String, Object> selectHistorySummary(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectHistorySummary", param);
+		}
+	}
+			
 	@Override
 	public User selectUserByUserId(Long userId) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -128,6 +194,7 @@ public class UserDaoImpl implements UserDao {
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw e;
+
 		}
 	}
 }

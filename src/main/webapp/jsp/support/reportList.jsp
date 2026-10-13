@@ -42,6 +42,7 @@
       <p class="meta" style="text-align:center;padding:40px 0">신고 내역이 없습니다.</p>
     </c:if>
   </div>
+  		<c:if test="${not empty reportList }">
 		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">
 			<a href="${pageInfo.curPage > 1 ? ctx += '/support/report/list?status=' += status += '&page=' += (pageInfo.curPage - 1) : '#'}">&lt;</a>
 			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" var="page">
@@ -49,6 +50,7 @@
 			</c:forEach>
 			<a href="${pageInfo.curPage < pageInfo.allPage ? ctx += '/support/report/list?status=' += status +=  '&page=' += (pageInfo.curPage + 1) : '#'}">&gt;</a>
 		</nav>
+		</c:if>
 </div>
 </main></div>
 <a class="fab" href="${ctx}/support/report/create"><span class="fab-label">신고 접수</span><span class="fab-btn" aria-hidden="true"></span></a>

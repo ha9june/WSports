@@ -17,6 +17,9 @@
 .pf-list dt { color: var(--ds-text-2); font-size: 11px; }
 .pf-list dd { font-weight: 500; }
 .pf-list dd.brand { color: var(--ds-brand); }
+.work .picked { display: flex; flex-wrap: wrap; gap: 8px; }
+.work .picked:empty { display: none; }
+.work .region-max { margin: 0; font-size: 12px; color: #e5484d; }
 
 /* 활동 목록 + 달력 */
 .act-layout { display: grid; grid-template-columns: 1fr 330px; gap: 22px; align-items: start; }

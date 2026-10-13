@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public User loginCheck(String loginId, String password) throws Exception {
-		User user = userDao.selectLoginId(loginId);
+		User user = userDao.selectLoginUser(loginId);
 	    if (user == null) {
 	        return null;               // 아이디 없음
 	    }

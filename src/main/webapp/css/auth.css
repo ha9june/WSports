@@ -13,6 +13,9 @@
 .join-wrap .form-grid { gap: 18px 20px; }
 .join-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; }
 .region-pop { margin-top: 8px; padding: 14px; border: 1px solid var(--ds-border); border-radius: var(--r-8); box-shadow: var(--shadow-pop); background: #fff; }
+.join-wrap .picked { display: flex; flex-wrap: wrap; gap: 8px; }
+.join-wrap .picked:empty { display: none; }
+.join-wrap .region-max { margin: 0; font-size: 12px; color: #e5484d; }
 
 /* 공개 프로필 */
 .profile-top { display: flex; gap: 22px; align-items: center; margin-bottom: 36px; }

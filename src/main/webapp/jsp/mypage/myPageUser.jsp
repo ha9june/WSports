@@ -11,6 +11,61 @@
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+$(function () {
+	var $form = $("#pwChangeForm");
+	var $msg = $("#pwMessage");
+
+	$('[data-modal-open="pwModal"]').on("click", function () {
+		$form[0].reset();
+		$msg.text("");
+	});
+	
+	$form.on("submit", function (e) {
+		e.preventDefault();
+
+		var oldPassword = $("#oldPassword").val();
+		var newPassword = $("#newPassword").val();
+		var newPassword2 = $("#newPassword2").val();
+		$msg.text("");
+
+		if (newPassword !== newPassword2) {
+			$msg.text("새 비밀번호가 일치하지 않아요.");
+			$("#newPassword2").focus();
+			return;
+		}
+
+		$.ajax({
+			url: "${ctx}/member/password/change",
+			type: "POST",
+			data: {
+				oldPassword: oldPassword,
+				newPassword: newPassword,
+				newPassword2: newPassword2
+			},
+			success: function (result) {
+				result = $.trim(result);
+				if (result === "true") {
+					$form[0].reset();
+					$("#pwModal [data-modal-close]").first().click();
+					showToast("비밀번호를 변경했어요.");
+				} else if (result === "false") {
+					$msg.text("현재 비밀번호가 올바르지 않아요.");
+					$("#oldPassword").focus();
+				} else if (result === "mismatch") {
+					$msg.text("새 비밀번호가 일치하지 않아요.");
+				} else {
+					$msg.text("비밀번호 변경에 실패했어요.");
+				}
+			},
+			error: function () {
+				$msg.text("요청 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.");
+			}
+		});
+	});
+});
+</script>
 <form class="work-inner" action="${ctx}/member/mypage/view" method="post" style="padding-left:24px">
   <h1 class="section-title">회원정보</h1>
   <p class="section-desc">회원정보와 정산 계좌를 확인할 수 있습니다.</p>
@@ -48,12 +103,24 @@
 <div class="modal" id="pwModal" role="dialog" aria-modal="true">
   <div class="modal-card md">
     <h2 class="modal-title">비밀번호 변경</h2>
+    <form id="pwChangeForm" action="${ctx}/member/password/change" method="post">
     <div class="modal-body">
-      <div class="field"><label class="field-label">현재 비밀번호</label><input class="input" type="password"></div>
-      <div class="field mt-16"><label class="field-label">새 비밀번호</label><input class="input" type="password" placeholder="8자 이상"></div>
-      <div class="field mt-16"><label class="field-label">새 비밀번호 확인</label><input class="input" type="password"></div>
+      <div class="field">
+      <label class="field-label" for="oldPassword">현재 비밀번호</label>
+      <input class="input" name="oldPassword" id="oldPassword" type="password" required>
+      </div>
+      <div class="field mt-16">
+      <label class="field-label" for="newPassword">새 비밀번호</label>
+      <input class="input" name="newPassword" id="newPassword" type="password" placeholder="8자 이상" required>
+      </div>
+      <div class="field mt-16">
+      <label class="field-label" for="newPassword2">새 비밀번호 확인</label>
+      <input class="input" name="newPassword2" id="newPassword2" type="password" required>
+      </div>
+      <p id="pwMessage" class="t-12 mt-16" style="color:#d32f2f"></p>
     </div>
-    <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>취소</button><button type="button" class="btn btn-primary" data-toast="비밀번호를 변경했어요.">변경</button></div>
+    <div class="modal-actions"><button type="button" class="btn btn-outline" data-modal-close>취소</button><button type="submit" id="pwChange" class="btn btn-primary">변경</button></div>
+    </form>
   </div>
 </div>
 <div class="modal" id="withdrawModal" role="dialog" aria-modal="true">
@@ -61,11 +128,19 @@
     <h2 class="modal-title">정말 탈퇴할까요?</h2>
     <p class="modal-desc">탈퇴하면 참가·작성한 경기와 팀 정보를 더 이상 확인할 수 없습니다. 정산 대기 금액이 있으면 탈퇴할 수 없어요.</p>
     <form action="${ctx}/member/withdraw" method="post">
+    	<input type="hidden" name="returnUrl" value="/member/mypage/view">
     	<div class="modal-actions">
     		<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
-    		<button type="button" class="btn btn-danger">탈퇴</button>
+    		<button type="submit" class="btn btn-danger">탈퇴</button>
     	</div>
     </form>
   </div>
 </div>
+<c:if test="${param.withdraw eq 'fail'}">
+<script>
+window.addEventListener('load', function () {
+  showToast('정산이 완료된 후에 탈퇴 가능합니다.');
+});
+</script>
+</c:if>
 <%@ include file="/jsp/common/footer.jsp" %>
