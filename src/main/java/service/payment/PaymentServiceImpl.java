@@ -623,4 +623,51 @@ public class PaymentServiceImpl implements PaymentService {
 		
 		return null;
 	}
+	
+	@Override
+	public boolean allRefundPersonalMatch(Long matchId, String title, String secretKey) throws Exception {
+		List<Map<String, Object>> targets = personalPaymentDao.selectPaidPaymentsByMatch(matchId);
+		String reason = "관리자 또는 호스트 취소";
+		boolean allSuccess = true;
+
+		for (Map<String, Object> target : targets) {
+			try {
+				String paymentKey = (String) target.get("payment_key");
+
+				//토스 결제 취소 (성공해야 다음 단계 진행)
+				JSONObject result = cancelPayment(paymentKey, reason, secretKey);
+				JSONArray cancels = result.getJSONArray("cancels");
+				JSONObject cancel = cancels.getJSONObject(cancels.length() - 1);
+				int cancelAmount = cancel.getInt("cancelAmount");
+
+				//결제 취소 + 참가 취소
+				Map<String, Object> param = new HashMap<>();
+				param.put("paymentId", ((Number) target.get("payment_id")).longValue());
+				param.put("canceledAt", OffsetDateTime.parse(cancel.getString("canceledAt")).toLocalDateTime());
+				param.put("cancelReason", cancel.optString("cancelReason", reason));
+				param.put("cancelAmount", cancelAmount);
+				personalPaymentDao.updateRefund(param);
+
+				//환불 알림 (실패해도 환불은 유지)
+				try {
+					Notification alarm = new Notification();
+					alarm.setUserId(((Number) target.get("user_id")).longValue());
+					alarm.setTitle("참가비 환불 완료");
+					alarm.setContent("'" + title + "' 경기가 관리자 또는 호스트에 의해 취소되어 결제하신 "
+							+ String.format("%,d", cancelAmount) + "원이 환불되었습니다.");
+					alarm.setLink("/match/detail/view?personalMatchId=" + matchId);
+					notificationService.sendNotification(alarm);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} catch (Exception e) {
+				//한 명 실패해도 나머지 참가자는 계속 환불
+				e.printStackTrace();
+				allSuccess = false;
+			}
+		}
+		return allSuccess;
+	}
+
+
 }

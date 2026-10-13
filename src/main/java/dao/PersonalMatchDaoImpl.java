@@ -17,6 +17,13 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			return sqlSession.selectList("mapper.personalmatch.selectNowPersonalMatchList", searchInfo);
 		}
 	}
+	@Override
+	public List<PersonalMatch> selectLatestPersonalMatchList(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatch.selectLatestPersonalMatchList", param);
+		}
+	}
+	
 
 	@Override
 	public List<PersonalMatch> selectNormalPersonalMatchList(MatchSearchInfo searchInfo) throws Exception {
@@ -226,6 +233,36 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			sqlSession.close();
 		}
 	}
+	@Override
+	public int updateStatusCancelOfHost(Long personalMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.personalmatch.updateStatusCancelOfHost", personalMatchId);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+	@Override
+	public int updateStatusDeleteOfAdmin(Long personalMatchId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.update("mapper.personalmatch.updateStatusDeleteOfAdmin", personalMatchId);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	
 
 
 

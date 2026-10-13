@@ -26,9 +26,7 @@ public interface PersonalMatchService {
 	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String month,String status,String sport)throws Exception;
 		
 	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
-	//일반 매치 가져오기
-	List<PersonalMatch> getNormalMatch(MatchSearchInfo searchInfo) throws Exception;
-	List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception;
+	
 	List<String>getMyPageCreatedPersonalMatchDates(Long userId, String status, String sport)throws Exception;
 	List<String>getMyPagePersonalMatchDates(Long userId, String status, String sport)throws Exception;
 	List<Map<String, Object>> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String status,
@@ -50,5 +48,11 @@ public interface PersonalMatchService {
 	
 	//매치글 상태 없데이트(취소,삭제 관련)
 	Long updateStatue(PersonalMatch personalMatch) throws Exception;
+	
+	
+	
+	//호스트 취소, 관리자 삭제
+	int updateStatusCancelOfHost(Long personalMatchId) throws Exception;
+	int updateStatusDeleteOfAdmin(Long personalMatchId) throws Exception;
 	
 }

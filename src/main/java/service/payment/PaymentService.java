@@ -35,7 +35,7 @@ public interface PaymentService {
 	List<Map<String, Object>> MypagePaymentList(PageInfo pageInfo, String keyword, Long userId, String status, String type, String period) throws Exception;
 	Map<String, Object> MypagePaymentSummary(String keyword, Long userId, String status, String type, String period) throws Exception;
 
-	//개인 경기 환불
+	//개인 경기 환불 (한명?)
 	void refundPersonalPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
 	//모집 기간 내 상대 팀이 없을 때 모집 팀 결제 자동 환불 (스케줄러 용)
 	boolean autoRefundHostTeamPayment(Long matchId, String secretKey) throws Exception;
@@ -46,6 +46,10 @@ public interface PaymentService {
 	//팀 경기 결제 취소 : 주최팀 모집자 본인 + 상대 팀 결제 전 + 모집 마감 전
 	void refundTeamPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
 	
+	
 	String getPaymentKey(Long userId,Long matchId,String matchType) throws Exception;
 
+	boolean allRefundPersonalMatch(Long matchId, String title, String secretKey) throws Exception;
+
+	
 }
