@@ -148,7 +148,7 @@
             </c:otherwise>
           </c:choose>
         </a>
-      </c:forEach>
+      </c:forEach> 
     </div>
 
     <%-- <div class="form-actions"><a class="btn btn-primary btn-sm" href="${ctx}/jsp/mypage/myPagePersonalMatch.jsp">마이페이지 내 경기로</a></div> --%>
