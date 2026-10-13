@@ -382,17 +382,25 @@ $('#thumbs').on('click', '.subImg', function() {
 
 					<%-- 경기 종료 --%>
 					<c:when test="${status eq '경기 종료'}">
-						<div class="side-card done">
+						<div class="side-card">
 							<h2>경기가 종료되었습니다</h2>
-							<c:if test="${isHost or applied}">
-								<p class="sub">우리 팀과 상대 팀의 경기 매너를 팀 단위로 평가해주세요.</p>
-								<div class="actions">
-									<a class="btn btn-primary"
-										href="${ctx}/jsp/review/reviewWrite.jsp?state=clubMatch">후기
-										작성</a> <a class="btn btn-primary"
-										href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">출석 확인 및 참가 팀 평가</a>
-								</div>
-							</c:if>
+							<c:choose>
+								<c:when test="${isHost or applied}">
+									<p class="sub">우리 팀과 상대 팀의 경기 매너를 팀 단위로 평가해주세요.</p>
+									<div class="actions">
+										<a class="btn btn-primary"
+											href="${ctx}/jsp/review/reviewWrite.jsp?state=clubMatch">후기 작성</a>
+										<a class="btn btn-outline"
+											href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">참가 팀 평가</a>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<p class="sub">이미 끝난 경기예요. 다른 경기를 찾아보세요.</p>
+									<div class="actions">
+										<a class="btn btn-primary" href="${ctx}/team-match/list">상대팀 찾기</a>
+									</div>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</c:when>
 

@@ -8,7 +8,6 @@
   sideScore = sideMe.get("score");
   pageContext.setAttribute("myScore", sideScore);
 %>
-<%@ page pageEncoding="UTF-8"%>
 <%--
   마이페이지 사이드바 (워크스페이스 시작 태그 포함)
    - sideMenu : user | profile | personalMatch | createdMatch | heartMatch | myTeam | teamMatch
@@ -40,42 +39,21 @@
 <div class="workspace">
   <aside class="side" aria-label="마이페이지 메뉴">
     <a class="me" href="${ctx}/member/publicProfile/view?userId=${user.userId}">
-      <span class="avatar sm ${empty user.profileImage? 'default' : ''}">
-        <c:if test="${not empty user.profileImage}">
-          <img class="avatar sm" src="${ctx}${profilePath}/${user.profileImage}" alt="프로필 사진">
-        </c:if>
-      </span>
+	<span class="avatar sm">
+		<c:choose>
+			<c:when test="${not empty user.profileImage}">
+				<img src="${ctx}${profilePath}/<c:out value='${user.profileImage}' />" alt="프로필 사진"
+					onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+					style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+			</c:when>
+			<c:otherwise>
+				<img src="${ctx}/img/default-profile.svg" alt="기본 프로필"
+					style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+			</c:otherwise>
+		</c:choose>
+	</span>
       <span><strong><c:out value="${user.nickname}" /></strong><small>내 평점 ★ ${empty myScore ? '-' : myScore}</small></span>
     </a>
-	<aside class="side" aria-label="마이페이지 메뉴">
-		<a class="me" href="${ctx}/jsp/mypage/myPageProfile.jsp">
-			<span class="avatar sm">
-				<c:choose>
-					<c:when test="${not empty sessionScope.user.profileImage}">
-						<img src="${ctx}/profiles/<c:out value='${sessionScope.user.profileImage}' />"
-							alt=""
-							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-					</c:when>
-					<c:otherwise>
-						<img src="${ctx}/img/default-profile.svg" alt=""
-							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-					</c:otherwise>
-				</c:choose>
-				</span> 
-				<span><strong>${sessionScope.user.nickname}</strong>
-					<small>내 평점
-						<c:choose>
-							<c:when test="${not empty myRatingSummary.avgScore}">
-								★ <fmt:formatNumber value="${myRatingSummary.avgScore}" pattern="0.0" />
-								(${myRatingSummary.ratingCount})
-							</c:when>
-							<c:otherwise>평가 없음</c:otherwise>
-						</c:choose>
-					</small>
-				</span>
-		</a>
-
 		<div class="group">
 			<p class="group-title">계정</p>
 			<nav class="menu">
