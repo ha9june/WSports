@@ -202,6 +202,17 @@
 			// 클릭한 사진 선택 표시
 			$(this).css('border', '2px solid #1677ff');
 		});
+		
+		var deleteForm = document.getElementById('teamDeleteForm');
+		if (deleteForm) {
+			deleteForm.addEventListener('submit', function(e) {
+				var r = document.getElementById('deleteReason');
+				if (r && !r.value.trim()) {
+					e.preventDefault();
+					showToast('삭제 사유를 입력해 주세요.');
+				}
+			});
+		}
 
 	});
 </script>
@@ -243,6 +254,10 @@
 					<dd>${team.ages }</dd>
 					<dt>실력</dt>
 					<dd>${team.skill }</dd>
+					<dt>활동 요일</dt>
+					<dd>${team.days }</dd>
+					<dt>활동 시간대</dt>
+					<dd>${team.times }</dd>
 					<dt>활동 지역</dt>
 					<dd>${team.regions }</dd>
 				</dl>
@@ -271,8 +286,8 @@
 						   <a class="btn btn-join btn-block" href="${applyUrl}" data-auth>가입 신청하기</a>
 					</c:otherwise>
 				</c:choose>
-				<c:if test="${sessionScope.user.grade eq 'Admin'}">
-					<button type="button" class="btn btn-danger btn-block btn-sm"
+				<c:if test="${sessionScope.user.grade eq 'Admin' or isCaptain}">
+					<button type="button" class="btn btn-outline btn-danger-soft btn-block btn-sm"
 						data-modal-open="teamDeleteModal">팀 삭제</button>
 				</c:if>
 			</aside>
@@ -358,7 +373,13 @@
 							<a class="post-card" href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
 								<p class="ttl" style="margin: 0">
 									<c:out value="${match.title }"></c:out> 
-									<span class="pill pill-success"><c:out value="${match.status }"></c:out></span>
+									<c:choose>
+										<c:when test="${match.status eq '모집중'}"><c:set var="stCls" value="pill-success" /></c:when>
+										<c:when test="${match.status eq '모집 마감' or match.status eq '경기 종료'}"><c:set var="stCls" value="pill-info" /></c:when>
+										<c:when test="${match.status eq '경기 취소'}"><c:set var="stCls" value="pill-danger" /></c:when>
+										<c:otherwise><c:set var="stCls" value="pill-neutral" /></c:otherwise>
+									</c:choose>
+									<span class="pill ${stCls}"><c:out value="${match.status}" /></span>
 								</p>
 									<p><c:out value="${match.matchDate }"></c:out> 
 									(${match.dayOfWeekKorean}) 
@@ -429,15 +450,26 @@
 		</c:choose>
 	</div>
 </main>
-  <c:if test="${sessionScope.user.grade eq 'Admin'}">
+<c:if test="${sessionScope.user.grade eq 'Admin' or isCaptain}">
 	<div class="modal" id="teamDeleteModal" role="dialog" aria-modal="true">
 		<div class="modal-card sm">
 			<h2 class="modal-title">팀을 삭제할까요?</h2>
-			<p class="modal-desc">팀과 팀 작성글이 모두 삭제되며 복구할 수 없습니다.</p>
-			<div class="modal-actions">
-				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
-				<button type="button" class="btn btn-danger" data-toast="팀을 삭제했어요.">삭제</button>
-			</div>
+			<p class="modal-desc">팀이 삭제되고 모든 팀원이 탈퇴 처리돼요. 복구할 수 없고, 진행 중인 경기가 있으면 삭제할 수 없어요.</p>
+			<form action="${ctx}/team/delete" method="post" id="teamDeleteForm">
+				<input type="hidden" name="teamId" value="${team.teamId}">
+				<c:if test="${sessionScope.user.grade eq 'Admin'}">
+					<div class="field">
+						<label class="field-label strong" for="deleteReason">삭제 사유
+							<span class="hint">팀원 전체에게 전달돼요</span></label>
+						<textarea class="textarea" id="deleteReason" name="reason" rows="3"
+							maxlength="100" placeholder="예: 운영 정책에 맞지 않는 팀 소개"></textarea>
+					</div>
+				</c:if>
+				<div class="modal-actions">
+					<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+					<button type="submit" class="btn btn-danger">삭제</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </c:if>

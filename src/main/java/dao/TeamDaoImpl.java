@@ -137,4 +137,34 @@ public class TeamDaoImpl implements TeamDao {
 		}
 	}
 
+	@Override
+	public int deleteTeamWithMembers(Long teamId, String reason) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			Map<String, Object> p = new HashMap<>();
+			p.put("teamId", teamId);
+			p.put("reason", reason);
+			int n = sqlSession.update("mapper.team.updateTeamToDelete", p);
+			if (n == 0) { sqlSession.rollback(); return 0; }
+			sqlSession.update("mapper.team.updateAllMembersWithdrawn", teamId);
+			sqlSession.commit();	
+			return n;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	@Override
+	public List<Long> selectActiveMemberUserIds(Long teamId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.team.selectActiveMemberUserIds", teamId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 }
