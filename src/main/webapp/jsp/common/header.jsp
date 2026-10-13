@@ -397,15 +397,6 @@ window.addEventListener("fcmMessageReceived", function(e) {
 							<!-- 알람 숫자 카운트 -->
 							<span id="bellBadge" class="badge">0</span>
 						</button>
-						<c:choose>
-							<c:when test="${not empty sessionScope.user.profileImage}">
-								<c:set var="headerProfileImg" value="${ctx}/profiles/${sessionScope.user.profileImage}" />
-							</c:when>
-							<c:otherwise>
-								<c:set var="headerProfileImg"
-									value="${ctx}/img/default-profile.svg" />
-							</c:otherwise>
-						</c:choose>
 						<a class="header-profile" href="${ctx}/member/mypage/view"
 							title="마이페이지">
 							<c:choose>
@@ -414,7 +405,7 @@ window.addEventListener("fcmMessageReceived", function(e) {
   									alt="프로필 사진">
 								</c:when>
 								<c:otherwise>
-									<img src="${ctx }/img/profile-default.png"
+									<img src="${ctx }/img/default-profile.svg"
 									alt="기본 프로필 사진">
 								</c:otherwise>
 							</c:choose>
