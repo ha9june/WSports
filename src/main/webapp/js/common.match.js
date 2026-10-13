@@ -1,4 +1,6 @@
 $(function () {
+	
+	
 	//사진 등록하기
 	  var input = document.querySelector('input[name="photos"]');
 	  var box = input.closest('.photo-upload');

@@ -71,8 +71,8 @@ public class AdminPersonSettlement extends HttpServlet {
 			request.getRequestDispatcher("/jsp/admin/adminPersonSettlement.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "정산관리 목록 조회 오류");
-			request.getRequestDispatcher("/jsp/admin/adminTeamSettlement.jsp").forward(request, response);
+			request.setAttribute("error", "개인 경기 정산관리 목록 조회 오류");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 	}
 

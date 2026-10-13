@@ -207,6 +207,13 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 	object-fit: cover !important; /* 사진이 고정 높이에서 찌그러지지 않게 방지 */
 	border-radius: 4px; /* 사진 모서리를 약간 둥글게 (선택사항) */
 }
+.host-inline a,
+.host-inline a strong {
+	color: #111827 !important;
+}
+.host-inline a:hover strong {
+  text-decoration: underline;
+  }
 </style>
 <main class="page">
 	<div class="rail">
@@ -236,12 +243,15 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 								style="object-fit: cover;" alt="프로필">
 						</c:when>
 						<c:otherwise>
-							<span class="avatar default"></span>
+							<img class="cmt-avatar"
+								src="${ctx}/profiles/<c:out value='${cm.profileImage}' />"
+								alt="프로필"
+								onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
 						</c:otherwise>
 					</c:choose>
 				<div>
 					<a
-						href="${ctx}/jsp/member/userProfileInfo.jsp?userId=${review.userId}"><strong>${review.nickname}</strong></a>
+						href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong>${review.nickname}</strong></a>
 					<small>작성자 · ${review.createdAtStr}</small>
 				</div>
 			</div>
@@ -297,7 +307,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 						</c:when>
 						<c:otherwise>
 							<a class="btn btn-outline btn-sm"
-								href="${ctx}/jsp/support/reportWrite.jsp?targetType=review&targetNo=${review.reviewId}"
+								href="${ctx}/support/report/create?targetType=review&targetNo=${review.reviewId}"
 								data-auth>신고</a>
 						</c:otherwise>
 					</c:choose>
@@ -318,7 +328,10 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 										src="${ctx}/profiles/${cm.profileImage}" alt="프로필">
 								</c:when>
 								<c:otherwise>
-									<span class="cmt-avatar cmt-avatar-default"></span>
+									<img class="cmt-avatar"
+										src="${ctx}/profiles/<c:out value='${cm.profileImage}' />"
+										alt="프로필"
+										onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
 								</c:otherwise>
 							</c:choose>
 
@@ -329,7 +342,9 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 										<span class="cmt-writer">작성자</span>
 									</c:if>
 								</div>
-								<p class="cmt-text"><c:out value="${cm.content}" /></p>
+								<p class="cmt-text">
+									<c:out value="${cm.content}" />
+								</p>
 							</div>
 
 							<div class="cmt-side">

@@ -163,6 +163,15 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 
+	@Override
+	public User selectUserAccountInfo(Long userId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectUserAccountInfo", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 	// 마이페이지 결제 내역 페이징
 	@Override
 	public Long selectHistoryCount(Map<String, Object> param) throws Exception {

@@ -10,6 +10,7 @@
   t.status : 모집중 | 모집 마감 | 경기 종료 | 인원 미달 경기 취소 | 작성자 경기 취소
 --%>
 <c:set var="status" value="${t.status}" />
+<c:set var="status" value="${경기 취소}" />
 <c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
 <c:set var="pageTitle" value="팀 경기 상세" />
 <c:set var="pageCss" value="match,team" />

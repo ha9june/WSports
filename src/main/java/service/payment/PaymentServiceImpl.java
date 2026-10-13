@@ -23,6 +23,8 @@ import org.json.JSONObject;
 
 import dao.PersonalPaymentDao;
 import dao.PersonalPaymentDaoImpl;
+import dao.PersonalSettlementDao;
+import dao.PersonalSettlementDaoImpl;
 import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
 import dao.TeamPaymentDao;
@@ -32,6 +34,7 @@ import dao.UserDaoImpl;
 import dto.Notification;
 import dto.PersonalMatch;
 import dto.PersonalPayment;
+import dto.PersonalSettlement;
 import dto.TeamMatch;
 import dto.TeamPayment;
 import util.PageInfo;
@@ -47,13 +50,15 @@ public class PaymentServiceImpl implements PaymentService {
 	private UserDao userDao;	
 	
 	private NotificationService notificationService;
-
+	private PersonalSettlementDao personalSettlementDao;
+	
 	public PaymentServiceImpl() {
 		this.personalPaymentDao = new PersonalPaymentDaoImpl();
 		this.teamPaymentDao = new TeamPaymentDaoImpl();
 		// 마이페이지 결제 내역 생성
 		this.userDao = new UserDaoImpl();		
 		this.notificationService = new NotificationServiceImpl();
+		this.personalSettlementDao = new PersonalSettlementDaoImpl();
 	}
 	
 	// 마이페이지 결제 내역
@@ -538,6 +543,11 @@ public class PaymentServiceImpl implements PaymentService {
 			}
 		}
 		return allSuccess;
+	}
+
+	@Override
+	public Long putPersonalSettlement(PersonalSettlement ps) throws Exception {
+		return personalSettlementDao.insertPersonalSettlement(ps);
 	}
 	//팀 경기 결제 취소 : 주최팀 모집자 본인 + 상대 팀 결제 전 + 모집 마감 전
 	@Override

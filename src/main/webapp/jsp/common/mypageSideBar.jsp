@@ -1,13 +1,19 @@
-<%@ page pageEncoding="UTF-8" %>
-<%@ page import="java.util.Map, dto.User, service.member.MemberService, service.member.MemberServiceImpl" %>
+<%@ page pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page
+	import="java.util.Map, dto.User, service.member.MemberService, service.member.MemberServiceImpl"%>
 <%
-  // 사이드바 상단 뱃지용 내 평점
-  Object sideScore = null;
-  User sideUser = (User) session.getAttribute("user");
-  Map<String, Object> sideMe = new MemberServiceImpl().publicProfile(sideUser.getUserId());
-  sideScore = sideMe.get("score");
-  pageContext.setAttribute("myScore", sideScore);
+// 사이드바 상단 뱃지용 내 평점 (로그인 정보가 없으면 건너뜀)
+User sideUser = (User) session.getAttribute("user");
+if (sideUser != null) {
+	Map<String, Object> sideMe = new MemberServiceImpl().publicProfile(sideUser.getUserId());
+	if (sideMe != null) {
+		pageContext.setAttribute("myScore", sideMe.get("score"));
+	}
+}
 %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%--
   마이페이지 사이드바 (워크스페이스 시작 태그 포함)
    - sideMenu : user | profile | personalMatch | createdMatch | heartMatch | myTeam | teamMatch
@@ -37,23 +43,27 @@
 }
 </style>
 <div class="workspace">
-  <aside class="side" aria-label="마이페이지 메뉴">
-    <a class="me" href="${ctx}/member/publicProfile/view?userId=${user.userId}">
-	<span class="avatar sm">
-		<c:choose>
-			<c:when test="${not empty user.profileImage}">
-				<img src="${ctx}${profilePath}/<c:out value='${user.profileImage}' />" alt="프로필 사진"
-					onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-					style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-			</c:when>
-			<c:otherwise>
-				<img src="${ctx}/img/default-profile.svg" alt="기본 프로필"
-					style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-			</c:otherwise>
-		</c:choose>
-	</span>
-      <span><strong><c:out value="${user.nickname}" /></strong><small>내 평점 ★ ${empty myScore ? '-' : myScore}</small></span>
-    </a>
+	<aside class="side" aria-label="마이페이지 메뉴">
+		<a class="me"
+			href="${ctx}/member/publicProfile/view?userId=${sessionScope.user.userId}">
+			<span class="avatar sm"> <c:choose>
+					<c:when test="${not empty sessionScope.user.profileImage}">
+						<img
+							src="${ctx}/profiles/<c:out value='${sessionScope.user.profileImage}' />"
+							alt="프로필 사진"
+							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+							style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+					</c:when>
+					<c:otherwise>
+						<img src="${ctx}/img/default-profile.svg" alt="프로필 사진"
+							style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+					</c:otherwise>
+				</c:choose>
+		</span> <span> <strong><c:out
+						value="${sessionScope.user.nickname}" /></strong> <small>내 평점 ★ <c:out
+						value="${empty myScore ? '-' : myScore}" /></small>
+		</span>
+		</a>
 		<div class="group">
 			<p class="group-title">계정</p>
 			<nav class="menu">
@@ -108,8 +118,8 @@
 		</div>
 
 		<div class="bottom">
-			<%-- TODO: 로그아웃 서블릿 URL 로 교체 (예: ${ctx}/logout) --%>
 			<a href="${ctx}/auth/logout/submit">로그아웃</a>
 		</div>
 	</aside>
+	
 	<main class="work">

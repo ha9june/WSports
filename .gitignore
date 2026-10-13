@@ -24,6 +24,8 @@ db.properties
 mail.properties
 service-account.json
 *service-account.json
+api.properties
+*properties
 # 기본 Dynamic Web Project 출력 폴더
 build/
 bin/

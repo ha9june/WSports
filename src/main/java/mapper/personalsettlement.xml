@@ -79,6 +79,26 @@
 		where settlement_id = #{settlementId}
 		and settlement_status = '정산대기'
 	</update>
+
+	<!--개인경기 정산 내역 insert-->
+	<insert id="insertPersonalSettlement" parameterType="personalsettlement" useGeneratedKeys="true" keyProperty="settlementId">
+		INSERT INTO personal_settlement (
+	        user_id,
+	        personal_match_id,
+	        account_number,
+	        bank_name,
+	        amount,
+	        settlement_status,
+	    ) VALUES (
+	        #{userId},
+	        #{personalMatchId},
+	        #{accountNumber},
+	        #{bankName},
+	        #{amount},
+	        #{settlementStatus},
+	    )
+	</insert>
+
 	
 	<!-- 마이페이지 개인 경기 정산 리스트 -->
 	<select id="selectMyPagePersonalSettlementList" parameterType="Map" resultType="Map">

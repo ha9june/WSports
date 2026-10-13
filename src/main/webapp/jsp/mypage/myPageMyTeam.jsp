@@ -182,6 +182,34 @@
 .sc-default {
 	background-color: #e5e7eb;
 }
+/* 더보기 페이징 */
+.myteam-card.is-hidden {
+	display: none !important;
+}
+
+.more-wrap {
+	display: flex;
+	justify-content: center;
+	margin-top: 24px;
+}
+
+.btn-more {
+	min-width: 140px;
+	height: 44px;
+	padding: 0 24px;
+	border: 1px solid #1a6bff;
+	border-radius: 999px;
+	background: #fff;
+	color: #1a6bff;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background .15s;
+}
+
+.btn-more:hover {
+	background: #eff6ff;
+}
 </style>
 
 <div class="work-inner" style="width: 100%; max-width: 1000px;">
@@ -349,19 +377,19 @@
 								<div class="kebab-menu">
 									<c:choose>
 										<c:when test="${m.myRole eq 'CAPTAIN'}">
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+											<a href="${ctx}/team/manage/applications?teamId=${m.teamId}">가입신청
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+											<a href="${ctx}/team/manage/members?teamId=${m.teamId}">팀원
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
 										</c:when>
 										<c:when test="${m.myRole eq 'VICE_CAPTAIN'}">
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+											<a href="${ctx}/team/manage/applications?teamId=${m.teamId}">가입신청
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+											<a href="${ctx}/team/manage/members?teamId=${m.teamId}">팀원
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
 											<hr>
 											<a href="#" class="danger btn-leave"
@@ -414,7 +442,27 @@
 <script>
 	$(function() {
 		var targetId = null;
+	
+		// 더보기: 6개씩 표시
+		var PAGE = 6;
+		$('.myteam-grid').each(function() {
+			var $grid = $(this);
+			var $cards = $grid.children('.myteam-card');
+			if ($cards.length <= PAGE) return;   // 6개 이하면 버튼 없음
 
+			$cards.slice(PAGE).addClass('is-hidden');
+
+			var $wrap = $('<div class="more-wrap"><button type="button" class="btn-more">↓ 더보기</button></div>');
+			$grid.after($wrap);
+
+			$wrap.find('.btn-more').on('click', function() {
+				$cards.filter('.is-hidden').slice(0, PAGE).removeClass('is-hidden');
+				if ($cards.filter('.is-hidden').length === 0) {
+					$wrap.remove();   // 다 보여줬으면 버튼 제거
+				}
+			});
+		});
+		
 		// 드롭다운 토글
 		$('[data-dropdown-toggle]').on('click', function(e) {
 			e.stopPropagation();

@@ -37,13 +37,30 @@
     <div class="grid-3">
       <div class="field">
       	<label class="field-label" for="matchDate">경기일자</label>
-      	<input class="input" type="date" id="matchDate" name="matchDate" value="2026-10-21" required>
+      	<input class="input" type="date" id="matchDate" name="matchDate" required>
       </div>
       <div class="field"><span class="field-label">시간</span>
         <div class="time-range">
-          <select class="select" name="startTime" aria-label="시작 시간" required><option>18:00</option><option selected>19:00</option><option>20:00</option></select>
-          <span>~</span>
-          <select class="select" name="endTime" aria-label="종료 시간" required><option>20:00</option><option selected>21:00</option><option>22:00</option></select>
+          <select class="select" name="startTime" required>
+				<option value="" disabled selected>시간 선택</option>
+				<c:forEach var="h" begin="0" end="23">
+					<c:set var="hh" value="${h<10 ? '0' :  ''}${h}"></c:set>
+					<option value="${hh}:00">${hh}:00</option>
+					<option value="${hh}:30">${hh}:30</option>
+				</c:forEach>
+			</select> 
+			<span>~</span> 
+			<select class="select" name="endTime" required>
+				<option value="" disabled selected>시간 선택</option>
+				<c:forEach var="h" begin="0" end="23">
+					<c:set var="hh" value="${h < 10 ? '0' : ''}${h}" />
+					<c:if test="${h > 0}">
+						<option value="${hh}:00">${hh}:00</option>
+					</c:if>
+					<option value="${hh}:30">${hh}:30</option>
+				</c:forEach>
+				<option value="24:00">24:00</option>
+			</select>
         </div>
       </div>
     </div>

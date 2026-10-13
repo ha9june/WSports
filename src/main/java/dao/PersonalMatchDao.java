@@ -32,15 +32,23 @@ public interface PersonalMatchDao {
 	
 	//관리자 경기수 세기 - 개인
 	Long selectMatchCntPersonal() throws Exception;
-	//스케줄러 : 마감 지난 최소 인원 미달 경기
-	List<PersonalMatch> selectExpiredUnderMin() throws Exception;
-	//스케줄러 : 최소 인원 미달 경기 취소
-	int updateStatusToUnderMinCancel(Long matchId) throws Exception;
+	
+	
+	
+	
 	
 	//스케줄러
-	List<PersonalMatch> selectExpiredRecruiting() throws Exception;
-	List<PersonalMatch> selectFinishedMatches() throws Exception;
-	int updateStatusToNoOpponentCancel(Long personalMatchId) throws Exception;
+	//마감 지난 최소 인원 미달 경기
+	List<PersonalMatch> selectExpiredUnderMin() throws Exception;
+	//최소 인원 미달 경기 취소
+	int updateStatusToUnderMinCancel(Long personalMatchId) throws Exception;
+	//최소인원 충족으로 인한 모집마감 조회
+	List<PersonalMatch> selectExpiredSuccess() throws Exception;
+	int updateStatusToExpired(Long personalMatchId) throws Exception;
+	
+	
+	
+	List<PersonalMatch> selectFinishedSuccess() throws Exception;
 	int updateStatusToFinished(Long personalMatchId) throws Exception;
 
 }

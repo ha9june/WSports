@@ -190,11 +190,9 @@
 		AND f.match_type = 'PERSONAL'
 		AND f.user_id =
 		#{userId}
-
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
 		AND m.longitude BETWEEN #{minLng} AND #{maxLng}
 		AND m.deleted = 0
-
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
 			<foreach collection="sports" item="sport" open="("
@@ -385,9 +383,9 @@
 		ON m.user_id
 		= u.user_id
 		LEFT JOIN favorite f
-		ON f.match_id = m.personal_match_id
+			ON f.match_id = m.personal_match_id
 		AND
-		f.match_type = 'Personal'
+			f.match_type = 'Personal'
 		AND f.user_id = #{userId}
 		WHERE m.personal_match_id = #{personalMatchId}
 
@@ -589,7 +587,16 @@
 		where status = '모집중'
 		and deleted = 0
 	</select>
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--스케줄러-->
 	<!-- 스케줄러 : 모집 마감 지났는데 최소 인원 미달인 개인 경기 -->
 	<select id="selectExpiredUnderMin" resultType="personalMatch">
 		select m.personal_match_id, m.user_id, m.title
@@ -605,7 +612,7 @@
 	<!-- 스케줄러 : 최소 인원 미달 경기 취소 -->
 	<update id="updateStatusToUnderMinCancel" parameterType="Long">
 		update personal_match
-		set status = '인원 미달 경기 취소',
+		set status = '경기 취소',
 			deleted = 1,
 			updated_at = now()
 		where personal_match_id = #{matchId}
@@ -613,37 +620,41 @@
 		and deleted = 0
 	</update>
 	
+	<!--스케줄러 : 마감시간인데 최소 인원 채운 것 조회-->
+	<select id="selectExpiredSuccess" resultType="personalMatch">
+		SELECT m.personal_match_id, m.user_id, m.title
+	    FROM personal_match m
+	    WHERE m.status = '모집중'
+	      AND m.deleted = 0
+	      AND m.deadline &lt;= NOW()
+	      AND (
+	          SELECT COUNT(*)
+	          FROM personal_match_participant p
+	          WHERE p.personal_match_id = m.personal_match_id
+	            AND p.status = '결제완료' ) &gt;= m.min_people
+	</select>
 	
-	<!-- 스케줄러 모집중 && 마감시간 지남 조회-->
-	<select id="selectExpiredRecruiting" resultType="personalMatch">
-		select
-			personal_match_id, user_id, title
-		from personal_match 
-		where 
-			status = '모집중' 
-			and deadline &lt;= now() 
-			and coalesce(deleted, 0) = 0
-	</select>
-	<!-- 스케줄러 모집마감 && 경기 종료 시간지남 조회 -->
-	<select id="selectFinishedMatches" resultType="personalMatch">
-		select
-			personal_match_id, user_id, title
-		from personal_match
-		where status =
-			'모집 마감'
-		and coalesce(deleted, 0) = 0
-		and timestamp(match_date, end_time) &lt;= now()
-	</select>
-	<update id="updateStatusToNoOpponentCancel" parameterType="Long">
-		update 
+	<!--스케줄러 : 모집마감으로 업데이트-->
+	<update id="updateStatusToExpired" parameterType="Long">
+		update
 			personal_match
 		set 
-			status = '인원 미달 경기 취소'
+			status = '모집중',
+		updated_at = now()
 		where 
 			personal_match_id = #{personalMatchId}
-			and status = '모집중'
-			and coalesce(deleted, 0) = 0
+		and status = '모집 마감'
+		and coalesce(deleted, 0) = 0
 	</update>
+	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기)-->
+	<select id="selectFinishedSuccess" resultType="personalMatch">
+		SELECT m.personal_match_id, m.user_id, m.title
+		FROM personal_match m
+		WHERE m.status = '모집 마감'
+		  AND coalesce(deleted, 0) = 0
+		  AND TIMESTAMP(m.match_date, m.end_time) &lt;= NOW();
+	</select>
+	<!--스케줄러 : 경기 종료로 업데이트-->
 	<update id="updateStatusToFinished" parameterType="Long">
 		update
 			personal_match

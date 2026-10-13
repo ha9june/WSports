@@ -1,13 +1,18 @@
 package controller.review;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.Notification;
+import dto.Review;
 import dto.User;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 import service.review.ReviewService;
 import service.review.ReviewServiceImpl;
 
@@ -49,7 +54,18 @@ public class ReviewComment extends HttpServlet {
 
 		try {
 			ReviewService service = new ReviewServiceImpl();
+			NotificationService notiService = new NotificationServiceImpl();
+			Notification alarm = new Notification();
+			
 			service.writeComment(reviewId, user.getUserId(), content);
+			
+			Review review = service.getReviewDetail(reviewId);
+			alarm.setTitle("'"+review.getTitle()+"'"+"게시글에 댓글이 달렸습니다.");
+			alarm.setContent("'"+user.getNickname()+"'"+"님이 댓글을 남겼습니다.");
+			alarm.setUserId(review.getUserId());
+			alarm.setLink("/review/detail?reviewId="+ reviewId);
+			
+			notiService.sendNotification(alarm);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -45,6 +45,9 @@
 	background: rgba(31, 41, 55, 0.95);
 }
 </style>
+  <c:if test="${param.error eq 'fail'}">
+  	<script>$(function(){ showToast("수정에 실패했습니다. 다시 시도해 주세요."); });</script>
+  </c:if>
 <main class="page">
 	<form class="rail" id="modifyForm" action="${ctx}/review/edit"
 		method="post" enctype="multipart/form-data"
@@ -100,7 +103,9 @@
 			</div>
 
 			<div class="form-actions">
-				<a class="btn btn-outline" href="${ctx}/mypage/reviews">취소</a>
+				  <a class="btn btn-outline"
+     href="${ctx}/review/detail?reviewId=${review.reviewId}"
+     onclick="return confirm('수정을 취소할까요? 변경한 내용은 저장되지 않아요.');">취소</a>
 				<button type="submit" class="btn btn-primary">수정 완료</button>
 			</div>
 		</div>
