@@ -47,6 +47,7 @@ public class TossPaymentController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//로그인 확인
 		User user = CheckUtil.getLoginUser(request);
 		if (user == null) {
 		    response.sendRedirect(request.getContextPath() + "/auth/login");
@@ -63,17 +64,10 @@ public class TossPaymentController extends HttpServlet {
 			return;
 		}
 		Long matchId = Long.parseLong(matchIdParam);
-		try {
-			// 로그인 확인
-			User loginUser = (User) request.getSession().getAttribute("user");
-			if (loginUser == null) {
-				response.sendRedirect(request.getContextPath() + "/jsp/match/personalMatchList.jsp");
-				return;
-			}
-						
+		try {		
 			PaymentService paymentService = new PaymentServiceImpl();
 			// 중복 참가 확인
-			if (paymentService.isAlreadyJoined(loginUser.getUserId(), matchId, isTeam)) {
+			if (paymentService.isAlreadyJoined(user.getUserId(), matchId, isTeam)) {
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().write("<script>alert('이미 참가한 경기입니다.'); history.back();</script>");
 				return;
@@ -92,6 +86,7 @@ public class TossPaymentController extends HttpServlet {
 				//팀 경기 상세 조회 서비스
 				TeamMatchService teamMatchService = new TeamMatchServiceImpl();
 				match = paymentService.getTeamMatch(matchId);
+				//참가비+수수료를 경기 개설에서 받아옴
 				totalAmount = paymentService.getTeamMatchTotalAmount(matchId.intValue());
 				request.setAttribute("teamId", Long.parseLong(teamIdParam));
 			} else {
@@ -100,6 +95,7 @@ public class TossPaymentController extends HttpServlet {
 				pm.setUserId(user.getUserId());
 				pm.setPersonalMatchId(matchId);
 				match = personalMatchService.getPersonalMatchDetail(pm);
+				//참가비+수수료를 경기 개설에서 받아옴
 				totalAmount = paymentService.getPersonalMatchTotalAmount(matchId.intValue());
 			}
 
@@ -118,6 +114,7 @@ public class TossPaymentController extends HttpServlet {
 			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 	}
+	//////
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");

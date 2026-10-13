@@ -56,7 +56,8 @@ public class AdminReport extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "정산관리 목록 조회 오류");
+			request.setAttribute("err", "신고관리 목록 조회 오류");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 		request.getRequestDispatcher("/jsp/admin/adminReport.jsp").forward(request, response);
 	}

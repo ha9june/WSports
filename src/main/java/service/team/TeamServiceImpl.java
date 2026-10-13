@@ -26,12 +26,15 @@ public class TeamServiceImpl implements TeamService {
 	}
 	
 	private String fileUpload(String uploadPath, Part file) throws Exception {
-		String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();		
-		if(fileName != null && !fileName.isEmpty()) {
-			File uploadDir = new File(uploadPath);			
-			if(!uploadDir.exists()) uploadDir.mkdir();			
-			file.write(uploadPath+File.separator+fileName);		
-		}		
+		if (file == null || file.getSize() == 0) return null;
+		String submitted = file.getSubmittedFileName();
+		if (submitted == null || submitted.isEmpty()) return null;
+
+		String fileName = Paths.get(submitted).getFileName().toString();
+
+		File uploadDir = new File(uploadPath);
+		if (!uploadDir.exists()) uploadDir.mkdirs();
+		file.write(uploadPath + File.separator + fileName);
 		return fileName;
 	}
 
@@ -76,17 +79,18 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
-	public int modifyTeam(Team team, String realPath, Part profileImage, Part activityImg1, Part activityImg2, Part activityImg3,
-			Part activityImg4, Part activityImg5) throws Exception {
-		if(teamDao.selectTeam(team.getTeamId()) == null) {
+	public int modifyTeam(Team team, String realPath, Part profileImage, Part activityImg1, Part activityImg2,
+			Part activityImg3, Part activityImg4, Part activityImg5) throws Exception {
+		if (teamDao.selectTeam(team.getTeamId()) == null) {
 			throw new Exception("존재하지 않는 팀 입니다.");
 		}
-		if(profileImage != null) team.setProfileImage(fileUpload(realPath, profileImage));
-		if(activityImg1 != null) team.setActivityImage1(fileUpload(realPath, activityImg1));
-		if(activityImg2 != null) team.setActivityImage2(fileUpload(realPath, activityImg2));
-		if(activityImg3 != null) team.setActivityImage3(fileUpload(realPath, activityImg3));
-		if(activityImg4 != null) team.setActivityImage4(fileUpload(realPath, activityImg4));
-		if(activityImg5 != null) team.setActivityImage5(fileUpload(realPath, activityImg5));
+		String name;
+		if ((name = fileUpload(realPath, profileImage)) != null) team.setProfileImage(name);
+		if ((name = fileUpload(realPath, activityImg1)) != null) team.setActivityImage1(name);
+		if ((name = fileUpload(realPath, activityImg2)) != null) team.setActivityImage2(name);
+		if ((name = fileUpload(realPath, activityImg3)) != null) team.setActivityImage3(name);
+		if ((name = fileUpload(realPath, activityImg4)) != null) team.setActivityImage4(name);
+		if ((name = fileUpload(realPath, activityImg5)) != null) team.setActivityImage5(name);
 		return teamDao.updateTeam(team);
 	}
 	

@@ -50,6 +50,7 @@ public class AdminTeamDetail extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "팀 관리 상세 목록 조회 오류");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 		request.getRequestDispatcher("/jsp/admin/adminTeamDetail.jsp").forward(request, response);
 	}

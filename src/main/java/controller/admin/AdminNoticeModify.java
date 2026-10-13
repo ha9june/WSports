@@ -38,7 +38,8 @@ public class AdminNoticeModify extends HttpServlet {
 			request.setAttribute("detail", detail);
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("err", "회원관리 상세 목록 조회 오류");
+			request.setAttribute("err", "공지 상세 목록 조회 오류");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 		request.getRequestDispatcher("/jsp/admin/adminNoticeModify.jsp").forward(request, response);
 	}
