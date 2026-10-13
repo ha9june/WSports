@@ -35,28 +35,8 @@ public class PersonalMatchJob {
         } catch (Exception e) {
             System.err.println("[PersonalMatchJob] finishMatches 실패");
             e.printStackTrace();
-        }
-        
-       
+        }    
     }
-    
-//    private void cancelNoOpponent() throws Exception { // 마감 지남 + 최소 인원 부족 → 경기취소
-//    	List<PersonalMatch> list = personalMatchDao.selectExpiredRecruiting();
-//    	for (PersonalMatch p : list) {
-//            try {
-//                int updated = personalMatchDao.updateStatusToNoOpponentCancel(p.getPersonalMatchId());
-//                if (updated > 0) {
-//                	notifyUser(p.getUserId(),
-//                        "인원 미달 경기 취소 안내",
-//                        "'" + p.getTitle() + "' 경기가 모집 마감 시간이 지나 인원 미달로 취소되었습니다.",
-//                        "/match/detail/view?personalMatchId=" + p.getPersonalMatchId());
-//                }
-//            } catch (Exception e) {
-//                System.err.println("[PersonalMatchJob] 경기 취소 처리 실패 personalMatchIdMatchId=" + p.getPersonalMatchId());
-//                e.printStackTrace();
-//            }
-//        }
-//    }
     
     
     private void finishMatches() throws Exception {	//마감상태 + 경기 시간 지남 + -> 경기 종료
