@@ -26,21 +26,41 @@
 				<h2>내 프로필</h2>
 				<c:choose>
 				  <c:when test="${not empty sessionScope.user.profileImage}">
-				    <span class="avatar"><img src="${ctx}/uploads/${sessionScope.user.profileImage}" alt=""></span>
+				    <span class="avatar"><img src="${ctx}/profiles/${sessionScope.user.profileImage}" alt=""></span>
 				  </c:when>
 				  <c:otherwise>
-				    <span class="avatar default"></span>
+				    <span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""></span>
 				  </c:otherwise>
 				</c:choose>
 				<dl>
 					<dt>주 활동 지역</dt>
-					<dd>${regions }</dd>
+					<dd>
+						<c:choose>
+							<c:when test="${not empty regions}"><c:out value="${regions}" /></c:when>
+							<c:otherwise><span class="t-2">등록된 활동 지역이 없어요</span></c:otherwise>
+						</c:choose>
+					</dd>
 					<dt>관심 종목</dt>
-					<dd>${sports }</dd>
-					<dt>${team.sport } 실력</dt>
-					<dd>${sportSkill }</dd>
+					<dd>
+						<c:choose>
+							<c:when test="${not empty sports}"><c:out value="${sports}" /></c:when>
+							<c:otherwise><span class="t-2">등록된 관심 종목이 없어요</span></c:otherwise>
+						</c:choose>
+					</dd>
+					<dt>${team.sport} 실력</dt>
+					<dd>
+						<c:choose>
+							<c:when test="${not empty sportSkill}"><c:out value="${sportSkill}" /></c:when>
+							<c:otherwise><span class="t-2">등록된 실력 정보가 없어요</span></c:otherwise>
+						</c:choose>
+					</dd>
 					<dt>한 줄 소개</dt>
-					<dd><c:out value="${sessionScope.user.bio}" /></dd>
+					<dd>
+						<c:choose>
+							<c:when test="${not empty sessionScope.user.bio}"><c:out value="${sessionScope.user.bio}" /></c:when>
+							<c:otherwise><span class="t-2">등록된 한 줄 소개가 없어요</span></c:otherwise>
+						</c:choose>
+					</dd>
 				</dl>
 				<div class="field">
 					<label class="field-label strong" for="joinMsg">가입 멘트</label>

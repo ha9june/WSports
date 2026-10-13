@@ -50,6 +50,19 @@
 		z-index: 40;
 		background: #fff;
 	}
+	
+	.host-name-link:hover {
+	text-decoration: underline;
+}
+
+.side-card .btn-danger-soft {
+	background: #fff !important;
+	color: #dc2626 !important;
+	border: 1px solid #fca5a5 !important;
+}
+.side-card .btn-danger-soft:hover {
+	background: #fef2f2 !important;
+}
 
 </style>
 
@@ -174,12 +187,24 @@
         </c:if>
       </div>
       <div class="host-inline">
-        <span class="avatar default"></span>
-        <div><a href="${ctx}/jsp/member/userProfileInfo.jsp"><strong>
-        ${personalMatch.nickname }
-        </strong></a><small>
-        호스트
-        </small></div>
+	      	<span class="avatar">
+				<c:choose>
+					<c:when test="${not empty t.hostProfileImage}"> 
+						<img src="${ctx}/profiles/<c:out value='${t.hostProfileImage}' />" alt=""
+							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+					</c:when>
+					<c:otherwise>
+						<img src="${ctx}/img/default-profile.svg" alt=""
+							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+					</c:otherwise>
+				</c:choose>
+			</span>
+			<div><a class="host-name-link" href="${ctx}/member/publicProfile/view?userId=${personalMatch.userId}"><strong style="color: #111827;">
+			${personalMatch.nickname }
+			</strong></a><small>
+			호스트
+			</small></div>
 
       </div>
     </section>
@@ -273,18 +298,17 @@
         			</c:when>
         			<c:when test="${isHost}">
 						<div class="side-card">
-			              <h2>내가 작성한 경기</h2>
-        			      <p style="margin-top:8px"><span class="pill ${pillCls}">${status} </span></p>			             
-			              <div class="actions">
-			                <a class="btn btn-outline btn-primary" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople} )</a>
-			                <a class="btn btn-outline" href="${ctx}/match/edit/form?personalMatchId=${personalMatch.personalMatchId}" data-auth>경기 정보 수정</a>
-			              </div>
-			              <p class="note">수정 시 참가자에게 알림이 전송돼요.</p>
-			              <button class="btn btn-danger btn-sm" type="button" class="cancel-link" data-modal-open="hostCancelModal" style="width:100%">경기 취소</button>
-			              <c:if test="${status ne 'hostConfirmed'}">
-			              </c:if>
-			            </div>
-        			</c:when>
+							<h2>내가 작성한 경기</h2>
+							<p style="margin-top:8px"><span class="pill ${pillCls}">${status}</span></p>
+								<div class="actions">
+									<a class="btn btn-primary" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople})</a>
+									<a class="btn btn-outline" href="${ctx}/match/edit/form?personalMatchId=${personalMatch.personalMatchId}" data-auth>경기 정보 수정</a>
+									<button type="button" class="btn btn-outline btn-danger-soft"
+										data-modal-open="hostCancelModal">경기 취소</button>
+								</div>
+							<p class="note">수정 시 참가자에게 알림이 전송돼요.</p>
+						</div>
+					</c:when>
         			<c:when test="${isUser and applied}">
 	        			<div class="side-card">
 			              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>

@@ -281,17 +281,22 @@
 					</div>
 				</div>
 
-				<div class="field">
-					<label class="field-label strong" for="address">장소</label>
-					<div class="field-row place-row">
-						<input class="input place-address" id="address" name="address"
-							placeholder="주소를 검색하세요" readonly>
-						<button type="button" id="postSearch" class="btn btn-primary btn-lg">검색</button>
-						<input class="input place-name" id="placeName" name="placeName"
+				<div class="form-row c-2">
+					<div class="field">
+						<label class="field-label strong" for="address">장소</label>
+						<div class="field-row" style="display:flex; gap:8px;">
+							<input class="input" id="address" name="address" style="flex:1; min-width:0;"
+								placeholder="주소를 검색하세요" readonly>
+							<button type="button" id="postSearch" class="btn btn-primary btn-lg">검색</button>
+						</div>
+						<input type="hidden" id="lat" name="latitude">
+						<input type="hidden" id="lng" name="longitude">
+					</div>
+					<div class="field">
+						<label class="field-label strong" for="placeName">장소명</label>
+						<input class="input" id="placeName" name="placeName"
 							maxlength="100" placeholder="장소명 (예: 마포 풋살장)">
 					</div>
-					<input type="hidden" id="lat" name="latitude">
-					<input type="hidden" id="lng" name="longitude">
 				</div>
 			</section>
 

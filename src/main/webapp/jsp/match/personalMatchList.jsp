@@ -16,6 +16,22 @@
 <%@ include file="/jsp/common/header.jsp" %>
 <style>
 	.is-hidden { display: none !important; }
+	
+	.map-title-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+	}
+	.map-title-row strong {
+		flex: 1;
+		min-width: 0;
+	}
+	.map-title-row .fav-btn {
+		position: static !important;
+		flex-shrink: 0;
+		margin: 0;
+	}
 </style>
 <script src="${ctx}/js/common.format.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
@@ -641,14 +657,17 @@
 	            removeMarkers();
 				let html = "<h3>지도 주변 경기</h3>";
 	            data.forEach(function(item) {	
-					html+= `
-			            <a href="${ctx}/match/detail/view?="`+item.personalMatchId+` 
-			            class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
-			            <small>`+item.sport+`</small>`+favBtn(item, "bare")+`
-			            <strong>`+item.title+`</strong>
-		                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
-			            </a>
-					`;
+	            	html += `
+	            		<a href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`"
+	            		   class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
+	            			<small>`+item.sport+`</small>
+	            			<div class="map-title-row">
+	            				<strong>`+item.title+`</strong>
+	            				`+favBtn(item, "bare")+`
+	            			</div>
+	            			<span>`+FormatDate(item.matchDate, item.startTime)+`</span>
+	            		</a>
+	            	`;
 	            	//마커찍기
 	                const marker = createMarker(item);
 	                markers.push(marker);
