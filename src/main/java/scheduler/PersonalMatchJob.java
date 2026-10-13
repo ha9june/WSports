@@ -6,8 +6,12 @@ import dao.PersonalMatchDao;
 import dao.PersonalMatchDaoImpl;
 import dao.PersonalMatchParticipantDao;
 import dao.PersonalMatchParticipantDaoImpl;
+import dao.UserDao;
+import dao.UserDaoImpl;
 import dto.Notification;
 import dto.PersonalMatch;
+import dto.PersonalSettlement;
+import dto.User;
 import service.notification.NotificationService;
 import service.notification.NotificationServiceImpl;
 import service.payment.PaymentService;
@@ -19,46 +23,26 @@ public class PersonalMatchJob {
     private NotificationService alarmService = new NotificationServiceImpl();
     private PersonalMatchParticipantDao personalMatchParticipantDao = new PersonalMatchParticipantDaoImpl();
 	private PaymentService paymentService = new PaymentServiceImpl();
-
+	private UserDao userDao = new UserDaoImpl();
     
     public void run() { // MatchScheduler가 부르는 유일한 공개 메서드
 
     	 try {
          	cancelUnderMin();
+         	changeExpired();
          } catch (Exception e) {
          	System.err.println("[PersonalMatchJob] finishMatches 실패");
          	e.printStackTrace();
          }
     	
         try {
-            finishMatches();
+        	changeTofinished();
         } catch (Exception e) {
             System.err.println("[PersonalMatchJob] finishMatches 실패");
             e.printStackTrace();
         }    
     }
     
-    
-    private void finishMatches() throws Exception {	//마감상태 + 경기 시간 지남 + -> 경기 종료
-    	List<PersonalMatch> list = personalMatchDao.selectExpiredRecruiting();
-    	for (PersonalMatch p : list) {
-            try {
-                int updated = personalMatchDao.updateStatusToFinished(p.getPersonalMatchId());
-                if (updated > 0) {
-                	String title = "'" + p.getTitle() + "' 경기가 종료되었습니다.";
-    				String content = "출석체크 확인 및 경기 매너 평가를 부탁드립니다.";
-    				String link = "/match/detail/view?personalMatchId=" + p.getPersonalMatchId();
-    				
-    				for (Long uid : personalMatchParticipantDao.selectParticipantUserIds(p.getPersonalMatchId())) {
-    					notifyUser(uid, title, content, link);
-    				}
-                }
-            } catch (Exception e) {
-                System.err.println("[PersonalMatchJob] 경기 취소 처리 실패 personalMatchIdMatchId=" + p.getPersonalMatchId());
-                e.printStackTrace();
-            }
-        }
-    }
 
 
     //마감시간이 지났는데 최소 인원 미달이라서 전원 환불 & 경기 취소 => 경기상태 바꾸고, 참가자들도 바꿔
@@ -84,6 +68,68 @@ public class PersonalMatchJob {
 		}
 	}
 	
+	private void changeExpired() throws Exception{
+		List<PersonalMatch> list = personalMatchDao.selectExpiredSuccess();
+		
+		for (PersonalMatch p : list) {
+            try {
+                int updated = personalMatchDao.updateStatusToExpired(p.getPersonalMatchId());
+                if (updated > 0) {
+                	String title = "'" + p.getTitle() + "' 모집이 마감되었습니다.";
+    				String content = "경기 시작시간 10분 전 까지 도착하여 주십시오.";
+    				String link = "/match/detail/view?personalMatchId=" + p.getPersonalMatchId();
+    				
+    				for (Long uid : personalMatchParticipantDao.selectParticipantUserIds(p.getPersonalMatchId())) {
+    					notifyUser(uid, title, content, link);
+    				}
+                }
+               
+            } catch (Exception e) {
+                System.err.println("[PersonalMatchJob] 경기 취소 처리 실패 personalMatchIdMatchId=" + p.getPersonalMatchId());
+                e.printStackTrace();
+            }
+        }
+	}
+	
+    private void changeTofinished() throws Exception {	//마감상태 + 경기 시간 지남 + -> 경기 종료
+    	List<PersonalMatch> list = personalMatchDao.selectFinishedSuccess();
+    	for (PersonalMatch p : list) {
+            try {
+                int updated = personalMatchDao.updateStatusToFinished(p.getPersonalMatchId());
+                if (updated > 0) {
+                	String title = "'" + p.getTitle() + "' 경기가 종료되었습니다.";
+    				String content = "출석체크 확인 및 경기 매너 평가를 부탁드립니다.";
+    				String link = "/match/detail/view?personalMatchId=" + p.getPersonalMatchId();
+    				
+    				int userCnt=0;
+    				for (Long uid : personalMatchParticipantDao.selectParticipantUserIds(p.getPersonalMatchId())) {
+    					userCnt++;
+    					notifyUser(uid, title, content, link);
+    				}
+    				
+    				
+    				//개인경기 정산 내역 인서트
+                    PersonalSettlement ps = new PersonalSettlement();
+                    ps.setUserId(p.getUserId());
+                    ps.setPersonalMatchId(p.getPersonalMatchId());
+                    	User user = userDao.selectUserAccountInfo(p.getUserId());
+                    ps.setAccountNumber(user.getAccountNumber());
+                    ps.setBankName(user.getBankName());
+                    
+                    int amount = (p.getParticipationFee() - p.getFee())*userCnt;
+                    ps.setAmount(amount);
+                    ps.setSettlementStatus("정산대기");
+                    paymentService.putPersonalSettlement(ps);
+                    
+                }
+               
+            } catch (Exception e) {
+                System.err.println("[PersonalMatchJob] 경기 취소 처리 실패 personalMatchIdMatchId=" + p.getPersonalMatchId());
+                e.printStackTrace();
+            }
+        }
+    }
+    
 	
 	private void notifyUser(Long userId, String title, String content, String link) {
         try {

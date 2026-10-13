@@ -5,7 +5,20 @@
 
 /* ---------- 상세 상단 ---------- */
 
-
+/*인기경기,인기경기,마감임박,신규모집 마우스 변경  */
+.feature-tabs .btnGroup1 {
+  cursor: pointer;
+  user-select: none;
+}
+.feature-tabs .btnGroup1:hover {
+  /* 사이트 색에 맞게 */
+  background: #f1f5f9;
+}
+.feature-tabs .btnGroup1.is-active:hover {
+  /* active 탭은 hover해도 기존 색 유지 */
+  background: inherit;
+  color: inherit;
+}
 /*검색창  */
 .search-shell .picked {
     display: flex;
