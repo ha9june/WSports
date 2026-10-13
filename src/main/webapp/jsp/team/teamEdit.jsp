@@ -18,9 +18,11 @@
 					img.src = e.target.result;
 					img.style.cssText = "display: block; width: 100%; height: 100%; object-fit: cover;";
 					document.getElementById("profilePreviewText").style.display = "none";
+					photoChosen(input);
 				}
 				reader.readAsDataURL(input.files[0])
 			}
+			
 		}
 
 		function previewActivity(input, previewId, textId) {
@@ -32,9 +34,28 @@
 					preview.src = e.target.result;
 					preview.style.display = "block";
 					text.style.display = "none";
+					photoChosen(input);
 				};
 				reader.readAsDataURL(input.files[0]);
 			}
+			
+		}
+		
+		function removePhoto(e, btn) {
+			e.preventDefault();
+			e.stopPropagation();                         // label 클릭으로 파일 선택창이 열리지 않게
+			var label = btn.closest('label');
+			label.querySelector('input[type="file"]').value = '';
+			var img = label.querySelector('img');
+			img.removeAttribute('src');
+			img.style.display = 'none';
+			label.querySelector('span').style.display = '';          // '사진 추가' 문구 복원
+			label.querySelector('input[name^="keep"]').value = '';   // 서버에서 null 처리됨
+			btn.style.display = 'none';
+		}
+		function photoChosen(input) {                    // 새 사진을 고르면 ✕ 다시 표시
+			var btn = input.closest('label').querySelector('.ph-remove');
+			if (btn) btn.style.display = '';
 		}
 
 		window.onload = function() {
@@ -204,6 +225,10 @@
 						</c:choose>
 						<input type="file" name="profileImage" accept="image/*" hidden
 						onchange="readURL(this)">
+						<input type="hidden" name="keepProfileImage" value="<c:out value='${team.profileImage}' />">
+						<button type="button" class="ph-remove" aria-label="사진 삭제"
+							style="${empty team.profileImage ? 'display:none;' : ''}"
+							onclick="removePhoto(event, this)">✕</button>
 					</label>
 
 					<div>
@@ -239,6 +264,10 @@
 							</c:choose>
 							<input type="file" name="activityImg${i}" accept="image/*" hidden
 							onchange="previewActivity(this, 'activityPreview${i}', 'activityText${i}')">
+							<input type="hidden" name="keepActivityImg${i}" value="<c:out value='${imgName}' />">
+							<button type="button" class="ph-remove" aria-label="사진 삭제"
+								style="${empty imgName ? 'display:none;' : ''}"
+								onclick="removePhoto(event, this)">✕</button>
 						</label>
 					</c:forEach>
 					<div class="photo-guide">
