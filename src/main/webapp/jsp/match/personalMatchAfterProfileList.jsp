@@ -7,11 +7,9 @@
    state : host(작성자) | participant(참가자)
 --%>
 <c:set var="state" value="${empty param.state ? 'host' : param.state}" />
-<c:set var="isHost" value="${state eq 'host'}" />
+<c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
 <c:set var="pageTitle" value="경기 후 관리" />
 <c:set var="pageCss" value="match" />
-<c:set var="demoRoles" value="member" />
-<c:set var="demoStates" value="host:작성자|participant:참가자" />
 <%@ include file="/jsp/common/header.jsp" %>
 
 <main class="page">
@@ -26,11 +24,18 @@
     <div class="postgame-card">
       <div class="match-summary">
         <div>
-          <p class="tags"><span class="sport-tag neutral" style="background:var(--ds-brand-subtle);color:var(--ds-brand)">풋살</span>경기 종료</p>
-          <strong>토요일 저녁 풋살 한 판!</strong>
-          <p class="meta"><span>9/19 (토) 19:00 - 21:00</span><span>서울 마포구 · 망원 풋살장</span></p>
+          <p class="tags"><span class="sport-tag neutral" style="background:var(--ds-brand-subtle);color:var(--ds-brand)">${personalMatch.sport }</span>${personalMatch.status }</p>
+          <strong>${personalMatch.title }</strong>
+          <p class="meta">
+          	<span>${personalMatch.matchDate}（${personalMatch.dayOfWeekKorean}）
+	            ${personalMatch.startTime} ～ 
+	            ${personalMatch.endTime}
+            </span>
+            <span>${personalMatch.region } · ${personalMatch.placeName }</span>
+           </p>
         </div>
-        <div class="target">평가 대상<b>2명</b></div>
+        
+        <div class="target">평가 대상<b>${userList.size() }명</b></div>
       </div>
       <div class="eval-head">
         <h3>출석 · 참가자 평가</h3>
@@ -43,16 +48,15 @@
              		${user.nickname }
              	</div>
 	            <div>
-	             	<span class="att-badge">출석</span>
-	             	<span class="att-badge">${user.attendance }</span>
+	             	<span class="att-badge">${user.attendance? "출석" : "미출석"}</span>
 	            </div>
 	            <div class="rate">
+	                <span class="rating">${user.avgRatingScore}</span>  
            		</div>
           	</div>
        </c:forEach>
-      <div class="eval-row"><div class="who"><span class="avatar sm default"></span>서울킥</div><div><span class="att-badge">출석</span></div><div class="rate"></div></div>
       <div class="form-actions" style="margin-right:20px">
-        <a class="btn btn-primary" href="${ctx}/match/after/profile/list/edit">정보 수정</a>
+        <a class="btn btn-primary" href="${ctx}/match/after/profile/list/edit?personalMatchId=${personalMatch.personalMatchId}">정보 수정</a>
       </div>
     </div>
   </div>

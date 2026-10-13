@@ -151,7 +151,7 @@ $(function(){
 	    teamMatchList(page);
 	});
 	 
-	// FAB 클릭: 팀장/부팀장 여부 확인 후 이동 또는 모달
+	// FAB 클릭: 주장/부주장 여부 확인 후 이동 또는 모달
 	$(document).on('click', '.fab', function (e) {
 	    var isLogin = ${not empty sessionScope.user};
 	    if (!isLogin) return;            // 비로그인: 기존 data-auth 로그인 모달 동작
@@ -207,8 +207,7 @@ $(function(){
 					<div class="filter-more">
 						<button type="button" class="btn btn-outline btn-sm"
 							data-filter-toggle>필터 더보기 +</button> 
-						<span class="count">0</span>
-						<div class="filter-panel">
+						<div class="filter-panel tm-filter">
 							<div class="chip-group" data-select="single" data-name="gender">
 							
 								<span class="chip-label">성별</span>
@@ -293,6 +292,10 @@ $(function(){
 			<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
 			<div class="picked" id="pickedRegions"></div>
 			<div id="regionInputs"></div>
+			<div class="filter-more" style="padding-top:5px;">
+				<span class="count">
+	             </span>
+			</div>
 		</form>
 		
 		<div class="teamMatch-grid" id="teamMatch-grid">
@@ -339,7 +342,7 @@ $(function(){
 <div class="modal" id="noTeamModal" role="dialog" aria-modal="true">
 	<div class="modal-card sm">
 		<h2 class="modal-title">팀 경기를 만들 수 없어요</h2>
-		<p class="modal-desc">팀 경기는 <b>팀장 또는 부팀장</b>만 만들 수 있어요.<br>팀을 만들거나, 팀장·부팀장에게 요청해 보세요.</p>
+		<p class="modal-desc">팀 경기는 <b>주장 또는 부주장</b>만 만들 수 있어요.<br>팀을 만들거나, 주장·부주장에게 요청해 보세요.</p>
 		<div class="modal-actions">
 			<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
 			<a class="btn btn-primary" href="${ctx}/team/create">팀 만들기</a>

@@ -36,13 +36,7 @@
         			<span class="sep">›</span>
         			<span>결제</span>
         		</c:when>
-        		<c:otherwise>
-        			<a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a>
-        			<span class="sep">›</span>
-        			<a href="${ctx}/jsp/match/personalMatchDetail.jsp">경기 상세</a>
-        			<span class="sep">›</span>
-        			<span>결제</span>
-        		</c:otherwise>
+
       		</c:choose>
     	</nav>
 	<div class="page-head">
@@ -80,7 +74,10 @@
       	
       	<div class="foot">
         	<label class="check"><input type="checkbox" id="refundAgree">환불 정책을 확인했습니다.</label>
-        	<button type="button" class="btn btn-primary btn-sm" id="payOpenBtn" data-modal-open="payConfirmModal" disabled>결제하기</button>
+        	<div class="modal-actions">
+        	<a class="btn btn-outline" href="${ctx}${isTeam ? '/team-match/list' : '/match/list'}">취소</a>
+        	<button type="button" class="btn btn-primary" id="payOpenBtn" data-modal-open="payConfirmModal" disabled>결제하기</button>
+        	</div>
       	</div>
     </section>
 	</div>
@@ -93,10 +90,10 @@
     <div class="total"><span>결제 금액</span><b>${total}원</b></div>
     <p class="t-11 t-2 mt-16">${isTeam ? '결제 완료 후 팀 매칭 신청이 접수됩니다.' : '결제 완료 후 참가가 바로 확정됩니다.'}</p>
     <div class="modal-actions">
-      <button type="button" class="btn btn-outline" data-modal-close>취소</button>
-      <button type="button" class="btn btn-primary" id="tossPayBtn"
-              data-amount="${totalNum}" data-order-name="${itemName}"
-              data-success-url="${ctx}/jsp/payment/toss_success.jsp" data-fail-url="${ctx}/jsp/payment/toss_fail.jsp">결제하기</button>
+		<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+      	<button type="button" class="btn btn-primary" id="tossPayBtn"
+              data-amount="${totalNum}"  data-order-name="${itemName}"
+              data-success-url="${ctx}/jsp/payment/toss_success.jsp" data-fail-url="${ctx}/payment/fail">결제하기</button>
     </div>
   </div>
 </div>
@@ -127,9 +124,9 @@
         	orderId: orderId,
         	orderName: btn.dataset.orderName,
         	successUrl: window.location.origin + btn.dataset.successUrl + query,
-        	failUrl: window.location.origin + btn.dataset.failUrl,
-        	customerName: "홍길동",
-        	customerEmail: "user@example.com"
+        	failUrl: window.location.origin + btn.dataset.failUrl + query,
+        	customerName: "${fn:escapeXml(sessionScope.user.name)}",
+        	customerEmail: "${fn:escapeXml(sessionScope.user.email)}"
       	}).catch(function (error) {
         	if (error.code === 'USER_CANCEL') {
          		alert('결제가 취소되었습니다.');

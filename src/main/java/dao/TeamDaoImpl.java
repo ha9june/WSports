@@ -127,4 +127,14 @@ public class TeamDaoImpl implements TeamDao {
 		}
 	}
 
+	@Override
+	public List<Team> selectTeamMatchParticipantsProfileList(Long teamMatchId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			return sqlSession.selectList("mapper.team.selectTeamMatchParticipantsProfileList", teamMatchId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 }

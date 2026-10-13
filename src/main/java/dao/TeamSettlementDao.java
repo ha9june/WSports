@@ -3,6 +3,8 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+import dto.TeamSettlement;
+
 public interface TeamSettlementDao {
 	Integer selectTeamSettlementWait() throws Exception;
 	Long selectTeamSettlementWaitMoney() throws Exception;
@@ -26,4 +28,6 @@ public interface TeamSettlementDao {
 	Map<String, Object> selectMyPageTeamSettlementTabCnt(Map<String, Object> param) throws Exception;	
 	// 마이페이지 팀 경기 정산 리스트 팀선택 조회
 	List<Map<String, Object>> selectMyPageTeamList(Long userId) throws Exception;
+
+	int insertTeamSettlement(TeamSettlement teamsettlement) throws Exception;
 }

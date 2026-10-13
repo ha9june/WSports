@@ -7,12 +7,14 @@
 	        user_id,
 	        personal_match_id,
 	        attendance,
+	        status,
 	        applied_at
 	    )
 	    VALUES (
 	        #{userId},
 	        #{personalMatchId},
 	        #{attendance},
+	        #{status},
 	        NOW()
 	    )
 	</insert>
@@ -23,8 +25,7 @@
 	        attendance,
 	        status,
 	        payment_id,
-	        applied_at
-	        
+	        applied_at   
 	    )
 	    VALUES (
 	        #{userId},
@@ -35,6 +36,23 @@
 	        NOW()
 	    )
 	</insert>
+	<update id="updateStatusCancel" parameterType="personalMatchParticipant">
+
+	    UPDATE personal_match_participant
+	    SET
+	        status = #{status},
+	        cancelled_at = NOW()
+	    WHERE personal_match_id = #{personalMatchId}
+	    	AND user_id = #{userId}
+	</update>
+	<update id="updateAttendance" parameterType="personalMatchParticipant">
+
+	    UPDATE personal_match_participant
+	    SET
+	        attendance = #{attendance}
+	    WHERE personal_match_id = #{personalMatchId}
+	    	AND user_id = #{userId}
+	</update>
 	<select id="selectPersonalMatchParticipantList" parameterType="Long" resultType="user">
 		SELECT
 		    u.user_id,
@@ -52,12 +70,37 @@
 		    u.user_id,
 		    u.nickname;
 	</select>
-	<select id="selectIsIsPersonalMatchParticipation" parameterType="map" resultType="boolean">
-		SELECT EXISTS (
-		    SELECT 1
+	<select id="selectOtherPersonalMatchParticipantList" parameterType="map" resultType="user">
+		SELECT
+		    u.user_id,
+		    u.nickname,
+		    p.attendance,
+		    COALESCE(AVG(r.score), 0) AS avg_rating_score
+		FROM personal_match_participant p
+		JOIN user u
+		    ON p.user_id = u.user_id
+		LEFT JOIN user_rating r
+		    ON r.receiver_user_id = u.user_id
+		WHERE p.personal_match_id = #{personalMatchId}
+		  AND (p.status IS NULL OR p.status != '취소')
+		  AND u.user_id != #{userId}
+		GROUP BY
+		    u.user_id,
+		    u.nickname 
+	</select>
+	<select id="selectIsPersonalMatchParticipation" parameterType="map" resultType="personalmatchparticipant">
+		    SELECT *
 		    FROM personal_match_participant
 		    WHERE user_id = #{userId}
 		      AND personal_match_id = #{personalMatchId}
-		)	
+			
+	</select>
+	<select id="selectParticipantUserIds" parameterType="Long"
+		resultType="Long">
+		select distinct user_id
+		from personal_match_participant
+		where
+		personal_match_id = #{personalMatchId}
+		and status = '결제완료'
 	</select>
 </mapper>

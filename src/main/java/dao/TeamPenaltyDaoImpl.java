@@ -163,4 +163,32 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 			throw e;
 		}
 	}
+	//스케줄러 : 자동 정지 대상 회원
+	@Override
+	public List<Map<String, Object>> selectAutoTeamSuspendTargets() throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teampenalty.selectAutoTeamSuspendTargets");
+		} 
+	}
+	//스케줄러 : 자동 정지 부여 (기존 쿼리 2개를 한 트랜잭션으로)
+	@Override
+	public void insertAutoTeamSuspend(Map<String, Object> param) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.teampenalty.insertTeamPenalty", param);
+			sqlSession.commit();
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}		
+	}
+	//스케줄러 : 영구정지 검토 알림 대상 팀 (100점 이상)
+	@Override
+	public List<Map<String, Object>> selectTeamReviewTargets() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teampenalty.selectTeamReviewTargets");
+		}
+	}
 }

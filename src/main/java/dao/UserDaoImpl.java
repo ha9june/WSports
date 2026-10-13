@@ -186,4 +186,15 @@ public class UserDaoImpl implements UserDao {
 			return sqlSession.selectOne("mapper.user.selectHistorySummary", param);
 		}
 	}
+			
+	@Override
+	public User selectUserByUserId(Long userId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectUserByUserId", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+
+		}
+	}
 }

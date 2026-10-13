@@ -60,7 +60,7 @@ public class MatchEditForm extends HttpServlet {
 			PersonalMatch pm = new PersonalMatch();
 			pm.setUserId(user.getUserId());
 			pm.setPersonalMatchId(personalMatchId);
-			PersonalMatch pMatch = service.getPersmalMatchDetail(pm);
+			PersonalMatch pMatch = service.getPersonalMatchDetail(pm);
 			System.out.println(pMatch);
 			request.setAttribute("personalMatch", pMatch);
 			request.getRequestDispatcher("/jsp/match/personalMatchEdit.jsp").forward(request, response);;			
@@ -101,7 +101,7 @@ public class MatchEditForm extends HttpServlet {
 	    
 	    PersonalMatch origin = null;
 		try {
-			origin = service.getPersmalMatchDetail(pm0);
+			origin = service.getPersonalMatchDetail(pm0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -179,7 +179,7 @@ public class MatchEditForm extends HttpServlet {
             pm.setSkillIntermediate(levels.contains("중급"));
             pm.setSkillAdvanced(levels.contains("상급"));
             
-            pm.setDeleted(false);
+            pm.setDeleted(false); 
             pm.setStatus("모집중");
             
             System.out.println(pm);
@@ -203,9 +203,8 @@ public class MatchEditForm extends HttpServlet {
 	    }
 	    System.out.println("----------");
 	    try {
-            Long psersonalMatchId = service.updatePersonalMatch(pm,parts,realPath);
-            System.out.println(psersonalMatchId);
-            response.sendRedirect(request.getContextPath() + "/match/detail/view?psersonalMatchId=" + psersonalMatchId);
+            service.updatePersonalMatch(pm,parts,realPath);
+            response.sendRedirect(request.getContextPath() + "/match/detail/view?psersonalMatchId=" + personalMatchId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			AlertUtil.back(response,"수정에 실패하였습니다. 관리자에게 문의하여 주세요.");

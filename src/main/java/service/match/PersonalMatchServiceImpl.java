@@ -121,7 +121,7 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 
 	@Override
 
-	public PersonalMatch getPersmalMatchDetail(PersonalMatch personalMatch) throws Exception {
+	public PersonalMatch getPersonalMatchDetail(PersonalMatch personalMatch) throws Exception {
 		// TODO Auto-generated method stub
 		return personalMatchDao.selectPersonalMatch(personalMatch);
 	}
@@ -165,25 +165,26 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	}
 
 	@Override
-	public List<PersonalMatch> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String status, String sport,
-			String startDate, String endDate) throws Exception {
+	public List<Map<String, Object>> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String status,
+			String sport, String startDate, String endDate) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		param.put("status", status);
 		param.put("sport", sport);
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
+
 		int size = 5;
 		int cnt = favoriteDao.selectMyPageFavoriteCnt(param);
+
 		Integer allPage = (int) Math.ceil(cnt / (double) size);
+		if (allPage == 0) allPage = 1;
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
+		if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
+
 		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 10 + 1;
 		int endPage = Math.min(startPage + 9, allPage);
 
-		if (endPage < 1)
-			endPage = 1;
-		if (pageInfo.getCurPage() > endPage) {
-			pageInfo.setCurPage(endPage);
-		}
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
@@ -235,12 +236,14 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
         Long personalMatchId = personalMatchDao.insertPersonalMatch(personalMatch);
         
         //개인 경기 참가지 인서트
-        PersonalMatchParticipant pmp = new PersonalMatchParticipant();
-        pmp.setUserId(personalMatch.getUserId());	
-        pmp.setPersonalMatchId(personalMatchId);
-        pmp.setAttendance(true);
-        System.out.println(pmp);
-        personalMatchParticipantDao.insertCreatorPersonalMatchParticipant(pmp);
+//        PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+//        pmp.setUserId(personalMatch.getUserId());	
+//        pmp.setPersonalMatchId(personalMatchId);
+//        pmp.setAttendance(true);
+//        pmp.setStatus("결제완료");
+//        System.out.println(pmp);
+//        personalMatchParticipantDao.insertCreatorPersonalMatchParticipant(pmp);
+
         
         return personalMatchId;
 
@@ -252,18 +255,11 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
         Long personalMatchId = personalMatchDao.updatePersonalMatch(personalMatch);
 		return personalMatchId;
 	}
-	@Override
-	public void deletePersmalMatchDetail(Long personalMatchId) throws Exception {
-		
-	}
 
 
 
-	public List<String> getMyPageFavoriteDates(Long userId, String status, String sport) throws Exception {
-		Map<String, Object> param = new HashMap<>();
-		param.put("userId", userId);
-		param.put("status", status);
-		param.put("sport", sport);
+
+	public List<String> getMyPageFavoriteDates(Map<String, Object> param) throws Exception {
 		return favoriteDao.selectMyPageFavoriteDates(param);
 	}
 
@@ -291,6 +287,14 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
+	
+	@Override
+	public Long updateStatue(PersonalMatch personalMatch) throws Exception {
+		return personalMatchDao.updatePersonalMatchStatue(personalMatch);
+	}
+
 
 
 

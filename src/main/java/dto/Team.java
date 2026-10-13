@@ -43,25 +43,27 @@ public class Team {
     private String ages;				//나이대 20~30대
     private String days;				//월 화 수 ... 평일 주말등등
     private String times; 				//시간대 아침 오전 오후 저녁 심야
+    private Double teamRating;			//팀 평점
+    private Integer teamRatingCount;	//받은 평가 수
+    
+    
     public Team() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	
-	@Override
-	public String toString() {
-		return "Team [teamId=" + teamId + ", teamName=" + teamName + ", profileImage=" + profileImage + ", description="
-				+ description + ", skill=" + skill + ", sport=" + sport + ", gender=" + gender + ", createdAt="
-				+ createdAt + ", deleted=" + deleted + ", region1=" + region1 + ", region2=" + region2 + ", region3="
-				+ region3 + ", age20s=" + age20s + ", age30s=" + age30s + ", age40s=" + age40s + ", age50s=" + age50s
-				+ ", age60Plus=" + age60Plus + ", dayMon=" + dayMon + ", dayTue=" + dayTue + ", dayWed=" + dayWed
-				+ ", dayThu=" + dayThu + ", dayFri=" + dayFri + ", daySat=" + daySat + ", daySun=" + daySun
-				+ ", time0609=" + time0609 + ", time0912=" + time0912 + ", time1218=" + time1218 + ", time1822="
-				+ time1822 + ", time2206=" + time2206 + ", activityImage1=" + activityImage1 + ", activityImage2="
-				+ activityImage2 + ", activityImage3=" + activityImage3 + ", activityImage4=" + activityImage4
-				+ ", activityImage5=" + activityImage5 + ", currentPeople=" + currentPeople + ", regions=" + regions
-				+ ", ages=" + ages + ", days=" + days + ", times=" + times + "]";
+	public Double getTeamRating() {
+		return teamRating;
+	}
+	public void setTeamRating(Double teamRating) {
+		this.teamRating = teamRating;
+	}
+	public Integer getTeamRatingCount() {
+		return teamRatingCount;
+	}
+
+	public void setTeamRatingCount(Integer teamRatingCount) {
+		this.teamRatingCount = teamRatingCount;
 	}
 
 	public Team(Long teamId, String teamName, String profileImage, String description, String skill, String sport,
@@ -70,7 +72,8 @@ public class Team {
 			Boolean dayTue, Boolean dayWed, Boolean dayThu, Boolean dayFri, Boolean daySat, Boolean daySun,
 			Boolean time0609, Boolean time0912, Boolean time1218, Boolean time1822, Boolean time2206,
 			String activityImage1, String activityImage2, String activityImage3, String activityImage4,
-			String activityImage5, Integer currentPeople, String regions, String ages, String days, String times) {
+			String activityImage5, Integer currentPeople, String regions, String ages, String days, String times,
+			Double teamRating, Integer teamRatingCount) {
 		super();
 		this.teamId = teamId;
 		this.teamName = teamName;
@@ -111,7 +114,33 @@ public class Team {
 		this.ages = ages;
 		this.days = days;
 		this.times = times;
+		this.teamRating = teamRating;
+		this.teamRatingCount = teamRatingCount;
 	}
+
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "Team [teamId=" + teamId + ", teamName=" + teamName + ", profileImage=" + profileImage + ", description="
+				+ description + ", skill=" + skill + ", sport=" + sport + ", gender=" + gender + ", createdAt="
+				+ createdAt + ", deleted=" + deleted + ", region1=" + region1 + ", region2=" + region2 + ", region3="
+				+ region3 + ", age20s=" + age20s + ", age30s=" + age30s + ", age40s=" + age40s + ", age50s=" + age50s
+				+ ", age60Plus=" + age60Plus + ", dayMon=" + dayMon + ", dayTue=" + dayTue + ", dayWed=" + dayWed
+				+ ", dayThu=" + dayThu + ", dayFri=" + dayFri + ", daySat=" + daySat + ", daySun=" + daySun
+				+ ", time0609=" + time0609 + ", time0912=" + time0912 + ", time1218=" + time1218 + ", time1822="
+				+ time1822 + ", time2206=" + time2206 + ", activityImage1=" + activityImage1 + ", activityImage2="
+				+ activityImage2 + ", activityImage3=" + activityImage3 + ", activityImage4=" + activityImage4
+				+ ", activityImage5=" + activityImage5 + ", currentPeople=" + currentPeople + ", regions=" + regions
+				+ ", ages=" + ages + ", days=" + days + ", times=" + times + ", teamRating=" + teamRating
+				+ ", teamRatingCount=" + teamRatingCount + "]";
+	}
+
+
+
 
 
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.TeamSettlement;
 
 public class TeamSettlementDaoImpl implements TeamSettlementDao {
 
@@ -87,7 +88,7 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 			Integer result = sqlSession.update("mapper.teamsettlement.updateTeamSettlement", param);
 			sqlSession.commit();
 			return result;
-		}
+		} 
 	}
 
 	@Override
@@ -144,4 +145,22 @@ public class TeamSettlementDaoImpl implements TeamSettlementDao {
 	        return sqlSession.selectList("mapper.teamsettlement.selectMyPageTeamList", userId);
 	    }
 	}
+
+	@Override
+	public int insertTeamSettlement(TeamSettlement teamsettlement) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			int cnt = sqlSession.insert("mapper.teamsettlement.insertHostSettlement", teamsettlement);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
+
 }
+

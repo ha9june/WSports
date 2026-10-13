@@ -128,6 +128,7 @@ time {
 	font-size: 15px;
 	min-width: 0;
 }
+
 .fcm-toast-dot {
 	width: 8px;
 	height: 8px;
@@ -135,13 +136,15 @@ time {
 	border-radius: 50%;
 	flex-shrink: 0;
 }
+
 #fcmToastTitle {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+
 .fcm-toast-body {
-	padding-left: 16px;   /* 점(8px) + 간격(8px)만큼 들여써 본문을 제목 글자와 맞춤 */
+	padding-left: 16px; /* 점(8px) + 간격(8px)만큼 들여써 본문을 제목 글자와 맞춤 */
 }
 
 .fcm-toast-content {
@@ -154,7 +157,11 @@ time {
 	gap: 10px;
 }
 
-#fcmToastTime { font-size: 12px; color: #999; white-space: nowrap; }
+#fcmToastTime {
+	font-size: 12px;
+	color: #999;
+	white-space: nowrap;
+}
 
 .fcm-toast-body {
 	margin-top: 5px;
@@ -163,7 +170,7 @@ time {
 }
 
 /* 알림 제목: 한 줄 + 말줄임 */
-.Alarm.link.btn > div {
+.Alarm.link.btn>div {
 	width: 100%;
 	min-width: 0;
 }
@@ -191,6 +198,8 @@ time {
 	<link rel="stylesheet" href="${ctx}/css/${cssName}.css">
 </c:forTokens>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="${ctx}/js/common.header.js"></script>
+<script>var ctx = '${ctx}';</script>
 <script type="text/javascript">
 window.contextPath = "${ctx}";
 </script>
@@ -315,7 +324,9 @@ window.addEventListener("fcmMessageReceived", function(e) {
 						'</li>'
 					);
 				});
-				$("#bellBadge").text(result.notConfirmCnt);
+				var cnt = result.notConfirmCnt;
+				$("#bellBadge").text(cnt);
+				$("#sideAlarmBadge").text(cnt > 99 ? "99+" : cnt).toggle(cnt > 0);
 			},
 			error: function () {
 				console.log("알림 목록 조회 실패");
@@ -349,9 +360,10 @@ window.addEventListener("fcmMessageReceived", function(e) {
 </c:if>
 </head>
 
-	
-<body data-role="${empty sessionScope.user ? 'guest' : (sessionScope.user.grade eq 'Admin' ? 'admin' : 'user')}">
-<header class="site-header">
+
+<body
+	data-role="${empty sessionScope.user ? 'guest' : (sessionScope.user.grade eq 'Admin' ? 'admin' : 'user')}">
+	<header class="site-header">
 		<div class="inner">
 			<a class="logo" href="${ctx}/home/main">매치온</a>
 
@@ -385,6 +397,15 @@ window.addEventListener("fcmMessageReceived", function(e) {
 							<!-- 알람 숫자 카운트 -->
 							<span id="bellBadge" class="badge">0</span>
 						</button>
+						<c:choose>
+							<c:when test="${not empty sessionScope.user.profileImage}">
+								<c:set var="headerProfileImg" value="${ctx}/profiles/${sessionScope.user.profileImage}" />
+							</c:when>
+							<c:otherwise>
+								<c:set var="headerProfileImg"
+									value="${ctx}/img/default-profile.svg" />
+							</c:otherwise>
+						</c:choose>
 						<a class="header-profile" href="${ctx}/member/mypage/view"
 							title="마이페이지">
 							<c:choose>
@@ -397,11 +418,13 @@ window.addEventListener("fcmMessageReceived", function(e) {
 									alt="기본 프로필 사진">
 								</c:otherwise>
 							</c:choose>
+							title="마이페이지"> <img src="${headerProfileImg}" alt="내 프로필"
+							style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
 						</a>
-						<button type="button" class="logout-btn" data-modal-open="logoutModal"
-							title="로그아웃" aria-label="로그아웃">
+						<button type="button" class="logout-btn"
+							data-modal-open="logoutModal" title="로그아웃" aria-label="로그아웃">
 							<img src="${ctx}/img/icon-logout.svg" alt="">
-						</button>	
+						</button>
 					</c:otherwise>
 				</c:choose>
 			</div>
@@ -433,8 +456,8 @@ window.addEventListener("fcmMessageReceived", function(e) {
 		<div id="fcmToast" class="fcm-toast">
 			<div class="fcm-toast-content">
 				<div class="fcm-toast-top">
-					<strong><span class="fcm-toast-dot"></span><span id="fcmToastTitle"></span></strong>
-					<span id="fcmToastTime"></span>
+					<strong><span class="fcm-toast-dot"></span><span
+						id="fcmToastTitle"></span></strong> <span id="fcmToastTime"></span>
 				</div>
 				<div id="fcmToastBody" class="fcm-toast-body"></div>
 			</div>

@@ -17,4 +17,12 @@ public interface UserPenaltyDao {
 	void insertUserPermanentPenalty(Map<String, Object> param) throws Exception;
 	//관리자 페널티 점수 부여
 	void insertChangeUserPenalty(Map<String, Object> param) throws Exception;
+	//스케줄러 : 자동 정지 대상 회원
+	List<Map<String, Object>> selectAutoSuspendTargets() throws Exception;
+	//스케줄러 : 자동 정지 부여 (기록 + 정지 상태, 한 트랜잭션)
+	void insertAutoSuspend(Map<String, Object> param) throws Exception;
+	//스케줄러 : 영구정지 검토 알림 대상 회원 (100점 이상)
+	List<Map<String, Object>> selectReviewTargets() throws Exception;
+	//스케줄러 : 관리자 회원 id 목록 (알림 받을 사람)
+	List<Long> selectAdminUserIds() throws Exception;
 }

@@ -28,8 +28,7 @@
 	            <span class="avatar sm default"></span>
 	            <strong>${user.nickname}</strong>
 	            <%-- <span class="lv">${user.skill}</span> --%>
-	            <span class="rating">${user.avgRatingScore}</span>
-	            
+	            <span class="rating">${user.avgRatingScore}</span>   
 	        </a>
 	    </c:forEach>
     </div>

@@ -77,7 +77,7 @@ public class NoticeDaoImpl implements NoticeDao {
 			throw e;
 		}	
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> selectPinnedNoticeList(Map<String, Object> param) throws Exception {
 		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {

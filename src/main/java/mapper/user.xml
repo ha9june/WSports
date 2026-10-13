@@ -6,6 +6,10 @@
 	<select id="selectLoginId" resultType="user" parameterType="String">
 		select * from user where login_id=#{loginId}
 	</select>
+	
+	<select id="selectUserByUserId" resultType="user" parameterType="Long">
+		select * from user where user_id=#{userId}
+	</select>
 
 	<select id="selectLoginUser" resultType="user" parameterType="String">
 		select * from user where login_id=#{loginId} and withdrawal_at is null

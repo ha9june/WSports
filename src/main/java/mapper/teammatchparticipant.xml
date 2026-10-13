@@ -24,4 +24,19 @@
 		from team_match_participant
 		where team_match_id = #{teamMatchId} and status = '결제완료'
 	</select>
+	
+	<select id="selectTeamMatchParticipantList" parameterType="Long" resultType="teammatchparticipant">
+		select *
+		from team_match_participant
+		where team_match_id = #{teamMatchId}
+		  and status = '결제완료'
+	</select>
+	
+	<update id="updateAttendance" parameterType="map">
+		update team_match_participant
+		set attendance = #{attendance}
+		where team_match_id = #{teamMatchId}
+		  and team_id = #{teamId}
+	</update>
+
 </mapper>

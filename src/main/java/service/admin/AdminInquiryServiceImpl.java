@@ -60,6 +60,8 @@ public class AdminInquiryServiceImpl implements AdminInquiryService {
 		param.put("answer", answer);
 		param.put("adminId", adminId);
 		inquiryDao.updateAdminInquiryAnswer(param);//답변 저장
+		
+		try {
 		//문의 세부정보 조회, 작성자 번호, 문의 제목 꺼내기
 		Map<String, Object> detail = inquiryDao.selectAdminInquiryDetail(inquiryId);
 		if (detail == null) return;
@@ -78,6 +80,9 @@ public class AdminInquiryServiceImpl implements AdminInquiryService {
 		alarm.setLink(link);
 		//알림 저장, 푸시 전송
 		notificationService.sendNotification(alarm);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	//문의 세부정보
 	@Override

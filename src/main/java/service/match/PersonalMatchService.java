@@ -25,28 +25,30 @@ public interface PersonalMatchService {
 
 	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String month,String status,String sport)throws Exception;
 		
-
 	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
 	//일반 매치 가져오기
 	List<PersonalMatch> getNormalMatch(MatchSearchInfo searchInfo) throws Exception;
 	List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception;
 	List<String>getMyPageCreatedPersonalMatchDates(Long userId, String status, String sport)throws Exception;
 	List<String>getMyPagePersonalMatchDates(Long userId, String status, String sport)throws Exception;
-	List<String>getMyPageFavoriteDates(Long userId, String status, String sport) throws Exception;
-	List<PersonalMatch>selectMyPageFavoriteList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
+	List<Map<String, Object>> selectMyPageFavoriteList(PageInfo pageInfo, Long userId, String status,
+			String sport, String startDate, String endDate) throws Exception;
 	
 	//마이페이지 관심경기 추가
-	void insertMyPageHeartMatch(Map<String,Object>param)throws Exception;
+	void insertMyPageHeartMatch(Map<String,Object> param)throws Exception;
 	//마이페이지 관심경기 제거
-	void deleteMyPageHeartMatch(Map<String,Object>param)throws Exception;
+	void deleteMyPageHeartMatch(Map<String,Object> param)throws Exception;
 	//마이페이지 관심경기 0,1표시
 	Boolean toggleMyPageHeartMatch(long userId,long matchId,String matchType)throws Exception;
 	Boolean isHeart(long userId,long matchId,String matchType)throws Exception;
+	List<String> getMyPageFavoriteDates(Map<String, Object> param) throws Exception;
 	//개인매치 상세글
-	PersonalMatch getPersmalMatchDetail(PersonalMatch personalMatch) throws Exception;
+	PersonalMatch getPersonalMatchDetail(PersonalMatch personalMatch) throws Exception;
 
 	Long createPersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;
 	Long updatePersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath) throws Exception;
-	void deletePersmalMatchDetail(Long personalMatchId) throws Exception;
+	
+	//매치글 상태 없데이트(취소,삭제 관련)
+	Long updateStatue(PersonalMatch personalMatch) throws Exception;
 	
 }

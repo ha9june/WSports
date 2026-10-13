@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.List;
 import java.util.Map;
 
 import dto.PersonalMatch;
@@ -26,6 +27,12 @@ public interface PersonalPaymentDao {
 	PersonalMatch selectPersonalPaymentMatch(String paymentKey) throws Exception;
 	//중복참가 확인
 	Integer selectPersonalJoinCnt(Long userId, Long matchId) throws Exception;
-	
-	
+	//개인 경기 모집자, 제목
+	Map<String, Object> selectPersonalMatchWriter(Long matchId) throws Exception;
+	//환불 대상 조회
+	Map<String, Object> selectRefundTarget(Map<String, Object> param) throws Exception;
+	//개인 경기 결제+참가 취소
+	void updateRefund(Map<String, Object> param) throws Exception;
+	//자동 환불 대상 결제 목록
+	List<Map<String, Object>> selectPaidPaymentsByMatch(Long matchId) throws Exception;
 }

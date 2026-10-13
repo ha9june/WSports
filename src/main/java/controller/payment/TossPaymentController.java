@@ -27,6 +27,7 @@ import service.payment.PaymentServiceImpl;
 import service.team.TeamMatchService;
 import service.team.TeamMatchServiceImpl;
 import util.CheckUtil;
+import util.TossKey;
 
 /**
  * Servlet implementation class PaymentHistoryList
@@ -34,8 +35,6 @@ import util.CheckUtil;
 @WebServlet("/payment/confirm")
 public class TossPaymentController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	// 토스페이먼츠 테스트 시크릿 키
-    private static final String SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
     /**
      * @see HttpServlet#HttpServlet()   
      */
@@ -92,7 +91,7 @@ public class TossPaymentController extends HttpServlet {
 			    }
 				//팀 경기 상세 조회 서비스
 				TeamMatchService teamMatchService = new TeamMatchServiceImpl();
-				match = teamMatchService.getTeamMatchNotUser(matchId);
+				match = paymentService.getTeamMatch(matchId);
 				totalAmount = paymentService.getTeamMatchTotalAmount(matchId.intValue());
 				request.setAttribute("teamId", Long.parseLong(teamIdParam));
 			} else {
@@ -100,7 +99,7 @@ public class TossPaymentController extends HttpServlet {
 				PersonalMatch pm = new PersonalMatch();
 				pm.setUserId(user.getUserId());
 				pm.setPersonalMatchId(matchId);
-				match = personalMatchService.getPersmalMatchDetail(pm);
+				match = personalMatchService.getPersonalMatchDetail(pm);
 				totalAmount = paymentService.getPersonalMatchTotalAmount(matchId.intValue());
 			}
 
@@ -188,7 +187,7 @@ public class TossPaymentController extends HttpServlet {
 		// 2. 토스페이먼츠 인증 헤더 생성 (Basic Authorization)
 		// 시크릿 키 뒤에 ':'를 붙인 후 Base64 인코딩
 		String authHeader = "Basic "
-				+ Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes(StandardCharsets.UTF_8));
+				+ Base64.getEncoder().encodeToString((TossKey.SECRET_KEY + ":").getBytes(StandardCharsets.UTF_8));
 		
 		// 토스에는 필요한 세 값 전송
 		JSONObject confirmJson = new JSONObject();
@@ -248,7 +247,7 @@ public class TossPaymentController extends HttpServlet {
 			response.getWriter().write("{\"message\":\"서버 내부 통신 오류가 발생했습니다.\"}");
 		} finally {
 			if (conn != null) {
-				conn.disconnect();
+				 conn.disconnect();
 			}
 		}
 	}

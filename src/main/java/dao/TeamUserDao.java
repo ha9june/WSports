@@ -11,4 +11,5 @@ public interface TeamUserDao {
 	List<User> selectTeamUserList(Long teamId) throws Exception;
 	String selectRole(Map<String, Object> param) throws Exception;
 	List<Long> selectTeamIdListByUserId(Long userId) throws Exception;
+	int updateTeamUserRole(Long teamId, Long userId, String role) throws Exception;
 }

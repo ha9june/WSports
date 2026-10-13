@@ -100,7 +100,43 @@ public class UserPenaltyDaoImpl implements UserPenaltyDao {
 				throw e;
 			}
 		}
-		
+	}
+	//스케줄러 : 자동 정지 대상 회원
+	@Override
+	public List<Map<String, Object>> selectAutoSuspendTargets() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.userpenalty.selectAutoSuspendTargets");
+		}
+	}
+	//스케줄러 : 자동 정지 부여 (기존 쿼리 2개를 한 트랜잭션으로)
+	@Override
+	public void insertAutoSuspend(Map<String, Object> param) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.userpenalty.insertUserPenalty", param);
+			sqlSession.update("mapper.userpenalty.updateUserPenalty", param);
+			sqlSession.commit();
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+	//스케줄러 : 영구정지 검토 알림 대상 회원 (100점 이상)
+	@Override
+	public List<Map<String, Object>> selectReviewTargets() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.userpenalty.selectReviewTargets");
+		}
+	}
+
+	//스케줄러 : 관리자 회원 id 목록 (알림 받을 사람)
+	@Override
+	public List<Long> selectAdminUserIds() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.userpenalty.selectAdminUserIds");
+		}
 	}
 
 }

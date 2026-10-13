@@ -53,10 +53,11 @@
 .member-card .info:hover .hover-card { display: block; }
 .post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
 .post-card { display: block; padding: 18px 20px; border: 1px solid var(--ds-border); border-radius: var(--r-8); background: #fff; }
-.post-card .ttl { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; }
-.post-card p { font-size: 11px; color: var(--ds-text-2); margin-top: 12px; }
+.post-card .ttl { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; color: var(--ds-text);}
+.post-card p { font-size: 12px; color: var(--ds-text-2); margin-top: 12px; }
 .post-card .acts { display: flex; gap: 8px; margin-top: 14px; }
-
+.post-card[data-href] { cursor: pointer; }
+.post-card[data-href]:hover { border-color: #1677ff; }
 .btn-join:disabled { background: var(--ds-border-subtle); color: var(--ds-text-3); cursor: not-allowed; }
 .btn-join:disabled:hover { background: var(--ds-border-subtle); }
 
@@ -141,6 +142,8 @@
 .tm-row .left {
 	gap: 10px;
 }
+
+
 .tm-row .main { flex: 1; min-width: 0; }
 .tm-row strong { font-size: 18px; }
 .tm-row .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 11px; color: var(--ds-text-2); margin-top: 8px; }
@@ -318,28 +321,27 @@
 .place-row .place-name { flex: 2; min-width: 0; }
 .place-row .btn { flex: none; }
 
-.filter-panel {
-	width: 540px;                    /* fit-content 대신 고정 */
+.filter-panel.tm-filter {
+	width: 540px;
 	max-width: calc(100vw - 48px);
 	padding: 16px;
 }
-
-.filter-panel .chip-group {
-	display: grid;                   /* 빠져 있다면 반드시 포함 */
+.filter-panel.tm-filter .chip-group {
+	display: grid;
 	grid-template-columns: 56px 1fr;
 	column-gap: 4px;
 	align-items: start;
 }
-.filter-panel .chip-group .chip-label {
+.filter-panel.tm-filter .chip-group .chip-label {
 	padding-top: 6px;
 	white-space: nowrap;
 }
-.filter-panel .chip-group .chips {
+.filter-panel.tm-filter .chip-group .chips {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 }
-.filter-panel .chip { white-space: nowrap; }
+.filter-panel.tm-filter .chip { white-space: nowrap; }
 
 .input#periodPicker,
 .input#periodPicker[readonly] {
@@ -358,3 +360,73 @@
 	border-color: #1677ff;
 	box-shadow: 0 0 0 3px rgba(22, 119, 255, .12);
 }
+
+.postgame-card .match-summary .meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 16px;
+	margin-top: 6px;
+}
+.postgame-card .match-summary .meta > span {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 5px;
+	width: auto;
+	flex: 0 0 auto;
+}
+.postgame-card .match-summary .meta > span > img {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	flex: 0 0 auto;
+	margin: 0;
+}
+
+.postgame-card .eval-row .att-view {
+	display: flex;
+	align-items: center;
+}
+.postgame-card .eval-row .att-view .pill {
+	display: inline-flex;
+	width: auto;
+	padding: 4px 14px;
+	flex: 0 0 auto;
+}
+.btn-danger-soft {
+  color: #d9433c;
+  border-color: #f1c7c4;
+  background: #fff;
+}
+.btn-danger-soft:hover {
+  background: #fdf1f0;
+  border-color: #e9a9a5;
+}
+.head-with-action { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+
+.vs-card .who { display: inline-block; font-size: 12px; font-weight: 500; padding: 3px 12px; border-radius: 99px; margin: 0; }
+.vs-card .who.host { background: #e8f1ff; color: #1457d6; }
+.vs-card .who.opp  { background: #f1f3f5; color: #495057; }
+
+.vs-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 10px 0 22px; }
+.vs-head h2 { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-link,
+.back-link {
+  flex: none;
+  color: #0b5cff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.vs-link:hover,
+.back-link:hover { text-decoration: underline; }
+
+@media (max-width: 768px) { .head-with-action { flex-direction: column; align-items: flex-start; } }
+
+.team-side .team-rating { margin: 4px 0 0; font-size: 13px; }
+
+.host-inline .host-name,
+.host-inline .host-name strong { color: var(--text-primary, #111827); }
+.host-inline .host-name:hover strong { text-decoration: underline; }

@@ -17,7 +17,7 @@
       box.classList.toggle('is-open');
     });
 
-    panel.addEventListener('click', function () {
+    /*panel.addEventListener('click', function () {
       setTimeout(function () {
         // '전체' 를 제외한 선택 칩 수를 배지에 표시
         var n = box.querySelectorAll(
@@ -26,7 +26,9 @@
 
         if (countEl) countEl.textContent = n;
       }, 0);
-    });
+    });*/
+    
+    
   });
 
   document.addEventListener('click', function (e) {
@@ -69,7 +71,7 @@
         });
 
       var countEl = shell.querySelector('.filter-more .count');
-      if (countEl) countEl.textContent = '0';
+      if (countEl) countEl.textContent = '';
 
       shell.querySelectorAll('input[type=text]').forEach(function (i) {
         i.value = '';

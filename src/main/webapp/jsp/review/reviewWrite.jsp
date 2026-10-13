@@ -22,27 +22,28 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
 	<form class="rail" action="${ctx}/review/create" method="post"
-		enctype="multipart/form-data">
+		enctype="multipart/form-data"
+		style="display: block; box-sizing: border-box; width: 100%; max-width: 744px; margin: 0 auto !important; padding-left: 0 !important; padding-right: 0 !important;">
 		<nav class="breadcrumb">
-			<a href="${ctx}/review/create">후기</a><span class="sep"></span><span>작성</span>
+			<a href="${ctx}/review/list">후기</a><span class="sep">›</span><span>작성</span>
 		</nav>
 		<div class="page-head">
 			<h1 class="page-title">후기 작성</h1>
 			<p class="page-desc">경기 후기를 작성하고 경험을 공유해보세요.</p>
 		</div>
 
-		<div style="width: 744px; max-width: 100%">
+		<div style="width: 100%;">
 			<div class="field">
 				<label class="field-label" for="matchNo">참여 경기</label>
 				<c:choose>
 					<c:when test="${not empty fixedMatch}">
 						<input class="input" value="${fixedMatch}" readonly
-							style="width: 420px">
+							style="width: 100%">
 						<input type="hidden" name="matchNo" value="${param.matchNo}">
 					</c:when>
 					<c:otherwise>
 						<select class="select" id="matchNo" name="matchNo"
-							style="width: 420px" required>
+							style="width: 100%; display: block;" required>
 							<option value="">참여한 경기를 선택하세요</option>
 							<c:forEach var="m" items="${myMatches}">
 								<option value="${m.matchType}:${m.matchId}">${m.title}</option>
@@ -52,34 +53,31 @@
 				</c:choose>
 			</div>
 
-			<div class="field mt-24">
+			<div class="field mt-24" style="margin-top: 24px !important;">
 				<label class="field-label" for="rvTitle">제목</label> <input
-					class="input" id="rvTitle" name="title" style="width: 420px"
+					class="input" id="rvTitle" name="title" style="width: 100%"
 					placeholder="후기 제목을 입력하세요" required>
 			</div>
 
 			<div class="field mt-24">
 				<label class="field-label" for="rvBody">내용</label>
 				<textarea class="textarea soft" id="rvBody" name="content" rows="7"
-					placeholder="경기에서 좋았던 점이나 참고할 내용을 적어주세요." required></textarea>
+					style="width: 100%" placeholder="경기에서 좋았던 점이나 참고할 내용을 적어주세요."
+					required></textarea>
 			</div>
+			<div class="photo-upload">
+				<label class="photo-add"><span class="plus">+</span>사진 추가 <input
+					type="file" id="photos" name="photos" accept="image/png,image/jpeg"
+					multiple hidden> </label>
+				<div id="photoPreviewList"></div>
+			</div>
+			<p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
+		</div>
 
-			<div class="field mt-24">
-				<span class="field-label">사진 <span class="t-11 t-2">선택
-						· 최대 5장</span></span>
-				<div class="photo-upload">
-					<label class="photo-add"><span class="plus">+</span>사진 추가 <input
-						type="file" id="photos" name="photos"
-						accept="image/png,image/jpeg" multiple hidden> </label>
-					<div id="photoPreviewList"></div>
-				</div>
-				<p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
-			</div>
-
-			<div class="form-actions">
-				<a class="btn btn-outline" href="${ctx}/review/list">취소</a>
-				<button type="submit" class="btn btn-primary">등록</button>
-			</div>
+		<div class="form-actions">
+			<a class="btn btn-outline" href="${ctx}/review/list">취소</a>
+			<button type="submit" class="btn btn-primary">등록</button>
+		</div>
 		</div>
 	</form>
 	<script>

@@ -173,13 +173,15 @@
 			<p class="page-desc">기본 정보와 소개글을 수정해보세요.</p>
 		</div>
 		<div class="team-form-inner">
-			<div class="field">
-				<label class="field-label" for="teamName">팀명</label><input
-					class="input" id="teamName" name="teamName"
-					value="<c:out value='${team.teamName}' />"
-					placeholder="팀 이름을 입력하세요" required>
-			</div>
-
+		<div class="field">
+			<label class="field-label" for="teamName">팀명
+				<span class="hint" id="teamNameCount">0/15</span>
+			</label>
+			<input class="input" id="teamName" name="teamName"
+				value="<c:out value='${team.teamName}' />"
+				maxlength="15" autocomplete="off"
+				placeholder="팀 이름을 입력하세요 (2~15자)">
+		</div>
 			<div class="field mt-24">
 				<span class="field-label strong"> 대표 사진 <span
 					class="t-11 t-2" style="font-weight: 400"> JPG, PNG · 1장 </span>
@@ -383,6 +385,37 @@
 					hidden.value = values.join(",");
 				}, 0);
 			});
+		});
+		
+		var teamNameInput = document.getElementById("teamName");
+		var teamNameCount = document.getElementById("teamNameCount");
+		teamNameCount.textContent = teamNameInput.value.length + "/15";
+		teamNameInput.addEventListener("input", function() {
+			teamNameCount.textContent = teamNameInput.value.length + "/15";
+		});
+		
+		document.querySelector('.form-rail').addEventListener('submit', function (e) {
+			var msg = '';
+			var $ = function (id) { return document.getElementById(id); };
+
+			var name = $('teamName').value.trim().replace(/\s+/g, ' ');
+
+			if (!name) msg = '팀명을 입력해 주세요.';
+			else if (name.length < 2 || name.length > 15) msg = '팀명은 2~15자로 입력해 주세요.';
+			else if (!/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9 ]+$/.test(name)) msg = '팀명은 한글, 영문, 숫자, 공백만 사용할 수 있어요.';
+			else if (!$('sport').value) msg = '종목을 선택해 주세요.';
+			else if (!$('days').value) msg = '활동 요일을 선택해 주세요.';
+			else if (!$('times').value) msg = '활동 시간대를 선택해 주세요.';
+			else if (!$('ages').value) msg = '연령대를 선택해 주세요.';
+			else if (!document.querySelectorAll('input[name="regions"]').length) msg = '활동 지역을 1개 이상 선택해 주세요.';
+			else if (!$('gender').value) msg = '성별을 선택해 주세요.';
+			else if (!$('skill').value) msg = '팀 레벨을 선택해 주세요.';
+			else if (!$('intro').value.trim()) msg = '팀 소개를 입력해 주세요.';
+
+			if (msg) {
+				e.preventDefault();
+				showToast(msg);
+			}
 		});
 	</script>
 </main>

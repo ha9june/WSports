@@ -7,9 +7,8 @@
    role  : guest(인기 기준 추천, 로그인 버튼) / member·admin(맞춤 추천 탭 추가)
    state : list(일반 검색) | map(지도 검색) | mapTyping(지도 검색어 입력 중) | mapPin(지도 핀 선택)
 --%>
-
 <c:set var="pageTitle" value="경기 찾기" />
-<c:set var="pageCss" value="home" />
+<c:set var="pageCss" value="home,match" />
 <c:set var="pageJs" value="home" />
 <c:set var="activeNav" value="match" />
 <c:set var="showFooter" value="true" />
@@ -23,20 +22,20 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<script>
+	const locationReady = getUserLocation().catch(() => null);
+	let userLat = null, userLng = null;
 
-<script>		
+	
 	let page =1;
 	
 	function favBtn(item, extraClass){
 	    return `<button type="button" class="fav-btn `+(extraClass||"")+(item.favorite ? " is-on" : "")+`"
-	    data-fav data-auth data-id="`+item.personalMatchId+`" aria-label="관심 경기">${heart}</button>`;
+	    data-fav2 data-auth data-match-type="Personal" data-match-id="`+item.personalMatchId+`" aria-label="관심 경기">${heart}</button>`;
 	}
 
 	$(function(){
-		let data = {"userId":"test1","grade":"User"};
-		
-		
-		
+
 		function NowList(searchType){
 			$.ajax({
 				url:"${ctx}/match/list/now",
@@ -45,8 +44,9 @@
 			    data: {
 			    	requestType: "ajax",
 			    	searchType:searchType,
-			    	data:JSON.stringify(data),
-			    	},
+			    	userLat: userLat,
+			    	userLng: userLng
+		    	},
 				success:function(result){
 					let html = "";
 					let searchtypeText = "";
@@ -93,7 +93,7 @@
 						      `+item.region+`
 						      </p>
 						      <p class="price">
-						      	`+item.participationFee+`원
+						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
 						      </p>
 						    </div>
 						    <p class="count">
@@ -115,19 +115,24 @@
 		}
 		function NormalList(page,target){
 			
-	        var data = $('#matchSearchForm').serializeArray();
+	        var data = $('#normalMatchSearchForm').serializeArray();
 	        data.push({
 	            name: 'page',
 	            value: page
 	        });
-
 	        data.push({
 	            name: 'requestType',
 	            value: 'ajax'
+	        });	     
+	        data.push({
+	            name: 'userLat',
+	            value: userLat
 	        });
-	        
+	        data.push({
+	            name: 'userLng',
+	            value: 'userLng'
+	        });
 	        console.log(data);
-			
 			$.ajax({
 				url:"${ctx}/match/list/normal",
 				type:"post",
@@ -136,6 +141,11 @@
 				success:function(result){
 					let html = "";
 					let searchTypeText="";
+					
+					
+					if(result.length < 4){
+						$("#moreBtn").addClass("is-hidden");
+					}
 					result.forEach(function(item) {
 						let sportsType = "";
 					    if(item.sport == "축구/풋살" || item.sport == "축구"){
@@ -147,27 +157,32 @@
 					    }else if(item.sport == "테니스"){
 					    	sportsType="tennis";
 					    }
-					    					    
+					    				    
 						
 						html+=`
 							<a class="match-row" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
-				            <div class="left"><span class="pill pill-success bd">모집중</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
+				            <div class="left"><span class="pill pill-success bd">`+item.status+`</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
 				            <div class="main">
 				              <p class="title">
 				              `+item.title+`
 				              </p>
 				              <div class="meta">
-				                <span class="it people"><img src="${ctx}/img/icon-person.svg" alt="">8/10 &nbsp; 최소 8명 <span class="cap"><i style="width:80%"></i></span></span>
+				                <span class="it people">
+				                	<img src="${ctx}/img/icon-person.svg" alt="">`+item.currentPeople+`/`+item.maxPeople+` &nbsp; 최소 8명 
+				                	<span class="cap">
+				                		<i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i>
+			                		</span>
+			                	</span>
 				                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">`+FormatDate(item.matchDate, item.startTime)+`</span>
-				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">서울 마포구</span>
-				                <span class="price">10,000원</span>
+				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">`+item.region+`</span>
+				                <span class="price">`+Number(item.participationFee).toLocaleString('ko-KR')+`원</span>
 				                `+favBtn(item)+`
 				              </div>
 				            </div>
 				          </a>
 						`;
 					});
-					if(target == null || target.id === "matchSearchForm")
+					if(target == null || target.id === "normalMatchSearchForm")
 						$("#normalMatchListDiv").html(html);
 					else if (target.id === "moreBtn")
 				    	$("#normalMatchListDiv").append(html);	
@@ -182,12 +197,16 @@
 		}
 		
 
+		//초기 리스트
+		locationReady.then(function (loc) {
+			
+			userLat = loc ? loc.lat : null;
+			userLng = loc ? loc.lng : null;
+			NowList("${sessionScope.user == null ? 'POPULAR' : 'RECOMAND'}");
+			NormalList(page);
+
+		});
 		
-		
-		
-	    NowList("${sessionScope.user == null ? 'POPULAR' : 'RECOMAND'}");
-		
-		NormalList(page);
 		$("#nowRecomandBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
@@ -209,63 +228,41 @@
 			NowList("NEW");
 		});
 		
+		
+		
 		//일반검색 버튼
 		$("#normalBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
-			$(".normalDivGroup").removeClass("is-hidden");
-		  	$(".mapDivGroup").addClass("is-hidden");
-			page=1;
-			NormalList(page, this);
+		  	$(".normalGroup").removeClass("is-hidden");
+		  	$(".mapGroup").addClass("is-hidden");
+			//NormalList(page, this);
 		});
 		$("#mapBtn").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
-			$(".normalDivGroup").addClass("is-hidden");
-		  	$(".mapDivGroup").removeClass("is-hidden");
-			map.relayout();
-			searchMatch(); 
-
+			$(".normalGroup").addClass("is-hidden");
+		  	$(".mapGroup").removeClass("is-hidden");
+		  	map.relayout();
+			searchMapMatch();
+			
 		});
 		$("#moreBtn").on("click", function(e) {
 			NormalList(++page,this);
 		});
-	    $('#matchSearchForm').on('submit', function(e) {
+
+	    $('#normalMatchSearchForm').on('submit', function(e) {
+	    	page=1;
+			$("#moreBtn").removeClass("is-hidden");
 	        e.preventDefault();
-	        if ($("#mapInputs").hasClass("is-hidden")) {
-	        	
-			    NormalList(page, this);
-			} else {
-				searchPlaces();
-			    searchMatch();   
-			}
+		    NormalList(page, this);
+	    });
+	    $('#mapMatchSearchForm').on('submit', function(e) {
+	        e.preventDefault();
+			searchPlaces();
 	    });
 		
-		$(document).on("click", ".fav-btn", function(e){
-		    e.preventDefault();
-		    e.stopPropagation();
-		    const $btn = $(this);
-		    alert($btn.data("id"));
-
-		    $.ajax({
-		        url: "${ctx}/mypage/matches/saved",
-		        type: "post",
-		        dataType: "text",              
-		        data: {
-		            matchId: $btn.data("id"),
-		            matchType: "PERSONAL"      
-		        },
-		        success: function(res){
-		            if(res === "insert") $btn.addClass("is-on");
-		            else if(res === "delete") $btn.removeClass("is-on");
-		        },
-		        error: function(xhr){
-		            if(xhr.status == 401) alert("로그인이 필요합니다.");
-		            else alert("오류가 생겼습니다.");
-		        }
-		    });
-		});
-
+	     
 		
 
 	});
@@ -305,8 +302,85 @@
       </div>
 
 
-      <%-- TODO: action 을 검색 서블릿 URL 로 교체 (예: ${ctx}/match/list) --%>
-      <form class="search-shell" id="matchSearchForm" method="post">
+
+
+
+      <form class="normalGroup search-shell" id="normalMatchSearchForm" method="post">
+        <div class="filter-row">
+          <div class="filter-cluster">
+            <div class="chip-group" data-select="multi" data-name="sports">
+              <span class="chip-label">종목</span>
+              <button type="button" class="chip" data-value="축구/풋살">축구/풋살</button>
+              <button type="button" class="chip" data-value="농구">농구</button>
+              <button type="button" class="chip" data-value="테니스">테니스</button>
+              <button type="button" class="chip" data-value="배드민턴">배드민턴</button>
+            </div>
+            <div class="filter-more">
+              <button type="button" class="btn btn-outline btn-sm" data-filter-toggle>필터 더보기 +</button>
+              <div class="filter-panel">
+                <div class="chip-group" data-select="single" data-name="gender">
+                  <span class="chip-label">성별</span>
+                  <button type="button" class="chip" data-value="혼성">성별무관</button>
+                  <button type="button" class="chip" data-value="남성">남성</button>
+                  <button type="button" class="chip" data-value="여성">여성</button>
+                </div>
+                <div class="chip-group" data-select="multi" data-name="ages">
+                  <span class="chip-label">연령대</span>
+                  <button type="button" class="chip">20대</button><button type="button" class="chip">30대</button>
+                  <button type="button" class="chip">40대</button><button type="button" class="chip">50대</button>
+                  <button type="button" class="chip" data-value="60대">연령무관</button>
+                </div>
+                <div class="chip-group" data-select="multi" data-name="skills">
+                  <span class="chip-label">실력</span>
+                  <button type="button" class="chip">입문</button><button type="button" class="chip">초급</button>
+                  <button type="button" class="chip">중급</button><button type="button" class="chip">상급</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-reset" data-filter-reset>필터 초기화</button>
+        </div>
+
+
+		<div class="input-row">
+		  <div id="normalInputs" class="normalDivGroup" style="display:contents">
+		    <select class="select" id="sido" name="sido" style="width: 140px"
+				aria-label="시·도">
+				<option value="">시 · 도</option>
+				<option value="서울시">서울시</option>
+				<option value="경기도">경기도</option>
+			</select>
+			 <select class="select" id="sigungu" name="sigungu" style="width: 140px" aria-label="시군구" disabled>
+					<option value="">시군구</option>
+			</select>
+		    <input type="text"
+		           id="periodPicker"
+		           class="input" 
+		           placeholder="날짜 선택 "  
+		           style="width:220px;">
+		    <input type="hidden" id="startDate" name="startDate">
+		    <input type="hidden" id="endDate" name="endDate">
+			<input class="input keyword" name="keyword" placeholder="제목 또는 내용 키워드 검색">			
+		  </div>
+ 		  
+		  
+		  <button type="submit" class="btn btn-primary btn-lg">검색</button>
+		</div>
+		<div class="normalDivGroup">
+			<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
+		    <div class="picked" id="pickedRegions"></div>
+		    <div id="regionInputs"></div>
+		</div>
+        <div class="filter-more" style="padding-top:5px;">
+			<span class="count">
+             </span>
+		</div>
+      </form>
+      
+      
+ 
+      
+      <form class="mapGroup search-shell is-hidden" id="mapMatchSearchForm" method="post">
         <div class="filter-row">
           <div class="filter-cluster">
             <div class="chip-group" data-select="multi" data-name="sports">
@@ -345,29 +419,7 @@
 
 
 		<div class="input-row">
-		  <div id="normalInputs" class="normalDivGroup" style="display:contents">
-		    <select class="select" id="sido" name="sido" style="width: 140px"
-				aria-label="시·도">
-				<option value="">시 · 도</option>
-				<option value="서울시">서울시</option>
-				<option value="경기도">경기도</option>
-			</select>
-			 <select class="select" id="sigungu" name="sigungu" style="width: 140px" aria-label="시군구" disabled>
-					<option value="">시군구</option>
-			</select>
-		    <input type="text"
-		           id="periodPicker"
-		           class="input" 
-		           placeholder="날짜 선택 "  
-		           style="width:220px;">
-		    <input type="hidden" id="startDate" name="startDate">
-		    <input type="hidden" id="endDate" name="endDate">
-			<input class="input keyword" name="keyword" placeholder="제목 또는 내용 키워드 검색">			
-		  </div>
- 		  
-		  
-		  
-		  <div id="mapInputs" class="mapDivGroup is-hidden" style="display:contents">
+		  <div id="mapInputs" style="display:contents">
 	          <div class="map-query">
 	            <input id="keyword" type="text" name="keyword" placeholder="지역을 검색해 주세요" aria-label="키워드" data-value="서울시청">
 			  </div>
@@ -376,18 +428,13 @@
 		  
 		  <button type="submit" class="btn btn-primary btn-lg">검색</button>
 		</div>
-		<div class="normalDivGroup">
-			<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
-		    <div class="picked" id="pickedRegions"></div>
-		    <div id="regionInputs"></div>
-		</div>
       </form>
     </section>
 
 
 
 	      <%-- ===== 일반 검색 결과 : 경기 리스트 ===== --%>
-	      <div id="normalDiv" class="normalDivGroup" style="display:contents">
+	      <div id="normalDiv" class="normalGroup" style="display:contents">
 	        <section class="list-head">
 	          <h2 class="section-title">경기 리스트</h2>
 	          <p class="section-desc">검색 조건에 맞는 경기를 한 줄씩 빠르게 비교해보세요.</p>
@@ -401,7 +448,7 @@
 
 
 
-      	<div id="mapDiv" class="mapDivGroup is-hidden" style="display:contents">
+      	<div id="mapDiv" class="mapGroup is-hidden" style="display:contents">
 	        <section class="list-head">
 	          <h2 class="section-title">지도 기반 경기 찾기</h2>
 	          <p class="section-desc">검색한 지역 주변 경기를 지도에서 확인하세요.</p>
@@ -432,25 +479,31 @@
 	    level: 5 // 지도의 확대 레벨
 	};
 	var map = new kakao.maps.Map(mapContainer, mapOption);
-
+	let mapCenter = map.getCenter();                         // 현재 기준 중심 저장
+	locationReady.then(function (loc) {
+		if (!loc) return;                                    // 위치 실패 → 서울시청 유지
+		mapCenter = new kakao.maps.LatLng(loc.lat, loc.lng);
+		map.setCenter(mapCenter);
+	});
+	
 	var ps = new kakao.maps.services.Places();  
 	
 	kakao.maps.event.addListener(map, 'dragend', function() {
-	    searchMatch();
+		searchMapMatch();
 	});
 	kakao.maps.event.addListener(map, 'zoom_changed', function() {
-	    searchMatch();
+		searchMapMatch();
 	});
 	
 	
 	function searchPlaces() {
 
 	    var keyword = document.getElementById('keyword').value;
+	    //if (!keyword) 
 	    if (!keyword.replace(/^\s+|\s+$/g, '')) {
-	        alert('키워드를 입력해주세요!');
+	    	searchMapMatch();
 	        return false;
 	    }
-	    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
 	    ps.keywordSearch( keyword, placesSearchCB); 
 	}
 	//콜백함수
@@ -469,12 +522,9 @@
 	function movePlace(places) {
 	    var moveLatLon = new kakao.maps.LatLng(places[0].y, places[0].x);
 	    map.setCenter(moveLatLon);
-	    searchMatch();
-	    
+	    searchMapMatch();
 	}
 	
-
-
 	function createMarker(item) {
     	 
 	    let sportsType = "";
@@ -545,9 +595,8 @@
 	    });
 	    markers = [];
 	}
-	
 
-	function searchMatch() {
+	function searchMapMatch() {
 	    const bounds = map.getBounds();
 	    const sw = bounds.getSouthWest();
 	    const ne = bounds.getNorthEast();
@@ -555,7 +604,7 @@
 	    const maxLat = ne.getLat();
 	    const minLng = sw.getLng();
 	    const maxLng = ne.getLng();
-        var data = $('#matchSearchForm').serializeArray();
+        var data = $('#mapMatchSearchForm').serializeArray();
         data.push({
             name: 'minLat',
             value: sw.getLat()
@@ -589,10 +638,9 @@
 					html+= `
 			            <a href="${ctx}/match/detail/view?="`+item.personalMatchId+` 
 			            class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
-			            <small>`+item.sport+`</small>
+			            <small>`+item.sport+`</small>`+favBtn(item, "bare")+`
 			            <strong>`+item.title+`</strong>
 		                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
-		                `+favBtn(item, "bare")+`
 			            </a>
 					`;
 	            	//마커찍기

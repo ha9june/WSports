@@ -133,7 +133,7 @@ public class MatchWriteForm extends HttpServlet {
             pm.setSkillIntermediate(levels.contains("중급"));
             pm.setSkillAdvanced(levels.contains("상급"));
             
-            pm.setDeleted(false);
+            pm.setDeleted(true);//deleted 1로 바꿔서 기본 1로 설정 - 결제 완료하면 0으로 바꾸기 -> 이건 payments 에서
             pm.setStatus("모집중");
             
             System.out.println(pm);
@@ -148,12 +148,12 @@ public class MatchWriteForm extends HttpServlet {
 	    try {
 	    	PersonalMatchService service = new PersonalMatchServiceImpl();
             Long personalMatchId = service.createPersonalMatch(pm,parts,realPath);
-            response.sendRedirect(request.getContextPath() + "/match/detail/view?personalMatchId=" + personalMatchId);
+            //db에 값 넣음 ㅇㅇ
+            response.sendRedirect(request.getContextPath()+ "/payment/confirm?matchId="+personalMatchId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			AlertUtil.back(response,"실패하였습니다. 관리자에게 문의하여 주세요.");
 			return;
-
 		}
 	    
 	}

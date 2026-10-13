@@ -30,4 +30,7 @@ public interface UserDao {
 	List<Map<String, Object>> selectHistoryList(Map<String, Object> param) throws Exception;
 	// 마이페이지 결제 내역 탭수
 	Map<String, Object> selectHistorySummary(Map<String, Object> param) throws Exception;
+
+	User selectUserByUserId(Long userId) throws Exception;
+
 }

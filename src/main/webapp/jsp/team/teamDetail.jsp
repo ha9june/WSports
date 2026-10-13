@@ -4,7 +4,7 @@
   팀 상세 (teamDetail.jsp) - 담당: 하준수
   피그마: Club / Detail / Desktop (비가입자), Club / Detail / Member View, Club / Detail / Manager View
   ─ 하나의 JSP 로 처리 ─
-   state : public(비가입자 - 팀원/작성글 잠금, 가입 신청) | member(팀원) | manager(팀장·부팀장 - 팀 관리 버튼)
+   state : public(비가입자 - 팀원/작성글 잠금, 가입 신청) | member(팀원) | manager(주장·부주장 - 팀 관리 버튼)
    role  : guest 면 state 와 상관없이 public 화면 + 가입 신청 시 로그인 안내
    admin : 관리자는 팀 삭제 버튼 노출
   실구현 : 로그인 사용자와 팀의 관계(TEAM_MEMBER.role)로 서블릿에서 state 계산
@@ -149,8 +149,8 @@
 		$('#profileImg').html('<img src="' + imageSrc + '" alt="팀 프로필 이미지">');
 
 		const images = [ '${team.activityImage1}', '${team.activityImage2}',
-				'${team.activityImage3}', '${team.activityImage4}',
-				'${team.activityImage5}' ];
+			'${team.activityImage3}', '${team.activityImage4}', '${team.activityImage5}' ]
+			.filter(function (image) { return image && image !== 'null'; });
 
 
 		var hasImage = images.some(function(image) {
@@ -220,8 +220,19 @@
 					<span class="logo-ph" id="profileImg"> <%-- <img src="${ctx}/uploads/${team.profileImage }" alt="대표"> --%>
 					</span>
 					<div>
-						<h1>${team.teamName }</h1>
+						<h1><c:out value="${team.teamName}" /></h1>
 						<p>${team.sport } · 팀원 ${team.currentPeople }</p>
+						<p class="team-rating">
+							<c:choose>
+								<c:when test="${team.teamRating != null}">
+									<span class="rating">${team.teamRating}</span>
+									<span class="t-11 t-2">(${team.teamRatingCount})</span>
+								</c:when>
+								<c:otherwise>
+									<span class="t-11 t-2">평가 없음</span>
+								</c:otherwise>
+							</c:choose>
+						</p>
 					</div>
 				</div>
 				<h2>모집 조건</h2>
@@ -287,10 +298,10 @@
 							<p class="section-desc">함께 활동 중인 팀원의 역할과 프로필을 확인할 수 있어요.</p>
 						</div>
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/team/teamInfoMembers.jsp">전체보기</a>
+							href="${ctx}/team/info/members?teamId=${team.teamId}">전체보기</a>
 					</div>
 					<div class="member-grid">
-						<c:forEach var="user" items="${teamUserList}">
+						<c:forEach var="user" items="${teamUserList}" end="5">
 							<c:choose>
 								<c:when test="${team.sport eq '축구/풋살'}">
 									<c:set var="userSkill" value="${user.soccerSkill}" />
@@ -306,15 +317,19 @@
 								</c:otherwise>
 							</c:choose>
 							<div class="member-card">
-								<c:choose>
-									<c:when test="${not empty user.profileImage}">
-										<span class="avatar"><img
-											src="${ctx}/uploads/${user.profileImage}" alt=""></span>
-									</c:when>
-									<c:otherwise>
-										<span class="avatar default"></span>
-									</c:otherwise>
-								</c:choose>
+								<span class="avatar">
+									<c:choose>
+										<c:when test="${not empty user.profileImage}">
+											<img src="${ctx}/profiles/<c:out value='${user.profileImage}' />" alt=""
+												onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+												style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+										</c:when>
+										<c:otherwise>
+											<img src="${ctx}/img/default-profile.svg" alt=""
+												style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+										</c:otherwise>
+									</c:choose>
+								</span>
 								<div class="info">
 									<strong><c:out value="${user.nickname}" /></strong>
 									<c:if test="${user.teamRole eq 'CAPTAIN'}">
@@ -340,18 +355,18 @@
 							<p class="section-desc">팀이 작성한 상대 팀 모집 글이에요.</p>
 						</div>
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/team/teamInfoPosts.jsp">전체보기</a>
+							href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기</a>
 					</div>
 					<div class="post-grid">
 
 						<c:forEach var="match" items="${teamMatchList }">
-							<a class="post-card" href="${ctx}/jsp/team/teamMatchDetail.jsp">
+							<a class="post-card" href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
 								<p class="ttl" style="margin: 0">
 									<c:out value="${match.title }"></c:out> 
 									<span class="pill pill-success"><c:out value="${match.status }"></c:out></span>
 								</p>
 									<p><c:out value="${match.matchDate }"></c:out> 
-									(요일) 
+									(${match.dayOfWeekKorean}) 
 									<c:out value="${match.startTime }"></c:out> - 
 									<c:out value="${match.endTime }"></c:out> · 
 									<c:out value="${match.placeName }"></c:out> 

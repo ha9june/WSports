@@ -20,8 +20,8 @@
 	<p class="section-desc">내가 작성한 후기와 연결된 경기를 확인하고 수정하거나 삭제할 수 있어요.</p>
 
 	<div class="act-head t-11">
-		<span class="t-2">작성한 후기 ${pageInfo.totalCnt}개</span> <span class="t-2">${pageInfo.curPage}
-			/ ${pageInfo.allPage} 페이지</span>
+		<span class="t-2">작성한 후기 ${pageInfo.totalCnt}개</span> <span
+			class="t-2">${pageInfo.curPage} / ${pageInfo.allPage} 페이지</span>
 	</div>
 
 	<c:if test="${empty Review}">
@@ -30,20 +30,22 @@
 	</c:if>
 	<c:forEach var="r" items="${Review}">
 		<div class="my-review"
-			data-href="${ctx}/review/detail?id=${r.reviewId}">
+			data-href="${ctx}/review/detail?reviewId=${r.reviewId}"
+			style="cursor: pointer;"
+			onclick="if(event.target.tagName !== 'BUTTON' && event.target.tagName !== 'A') location.href=this.dataset.href;">
+
 			<div>
 				<p class="cat">
 					<c:out value="${r.sport}" />
 				</p>
 				<strong><c:out value="${r.title}" /></strong>
-				<p>
-					연결 경기 ·
-					<c:out value="${r.matchTitle}" />
+				<p style="color: #1a6bff;">
+					연결 경기 · <span style="color: #1a6bff;"><c:out
+							value="${r.matchTitle}" /></span>
 				</p>
-				<p>
-					<c:out value="${r.content}" />
-				</p>
-				♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}
+				<%-- 내용 <p> 삭제 --%>
+				<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp;
+					댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
 			</div>
 
 			<div class="aside">
@@ -56,6 +58,7 @@
 			</div>
 		</div>
 	</c:forEach>
+
 
 	<c:if test="${pageInfo.allPage > 1}">
 		<nav class="pagination">
@@ -89,8 +92,20 @@
 
 	<script>
 		$(function() {
+			// [추가] 후기 리스트 카드 클릭 시 상세 페이지로 이동 처리
+			$(document).on('click', '.my-review', function(e) {
+				// 클릭된 요소가 버튼(삭제)이나 링크(수정)가 아닐 때만 이동
+				if (!$(e.target).is('button, a')) {
+					var url = $(this).data('href');
+					if (url) {
+						location.href = url;
+					}
+				}
+			});
+
+			// 기존 삭제 모달 기능 유지
 			$(document).on('click', '.btn-review-delete', function(e) {
-				e.stopPropagation(); // 카드 클릭 이동 방지
+				e.stopPropagation(); // 카드 클릭 이동 이벤트 버블링 방지
 				$('#deleteReviewId').val($(this).data('id'));
 				$('#reviewDeleteModal').addClass('is-open');
 			});
@@ -111,4 +126,5 @@
 			});
 		});
 	</script>
+
 	<%@ include file="/jsp/common/footer.jsp"%>

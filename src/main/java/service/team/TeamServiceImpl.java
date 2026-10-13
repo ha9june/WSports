@@ -106,7 +106,14 @@ public class TeamServiceImpl implements TeamService {
 	}
 	
 	
-	
+	@Override
+	public List<Team> getTeamMatchParticipantsProfileList(Long teamMatchId) throws Exception {
+		List<Team> teamList = teamDao.selectTeamMatchParticipantsProfileList(teamMatchId);
+		for(Team t : teamList) {
+			t.setRegions(teamDetailRegion(t.getRegion1(), t.getRegion2(), t.getRegion3()));
+		}
+		return teamList;
+	}
 	
 	
 	
@@ -178,7 +185,7 @@ public class TeamServiceImpl implements TeamService {
 	    for (String r : new String[]{region1, region2, region3}) {
 	        if (r == null || r.trim().isEmpty()) continue;
 	        String[] p = r.trim().split(" ");
-	        list.add(p[p.length - 1]);          // "서울시 영등포구" -> "영등포구"
+	        list.add(p[p.length - 1]);          
 	    }
 	    if (list.isEmpty()) return "";
 	    return list.size() == 1 ? list.get(0) : list.get(0) + " 외 " + (list.size() - 1);

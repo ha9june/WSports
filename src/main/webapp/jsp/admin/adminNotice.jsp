@@ -35,7 +35,7 @@
     	</div>
     </form>
 	<div style="width:fit-content; max-width:100%">
-		<div class="tbl-head" style="grid-template-columns:70px 100px 70px 100px 200px 110px 130px;
+		<div class="tbl-head" style="grid-template-columns:70px 120px 70px 100px 300px 110px 130px;
     	justify-self: start; justify-items: center; padding-left: 0px">
     		<span>공지번호</span>
     		<span>공지날짜</span>
@@ -46,10 +46,10 @@
     		<span>수정,삭제</span>
     	</div>
 		<c:forEach var="n" items="${noticelist}">
-			<div class="tbl-row" id="notice-${n.notice_id}" style="grid-template-columns: 70px 100px 70px 100px 200px 110px 130px; 
+			<div class="tbl-row" id="notice-${n.notice_id}" style="grid-template-columns: 70px 120px 70px 100px 300px 110px 130px; 
 			justify-items: center; align-items: center; padding-left: 0px">
     			<span>${n.notice_id }</span>
-    			<b><fmt:formatDate value="${n.created_at}" pattern="yyyy/MM/dd" /></b>
+    			<b><fmt:formatDate value="${n.created_at}" pattern="yyyy.MM.dd" /></b>
     			<span>${n.type }</span>
     			<span>${n.nickname}</span>
     			<span>${n.title }</span>

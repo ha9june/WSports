@@ -10,4 +10,5 @@ public interface TeamUserService {
 	List<User> getTeamUserList(Long teamId) throws Exception;
 	String getRole(Long teamId, Long userId) throws Exception;
 	List<Long> getTeamIdListByUserId(Long userId) throws Exception;
+	int modifyTeamUserRole(Long teamId, Long userId, String role) throws Exception;
 }	

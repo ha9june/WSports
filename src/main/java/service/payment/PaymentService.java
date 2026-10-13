@@ -10,6 +10,7 @@ import dto.TeamPayment;
 import util.PageInfo;
 
 public interface PaymentService {
+	//알림 넣어라
 	void completePersonalPayment(String responseJson, Long userId, Long matchId) throws Exception;
 	void completeTeamPayment(String responseStr, Long userId, Long matchId, Long teamId) throws Exception;
 	PersonalPayment getPersonalPaymentByPaymentKey(String paymentKey) throws Exception;
@@ -32,4 +33,14 @@ public interface PaymentService {
 	// 마이페이지 결제내역
 	List<Map<String, Object>> MypagePaymentList(PageInfo pageInfo, String keyword, Long userId, String status, String type, String period) throws Exception;
 	Map<String, Object> MypagePaymentSummary(String keyword, Long userId, String status, String type, String period) throws Exception;
+
+	//개인 경기 환불
+	void refundPersonalPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
+	//모집 기간 내 상대 팀이 없을 때 모집 팀 결제 자동 환불 (스케줄러 용)
+	boolean autoRefundHostTeamPayment(Long matchId, String secretKey) throws Exception;
+	//개인경기 최소 인원 미달 자동 환불 (스케줄러 용)
+	boolean autoRefundPersonalMatch(Long matchId, String title, String secretKey) throws Exception;
+	//팀 경기 결제 취소 : 주최팀 모집자 본인 + 상대 팀 결제 전 + 모집 마감 전
+	void refundTeamPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
+
 }

@@ -68,7 +68,7 @@ public class PaymentCompleteController extends HttpServlet {
 				PersonalMatch pm = new PersonalMatch();
 				pm.setUserId(user.getUserId());
 				pm.setPersonalMatchId(matchId);
-				match = personalMatchService.getPersmalMatchDetail(pm);
+				match = personalMatchService.getPersonalMatchDetail(pm);
 			}
 				request.setAttribute("payment", payment);
 				request.setAttribute("match", match);

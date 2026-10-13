@@ -260,19 +260,37 @@
 		</if>
 	</select>
 
- 	<select id="selectTeam" parameterType="Long" resultType="team">
-		select 
-			t.team_id, t.team_name, t.profile_image, t.description, t.skill, t.sport, t.gender, t.region1, t.region2, t.region3, 
-			t.age_20s, t.age_30s, t.age_40s, t.age_50s, t.age_60_plus, 
-			t.day_mon, t.day_tue, t.day_wed, t.day_thu, t.day_fri, t.day_sat, t.day_sun,
-			t.time_06_09, t.time_09_12, t.time_12_18, t.time_18_22, t.time_22_06,
-			t.activity_image1, t.activity_image2, t.activity_image3, t.activity_image4, t.activity_image5,
-			(
-				select count(*)
-				from team_user tu
-				where tu.team_id = t.team_id and tu.withdrawn = false
-			) as current_people
-		from team t
+	<select id="selectTeam" parameterType="Long" resultType="team">
+		select
+		t.team_id, t.team_name, t.profile_image, t.description, t.skill,
+		t.sport, t.gender, t.region1, t.region2, t.region3,
+		t.age_20s,
+		t.age_30s, t.age_40s, t.age_50s, t.age_60_plus,
+		t.day_mon, t.day_tue,
+		t.day_wed, t.day_thu, t.day_fri, t.day_sat, t.day_sun,
+		t.time_06_09,
+		t.time_09_12, t.time_12_18, t.time_18_22, t.time_22_06,
+		t.activity_image1, t.activity_image2, t.activity_image3,
+		t.activity_image4, t.activity_image5,
+		(
+		select count(*)
+		from team_user tu
+		where tu.team_id = t.team_id and tu.withdrawn = false
+		) as
+		current_people,
+		(
+		select round(avg(tr.score), 1)
+		from team_rating tr
+		where tr.team_id = t.team_id
+		) as team_rating,
+		(
+		select count(*)
+		from
+		team_rating tr
+		where tr.team_id = t.team_id
+		) as team_rating_count
+		from
+		team t
 		where t.team_id = #{teamId} and COALESCE(t.deleted, false) = false
 	</select>
 
@@ -378,7 +396,22 @@
 	    LIMIT 4;
 	</select>
 	
-
+	<select id="selectTeamMatchParticipantsProfileList" parameterType="Long" resultType="team">
+		select 
+			t.team_id, t.team_name, t.region1, t.region2, t.region3, t.sport, t.profile_image, t.skill,
+		   (select round(avg(tr.score), 1) from team_rating tr where tr.team_id = t.team_id) as team_rating,
+	       (select count(*)                from team_rating tr where tr.team_id = t.team_id) as team_rating_count,
+	       (
+			select count(*)
+			from team_user tu
+			where tu.team_id = t.team_id and tu.withdrawn = false
+		   ) as current_people
+		from team t
+		join team_match_participant tmp
+		on t.team_id = tmp.team_id
+		where team_match_id = #{teamMatchId}
+			and status = '결제완료'
+	</select>
 	
 	
 

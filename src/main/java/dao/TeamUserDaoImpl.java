@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,26 @@ public class TeamUserDaoImpl implements TeamUserDao {
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+
+	@Override
+	public int updateTeamUserRole(Long teamId, Long userId, String role) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		Map<String, Object> param = new HashMap<>();
+		param.put("teamId", teamId);
+		param.put("userId", userId);
+		param.put("role", role);
+		try {
+			int cnt = sqlSession.update("mapper.teamuser.updateTeamUserRole", param);
+			sqlSession.commit();
+			return cnt;
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
 		}
 	}
 

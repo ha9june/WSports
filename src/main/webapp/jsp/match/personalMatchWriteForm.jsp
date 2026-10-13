@@ -37,7 +37,7 @@
     <div class="grid-3">
       <div class="field">
       	<label class="field-label" for="matchDate">경기일자</label>
-      	<input class="input" type="date" id="matchDate" name="matchDate" value="2026-09-19" required>
+      	<input class="input" type="date" id="matchDate" name="matchDate" value="2026-10-21" required>
       </div>
       <div class="field"><span class="field-label">시간</span>
         <div class="time-range">
@@ -75,7 +75,7 @@
     </div>
     <div class="field w-300">
       <label class="field-label" for="deadline">모집 마감</label>
-      <input class="input" type="datetime-local" id="deadline" name="deadline" value="2026-09-19T17:00" required>
+      <input class="input" type="datetime-local" id="deadline" name="deadline" value="2026-10-20T17:00" required>
     </div>
   </section>
   <section class="form-section">

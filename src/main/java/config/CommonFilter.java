@@ -13,6 +13,11 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.UserRatingDao;
+import dao.UserRatingDaoImpl;
+import dto.User;
 
 //모든 URL 패턴(/*)에 필터 적용
 @WebFilter(
@@ -22,7 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 				@WebInitParam(name="profilePath", value="/profiles")
 		}
 )
+
 public class CommonFilter implements Filter {
+	
+	private final UserRatingDao ratingDao = new UserRatingDaoImpl();
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -43,7 +51,30 @@ public class CommonFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse)response;
 		
 		req.setCharacterEncoding("UTF-8");
-		res.setCharacterEncoding("UTF-8");		
+		res.setCharacterEncoding("UTF-8");	
+		
+		// ===== 사이드바 평점 =====
+		if ("GET".equalsIgnoreCase(req.getMethod())) {
+		    String path = req.getRequestURI().substring(req.getContextPath().length());
+		    boolean sidebarPage = path.startsWith("/mypage/")
+		            || path.startsWith("/member/")
+		            || path.startsWith("/settlement/")
+		            || path.startsWith("/payment/")
+		            || path.startsWith("/support/");
+
+		    if (sidebarPage) {
+		        HttpSession session = req.getSession(false);
+		        Object user = (session == null) ? null : session.getAttribute("user");
+		        if (user != null) {
+		            try {
+		            	long userId = ((User) user).getUserId();   // 교체: 실제 DTO/getter
+		            	req.setAttribute("myRatingSummary", ratingDao.selectRatingSummaryByUserId(userId));
+		            } catch (Exception e) {
+		                e.printStackTrace();   // 실패해도 페이지는 뜸
+		            }
+		        }
+		    }
+		}
 		
 		chain.doFilter(req, res);
 

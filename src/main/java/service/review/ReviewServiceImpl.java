@@ -18,6 +18,7 @@ import dao.ReviewLikeDao;
 import dao.ReviewLikeDaoImpl;
 import dao.UserDao;
 import dao.UserDaoImpl;
+import dto.Comment;
 import dto.Review;
 import util.PageInfo;
 
@@ -75,23 +76,23 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public List<Review> getReviewableMatches(long userId) throws Exception {
-	    List<Review> list = new ArrayList<>();
-	    try {
-	        list.addAll(reviewDao.selectReviewablePersonal(userId));
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    try {
-	        list.addAll(reviewDao.selectReviewableTeam(userId));
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return list;
+		List<Review> list = new ArrayList<>();
+		try {
+			list.addAll(reviewDao.selectReviewablePersonal(userId));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			list.addAll(reviewDao.selectReviewableTeam(userId));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public List<Review> getReviewList(Long userId) throws Exception {
-		List<Review> list = reviewDao.selectReviewList(userId);
+		List<Review> list = reviewDao.selectMainPageReviewSportList(userId);
 
 		Map<Long, Integer> likeCounts = toCountMap(reviewlikeDao.selectReviewLikeCnt());
 		Map<Long, Integer> commentCounts = toCountMap(commentDao.selectReviewCommentCnt());
@@ -102,80 +103,83 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<Review> getNowReviewList() throws Exception {
 		List<Review> list = reviewDao.selectNowReviewList();
 		return list;
 	}
-	
-	
+
 	private Map<Long, Integer> toCountMap(List<Map<String, Object>> rows) {
 		Map<Long, Integer> map = new HashMap<>();
 		for (Map<String, Object> m : rows) {
-			map.put(((Number) m.get("reviewId")).longValue(),
-			        ((Number) m.get("cnt")).intValue());
+			map.put(((Number) m.get("reviewId")).longValue(), ((Number) m.get("cnt")).intValue());
 		}
 		return map;
 	}
 
-
 	@Override
-	public List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status) throws Exception {
-				Map<String, Object> param = new HashMap<>();
-				// 모르는 값이면 전체
-				param.put("status", status == null ? "ALL" : status);
-				// 전체 게시글 수
-				Integer reviewCnt = reviewDao.selectReviewListCnt(param);
-						
-				Integer allPage = (int) Math.ceil(reviewCnt / 9.0); // 전체 페이지 수
-				if (allPage == 0) allPage = 1; // 회원이 0명이어도 1페이지는 있도록
+	public List<Map<String, Object>> selectMainReviewList(PageInfo pageInfo, String status, String keyword) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("status", status == null ? "ALL" : status);
+		param.put("keyword", keyword == null ? "" : keyword.trim());
+		Integer reviewCnt = reviewDao.selectReviewListCnt(param);
 
-				// 현재 페이지 보정을 먼저 (1 ~ 마지막 페이지 사이로)
-				if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
-				if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
-						
-				// startPage : curPage(1~10)=>1, curPage(11~20)=>11, curPage(21~30)=>21
-				Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 9 + 1 ;
-				Integer endPage = startPage + 10 -1;
-				if (endPage > allPage) endPage = allPage; // 마지막 페이지 보정, 전체 페이지 넘지 않게
+		Integer allPage = (int) Math.ceil(reviewCnt / 9.0); // 전체 페이지 수
+		if (allPage == 0)
+			allPage = 1; // 회원이 0명이어도 1페이지는 있도록
 
-				pageInfo.setAllPage(allPage);
-				pageInfo.setStartPage(startPage);
-				pageInfo.setEndPage(endPage);
+		// 현재 페이지 보정을 먼저 (1 ~ 마지막 페이지 사이로)
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1)
+			pageInfo.setCurPage(1);
+		if (pageInfo.getCurPage() > allPage)
+			pageInfo.setCurPage(allPage);
 
-				param.put("row",(pageInfo.getCurPage() - 1) * 9);
-								
-				return reviewDao.selectMainReviewList(param);
-			}
+		// startPage : curPage(1~10)=>1, curPage(11~20)=>11, curPage(21~30)=>21
+		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 9 + 1;
+		Integer endPage = startPage + 10 - 1;
+		if (endPage > allPage)
+			endPage = allPage; // 마지막 페이지 보정, 전체 페이지 넘지 않게
+
+		pageInfo.setAllPage(allPage);
+		pageInfo.setStartPage(startPage);
+		pageInfo.setEndPage(endPage);
+
+		param.put("row", (pageInfo.getCurPage() - 1) * 9);
+
+		return reviewDao.selectMainReviewList(param);
+	}
 
 	@Override
 	public List<Map<String, Object>> getMypageReviewList(PageInfo pageInfo, Long userId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
-		
-		
+
 		// 전체 게시글 수
 		Integer reviewCnt = reviewDao.selectMypageReviewListCnt(param);
-				
+
 		Integer allPage = (int) Math.ceil(reviewCnt / 5.0); // 전체 페이지 수
-		if (allPage == 0) allPage = 1; // 회원이 0명이어도 1페이지는 있도록
+		if (allPage == 0)
+			allPage = 1; // 회원이 0명이어도 1페이지는 있도록
 
 		// 현재 페이지 보정을 먼저 (1 ~ 마지막 페이지 사이로)
-		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1) pageInfo.setCurPage(1);
-		if (pageInfo.getCurPage() > allPage) pageInfo.setCurPage(allPage);
-				
+		if (pageInfo.getCurPage() == null || pageInfo.getCurPage() < 1)
+			pageInfo.setCurPage(1);
+		if (pageInfo.getCurPage() > allPage)
+			pageInfo.setCurPage(allPage);
+
 		// startPage : curPage(1~10)=>1, curPage(11~20)=>11, curPage(21~30)=>21
-		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 9 + 1 ;
-		Integer endPage = startPage + 10 -1;
-		if (endPage > allPage) endPage = allPage; // 마지막 페이지 보정, 전체 페이지 넘지 않게
+		Integer startPage = (pageInfo.getCurPage() - 1) / 10 * 9 + 1;
+		Integer endPage = startPage + 10 - 1;
+		if (endPage > allPage)
+			endPage = allPage; // 마지막 페이지 보정, 전체 페이지 넘지 않게
 		pageInfo.setTotalCnt(reviewCnt);
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
 
-		param.put("row",(pageInfo.getCurPage() - 1) * 5);
-						
+		param.put("row", (pageInfo.getCurPage() - 1) * 5);
+
 		return reviewDao.selectMypageReviewList(param);
 	}
 
@@ -183,28 +187,91 @@ public class ReviewServiceImpl implements ReviewService {
 	public int modifyMypageReview(Long userId, Long reviewId, String title, String content, String image)
 			throws Exception {
 		Map<String, Object> param = new HashMap<>();
-	    param.put("userId", userId);
-	    param.put("reviewId", reviewId);
-	    param.put("title", title);
-	    param.put("content", content);
-	    param.put("image", image);      // null이면 이미지는 변경 안 됨
-	    return reviewDao.updateMypageReview(param);
+		param.put("userId", userId);
+		param.put("reviewId", reviewId);
+		param.put("title", title);
+		param.put("content", content);
+		param.put("image", image); // null이면 이미지는 변경 안 됨
+		return reviewDao.updateMypageReview(param);
 	}
-
 
 	@Override
 	public int deleteMypageReview(Long userId, Long reviewId) throws Exception {
 		Map<String, Object> param = new HashMap<>();
-	    param.put("userId", userId);
-	    param.put("reviewId", reviewId);
-	    return reviewDao.deleteMypageReview(param);
+		param.put("userId", userId);
+		param.put("reviewId", reviewId);
+		return reviewDao.deleteMypageReview(param);
 	}
 
 	@Override
 	public Map<String, Object> selectMyReview(Long userId, Long reviewId) throws Exception {
-		 Map<String, Object> param = new HashMap<>();
-		    param.put("userId", userId);
-		    param.put("reviewId", reviewId);
-		    return reviewDao.selectMyReview(param);
-		}
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("reviewId", reviewId);
+		return reviewDao.selectMyReview(param);
+	}
+
+	@Override
+	public Review getReviewDetail(Long reviewId) throws Exception {
+		return reviewDao.selectReviewDetail(reviewId);
+	}
+
+	@Override
+	public List<Comment> getCommentList(Long reviewId) throws Exception {
+		return commentDao.selectReviewComments(reviewId);
+	}
+
+	@Override
+	public boolean addReviewLike(Long reviewId, Long userId) throws Exception {
+		Map<String, Object> params = new HashMap<>();
+		params.put("reviewId", reviewId);
+		params.put("userId", userId);
+
+		int result = reviewlikeDao.insertReviewLike(reviewId, userId);
+		return result > 0;
+	}
+
+	@Override
+	public boolean removeReviewLike(Long reviewId, Long userId) throws Exception {
+		Map<String, Object> params = new HashMap<>();
+		params.put("reviewId", reviewId);
+		params.put("userId", userId);
+
+		int result = reviewlikeDao.deleteReviewLike(reviewId, userId);
+		return result > 0;
+	}
+
+	@Override
+	public List<Map<String, Object>> getReviewLikeCnt() throws Exception {
+		return reviewlikeDao.selectReviewLikeCnt();
+	}
+
+	@Override
+	public boolean checkReviewLike(Long reviewId, Long userId) throws Exception {
+		return reviewlikeDao.checkReviewLike(reviewId, userId) > 0;
+	}
+
+	@Override
+	public boolean writeComment(Long reviewId, Long userId, String content) throws Exception {
+		if (content == null || content.trim().isEmpty()) return false;
+		Map<String, Object> param = new HashMap<>();
+		param.put("reviewId", reviewId);
+		param.put("userId", userId);
+		param.put("content", content.trim());
+		param.put("parentCommentId", null);
+		return commentDao.insertComment(param) > 0;
+	}
+
+	@Override
+	public boolean removeComment(Long commentId, Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("commentId", commentId);
+		param.put("userId", userId);
+		return commentDao.deleteComment(param) > 0;
+	}
+
+	@Override
+	public boolean removeReviewByAdmin(Long reviewId) throws Exception {
+		return reviewDao.deleteReviewByAdmin(reviewId) > 0;
+	}
 }

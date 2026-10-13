@@ -27,10 +27,20 @@ public interface PersonalMatchDao {
 	//매치글 인서트
 	Long insertPersonalMatch(PersonalMatch personalMatch) throws Exception;
 	Long updatePersonalMatch(PersonalMatch personalMatch) throws Exception;
-	void deletePersonalMatch(Long personaMatchId) throws Exception;
+	Long updatePersonalMatchStatue(PersonalMatch personalMatch) throws Exception;
 
 	
 	//관리자 경기수 세기 - 개인
 	Long selectMatchCntPersonal() throws Exception;
+	//스케줄러 : 마감 지난 최소 인원 미달 경기
+	List<PersonalMatch> selectExpiredUnderMin() throws Exception;
+	//스케줄러 : 최소 인원 미달 경기 취소
+	int updateStatusToUnderMinCancel(Long matchId) throws Exception;
 	
+	//스케줄러
+	List<PersonalMatch> selectExpiredRecruiting() throws Exception;
+	List<PersonalMatch> selectFinishedMatches() throws Exception;
+	int updateStatusToNoOpponentCancel(Long personalMatchId) throws Exception;
+	int updateStatusToFinished(Long personalMatchId) throws Exception;
+
 }

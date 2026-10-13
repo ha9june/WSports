@@ -1,13 +1,11 @@
 package dao;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
-import dto.PersonalSettlement;
 
 public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 	@Override
@@ -18,7 +16,10 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}finally {
+			sqlSession.close();
 		}
+		
 	}
 
 	@Override
@@ -29,6 +30,8 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}finally {
+			sqlSession.close();
 		}
 	}
 	

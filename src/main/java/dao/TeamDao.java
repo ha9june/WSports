@@ -16,6 +16,7 @@ public interface TeamDao {
 
 	List<Team> selectTeamInfoByUserManager(Long userId) throws Exception;
 	List<Team> selectTeamInfoByUserManagerSport(Long userId, String sport) throws Exception;
+	List<Team> selectTeamMatchParticipantsProfileList(Long teamMatchId) throws Exception;
 
 	//관리자 팀수 세기
 	Long selectTeamCnt() throws Exception;
