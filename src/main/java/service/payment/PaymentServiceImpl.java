@@ -357,6 +357,7 @@ public class PaymentServiceImpl implements PaymentService {
 	public Map<String, Object> MypagePaymentSummary(String keyword, Long userId, String status, String type,
 			String period) throws Exception {
 		return userDao.selectHistorySummary(buildHistoryParam(keyword, userId, null, null, period));
+	}
 
 	// 개인 경기 결제 취소
 	@Override

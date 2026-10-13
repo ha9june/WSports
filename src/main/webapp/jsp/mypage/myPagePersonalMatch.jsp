@@ -23,7 +23,7 @@
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
 .pill-info.bd {
-	border: 1px solid var(- -ds-info-bd);
+	border: 1px solid var(--ds-info-bd);
 }
 
 .match-left img {
@@ -52,24 +52,10 @@
 	border: 1px solid #e5e7eb;
 	border-radius: 16px;
 }
-/* 경기 있는 날: 글자 강조 + 점 */
-.cal .flatpickr-day.has-match {
-	font-weight: 700 !important;
-	color: #1a6bff !important;
-	position: relative !important;
-}
 
-.cal .flatpickr-day.has-match::after {
-	content: "" !important;
-	position: absolute !important;
-	width: 5px !important;
-	height: 5px !important;
-	left: 50% !important;
-	bottom: 5px !important;
-	transform: translateX(-50%) !important;
-	border-radius: 50% !important;
-	background: #1a6bff !important;
-	display: block !important;
+/* 달력 점 색: 여기 한 줄만 바꾸면 전체 적용 */
+.cal {
+	--dot-color: #1a6bff;
 }
 
 .cal .flatpickr-calendar.inline {
@@ -89,35 +75,36 @@
 	border-radius: 0%;
 }
 
+/* 경기 있는 날: 글자 강조 + 점 (평소 / 범위 안 / 시작·끝 모두 같은 점) */
+.cal .flatpickr-day.has-match {
+	font-weight: 700 !important;
+	color: #1a6bff !important;
+}
+
+.cal .flatpickr-day.has-match,
+.cal .flatpickr-day.inRange.has-match,
+.cal .flatpickr-day.startRange.has-match,
+.cal .flatpickr-day.endRange.has-match,
+.cal .flatpickr-day.selected.has-match {
+	background-image: radial-gradient(circle at 50% calc(100% - 7px), var(--dot-color) 2.5px, transparent 3px) !important;
+	background-repeat: no-repeat !important;
+}
+
 /* [선택 기간] 범위 배경 */
 .cal .flatpickr-day.inRange {
-	background: #fff1e6 !important;
-	border-color: #fff1e6 !important;
+	background: #D9E2EC !important;
+	border-color: #F0F4F8 !important;
 	box-shadow: none;
-	color: #e0600f !important;
+	color: #102A43 !important;
+	border-radius: 0 !important;
 }
 
 /* [선택 시작/끝/단일] */
-.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
-	{
-	background: #ff7a29 !important;
-	border-color: #ff7a29 !important;
-	color: #fff !important;
-}
-
-/* 선택된 날에 경기가 있어도 글자는 흰색 유지 */
-.cal .flatpickr-day.selected.has-match, .cal .flatpickr-day.startRange.has-match,
-	.cal .flatpickr-day.endRange.has-match {
-	color: #fff !important;
-}
-
-.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
-	{
+.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange {
+	background: #102A43 !important;
+	border-color: #102A43 !important;
+	color: #BCCCDC !important;
 	border-radius: 50% !important;
-}
-
-.cal .flatpickr-day.inRange {
-	border-radius: 0 !important;
 }
 
 .cal .flatpickr-day.startRange:not(.endRange) {
@@ -132,18 +119,41 @@
 	border-radius: 50% !important;
 }
 
-/* 범위 안의 경기 있는 날 점 색 */
-.cal .flatpickr-day.inRange.has-match::after {
-	background: #1a6bff !important;
+/* 짧게 선택(붙어 있는 두 날짜)했을 때 사이를 메우는 기본 파란색 → 남색 */
+.cal .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)),
+.cal .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)),
+.cal .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+	box-shadow: -10px 0 0 #102A43 !important;
 }
 
-/* 범위 선택 중(.startRange, .endRange)일 때는 가독성을 위해 흰색 점으로 변경 */
-.cal .flatpickr-day.startRange.has-match::after, .cal .flatpickr-day.endRange.has-match::after,
-	.cal .flatpickr-day.selected.has-match::after {
-	background: #ffffff !important;
+/* 오늘 날짜: 작은 동그라미 */
+.cal .flatpickr-day.today {
+	border-color: transparent !important;
+	font-weight: 700;
 }
 
-/* 하단 범례 및 카드 */
+.cal .flatpickr-day.today::before {
+	content: "" !important;
+	position: absolute !important;
+	top: 50% !important;
+	left: 50% !important;
+	width: 28px !important;
+	height: 28px !important;
+	transform: translate(-50%, -50%) !important;
+	box-sizing: border-box !important;
+	border: 1.5px solid #102A43 !important;
+	border-radius: 50% !important;
+	pointer-events: none;
+}
+
+/* 오늘이 시작/끝/선택일일 때: 배경이 남색이라 밝은 원 */
+.cal .flatpickr-day.today.selected::before,
+.cal .flatpickr-day.today.startRange::before,
+.cal .flatpickr-day.today.endRange::before {
+	border-color: #BCCCDC !important;
+}
+
+/* 하단 범례 */
 .cal .legend {
 	display: flex;
 	align-items: center;
@@ -156,9 +166,10 @@
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
-	background: #1a6bff;
+	background: var(--dot-color);
 }
 
+/* 카드 */
 .act-card {
 	margin-bottom: 16px;
 }
@@ -174,19 +185,10 @@
 .act-card .left img {
 	width: 64px;
 	height: 64px;
-	object-fit: contain; /* 비율 유지하면서 칸에 맞춤 */
+	object-fit: contain;
 }
 
-.list-head {
-	display: flex;
-	align-items: center;
-	margin-bottom: 12px;
-}
-
-.btn-reset {
-	margin-left: auto;
-}
-
+/* 필터 */
 .act-filters {
 	display: flex;
 	align-items: center;
@@ -194,14 +196,14 @@
 }
 
 .act-filters .btn-reset {
-	margin-left: 0; /* 오른쪽 끝 정렬 해제 → 셀렉트 바로 옆 */
+	margin-left: 0;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	height: 35px; /* 셀렉트 높이에 맞추세요 */
+	height: 35px;
 	padding: 0 20px;
-	border: 1px solid #111; /* 얇은 검은 테두리 */
-	border-radius: 10px; /* 셀렉트와 같은 둥글기 */
+	border: 1px solid #111;
+	border-radius: 10px;
 	background: #fff;
 	color: #111;
 	font-size: 14px;
@@ -214,6 +216,14 @@
 .act-filters .btn-reset:hover {
 	background: #111;
 	color: #fff;
+}
+.cal .legend-today {
+	width: 12px;
+	height: 12px;
+	box-sizing: border-box;
+	border: 1.5px solid #102A43;
+	border-radius: 50%;
+	margin-left: 10px;
 }
 </style>
 
@@ -366,6 +376,7 @@
 			<div id="periodPicker"></div>
 			<p class="legend">
 				<span class="legend-dot"></span> 경기 있음
+				<span class="legend-today"></span> Today
 			</p>
 		</aside>
 		<%--
