@@ -74,7 +74,7 @@ function splitRegions() {
 }
 
 function resetToDefault() {
-	document.getElementById('preview').src = '${ctx}/img/profile-default.png';
+	document.getElementById('preview').src = '${ctx}/img/default-profile.svg';
 	document.getElementById('profile').value = '';       // 선택해 둔 새 파일 취소
 	document.getElementById('deleteImg').value = 'true';
 }
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	  <c:otherwise>
 		  <img class="avatar lg"
 		       id="preview"
-			   src="${ctx }/img/profile-default.png"
+			   src="${ctx }/img/default-profile.svg"
 			   alt="기본 프로필 사진">
 	  </c:otherwise>
 	</c:choose>
