@@ -70,11 +70,11 @@
 		<%-- TODO: <c:forEach var="m" items="${memberList}"> 주장 본인은 메뉴 없음 --%>
 		<div class="member-grid">
 			<c:forEach var="m" items="${userList}">
-				<div class="member-card">
+				<a class="member-card" href="${ctx}/member/publicProfile/view?userId=${m.userId}">
 					<c:choose>
 						<c:when test="${not empty m.profileImage}">
 							<span class="avatar"><img
-								src="${ctx}/uploads/${m.profileImage}" alt=""></span>
+								src="${ctx}/profiles/${m.profileImage}" alt=""></span>
 						</c:when>
 						<c:otherwise>
 							<span class="avatar"><img
@@ -148,7 +148,7 @@
 							</div>
 						</div>
 					</c:if>
-				</div>
+				</a>
 			</c:forEach>
 		</div>
 		<c:if test="${fn:length(userList) > 12}">

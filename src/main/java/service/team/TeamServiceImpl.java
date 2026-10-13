@@ -9,20 +9,29 @@ import javax.servlet.http.Part;
 
 import dao.TeamDao;
 import dao.TeamDaoImpl;
+import dao.TeamMatchDao;
+import dao.TeamMatchDaoImpl;
 import dao.TeamUserDao;
 import dao.TeamUserDaoImpl;
+import dto.Notification;
 import dto.Team;
 import dto.TeamSearchCondition;
 import dto.TeamUser;
+import service.notification.NotificationService;
+import service.notification.NotificationServiceImpl;
 
 public class TeamServiceImpl implements TeamService {
 
 	TeamDao teamDao;
 	TeamUserDao teamUserDao;
+	TeamMatchDao teamMatchDao;
+	NotificationService alarmService;
 	
 	public TeamServiceImpl() {
 		teamDao = new TeamDaoImpl();
 		teamUserDao = new TeamUserDaoImpl();
+		teamMatchDao = new TeamMatchDaoImpl();
+		alarmService = new NotificationServiceImpl();
 	}
 	
 	private String fileUpload(String uploadPath, Part file) throws Exception {
@@ -235,6 +244,43 @@ public class TeamServiceImpl implements TeamService {
 			}
 		}
 		return String.join(" · ", parts);
+	}
+
+	@Override
+	public void removeTeam(Long teamId, boolean byAdmin, Long actorUserId, String reason) throws Exception {
+		Team team = teamDao.selectTeam(teamId);
+		if (team == null) throw new IllegalStateException("이미 삭제되었거나 없는 팀이에요.");
+		if (teamMatchDao.countActiveByTeam(teamId) > 0)
+			throw new IllegalStateException("진행 중인 경기가 있어 삭제할 수 없어요.");
+
+		List<Long> memberIds = teamDao.selectActiveMemberUserIds(teamId);   // 탈퇴 처리 전에 확보
+
+		if (teamDao.deleteTeamWithMembers(teamId, byAdmin ? reason : null) == 0)
+			throw new IllegalStateException("이미 삭제되었거나 없는 팀이에요.");
+
+		String title = "'" + team.getTeamName() + "' 팀이 삭제되었습니다.";
+		String content = byAdmin
+				? "운영 정책에 따라 관리자가 팀을 삭제했습니다. 사유: " + reason
+				: "주장이 팀을 삭제했습니다.";
+
+		for (Long uid : memberIds) {
+			if (!byAdmin && uid.equals(actorUserId)) continue;   // 주장 본인에게는 알림 생략
+			try {
+				Notification n = new Notification();
+				n.setUserId(uid);
+				n.setTitle(title);
+				n.setContent(content);
+				n.setLink("/team/list");        // 삭제된 팀 상세는 열리지 않으므로 목록으로
+				alarmService.sendNotification(n);
+			} catch (Exception e) {
+				e.printStackTrace();            // 한 명의 알림 실패가 나머지를 막지 않게
+			}
+		}
+	}
+
+	@Override
+	public Long getCaptainUserId(Long teamId) throws Exception {
+		return teamDao.selectTeamCaptainUserId(teamId);
 	}
 
 

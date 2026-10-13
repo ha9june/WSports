@@ -79,7 +79,7 @@
 	</update>
 	<select id="selectMypageMyTeamList" parameterType="Map"
 		resultType="Map">
-		SELECT a.application_id AS applicationId,
+		SELECT a.application_id AS applicationId, t.profile_image as profileImage,
 		a.team_id AS teamId,
 		a.status,
 		DATE_FORMAT(a.applied_at, '%Y-%m-%d %H:%i') AS appliedAt,
@@ -117,7 +117,7 @@
 	</select>
 	<select id="selectMypageJoinedTeamList" parameterType="Map"
 		resultType="Map">
-		SELECT t.team_id AS teamId,
+		SELECT t.team_id AS teamId, t.profile_image as profileImage,
 		t.team_name AS teamName,
 		t.sport AS sport,
 		t.region1 AS region,

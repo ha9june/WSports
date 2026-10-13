@@ -126,7 +126,7 @@
 		#{skillAdvanced},
 		#{age20s}, #{age30s}, #{age40s}, #{age50s},
 		#{age60Plus},
-		#{gender}, #{matchPeople}, true,
+		#{gender}, #{matchPeople}, false,
 		#{image1}, #{image2},
 		#{image3}, #{image4}, #{image5},
 		'모집중', #{region}
@@ -587,6 +587,22 @@
 		left join team_settlement s on s.team_match_id = tm.team_match_id
 		where tm.status = '경기 종료'
 		  and s.settlement_id is null
+	</select>
+	
+	<select id="countActiveByTeam" parameterType="Long" resultType="int">
+		select
+			(select count(*)
+			 from team_match
+			 where team_id = #{teamId}
+			   and status in ('모집중', '모집 마감')
+			   and coalesce(deleted, 0) = 0)
+		  + (select count(*)
+			 from team_match_participant p
+			 join team_match m on m.team_match_id = p.team_match_id
+			 where p.team_id = #{teamId}
+			   and p.status = '결제완료'
+			   and m.status = '모집 마감'
+			   and coalesce(m.deleted, 0) = 0)
 	</select>
 	
 </mapper>

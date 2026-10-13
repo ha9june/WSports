@@ -57,6 +57,11 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<c:if test="${not empty sessionScope.toast}">
+	<script>$(function() { showToast('<c:out value="${sessionScope.toast}" />'); });</script>
+	<c:remove var="toast" scope="session" />
+</c:if>
+
 <script src="${ctx}/js/common.js"></script>
 <c:forTokens items="${pageJs}" delims="," var="jsName">
 	<script src="${ctx}/js/${jsName}.js"></script>

@@ -176,7 +176,7 @@
 									<strong><c:out value="${r.title}" /></strong>
 									<p class="by">
 										작성자 ·
-										<c:out value="${r.userId}" />
+										<c:out value="${r.nickname}" />
 									</p>
 									<p class="link">
 										참여 경기 ·
@@ -218,7 +218,7 @@
 								<strong><c:out value="${r.title}" /></strong>
 								<p class="by">
 									작성자 ·
-									<c:out value="${r.userId}" />
+									<c:out value="${r.nickname}" />
 								</p>
 								<p class="link">
 									참여 경기 ·
