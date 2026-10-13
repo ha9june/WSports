@@ -79,7 +79,7 @@
 					    html += `
 					    	<a class="match-card `+sportsType+`" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
 						    <img class="art" src="${ctx}/img/art-`+sportsType+`.png" alt="">
-						    <span class="sport-tag football">
+						    <span class="sport-tag `+sportsType+`">
 						    `+item.sport+`
 						    </span>
 						    `+favBtn(item, "bare")+`
@@ -168,7 +168,7 @@
 				              </p>
 				              <div class="meta">
 				                <span class="it people">
-				                	<img src="${ctx}/img/icon-person.svg" alt="">`+item.currentPeople+`/`+item.maxPeople+` &nbsp; 최소 8명 
+				                	<img src="${ctx}/img/icon-person.svg" alt="">`+item.currentPeople+`/`+item.maxPeople+` &nbsp; 최소 `+item.minPeople+`명 
 				                	<span class="cap">
 				                		<i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i>
 			                		</span>

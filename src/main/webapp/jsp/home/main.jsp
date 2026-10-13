@@ -175,7 +175,7 @@
 								<img src="${ctx}/img/icon-calendar-14.svg" alt="">${match.startTime}
 								· ${match.region}
 							</p>
-							<p class="price">${match.participationFee}원</p>
+							<p class="price"><fmt:formatNumber value="${match.participationFee}" pattern="#,###" />원</p>
 						</div>
 						<p class="count">${match.currentPeople}명<small>/ 정원
 								${match.maxPeople}명</small>
@@ -201,10 +201,10 @@
 				<c:forEach var="team" items="${nTList}">
 					<c:set var="sportClass"
 						value="${team.sport eq '축구/풋살' ? 'football' :
-    		    team.sport eq '축구' ? 'football' :	
-    		    team.sport eq '농구' ? 'basketball' :	
-                team.sport eq '테니스' ? 'tennis' :
-                team.sport eq '배드민턴' ? 'badminton' : ''}" />
+			    		    team.sport eq '축구' ? 'football' :	
+			    		    team.sport eq '농구' ? 'basketball' :	
+			                team.sport eq '테니스' ? 'tennis' :
+			                team.sport eq '배드민턴' ? 'badminton' : ''}" />
 					<a class="team-mini"
 						href="${ctx}/team/detail/view?teamId=${team.teamId}">
 						<div class="top">
@@ -219,7 +219,7 @@
 							</div>
 						</div>
 						<div class="foot">
-							<span class="sport-tag football">${team.sport}</span>
+							<span class="sport-tag ${sportClass }">${team.sport}</span>
 						</div>
 					</a>
 				</c:forEach>
