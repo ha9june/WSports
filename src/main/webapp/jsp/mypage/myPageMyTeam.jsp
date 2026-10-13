@@ -152,14 +152,15 @@
 	margin-right: 16px;
 	flex-shrink: 0;
 	background: none !important;
-	border-radius: 0;
+	border-radius: 50%;
+	overflow: hidden;
 	display: block;
 }
 
 .sport-circle img {
 	width: 100%;
 	height: 100%;
-	object-fit: contain;
+	object-fit: cover;
 	display: block;
 }
 
@@ -258,12 +259,20 @@
 							<c:set var="sportImg" value="match-default.png" />
 						</c:otherwise>
 					</c:choose>
+					<%-- 기본: 종목별 기본 이미지 --%>
+					<c:set var="imgSrc" value="${ctx}/img/${sportImg}" />
+					<%-- 팀 프로필 이미지가 있으면 덮어쓰기 --%>
+					<c:if test="${not empty m.profileImage}">
+						<c:set var="imgSrc" value="${ctx}/uploads/${m.profileImage}" />
+					</c:if>
 
 					<div class="myteam-card"
+							data-href="${ctx}/team/detail/view?teamId=${m.teamId}"
 						style="display: flex; align-items: center; padding: 16px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); position: relative; height: 110px; box-sizing: border-box;">
 
 						<div class="sport-circle ${sportCls}">
-							<img src="${ctx}/img/${sportImg}" alt="${m.sport}">
+							<img src="${imgSrc}" alt="${m.teamName}"
+								onerror="this.onerror=null; this.src='${ctx}/img/${sportImg}';">
 						</div>
 
 						<div class="main-info"
@@ -337,13 +346,20 @@
 							<c:set var="sportImg" value="match-default.png" />
 						</c:otherwise>
 					</c:choose>
+					<%-- 기본: 종목별 기본 이미지 --%>
+					<c:set var="imgSrc" value="${ctx}/img/${sportImg}" />
+					<%-- 팀 프로필 이미지가 있으면 덮어쓰기 --%>
+					<c:if test="${not empty m.profileImage}">
+						<c:set var="imgSrc" value="${ctx}/uploads/${m.profileImage}" />
+					</c:if>
 
 					<div class="myteam-card"
 						data-href="${ctx}/team/detail/view?teamId=${m.teamId}"
 						style="display: flex; align-items: center; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff;">
 
 						<div class="sport-circle ${sportCls}">
-							<img src="${ctx}/img/${sportImg}" alt="${m.sport}">
+							<img src="${imgSrc}" alt="${m.teamName}"
+								onerror="this.onerror=null; this.src='${ctx}/img/${sportImg}';">
 						</div>
 
 						<div class="main" style="flex: 1;">

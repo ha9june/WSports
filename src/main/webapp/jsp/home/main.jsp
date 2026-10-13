@@ -211,7 +211,7 @@
 							<img src="${ctx}/img/team-${sportClass}.png" alt="">
 							<div>
 								<strong>${team.teamName}</strong>
-								<p class="meta">${team.sport}·${team.region1}</p>
+								<p class="meta">${team.sport}</p>
 								<p class="sub">
 									<span><img src="${ctx}/img/icon-user-12.svg" alt="">${team.currentPeople}</span>
 									<span><img src="${ctx}/img/icon-pin-12.svg" alt="">${team.region1}</span>

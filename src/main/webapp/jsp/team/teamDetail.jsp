@@ -77,6 +77,18 @@
 	background: #fff;
 }
 
+.link-more {
+	color: #1a6bff;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.link-more:hover {
+	text-decoration: underline;
+}
+
 
 
 
@@ -312,8 +324,8 @@
 							<h2>팀원 ${team.currentPeople }명</h2>
 							<p class="section-desc">함께 활동 중인 팀원의 역할과 프로필을 확인할 수 있어요.</p>
 						</div>
-						<a class="btn btn-outline btn-sm"
-							href="${ctx}/team/info/members?teamId=${team.teamId}">전체보기</a>
+						<a class="link-more"
+							href="${ctx}/team/info/members?teamId=${team.teamId}">전체보기 →</a>
 					</div>
 					<div class="member-grid">
 						<c:forEach var="user" items="${teamUserList}" end="5">
@@ -364,8 +376,8 @@
 							<h2>팀 작성글</h2>
 							<p class="section-desc">팀이 작성한 상대 팀 모집 글이에요.</p>
 						</div>
-						<a class="btn btn-outline btn-sm"
-							href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기</a>
+					<a class="link-more"
+						href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기 →</a>
 					</div>
 					<div class="post-grid">
 
