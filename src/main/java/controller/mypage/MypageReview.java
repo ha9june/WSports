@@ -39,7 +39,7 @@ public class MypageReview extends HttpServlet {
 		HttpSession session = request.getSession(false);
 	    User user = (session == null) ? null : (User) session.getAttribute("user");
 	    if (user == null) {
-	        response.sendRedirect(request.getContextPath() + "/login");
+	        response.sendRedirect(request.getContextPath() + "/auth/login");
 	        return;
 	    }
 

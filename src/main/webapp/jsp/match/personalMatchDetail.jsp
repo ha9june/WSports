@@ -152,7 +152,7 @@
 	<c:when test="${status eq '모집 마감' or status eq '경기 종료'}">
 		<c:set var="pillCls" value="pill-info" /><c:set var="pillText" value="${status}" />
 	</c:when>
-	<c:when test="${status eq '인원 미달 경기 취소' or status eq '작성자 경기 취소'}">
+	<c:when test="${status eq '경기 취소'}">
 		<c:set var="pillCls" value="pill-danger" /><c:set var="pillText" value="경기 취소" />
 	</c:when>
 	<c:otherwise>
@@ -321,7 +321,7 @@
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">			             
 			                <a class="btn btn-primary btn-sm" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
-			                <button type="button" class="btn btn-danger btn-sm" data-modal-open="applyCancelModal">신청 취소</button>
+			                <button type="button" class="btn btn-danger btn-sm" data-modal-open="refundModal">신청 취소</button>
 			              </div>
 			            </div>
 						
@@ -335,14 +335,9 @@
 			              <div class="actions">
 			                <a class="btn btn-primary" href="${ctx}/payment/confirm?state=match&matchId=${personalMatch.personalMatchId}" data-auth>결제하기</a>
 			                <%-- <a class="btn btn-primary" href="${ctx}/match/participant/update?personalMatchId=${personalMatch.personalMatchId}&updateType='참가'" data-auth>참가하기</a> --%>
-			                <button type="button" class="btn btn-primary" data-modal-open="applyParticipantModal">참가하기</button>
 			              </div>
 			            </div>
         			</c:when>
-        			<c:otherwise>
-        				<h1>너 누구야!
-        				</h1>
-        			</c:otherwise>
         		</c:choose>
         	</c:when>
         	<c:when test="${status eq '모집 마감'}">
@@ -447,6 +442,38 @@
     </div>
   </div>
 </c:if>
+<!-- 환불 확인 모달 -->
+<div class="modal" id="refundModal" role="dialog" aria-modal="true">
+	<div class="modal-card md">
+		<h2 class="modal-title">환불할까요?</h2>
+		<p class="modal-desc">
+				<p class="t-12 t-danger" style="margin-bottom:12px">
+				환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br>
+				모집 마감 전까지만 환불할 수 있어요.
+				</p>  
+		</p>
+		<form method="post" action="${ctx}/payment/match/detail/refund" id="refundForm">
+			<input type="hidden" name="matchType" value="Personal"/>
+			<div class="modal-body">
+				<p>환불금액 : <b><fmt:formatNumber value="${personalMatch.participationFee - personalMatch.fee}"  pattern="#,###"/>원</b></p>
+				<div class="field mt-16">
+					<label class="field-label">환불사유</label>
+					<select class="select" name="cancelReason" required>
+						<option>일정이 맞지 않음</option>
+						<option>개인 사정</option>
+						<option>잘못 결제함</option>
+						<option>기타</option>
+					</select>
+				</div>
+			</div>
+			<input type="hidden" name="matchId" value="${personalMatch.personalMatchId }"/>
+			<div class="modal-actions">
+				<button type="submit" class="btn btn-danger" id="refundSubmit">환불하기</button>
+				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
+			</div>
+		</form>
+	</div>
+</div>
 
 <%@ include file="/jsp/common/footer.jsp" %>
 <script>

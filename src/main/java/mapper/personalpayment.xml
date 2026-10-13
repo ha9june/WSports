@@ -204,5 +204,18 @@
 		where p.personal_match_id = #{matchId}
 		and p.status = '결제완료'
 		and pay.payment_status = 'DONE'
-</select>
+	</select>
+	
+	
+	<!--결제번호 가져오기-->
+	<select id="selectPaymentKey" resultType="String">
+	    SELECT p.payment_key
+		FROM personal_match_participant pm
+		JOIN personal_payment p ON pm.payment_id = p.payment_id
+		WHERE pm.user_id = #{userId}
+		  AND pm.personal_match_id = #{matchId}
+		  AND pm.status = '결제완료'
+		ORDER BY participant_id DESC
+		LIMIT 1
+	</select>
 </mapper>

@@ -42,7 +42,7 @@ public class MypageTeamMatches extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		User user = (session == null) ? null : (User) session.getAttribute("user");
 		if(user==null) {
-		response.sendRedirect(request.getContextPath()+"/login");
+		response.sendRedirect(request.getContextPath()+"/auth/login");
 		return;// 로그인 경로 수정
 		}
 		long userId = user.getUserId();

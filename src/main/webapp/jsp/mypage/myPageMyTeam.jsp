@@ -373,7 +373,6 @@
 								${m.appliedAt}</p>
 						</div>
 
-						<%-- 기존에 예쁘게 나오던 가입한 팀 레이아웃은 일절 건드리지 않고 그대로 유지합니다 --%>
 						<div class="card-right" onclick="event.stopPropagation()">
 							<c:if test="${not empty m.myRole}">
 								<c:choose>
@@ -416,8 +415,8 @@
 												data-team-id="${m.teamId}">탈퇴하기</a>
 										</c:when>
 										<c:otherwise>
-											<a href="${ctx}/team/members?teamId=${m.teamId}">팀원 보기</a>
-											<a href="${ctx}/team/posts?teamId=${m.teamId}">팀 작성글 보기</a>
+											<a href="${ctx}/team/info/members?teamId=${m.teamId}">팀원 보기</a>
+											<a href="${ctx}/team/info/posts?teamId=${m.teamId}">팀 작성글 보기</a>
 											<hr>
 											<a href="#" class="danger btn-leave"
 												data-team-id="${m.teamId}">탈퇴하기</a>

@@ -35,4 +35,7 @@ public interface PersonalPaymentDao {
 	void updateRefund(Map<String, Object> param) throws Exception;
 	//자동 환불 대상 결제 목록
 	List<Map<String, Object>> selectPaidPaymentsByMatch(Long matchId) throws Exception;
+	
+	//결제번호 가져오기
+	String selectPaymentKey(Map<String, Object> param) throws Exception;
 }

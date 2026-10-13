@@ -45,5 +45,7 @@ public interface PaymentService {
 	Long putPersonalSettlement(PersonalSettlement ps) throws Exception;
 	//팀 경기 결제 취소 : 주최팀 모집자 본인 + 상대 팀 결제 전 + 모집 마감 전
 	void refundTeamPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception;
+	
+	String getPaymentKey(Long userId,Long matchId,String matchType) throws Exception;
 
 }
