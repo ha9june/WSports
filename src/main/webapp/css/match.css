@@ -4,6 +4,16 @@
    ========================================================= */
 
 /* ---------- 상세 상단 ---------- */
+
+
+/*검색창  */
+.search-shell .picked {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+/* 달력  */
 .input#periodPicker,
 .input#periodPicker[readonly] {
 	background-color: #fff;
