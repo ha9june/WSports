@@ -195,10 +195,10 @@ $(function(){
 			},
 			success:function(result) {
 				if($.trim(result) === "true") {
-					alert('제제 적용');
+					alert('제재 적용');
 					location.reload();
 				}else {
-					alert('제제 적용 실패');
+					alert('제재 적용 실패');
 				}
 			},
 			error: function(){

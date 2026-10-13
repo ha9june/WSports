@@ -274,13 +274,13 @@
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
 			<c:forEach var="m" items="${match}">
 				<c:choose>
-					<c:when test="${m.matchType eq 'Team'}">
+					<c:when test="${fn:toLowerCase(m.matchType) eq 'team'}">
 						<c:set var="detailUrl"
-							value="${ctx}/jsp/match/teamMatchDetail.jsp?teamMatchId=${m.matchId}" />
+							value="${ctx}/team-match/detail/view?teamMatchId=${m.matchId}" />
 					</c:when>
 					<c:otherwise>
 						<c:set var="detailUrl"
-							value="${ctx}/jsp/match/personalMatchDetail.jsp?personalMatchId=${m.matchId}" />
+							value="${ctx}/match/detail/view?personalMatchId=${m.matchId}" />
 					</c:otherwise>
 				</c:choose>
 				<div class="act-card" data-href="${detailUrl}">
@@ -393,6 +393,7 @@
   TODO: ?ym=2026-09 로 월 이동 → 서블릿에서 해당 월 목록 조회
 --%>
 		<script>
+		
 		$(function() {
 		    // ★ 내가 참가한 경기 날짜
 		    var favDates = [

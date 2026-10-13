@@ -206,7 +206,17 @@
             
             <div class="info-row"><dt>참가 인원</dt>
 	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
-	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}"><small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small></c:if>
+	            	<c:choose>
+	            		<c:when test="${personalMatch.currentPeople >= personalMatch.minPeople}">
+	            			<small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small>
+	            		</c:when>
+	            		<c:otherwise>
+	            			<small style="color:red;">최소 진행 ${personalMatch.minPeople }명 · 미충족</small>
+	            		</c:otherwise>
+	            	</c:choose>
+	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}">
+	            		<small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small>
+            		</c:if>
 	           	</dd>
            	</div>
             <div class="info-row"><dt>마감</dt><dd>
@@ -346,37 +356,16 @@
 	              </div>
 	            </div>
         	</c:when>
-        
-			<%-- 작성자 취소 --%>
-			<c:when test="${status eq '인원 미달 경기 취소'}">
+			<c:when test="${status eq '경기 취소'}">
 	            <div class="side-card">
-	              <span class="pill pill-danger bd">자동 취소</span>
-	              <p class="status-title">최소 인원 미달로 자동 취소</p>
-	              <p class="sub">모집 마감까지 최소 인원이 충족되지 않아 경기가 자동으로 취소되었습니다.</p>
+	              <span class="pill pill-danger bd">경기 취소</span>
+	              <p class="status-title">경기가 취소되었습니다.</p>
+	              <p class="sub">경기가 취소되었습니다.</p>
 	              <p class="note">결제한 참가비는 환불 규정에 따라 처리됩니다.</p>
 	            </div>
 	          </c:when>
-
-			<c:when test="${status eq '작성자 경기 취소'}">
-	            <div class="side-card">
-	              <span class="pill pill-danger bd">작성자 취소</span>
-	              <p class="status-title">작성자가 경기를 취소했어요</p>
-	              <p class="sub">호스트가 경기를 취소했습니다. 참가자에게 취소 알림이 발송됩니다.</p>
-	              <p class="note">결제된 참가비는 환불 규정에 따라 처리됩니다.</p>
-	            </div>
-	         </c:when>
-	         <c:when test="${status eq '작성자 경기 삭제'}">
-	            <div class="side-card">
-	              <span class="pill pill-danger bd">작성자 삭제</span>
-	              <p class="status-title">작성자가 경기를 삭제했어요</p>
-	              <p class="sub">호스트가 경기를 삭제했습니다. 참가자에게 취소 알림이 발송됩니다.</p>
-	              <p class="note">결제된 참가비는 환불 규정에 따라 처리됩니다.</p>
-	            </div>
-	         </c:when>
          </c:choose>    
       </aside>
-      
-      
     </div>
   </div>
 </main>

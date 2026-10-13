@@ -272,7 +272,7 @@
 			<!-- 반복문으로 하나씩 꺼내서 match라는 변수로 받음 -->
 			<c:forEach var="m" items="${matchList}">
 				<div class="act-card"
-					<c:if test="${m.status ne '경기 취소'}">data-href="${ctx}/team-match/detail/view?teamMatchId=${m.teamMatchId}"</c:if>>
+					data-href="${ctx}/team-match/detail/view?teamMatchId=${m.teamMatchId}">
 					<div class="left">
 						<c:choose>
 							<c:when test="${m.status eq '모집중'}">

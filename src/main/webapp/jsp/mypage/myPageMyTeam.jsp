@@ -14,6 +14,28 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+.btn-cancel-apply:hover {
+	background-color: #fef2f2 !important; /* 연한 빨간색 배경 */
+	border-color: #fca5a5 !important; /* 빨간색 테두리 */
+	color: #ef4444 !important; /* 진한 빨간색 글자 */
+}
+
+.role-pill.pill-blue {
+	color: #1a6bff !important;
+	background-color: #eff6ff !important; /* 연한 파란색 배경 */
+	background: #eff6ff !important;
+	border: none !important; /* 테두리 제거 */
+	font-weight: 600 !important;
+	padding: 4px 12px !important;
+	/* 왼쪽 이미지 여백 적용 */
+	border-radius: 9999px !important;
+	display: inline-block !important;
+	padding: 4px 12px !important; /* 왼쪽 이미지 여백 적용 */
+	border-radius: 9999px !important;
+	display: inline-block !important;
+	font-size: 12px !important;
+}
+
 .myteam-card {
 	position: relative;
 }
@@ -29,21 +51,14 @@
 	margin-left: 12px;
 }
 
+/* 2. 기존의 회색 배경(background: #f3f4f6) 속성들을 전부 삭제하여 겉도는 회색을 제거했습니다 */
 .card-right .role-pill {
-	padding: 3px 10px;
-	border-radius: 999px;
 	font-size: 11px;
 	font-weight: 700;
-	background: #f3f4f6;
-	color: #374151;
 	white-space: nowrap;
 }
 
 .dropdown {
-	position: relative;
-}
-
-.myteam-card {
 	position: relative;
 }
 
@@ -67,13 +82,10 @@
 	color: #1a6bff;
 }
 
+/* 3. 여기에서도 겉돌던 회색 배경 속성을 제거했습니다 */
 .dropdown .role-pill {
-	padding: 3px 10px;
-	border-radius: 999px;
 	font-size: 11px;
 	font-weight: 700;
-	background: #f3f4f6;
-	color: #374151;
 	white-space: nowrap;
 }
 
@@ -171,6 +183,7 @@
 	background-color: #e5e7eb;
 }
 </style>
+
 <div class="work-inner" style="width: 100%; max-width: 1000px;">
 	<h1 class="section-title">내 팀</h1>
 	<p class="section-desc">${state eq 'applications' ? '가입 신청 현황을 확인하고 대기 중인 신청을 취소할 수 있어요.' : '가입한 팀을 확인하고 팀별 역할에 따라 관리하세요.'}</p>
@@ -247,15 +260,17 @@
 									style="width: 12px; height: 12px; opacity: 0.4;"> <span>${m.appliedAt}</span>
 							</p>
 						</div>
-
 						<div class="aside-info"
-							style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 6px; flex-shrink: 0; width: 80px;">
+							style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; flex-shrink: 0; width: auto; margin-left: auto; height: 72px; margin-top: 4px; box-sizing: border-box; padding-right: 4px;">
+
 							<span class="status-txt"
-								style="font-size: 12px; color: #6b7280; font-weight: 500; margin-right: 4px; white-space: nowrap;">${m.status}</span>
-							<button type="button" class="btn-cancel"
+								style="display: inline-block; font-size: 11px; color: #4b5563; background-color: #f3f4f6; font-weight: 700; padding: 3px 10px; border-radius: 9999px; white-space: nowrap; line-height: 1.2; text-align: center; min-width: 56px;">
+								${m.status} </span>
+
+							<button type="button" class="btn-cancel btn-cancel-apply"
 								data-id="${m.applicationId}"
-								style="width: 100%; background-color: #fff; border: 1px solid #d1d5db; color: #1f2937; font-size: 12px; font-weight: 600; padding: 6px 0; text-align: center; border-radius: 8px; cursor: pointer; white-space: nowrap;">신청
-								취소</button>
+								style="display: inline-block; width: auto; min-width: 80px; background-color: #fff; border: 1px solid #d1d5db; color: #1f2937; font-size: 12px; font-weight: 600; padding: 6px 14px; text-align: center; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: all 0.2s ease;">
+								신청 취소</button>
 						</div>
 					</div>
 				</c:forEach>
@@ -313,16 +328,19 @@
 							<p class="sub" style="margin: 0; font-size: 12px; color: #888;">가입일
 								${m.appliedAt}</p>
 						</div>
+
+						<%-- 기존에 예쁘게 나오던 가입한 팀 레이아웃은 일절 건드리지 않고 그대로 유지합니다 --%>
 						<div class="card-right" onclick="event.stopPropagation()">
 							<c:if test="${not empty m.myRole}">
-								<span class="role-pill"> <c:choose>
-										<c:when
-											test="${m.myRole eq 'CAPTAIN' or m.myRole eq 'LEADER'}">주장</c:when>
-										<c:when
-											test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">부주장</c:when>
-										<c:otherwise>팀원</c:otherwise>
-									</c:choose>
-								</span>
+								<c:choose>
+									<c:when test="${m.myRole eq 'CAPTAIN' or m.myRole eq 'LEADER'}">
+										<span class="role-pill pill-blue">주장</span>
+									</c:when>
+									<c:when
+										test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">
+										<span class="role-pill pill-blue">부주장</span>
+									</c:when>
+								</c:choose>
 							</c:if>
 
 							<div class="dropdown">
@@ -355,16 +373,17 @@
 											<hr>
 											<a href="#" class="danger btn-leave"
 												data-team-id="${m.teamId}">탈퇴하기</a>
-									</c:otherwise>
-									</c:choose>        
-								</div>                
-							</div>                    
-						</div>                        
-					</div>                           
-				</c:forEach>                       
-			</div>                                   
-		</c:otherwise>                           
-	</c:choose>                        
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+		</c:otherwise>
+	</c:choose>
+
 	<!-- 탈퇴 모달 -->
 	<div class="modal" id="leaveModal" role="dialog" aria-modal="true">
 		<div class="modal-card">
