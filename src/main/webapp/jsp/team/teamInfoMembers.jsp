@@ -26,7 +26,7 @@
 			<a class="tab ${manageTab eq 'members' ? 'is-active' : ''}"
 				href="${ctx}/team/info/members?teamId=${team.teamId}">팀원</a>
 			<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
-				href="${ctx}/team/info/posts/teamId=${team.teamId}">팀 작성글</a>
+				href="${ctx}/team/info/posts?teamId=${teamId}">팀 작성글</a>
 		</nav>
 
 		<h2 class="sub-title">팀원 ${team.currentPeople}명</h2>
@@ -37,7 +37,7 @@
 				<div class="member-card">
 					<c:choose>
 						<c:when test="${not empty m.profileImage}">
-							<span class="avatar"><img src="${ctx}/uploads/${m.profileImage}" alt=""></span>
+							<span class="avatar"><img src="${ctx}/profiles/${m.profileImage}" alt=""></span>
 						</c:when>
 						<c:otherwise>
 							<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""></span>

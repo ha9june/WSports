@@ -40,6 +40,9 @@ public class TeamEdit extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    private String blankToNull(String s) {
+    	return (s == null || s.isBlank()) ? null : s;
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -153,13 +156,22 @@ public class TeamEdit extends HttpServlet {
 			team.setSkill(request.getParameter("skill"));
 			team.setDescription(request.getParameter("intro"));
 			
-			System.out.println(team);
+			
+			team.setProfileImage(blankToNull(request.getParameter("keepProfileImage")));
+			team.setActivityImage1(blankToNull(request.getParameter("keepActivityImg1")));
+			team.setActivityImage2(blankToNull(request.getParameter("keepActivityImg2")));
+			team.setActivityImage3(blankToNull(request.getParameter("keepActivityImg3")));
+			team.setActivityImage4(blankToNull(request.getParameter("keepActivityImg4")));
+			team.setActivityImage5(blankToNull(request.getParameter("keepActivityImg5")));
+
 			teamService.modifyTeam(team, realPath, profileImage, activityImg1, activityImg2,
 					activityImg3, activityImg4, activityImg5);
 			
 		    response.sendRedirect(request.getContextPath()+"/team/detail/view?teamId="+ team.getTeamId());
 		} catch (Exception e) {
 			e.printStackTrace();
+			request.setAttribute("error", "팀 수정 중 에러 발생");
+			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 		}
 	}
 
