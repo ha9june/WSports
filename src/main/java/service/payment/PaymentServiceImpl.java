@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import dao.PersonalPaymentDao;
 import dao.PersonalPaymentDaoImpl;
+import dao.PersonalSettlementDao;
+import dao.PersonalSettlementDaoImpl;
 import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
 import dao.TeamPaymentDao;
@@ -27,6 +29,7 @@ import dao.TeamPaymentDaoImpl;
 import dto.Notification;
 import dto.PersonalMatch;
 import dto.PersonalPayment;
+import dto.PersonalSettlement;
 import dto.TeamMatch;
 import dto.TeamPayment;
 import service.notification.NotificationService;
@@ -37,11 +40,13 @@ public class PaymentServiceImpl implements PaymentService {
 	private PersonalPaymentDao personalPaymentDao;
 	private TeamPaymentDao teamPaymentDao;
 	private NotificationService notificationService;
-
+	private PersonalSettlementDao personalSettlementDao;
+	
 	public PaymentServiceImpl() {
 		this.personalPaymentDao = new PersonalPaymentDaoImpl();
 		this.teamPaymentDao = new TeamPaymentDaoImpl();
 		this.notificationService = new NotificationServiceImpl();
+		this.personalSettlementDao = new PersonalSettlementDaoImpl();
 	}
 
 	// 결제 내역 + 참가자 등록
@@ -441,5 +446,10 @@ public class PaymentServiceImpl implements PaymentService {
 			}
 		}
 		return allSuccess;
+	}
+
+	@Override
+	public Long putPersonalSettlement(PersonalSettlement ps) throws Exception {
+		return personalSettlementDao.insertPersonalSettlement(ps);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import config.MybatisSqlSessionFactory;
+import dto.PersonalSettlement;
 
 public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 	@Override
@@ -103,6 +104,23 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	@Override
+	public Long insertPersonalSettlement(PersonalSettlement ps) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.personalmatch.insertPersonalSettlement", ps);
+			sqlSession.commit();
+			return ps.getSettlementId();
+		} catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		
 	}
 
 }

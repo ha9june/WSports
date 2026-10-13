@@ -158,6 +158,12 @@ $(function(){
 
 	    e.preventDefault();
 	    e.stopImmediatePropagation();
+	    
+	    // 계좌 없으면 계좌 모달
+	    if ($(this).attr('data-account') !== 'true') {
+	        openModal('accountRequiredModal');
+	        return;
+	    }
 
 	    var href = $(this).attr('href');
 	    $.get('${ctx}/team-match/create/check', function (result) {
@@ -349,8 +355,11 @@ $(function(){
 		</div>
 	</div>
 </div>
-<a class="fab" href="${ctx}/team-match/create" data-auth><span
-	class="fab-label">상대 팀 모집</span><span class="fab-btn"
+<a id=matchMakeButton class="fab" href="${ctx}/team-match/create" data-auth
+		data-account="${not empty sessionScope.user.bankName
+	    and not empty sessionScope.user.accountNumber
+	    and not empty sessionScope.user.accountHolder}">
+    <span class="fab-label">상대 팀 모집</span><span class="fab-btn"
 	aria-hidden="true"></span></a>
 <%@ include file="/jsp/common/footer.jsp"%>
 <script>

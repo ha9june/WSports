@@ -3,6 +3,8 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+import dto.PersonalSettlement;
+
 public interface PersonalSettlementDao {
 	Integer selectPersonalSettlementWait() throws Exception;
 	Long selectPersonalSettlementWaitMoney() throws Exception;
@@ -15,4 +17,6 @@ public interface PersonalSettlementDao {
 	Integer updatePersonalSettlement(Map<String, Object> param) throws Exception;
 	//정산번호로 회원/경기 정보 조회(알림용)
 	Map<String, Object> selectPersonalSettlementUser(Long settlementId) throws Exception;
+	
+	Long insertPersonalSettlement(PersonalSettlement ps) throws Exception;
 }

@@ -120,4 +120,14 @@ public class UserDaoImpl implements UserDao {
 			throw e;
 		}
 	}
+
+	@Override
+	public User selectUserAccountInfo(Long userId) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.user.selectUserAccountInfo", userId);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

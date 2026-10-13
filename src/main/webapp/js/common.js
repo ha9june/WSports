@@ -53,6 +53,19 @@
       openModal('loginRequiredModal');
       return;
     }
+    
+    //계좌 제한 기능
+    var t = e.target;
+    var accountEl = t.closest('[data-account]');
+    if (accountEl && accountEl.getAttribute('data-account') !== 'true') {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal('accountRequiredModal');
+        return;
+    }
+    
+    
+    
 
     // 모달 열기 / 닫기
     var opener = t.closest('[data-modal-open]');
@@ -216,7 +229,7 @@
     }
   });
 
-	
+
 	/*function updateFilterCount(group) {
 	  var more = group.closest('.filter-more');
 	  if (!more) return;
@@ -232,13 +245,12 @@
 	function updateFilterCount(group) {
 	  var more = group.closest('.search-shell');
 	  if (!more) return;
-	  //var countEl = more.querySelector('.count');
 	  var countEl = more.querySelector('.count');
 	  if (!countEl) return;
 	
 	  countEl.innerHTML = '';   // 기존 내용 비우기
 	
-	  more.querySelectorAll('.chip.is-selected').forEach(function (c) {
+	  more.querySelectorAll('.filter-panel .chip.is-selected').forEach(function (c) {
 	    var dot = document.createElement('span');
 	    dot.className = 'count-dot';
 	    dot.textContent = c.textContent.trim();

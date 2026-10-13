@@ -392,7 +392,6 @@
             </div>
             <div class="filter-more">
               <button type="button" class="btn btn-outline btn-sm" data-filter-toggle>필터 더보기 +</button>
-              <span class="count">0</span>
               <div class="filter-panel">
                 <div class="chip-group" data-select="single" data-name="gender">
                   <span class="chip-label">성별</span>
@@ -427,6 +426,10 @@
 		  
 		  
 		  <button type="submit" class="btn btn-primary btn-lg">검색</button>
+		</div>
+		<div class="filter-more" style="padding-top:5px;">
+			<span class="count">
+             </span>
 		</div>
       </form>
     </section>
@@ -465,9 +468,12 @@
   </div>
 </main>
 
-<a class="fab" href="${ctx}/match/write/form" data-auth>
-  <span class="fab-label">경기 만들기</span><span class="fab-btn" aria-hidden="true"></span>
-</a>
+	<a id=matchMakeButton class="fab" href="${ctx}/match/write/form" data-auth 
+		data-account="${not empty sessionScope.user.bankName
+	    and not empty sessionScope.user.accountNumber
+	    and not empty sessionScope.user.accountHolder}">
+	  <span class="fab-label">경기 만들기</span><span class="fab-btn" aria-hidden="true"></span>
+	</a>
 
 <%@ include file="/jsp/common/footer.jsp" %>
 
@@ -659,6 +665,7 @@
 
 </script>
 <script src="${ctx}/js/address.js"></script>
+<script src="${ctx}/js/common.match.js"></script>
 
 <script>
 	const periodPicker = document.getElementById('periodPicker');
