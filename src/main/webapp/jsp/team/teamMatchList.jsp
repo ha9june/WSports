@@ -207,7 +207,6 @@ $(function(){
 					<div class="filter-more">
 						<button type="button" class="btn btn-outline btn-sm"
 							data-filter-toggle>필터 더보기 +</button> 
-						<span class="count">0</span>
 						<div class="filter-panel tm-filter">
 							<div class="chip-group" data-select="single" data-name="gender">
 							
@@ -293,6 +292,10 @@ $(function(){
 			<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
 			<div class="picked" id="pickedRegions"></div>
 			<div id="regionInputs"></div>
+			<div class="filter-more" style="padding-top:5px;">
+				<span class="count">
+	             </span>
+			</div>
 		</form>
 		
 		<div class="teamMatch-grid" id="teamMatch-grid">
