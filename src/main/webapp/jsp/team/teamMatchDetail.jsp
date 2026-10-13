@@ -144,7 +144,7 @@ $('#thumbs').on('click', '.subImg', function() {
 			<div class="host-inline">
 				<span class="avatar">
 					<c:choose>
-						<c:when test="${not empty t.hostProfileImage}">
+						<c:when test="${not empty t.hostProfileImage}"> 
 							<img src="${ctx}/profiles/<c:out value='${t.hostProfileImage}' />" alt=""
 								onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
 								style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
