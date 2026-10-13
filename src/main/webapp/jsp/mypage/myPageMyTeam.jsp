@@ -399,8 +399,8 @@
 												data-team-id="${m.teamId}">탈퇴하기</a>
 										</c:when>
 										<c:otherwise>
-											<a href="${ctx}/team/members?teamId=${m.teamId}">팀원 보기</a>
-											<a href="${ctx}/team/posts?teamId=${m.teamId}">팀 작성글 보기</a>
+											<a href="${ctx}/team/info/members?teamId=${m.teamId}">팀원 보기</a>
+											<a href="${ctx}/team/info/posts?teamId=${m.teamId}">팀 작성글 보기</a>
 											<hr>
 											<a href="#" class="danger btn-leave"
 												data-team-id="${m.teamId}">탈퇴하기</a>
