@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teamsettlement">
 	<!-- 정산대기 중인 팀 정산 총 개수 -->
 	<select id="selectTeamSettlementWait" resultType="Integer">
@@ -79,4 +79,11 @@
 		where settlement_id = #{settlementId}
 		and settlement_status = '정산대기'
 	</update>
+	
+	<insert id="insertHostSettlement" parameterType="teamsettlement">
+		insert into team_settlement
+		(user_id, team_match_id, account_number, bank_name, amount, settlement_status)
+		values
+		(#{userId}, #{teamMatchId}, #{accountNumber}, #{bankName}, #{amount}, '정산대기' )
+	</insert>
 </mapper>

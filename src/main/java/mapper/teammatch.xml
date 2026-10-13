@@ -581,4 +581,12 @@
 		  and coalesce(deleted, 0) = 0
 	</select>
 	
+	<select id="selectFinishedWithoutSettlement" resultType="teammatch">
+		select tm.*
+		from team_match tm
+		left join team_settlement s on s.team_match_id = tm.team_match_id
+		where tm.status = '경기 종료'
+		  and s.settlement_id is null
+	</select>
+	
 </mapper>

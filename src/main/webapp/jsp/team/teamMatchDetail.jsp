@@ -100,6 +100,9 @@ $('#thumbs').on('click', '.subImg', function() {
 	<c:when test="${status eq '모집중'}">
 		<c:set var="pillCls" value="pill-success" /><c:set var="pillText" value="모집중" />
 	</c:when>
+	<c:when test="${status eq '모집 마감' or status eq '경기 종료'}">
+		<c:set var="pillCls" value="pill-info" /><c:set var="pillText" value="${status}" />
+	</c:when>
 	<c:when test="${status eq '경기 취소'}">
 		<c:set var="pillCls" value="pill-danger" /><c:set var="pillText" value="경기 취소" />
 	</c:when>
@@ -139,9 +142,21 @@ $('#thumbs').on('click', '.subImg', function() {
 				</c:if>
 			</div>
 			<div class="host-inline">
-				<span class="avatar default"></span>
+				<span class="avatar">
+					<c:choose>
+						<c:when test="${not empty t.hostProfileImage}">
+							<img src="${ctx}/profiles/<c:out value='${t.hostProfileImage}' />" alt=""
+								onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+								style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+						</c:when>
+						<c:otherwise>
+							<img src="${ctx}/img/default-profile.svg" alt=""
+								style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+						</c:otherwise>
+					</c:choose>
+				</span>
 				<div>
-					<a href="${ctx}/jsp/member/userProfileInfo.jsp"><strong><c:out
+					<a class="host-name" href="${ctx}/member/publicProfile/view?userId=${t.userId}"><strong><c:out
 								value="${t.hostNickname}" /></strong></a> <small>호스트 · <c:out
 							value="${t.teamName}" /> ${t.hostRole eq 'VICE_CAPTAIN' ? '부주장' : '주장'}
 					</small>
@@ -337,10 +352,10 @@ $('#thumbs').on('click', '.subImg', function() {
 							</c:when>
 							<c:when test="${applied}">
 								<div class="side-card">
-									<h2>
-										신청 완료 <span class="pill pill-info">결제 완료</span>
-									</h2>
-									<p class="sub">결제가 완료되어 팀 매칭 신청이 접수되었습니다.</p>
+									<h2>내가 신청한 팀 매칭</h2>
+									<p style="margin-top: 8px">
+										<span class="pill pill-info">결제 완료</span>
+									</p>
 									<div class="kv">
 										참가비 <b><fmt:formatNumber value="${t.participationFee}" />원</b>
 									</div>
@@ -348,12 +363,12 @@ $('#thumbs').on('click', '.subImg', function() {
 										결제 금액 <b><fmt:formatNumber
 												value="${t.participationFee + t.fee}" />원</b>
 									</div>
-									<div class="actions row">
-										<a class="btn btn-outline btn-sm"
+									<div class="actions">
+										<a class="btn btn-primary"
 											href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가
 											팀 확인</a>
-										<p class="note">경기가 확정되어 취소와 환불이 불가해요.</p>
 									</div>
+									<p class="note">경기가 확정되어 취소와 환불이 불가해요.</p>
 								</div>
 							</c:when>
 							<c:otherwise>

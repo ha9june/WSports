@@ -20,4 +20,6 @@ public interface UserDao {
 	
 	//관리자 인원수 세기
 	Long selectUserCnt() throws Exception;
+	
+	User selectUserByUserId(Long userId) throws Exception;
 }

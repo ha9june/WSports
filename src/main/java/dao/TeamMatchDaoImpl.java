@@ -233,4 +233,14 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			throw e;
 		} 
 	}
+
+	@Override
+	public List<TeamMatch> selectFinishedWithoutSettlement() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teammatch.selectFinishedWithoutSettlement");
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }
