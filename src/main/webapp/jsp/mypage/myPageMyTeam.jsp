@@ -47,7 +47,7 @@
 	justify-content: center;
 	gap: 14px; /* 알약과 ⋮ 사이 간격 */
 	flex-shrink: 0;
-	min-width: 56px; /* 팀장/부팀장/팀원 알약 폭이 달라도 ⋮ 위치 고정 */
+	min-width: 56px; /* 주장/부주장/팀원 알약 폭이 달라도 ⋮ 위치 고정 */
 	margin-left: 12px;
 }
 

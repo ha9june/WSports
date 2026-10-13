@@ -6,7 +6,7 @@
     t              : 경기 정보 (TeamMatch)
     isHost         : 글쓴이 여부
     applied        : 상대 팀으로 신청한 경기인지
-    myTeamList     : 내가 팀장/부팀장인 팀 목록
+    myTeamList     : 내가 주장/부주장인 팀 목록
   t.status : 모집중 | 모집 마감 | 경기 종료 | 인원 미달 경기 취소 | 작성자 경기 취소
 --%>
 <c:set var="status" value="${t.status}" />
@@ -49,7 +49,8 @@ $(function() {
 	
 	const images = [ '${t.image1}', '${t.image2}',
 		'${t.image3}', '${t.image4}',
-		'${t.image5}' ];
+		'${t.image5}' ]
+	.filter(function (image) { return image && image !== 'null'; });
 
 
 	var hasImage = images.some(function(image) {
@@ -99,10 +100,7 @@ $('#thumbs').on('click', '.subImg', function() {
 	<c:when test="${status eq '모집중'}">
 		<c:set var="pillCls" value="pill-success" /><c:set var="pillText" value="모집중" />
 	</c:when>
-	<c:when test="${status eq '모집 마감' or status eq '경기 종료'}">
-		<c:set var="pillCls" value="pill-info" /><c:set var="pillText" value="${status}" />
-	</c:when>
-	<c:when test="${status eq '인원 미달 경기 취소' or status eq '작성자 경기 취소'}">
+	<c:when test="${status eq '경기 취소'}">
 		<c:set var="pillCls" value="pill-danger" /><c:set var="pillText" value="경기 취소" />
 	</c:when>
 	<c:otherwise>
@@ -262,21 +260,13 @@ $('#thumbs').on('click', '.subImg', function() {
 									<p style="margin-top: 8px">
 										<span class="pill pill-success">모집중</span>
 									</p>
-									<div class="actions">
-										<a class="btn btn-outline"
-											href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기
-											수정</a>
-										<button type="button" class="btn btn-danger"
-											data-modal-open="hostCancelModal">경기 취소</button>
-									</div>
-									<div class="actions row">
-										<button type="button" class="btn btn-outline btn-sm" disabled>출석
-											체크</button>
-										<button type="button" class="btn btn-outline btn-sm" disabled>양
-											팀 참가자</button>
-									</div>
-									<p class="note">상대 팀이 신청하기 전까지는 취소하면 전액 환불돼요. 상대 팀이 확정되면 경기
-										관리 기능을 사용할 수 있어요.</p>
+								<div class="actions">
+								<a class="btn btn-primary"
+									href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기 수정</a>
+									<button type="button" class="btn btn-outline btn-danger-soft"
+										data-modal-open="hostCancelModal">경기 취소</button>
+								</div>
+								<p class="note">상대 팀이 신청하기 전까지는 취소하면 전액 환불돼요. 상대 팀이 확정되면 출석 체크와 참가 팀 확인을 사용할 수 있어요.</p>
 								</div>
 							</c:when>
 							<c:when test="${isMyTeamList}">
@@ -284,7 +274,7 @@ $('#thumbs').on('click', '.subImg', function() {
 									<h2>팀 매칭 신청</h2> 
 									<div class="field mt-16">
 										<label class="field-label" for="myTeam">내 ${t.sport} 팀 선택</label>
-										<%-- TODO: 내가 팀장/부팀장인 팀 목록 (서블릿에서 myTeamList로 전달) --%>
+										<%-- TODO: 내가 주장/부주장인 팀 목록 (서블릿에서 myTeamList로 전달) --%>
 										<select class="select" id="myTeam" name="teamNo">
 											<c:forEach var="mt" items="${myTeamList}">
 												<option value="${mt.teamId}"><c:out
@@ -306,19 +296,19 @@ $('#thumbs').on('click', '.subImg', function() {
 										<%-- 비로그인 --%>
 										<c:when test="${empty sessionScope.user}">
 											<h2>팀 매칭 신청</h2>
-											<p class="sub">로그인 후 팀장 또는 부팀장 계정으로 신청할 수 있어요.</p>
+											<p class="sub">로그인 후 주장 또는 부주장 계정으로 신청할 수 있어요.</p>
 											<div class="actions">
 												<a class="btn btn-primary" href="${ctx}/auth/login" data-auth>로그인</a>
 											</div>
 										</c:when>
-										<%-- 로그인했지만 팀장/부팀장이 아님 --%>
+										<%-- 로그인했지만 주장/부주장이 아님 --%>
 										<c:otherwise>
 											<h2>팀 매칭 신청</h2>
-											<p class="sub">이 경기는 <b>${t.sport}</b> 종목 팀의 <b>팀장 또는 부팀장</b>만 신청할 수 있어요.</p>
-											<p class="note">팀원이라면 팀장이나 부팀장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
+											<p class="sub">이 경기는 <b>${t.sport}</b> 종목 팀의 <b>주장 또는 부주장</b>만 신청할 수 있어요.</p>
+											<p class="note">팀원이라면 주장이나 부주장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
 											<div class="actions row">
 												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀 찾기</a>
-												<a class="btn btn-outline btn-sm" href="${ctx}/team/create">팀 만들기</a>
+												<a class="btn btn-primary btn-sm" href="${ctx}/team/create">팀 만들기</a>
 											</div>
 										</c:otherwise>
 									</c:choose>
@@ -336,17 +326,13 @@ $('#thumbs').on('click', '.subImg', function() {
 									<p style="margin-top: 8px">
 										<span class="pill pill-info">모집 마감</span>
 									</p>
-									<div class="actions">
-										<a class="btn btn-primary"
-											href="${ctx}/team-match/result?teamMatchId=${t.teamMatchId}">출석
-											체크</a> <a class="btn btn-outline"
-											href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가
-											팀 확인</a> <a class="btn btn-outline"
-											href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기
-											정보 수정</a>
-									</div>
-									<p class="note">수정 시 상대 팀에 알림이 전송돼요. 상대 팀이 확정되어 취소와 환불은
-										불가해요.</p>
+								<div class="actions">
+									<a class="btn btn-primary"
+										href="${ctx}/team-match/result?teamMatchId=${t.teamMatchId}">출석 체크</a>
+									<a class="btn btn-outline"
+										href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가 팀 확인</a>
+								</div>
+								<p class="note">상대 팀이 확정되어 경기 수정, 취소, 환불은 불가해요.</p>
 								</div>
 							</c:when>
 							<c:when test="${applied}">
@@ -395,24 +381,15 @@ $('#thumbs').on('click', '.subImg', function() {
 						</div>
 					</c:when>
 
-					<%-- 인원 미달 취소 --%>
-					<c:when test="${status eq '인원 미달 경기 취소'}">
+					<%-- 경기 취소 --%>
+					<c:when test="${status eq '경기 취소'}">
 						<div class="side-card">
-							<span class="pill pill-danger bd">매칭 실패</span>
-							<p class="status-title">상대 팀을 구하지 못했어요</p>
-							<p class="sub">모집 마감까지 신청한 팀이 없어 경기가 자동 취소되었습니다.</p>
+							<span class="pill pill-danger bd">경기 취소</span>
+							<p class="status-title">경기가 취소되었습니다</p>
+							<p class="sub">이 경기는 취소되어 더 이상 신청할 수 없어요.</p>
 							<c:if test="${isHost}">
 								<p class="note">결제하신 금액은 전액 환불돼요.</p>
 							</c:if>
-						</div>
-					</c:when>
-
-					<%-- 작성자 취소 --%>
-					<c:when test="${status eq '작성자 경기 취소'}">
-						<div class="side-card">
-							<span class="pill pill-danger bd">작성자 취소</span>
-							<p class="status-title">경기가 취소되었습니다</p>
-							<p class="sub">팀 작성자가 경기를 취소했습니다.</p>
 						</div>
 					</c:when>
 

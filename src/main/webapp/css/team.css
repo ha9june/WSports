@@ -321,28 +321,27 @@
 .place-row .place-name { flex: 2; min-width: 0; }
 .place-row .btn { flex: none; }
 
-.filter-panel {
-	width: 540px;                    /* fit-content 대신 고정 */
+.filter-panel.tm-filter {
+	width: 540px;
 	max-width: calc(100vw - 48px);
 	padding: 16px;
 }
-
-.filter-panel .chip-group {
-	display: grid;                   /* 빠져 있다면 반드시 포함 */
+.filter-panel.tm-filter .chip-group {
+	display: grid;
 	grid-template-columns: 56px 1fr;
 	column-gap: 4px;
 	align-items: start;
 }
-.filter-panel .chip-group .chip-label {
+.filter-panel.tm-filter .chip-group .chip-label {
 	padding-top: 6px;
 	white-space: nowrap;
 }
-.filter-panel .chip-group .chips {
+.filter-panel.tm-filter .chip-group .chips {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 }
-.filter-panel .chip { white-space: nowrap; }
+.filter-panel.tm-filter .chip { white-space: nowrap; }
 
 .input#periodPicker,
 .input#periodPicker[readonly] {
@@ -394,4 +393,13 @@
 	width: auto;
 	padding: 4px 14px;
 	flex: 0 0 auto;
+}
+.btn-danger-soft {
+  color: #d9433c;
+  border-color: #f1c7c4;
+  background: #fff;
+}
+.btn-danger-soft:hover {
+  background: #fdf1f0;
+  border-color: #e9a9a5;
 }

@@ -90,7 +90,7 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 
 	@Override
 	public List<TeamMatch> getTeamPostList(Long teamId, PageInfo pageInfo) throws Exception {
-		final int SIZE = 8, BLOCK = 5;
+		final int SIZE = 1, BLOCK = 5;
 		int total = teamMatchDao.selectTeamPostCnt(teamId);
 		int allPage = Math.max(1, (int) Math.ceil(total / (double) SIZE));
 		int cur = Math.min(Math.max(pageInfo.getCurPage(), 1), allPage);
@@ -109,5 +109,10 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 	@Override
 	public int getTeamPostsCnt(Long teamId) throws Exception {
 		return teamMatchDao.selectTeamPostCnt(teamId);
+	}
+
+	@Override
+	public int modifyTeamMatchToCancel(Long teamMatchId) throws Exception {
+		return teamMatchDao.updateStatusToCancel(teamMatchId);
 	}
 }

@@ -95,16 +95,38 @@ $(function() {
 			}
 		}).open();
 	});
+	
+	// 제목 글자 수 카운터
+	var $tmTitle = $('#tmTitle'), $tmTitleCount = $('#tmTitleCount');
+	function updateTitleCount() {
+		$tmTitleCount.text($tmTitle.val().length + '/12');
+	}
+	$tmTitle.on('input', updateTitleCount);
+	updateTitleCount();
 
 	// ---------- 제출 검사 ----------
-	$('.form-rail').on('submit', function(e) {
-		var msg = '';
-		if (!$('#address').val() || !$('#lat').val()) msg = '장소를 검색해 선택해 주세요.';
-		else if (!$.trim($('#placeName').val())) { msg = '장소명을 입력해 주세요.'; $('#placeName').focus(); }
-		else if (!$('select[name="startTime"]').val() || !$('select[name="endTime"]').val()) msg = '경기 시간을 선택해 주세요.';
-		else if (!$('#tmSize').val()) msg = '경기 인원을 선택해 주세요.';
-		if (msg) { e.preventDefault(); showToast(msg); }
-	});
+	$('.form-rail').on('submit', function (e) {
+			var msg = '';
+			var start = $('select[name="startTime"]').val();
+			var end = $('select[name="endTime"]').val();
+		
+			if (!$.trim($('#tmTitle').val())) msg = '제목을 입력해 주세요.';
+			else if ($.trim($('#tmTitle').val()).length > 12) msg = '제목은 12자 이하로 입력해 주세요.';
+			else if (!$('#tmDate').val()) msg = '경기일자를 선택해 주세요.';
+			else if (!start || !end) msg = '경기 시간을 선택해 주세요.';
+			else if (end <= start && end !== '24:00') msg = '종료 시간은 시작 시간보다 늦어야 해요.';
+			else if (!$('#address').val() || !$('#lat').val()) msg = '장소를 검색해 선택해 주세요.';
+			else if (!$.trim($('#placeName').val())) { msg = '장소명을 입력해 주세요.'; $('#placeName').focus(); }
+			else if (!$('#tmSize').val()) msg = '경기 인원을 선택해 주세요.';
+			else if (!$.trim($('#tmFee').val())) msg = '참가비를 입력해 주세요.';
+			else if (!$('#tmDeadline').val()) msg = '모집 마감 시간을 선택해 주세요.';
+			else if ($('#tmDeadline').val() >= $('#tmDate').val() + 'T' + start) msg = '모집 마감은 경기 시작 전이어야 해요.';
+			else if (!$('#ages').val()) msg = '연령대를 선택해 주세요.';
+			else if (!$('#gender').val()) msg = '성별을 선택해 주세요.';
+			else if (!$('#skill').val()) msg = '팀 레벨을 선택해 주세요.';
+		
+			if (msg) { e.preventDefault(); showToast(msg); }
+		});
 
 	// ---------- 사진 ----------
 	var MAX_PHOTOS = 5, MAX_SIZE = 5 * 1024 * 1024;
@@ -203,8 +225,12 @@ $(function() {
 					</div>
 				</div>
 				<div class="field">
-					<label class="field-label strong" for="tmTitle">제목</label>
-					<input class="input" id="tmTitle" name="title" value="<c:out value='${t.title}' />" placeholder="제목" required>
+					<label class="field-label strong" for="tmTitle">제목
+						<span class="hint-gray" id="tmTitleCount">0/12</span>
+					</label>
+					<input class="input" id="tmTitle" name="title"
+						value="<c:out value='${t.title}' />"
+						maxlength="12" autocomplete="off" placeholder="제목 (최대 12자)">
 				</div>
 			</section>
 

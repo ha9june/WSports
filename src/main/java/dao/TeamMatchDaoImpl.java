@@ -110,10 +110,10 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 	}
 
 	@Override
-	public int updateStatusToNoOpponentCancel(Long teamMatchId) throws Exception {
+	public int updateStatusToCancel(Long teamMatchId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			int cnt = sqlSession.update("mapper.teammatch.updateStatusToNoOpponentCancel", teamMatchId);
+			int cnt = sqlSession.update("mapper.teammatch.updateStatusToCancel", teamMatchId);
 			sqlSession.commit();
 			return cnt;
 		}catch(Exception e) {

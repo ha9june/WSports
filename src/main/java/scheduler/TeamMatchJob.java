@@ -38,7 +38,7 @@ public class TeamMatchJob {
             try {
             	//모집 팀 결제 자동 환불 + 환불 알림
             	paymentService.autoRefundHostTeamPayment(t.getTeamMatchId(), TossKey.SECRET_KEY);
-                int updated = teamMatchDao.updateStatusToNoOpponentCancel(t.getTeamMatchId());
+                int updated = teamMatchDao.updateStatusToCancel(t.getTeamMatchId());
                 if (updated > 0) {
                     notifyUser(t.getUserId(),
                         "인원 미달 경기 취소 안내",

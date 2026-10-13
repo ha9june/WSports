@@ -278,9 +278,9 @@
 		'모집중' and deadline &lt;= now() and coalesce(deleted, 0) = 0
 	</select>
 
-	<update id="updateStatusToNoOpponentCancel" parameterType="Long">
+	<update id="updateStatusToCancel" parameterType="Long">
 		update team_match
-		set status = '인원 미달 경기 취소'
+		set status = '경기 취소'
 		where team_match_id =
 		#{teamMatchId}
 		and status = '모집중'
@@ -580,4 +580,5 @@
 		where team_id = #{teamId}
 		  and coalesce(deleted, 0) = 0
 	</select>
+	
 </mapper>

@@ -29,9 +29,32 @@
 </style>
 <div class="workspace">
 	<aside class="side" aria-label="마이페이지 메뉴">
-		<a class="me" href="${ctx}/jsp/mypage/myPageProfile.jsp"> <span
-			class="avatar sm default"></span> <span><strong>매치온
-					회원</strong><small>내 평점 ★ 4.6</small></span>
+		<a class="me" href="${ctx}/jsp/mypage/myPageProfile.jsp">
+			<span class="avatar sm">
+				<c:choose>
+					<c:when test="${not empty sessionScope.user.profileImage}">
+						<img src="${ctx}/profiles/<c:out value='${sessionScope.user.profileImage}' />"
+							alt=""
+							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+					</c:when>
+					<c:otherwise>
+						<img src="${ctx}/img/default-profile.svg" alt=""
+							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+					</c:otherwise>
+				</c:choose>
+				</span> 
+				<span><strong>${sessionScope.user.nickname}</strong>
+					<small>내 평점
+						<c:choose>
+							<c:when test="${not empty myRatingSummary.avgScore}">
+								★ <fmt:formatNumber value="${myRatingSummary.avgScore}" pattern="0.0" />
+								(${myRatingSummary.ratingCount})
+							</c:when>
+							<c:otherwise>평가 없음</c:otherwise>
+						</c:choose>
+					</small>
+				</span>
 		</a>
 
 		<div class="group">

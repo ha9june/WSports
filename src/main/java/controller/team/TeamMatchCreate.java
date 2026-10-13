@@ -103,7 +103,7 @@ public class TeamMatchCreate extends HttpServlet {
 			Long teamId = Long.parseLong(request.getParameter("teamNo"));
 			String role = teamUserService.getRole(teamId, user.getUserId());
 			if (!"CAPTAIN".equals(role) && !"VICE_CAPTAIN".equals(role)) {
-				request.setAttribute("error", "팀장 또는 부팀장으로 있는 팀이 없어요. 팀 경기는 팀장과 부팀장만 만들 수 있어요.");
+				request.setAttribute("error", "주장 또는 부주장으로 있는 팀이 없어요. 팀 경기는 주장과 부주장만 만들 수 있어요.");
 				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 				return;
 			}

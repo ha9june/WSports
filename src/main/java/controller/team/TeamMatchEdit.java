@@ -129,10 +129,10 @@ public class TeamMatchEdit extends HttpServlet {
 				return;
 			}
 			
-			// 현재 팀장/부팀장인지도 확인
+			// 현재 주장/부주장인지도 확인
 			String role = teamUserService.getRole(origin.getTeamId(), user.getUserId());
 			if (!"CAPTAIN".equals(role) && !"VICE_CAPTAIN".equals(role)) {
-				request.setAttribute("error", "팀장 또는 부팀장만 수정할 수 있어요.");
+				request.setAttribute("error", "주장 또는 부주장만 수정할 수 있어요.");
 				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 				return;
 			}
