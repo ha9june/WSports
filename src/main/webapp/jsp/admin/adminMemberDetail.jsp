@@ -17,7 +17,7 @@
     		<span class="avatar">
 				<c:choose>
 					<c:when test="${not empty info.profile_image}">
-						<img src="${ctx}/uploads/${info.profile_image}" alt="프로필 사진">
+						<img src="${ctx}/profiles/${info.profile_image}" alt="프로필 사진">
 					</c:when>
 					<c:otherwise>
 						<img src="${ctx}/img/default-profile.svg" alt="기본 프로필 사진">
