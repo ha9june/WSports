@@ -383,6 +383,10 @@
 												관리</a>
 											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
+											<hr>
+											<a href="#" class="danger btn-delete-team"
+												data-team-id="${m.teamId}"
+												data-team-name="<c:out value='${m.teamName}' />">팀 삭제</a>
 										</c:when>
 										<c:when test="${m.myRole eq 'VICE_CAPTAIN'}">
 											<a href="${ctx}/team/manage/applications?teamId=${m.teamId}">가입신청
@@ -436,6 +440,21 @@
 			<button type="button" class="btn btn-danger" id="confirmCancel">신청
 				취소</button>
 		</div>
+	</div>
+</div>
+<!-- 팀 삭제 모달 -->
+<div class="modal" id="teamDeleteModal" role="dialog" aria-modal="true">
+	<div class="modal-card">
+		<h2 class="modal-title">팀을 삭제할까요?</h2>
+		<p class="modal-desc"><b id="deleteTeamName"></b> 팀이 삭제되고 모든 팀원이 탈퇴 처리돼요. 복구할 수 없고, 진행 중인 경기가 있으면 삭제할 수 없어요.</p>
+		<form action="${ctx}/team/delete" method="post">
+			<input type="hidden" name="teamId" id="deleteTeamId">
+			<input type="hidden" name="from" value="mypage">
+			<div class="modal-actions">
+				<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
+				<button type="submit" class="btn btn-danger">삭제</button>
+			</div>
+		</form>
 	</div>
 </div>
 
@@ -520,6 +539,16 @@
 					showToast('탈퇴 처리에 실패했어요.');
 				}
 			});
+		});
+		// 팀 삭제: 메뉴의 "팀 삭제" 클릭 시 모달 열기
+		$('.btn-delete-team').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+			$('.dropdown').removeClass('is-open');
+			$('#deleteTeamId').val($(this).data('team-id'));
+			$('#deleteTeamName').text($(this).data('team-name'));
+			$('#teamDeleteModal').addClass('is-open');
 		});
 	});
 </script>

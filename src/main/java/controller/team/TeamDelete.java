@@ -48,6 +48,8 @@ public class TeamDelete extends HttpServlet {
 		}
 
 		Long teamId = Long.parseLong(request.getParameter("teamId"));
+		String from = request.getParameter("from");
+		String back = "mypage".equals(from) ? "/mypage/clubs" : "/team/list";
 
 		TeamService teamService = new TeamServiceImpl();
 		try {
@@ -73,15 +75,21 @@ public class TeamDelete extends HttpServlet {
 			}
 
 			teamService.removeTeam(teamId, admin, user.getUserId(), reason);
+			
 			session.setAttribute("toast", "팀을 삭제했어요.");
-			response.sendRedirect(request.getContextPath() + "/team/list");
+			
+
+			response.sendRedirect(request.getContextPath() + back);
 		} catch (IllegalStateException e) {
 			session.setAttribute("toast", e.getMessage());
-			response.sendRedirect(request.getContextPath() + "/team/detail/view?teamId=" + teamId);
+			String dest = "mypage".equals(from)
+					? "/mypage/clubs"
+					: "/team/detail/view?teamId=" + teamId;
+			response.sendRedirect(request.getContextPath() + dest);
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.setAttribute("toast", "팀 삭제 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요.");
-			response.sendRedirect((request.getContextPath() + "/team/list"));
+			response.sendRedirect(request.getContextPath() + back);
 		}
 	}
 
