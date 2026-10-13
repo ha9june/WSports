@@ -191,4 +191,10 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 			return sqlSession.selectList("mapper.personalpayment.selectPaidPaymentsByMatch", matchId);
 		}
 	}
+	@Override
+	public String selectPaymentKey(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.personalpayment.selectPaymentKey", param);
+		}
+	}
 }

@@ -215,4 +215,10 @@ public class TeamPaymentDaoImpl implements TeamPaymentDao {
 			}
 		}
 	}
+	@Override
+	public String selectPaymentKey(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teampayment.selectPaymentKey", param);
+		}
+	}
 }

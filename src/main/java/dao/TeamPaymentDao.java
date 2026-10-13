@@ -39,4 +39,7 @@ public interface TeamPaymentDao {
 	Map<String, Object> selectTeamRefundTarget(Map<String, Object> param) throws Exception;
 	//주최팀 환불 : 결제 취소 + 참가 취소 + 경기 취소(한 트랜잭션), 경기 취소된 행 수 반환
 	Integer updateTeamHostRefund(Map<String, Object> param) throws Exception;
+	
+	//결제번호 가져오기
+	String selectPaymentKey(Map<String, Object> param) throws Exception;
 }

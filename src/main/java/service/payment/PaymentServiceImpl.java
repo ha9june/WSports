@@ -604,4 +604,23 @@ public class PaymentServiceImpl implements PaymentService {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public String getPaymentKey(Long userId, Long matchId, String matchType) throws Exception {
+		
+		HashMap<String,Object> param = new HashMap<>();
+		param.put("userId",userId);
+		param.put("matchId",matchId);
+		
+		System.out.println(userId);
+		System.out.println(matchId);
+		
+		if(matchType.equals("Personal")) {
+			return personalPaymentDao.selectPaymentKey(param);
+		}else if(matchType.equals("Team")) {
+			return teamPaymentDao.selectPaymentKey(param);
+		}
+		
+		return null;
+	}
 }
