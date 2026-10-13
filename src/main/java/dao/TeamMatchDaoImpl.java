@@ -243,4 +243,14 @@ public class TeamMatchDaoImpl implements TeamMatchDao {
 			throw e;
 		}
 	}
+
+	@Override
+	public int countActiveByTeam(Long teamId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teammatch.countActiveByTeam", teamId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

@@ -14,6 +14,11 @@
 <c:set var="activeNav" value="teamMatch" />
 <c:set var="demoRoles" value="member" />
 <c:set var="hostIsOur" value="${ourTeam eq 'host'}" />
+<style>
+.eval-row .who a:hover {
+	text-decoration: underline;
+}
+</style>
 <c:choose>
 	<c:when test="${not empty hostTeam.profileImage}"><c:set var="hostImg" value="${ctx}/uploads/${hostTeam.profileImage}" /></c:when>
 	<c:otherwise><c:set var="hostImg" value="${ctx}/img/default-profile.svg" /></c:otherwise>
@@ -73,7 +78,7 @@
 						<img alt="" src="${hostImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
 					</span>
 					<div>
-						<c:out value="${hostTeam.teamName}" /><small>모집 팀${hostIsOur ? ' · 우리 팀' : ''}</small>
+						<a href="${ctx}/team/detail/view?teamId=${hostTeam.teamId}"><c:out value="${hostTeam.teamName}" /></a><small>모집 팀${hostIsOur ? ' · 우리 팀' : ''}</small>
 					</div>
 				</div>
 				<div class="att-view">
@@ -99,7 +104,7 @@
 						<img alt="" src="${guestImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
 					</span>
 					<div>
-						<c:out value="${guestTeam.teamName}" /><small>참가 팀${hostIsOur ? '' : ' · 우리 팀'}</small>
+						<a href="${ctx}/team/detail/view?teamId=${guestTeam.teamId}"><c:out value="${guestTeam.teamName}" /></a><small>참가 팀${hostIsOur ? '' : ' · 우리 팀'}</small>
 					</div>
 				</div>
 				<div class="att-view">

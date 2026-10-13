@@ -61,6 +61,11 @@ public class TeamDetailView extends HttpServlet {
 				}
 			}
 			
+			Long captainId = teamService.getCaptainUserId(teamId);
+			boolean isCaptain = user != null && captainId != null
+					&& captainId.equals(user.getUserId());
+			request.setAttribute("isCaptain", isCaptain);
+			
 			request.setAttribute("team", teamService.getTeam(teamId));
 			request.setAttribute("state", state); //팀원인지 관리자인지 신청자인지 member // manager //applicater	
 			if("member".equals(state) || "manager".equals(state)) { //팀원 혹은 팀 관리자면

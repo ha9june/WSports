@@ -17,6 +17,7 @@ public class TeamSearchCondition {
     private String startDate;     // 경기 시작일
     private String endDate;       // 경기 종료일
     private Long userId; //로그인 유저 비회원은 널
+    private String[] times; //시간대 아침 오전 오후 저녁 야간
     
 
     
@@ -26,6 +27,13 @@ public class TeamSearchCondition {
 	public TeamSearchCondition() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	public String[] getTimes() {
+		return times;
+	}
+
+	public void setTimes(String[] times) {
+		this.times = times;
 	}
 	
 	public String[] getAges() {
@@ -70,15 +78,16 @@ public class TeamSearchCondition {
 		this.userId = userId;
 	}
 
+
 	@Override
 	public String toString() {
 		return "TeamSearchCondition [offset=" + offset + ", sports=" + Arrays.toString(sports) + ", gender=" + gender
 				+ ", days=" + Arrays.toString(days) + ", skills=" + Arrays.toString(skills) + ", regions="
 				+ Arrays.toString(regions) + ", keyword=" + keyword + ", sort=" + sort + ", ages="
 				+ Arrays.toString(ages) + ", matchPeople=" + Arrays.toString(matchPeople) + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", userId=" + userId + ", SearchType=" + SearchType + "]";
+				+ ", endDate=" + endDate + ", userId=" + userId + ", times=" + Arrays.toString(times) + ", SearchType="
+				+ SearchType + "]";
 	}
-
 	public TeamSearchCondition(int offset, String[] sports, String gender, String[] days, String[] skills,
 			String[] regions, String keyword, String sort, String[] ages, String[] matchPeople, String startDate,
 			String endDate, Long userId, String searchType) {

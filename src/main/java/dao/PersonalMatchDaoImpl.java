@@ -148,7 +148,13 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 		} catch (Exception e) {
 			throw e;
 		}
+
 	}
+	
+	
+	
+	
+	
 	// 스케줄러 : 마감 지난 최소 인원 미달 경기
 	@Override
 	public List<PersonalMatch> selectExpiredUnderMin() throws Exception {
@@ -171,36 +177,41 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			sqlSession.close();
 		}
 	}
-
+	
+	
+	// 스케줄러 : 최소인원 충족으로 인한 모집마감 조회
 	@Override
-	public List<PersonalMatch> selectExpiredRecruiting() throws Exception {
-		try (SqlSession Session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return Session.selectList("mapper.personalmatch.selectExpiredRecruiting");
+	public List<PersonalMatch> selectExpiredSuccess() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatch.selectExpiredSuccess");
 		}
 	}
-
+	
 	@Override
-	public List<PersonalMatch> selectFinishedMatches() throws Exception {
-		try (SqlSession Session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return Session.selectList("mapper.personalmatch.selectFinishedMatches");
-		}
-	}
-
-	@Override
-	public int updateStatusToNoOpponentCancel(Long personalMatchId) throws Exception {
+	public int updateStatusToExpired(Long personalMatchId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			int cnt = sqlSession.update("mapper.personalmatch.updateStatusToNoOpponentCancel", personalMatchId);
+			int cnt = sqlSession.update("mapper.personalmatch.updateStatusToExpired", personalMatchId);
 			sqlSession.commit();
 			return cnt;
-		}catch(Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			sqlSession.rollback();
 			throw e;
-		}finally {
+		} finally {
 			sqlSession.close();
 		}
 	}
+	
+	
 
+	@Override
+	public List<PersonalMatch> selectFinishedSuccess() throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.personalmatch.selectFinishedSuccess");
+		}
+	}
+	
+	
 	@Override
 	public int updateStatusToFinished(Long personalMatchId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
@@ -215,6 +226,11 @@ public class PersonalMatchDaoImpl implements PersonalMatchDao {
 			sqlSession.close();
 		}
 	}
+
+
+
+
+
 
 
 

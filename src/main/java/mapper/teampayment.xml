@@ -231,4 +231,20 @@
 		and status = '모집중'
 		and coalesce(deleted, 0) = 0
 	</update>
+	
+	
+	
+	<!--결제번호 가져오기-->
+	<select id="selectPaymentKey" resultType="String">
+	    SELECT t.payment_key
+		FROM team_match_participant tm
+		JOIN team_payment t ON tm.payment_id = t.payment_id
+		WHERE tm.user_id = #{userId}
+		  AND tm.team_match_id = #{matchId}
+		  AND tm.status = '결제완료'
+		ORDER BY participant_id DESC
+		LIMIT 1
+	</select>
+	
+	
 </mapper>

@@ -27,8 +27,7 @@
         if (countEl) countEl.textContent = n;
       }, 0);
     });*/
-    
-    
+ 
   });
 
   document.addEventListener('click', function (e) {

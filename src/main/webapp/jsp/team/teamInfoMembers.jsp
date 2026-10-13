@@ -34,7 +34,7 @@
 
 		<div class="member-grid">
 			<c:forEach var="m" items="${userList}">
-				<div class="member-card">
+				<a class="member-card" href="${ctx}/member/publicProfile/view?userId=${m.userId}">
 					<c:choose>
 						<c:when test="${not empty m.profileImage}">
 							<span class="avatar"><img src="${ctx}/profiles/${m.profileImage}" alt=""></span>
@@ -64,7 +64,7 @@
 							</p>
 						</c:if>
 					</div>
-				</div>
+				</a>
 			</c:forEach>
 		</div>
 			<c:if test="${fn:length(userList) > 12}">

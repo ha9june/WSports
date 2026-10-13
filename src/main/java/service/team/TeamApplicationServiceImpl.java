@@ -167,8 +167,10 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
-		param.put("size", size);
-		param.put("offset", (pageInfo.getCurPage() - 1) * size);
+//		param.put("size", size);
+		param.put("size", Integer.MAX_VALUE);
+//		param.put("offset", (pageInfo.getCurPage() - 1) * size);
+		param.put("offset", 0);
 
 		return teamApplicationDao.selectMypageMyTeamList(param);
 	}
@@ -180,7 +182,7 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 		param.put("userId", userId);
 		param.put("sport", sport);
 
-		int size = 5;
+		int size = 6;
 		int cnt = teamApplicationDao.selectMypageJoinedTeamCnt(param);
 
 		Integer allPage = (int) Math.ceil(cnt / (double) size);
@@ -198,8 +200,10 @@ public class TeamApplicationServiceImpl implements TeamApplicationService {
 		pageInfo.setAllPage(allPage);
 		pageInfo.setStartPage(startPage);
 		pageInfo.setEndPage(endPage);
-		param.put("size", size);
-		param.put("offset", (pageInfo.getCurPage() - 1) * size);
+//		param.put("size", size);
+		param.put("size", Integer.MAX_VALUE);
+//		param.put("offset", (pageInfo.getCurPage() - 1) * size);
+		param.put("offset", 0);
 
 		return teamApplicationDao.selectMypageJoinedTeamList(param);
 	}

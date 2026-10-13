@@ -23,6 +23,7 @@ public interface TeamMatchDao {
 	List<Long> selectParticipantUserIds(Long teamMatchId) throws Exception;
 	List<TeamMatch> selectTeamPostList(Long teamId, int offset, int size) throws Exception;
 	int selectTeamPostCnt (Long teamId) throws Exception;
+	int countActiveByTeam(Long teamId) throws Exception;
 	
 	//관리자 경기수 세기 - 팀
 	Long selectMatchCntTeam() throws Exception;
