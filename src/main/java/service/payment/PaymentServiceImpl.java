@@ -358,7 +358,7 @@ public class PaymentServiceImpl implements PaymentService {
 			String period) throws Exception {
 		return userDao.selectHistorySummary(buildHistoryParam(keyword, userId, null, null, period));
 	}
-	
+
 	// 개인 경기 결제 취소
 	@Override
 	public void refundPersonalPayment(String paymentKey, Long userId, String reason, String secretKey)
