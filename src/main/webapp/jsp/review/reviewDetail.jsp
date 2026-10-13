@@ -251,7 +251,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 					</c:choose>
 				<div>
 					<a
-						href="${ctx}/jsp/member/userProfileInfo.jsp?userId=${review.userId}"><strong>${review.nickname}</strong></a>
+						href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong>${review.nickname}</strong></a>
 					<small>작성자 · ${review.createdAtStr}</small>
 				</div>
 			</div>
@@ -307,7 +307,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 						</c:when>
 						<c:otherwise>
 							<a class="btn btn-outline btn-sm"
-								href="${ctx}/jsp/support/reportWrite.jsp?targetType=review&targetNo=${review.reviewId}"
+								href="${ctx}/support/report/create?targetType=review&targetNo=${review.reviewId}"
 								data-auth>신고</a>
 						</c:otherwise>
 					</c:choose>

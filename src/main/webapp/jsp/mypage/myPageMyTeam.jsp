@@ -349,19 +349,19 @@
 								<div class="kebab-menu">
 									<c:choose>
 										<c:when test="${m.myRole eq 'CAPTAIN'}">
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+											<a href="${ctx}/team/manage/applications?teamId=${m.teamId}">가입신청
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+											<a href="${ctx}/team/manage/members?teamId=${m.teamId}">팀원
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
 										</c:when>
 										<c:when test="${m.myRole eq 'VICE_CAPTAIN'}">
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+											<a href="${ctx}/team/manage/applications?teamId=${m.teamId}">가입신청
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+											<a href="${ctx}/team/manage/members?teamId=${m.teamId}">팀원
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
 											<hr>
 											<a href="#" class="danger btn-leave"
