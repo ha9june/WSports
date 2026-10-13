@@ -432,3 +432,8 @@
 .host-inline .host-name:hover strong { text-decoration: underline; }
 
 .side-card.done h2 { color: var(--text-primary, #111827); }
+
+.ph { position: relative; }
+.ph-remove { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; padding: 0;
+  border: 0; border-radius: 50%; background: rgba(0,0,0,.6); color: #fff;
+  font-size: 12px; line-height: 24px; cursor: pointer; z-index: 2; }
