@@ -15,6 +15,21 @@
 <c:set var="demoRoles" value="admin" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/adminSideBar.jsp" %>
+<style>
+.tbl-row .pill.pill-wait {
+  background: #fdeeee;
+  color: #d6303a;
+  border: 1px solid #e8878b;
+  font-weight: 700;
+}
+.tbl-row .pill.pill-done {
+  background: #e4edff;
+  color: #2b5fd9;
+  border: 1px solid #a9bdf7;
+  font-weight: 700;
+}
+</style>
+
 <div class="admin-inner">
 	<p class="eyebrow-path">관리자(사이트)</p>
 	<div class="page-head">
@@ -52,7 +67,7 @@
     			<span>${i.type }</span>
     			<span>${i.nickname}</span>
     			<span>${i.title }</span>
-    			<span class="pill ${i.answer_status eq '답변완료' ? 'pill-neutral' : 'pill-warning bd'}">${i.answer_status}</span>
+    			<span class="pill ${i.answer_status eq '답변완료' ? 'pill-done' : 'pill-wait'}">${i.answer_status}</span>
     			<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/inquiry/detail?inquiryId=${i.inquiry_id}">보기</a>
 			</div>
     	</c:forEach>
