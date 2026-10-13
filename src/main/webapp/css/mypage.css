@@ -133,3 +133,64 @@
 .act-card[data-href]:hover { border-color: #c8ced3; }
 .act-card .main .meta span { display: inline-flex; align-items: center; gap: 4px; }
 .act-card .main .meta img { width: 12px; height: 12px; }
+
+/* =========================================================
+   내 프로필 / 프로필 수정  (참가 경기 등 다른 마이페이지와 여백·글자 크기 통일)
+   ========================================================= */
+
+/* ---------- 공통 ---------- */
+.pf-page { max-width: 1000px; display: flex; flex-direction: column; gap: 16px; }
+.pf-head { margin-bottom: 4px; }
+.pf-head .section-desc { margin-bottom: 0 !important; }
+.pf-card { border: 1px solid var(--ds-border); border-radius: var(--r-12); padding: 20px 24px 22px; background: #fff; }
+.pf-card > .sub-title { display: flex; align-items: baseline; gap: 10px; font-size: 16px; }
+.pf-card > .section-desc { margin-bottom: 0 !important; }
+.pf-card .avatar.lg { width: 72px; height: 72px; }
+.pf-page .form-actions { margin-top: 4px; padding-bottom: 8px; }
+.pf-page .form-actions .btn-primary { width: 92px; }
+
+/* ---------- 보기: 프로필(사진 + 한 줄 소개) ---------- */
+.pf-intro { display: flex; align-items: flex-start; gap: 20px; margin-top: 16px; }
+.pf-intro-body { flex: 1; min-width: 0; }
+.pf-intro-label { font-size: 11px; color: var(--ds-text-2); margin-bottom: 6px; }
+.pf-bio { display: flex; align-items: center; min-height: 49px; padding: 12px 16px; box-sizing: border-box; border-radius: var(--r-8); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); font-size: 12px; line-height: 1.7; }
+.pf-bio.is-empty { background: #fff; border-style: dashed; border-color: var(--ds-border); color: var(--ds-text-3); font-size: 11px; }
+
+/* ---------- 보기: 활동 정보 (행의 위·아래 여백을 같게, 마지막 행은 카드 하단 여백 상쇄) ---------- */
+.pf-rows { display: flex; flex-direction: column; margin-bottom: -22px; }
+.pf-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; align-items: center; min-height: 52px; padding: 14px 0; border-bottom: 1px solid var(--ds-border-subtle); }
+.pf-row:last-child { border-bottom: 0; }
+.pf-row dt { font-size: 11px; color: var(--ds-text-2); }
+.pf-row dd { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; font-weight: 500; }
+.pf-empty-text { font-size: 11px; font-weight: 400; color: var(--ds-text-3); }
+
+/* ---------- 보기: 종목별 프로필 (입력됨 = 파란 카드 / 미입력 = 점선 카드) ---------- */
+.pf-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+.pf-tile { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: var(--r-12); border: 1px solid var(--ds-brand); background: var(--ds-brand-subtle); }
+.pf-tile small { font-size: 11px; color: var(--ds-text-2); }
+.pf-tile b { font-size: 15px; font-weight: 700; color: var(--ds-brand); }
+.pf-tile.is-empty { border: 1px dashed var(--ds-border); background: var(--ds-bg-subtle); }
+.pf-tile.is-empty b { font-size: 12px; font-weight: 400; color: var(--ds-text-3); }
+
+/* ---------- 수정: 사진 + 한 줄 소개 ---------- */
+.pf-edit-top { display: flex; align-items: flex-start; gap: 32px; margin-top: 16px; }
+.pf-edit-top .profile-photo { margin-top: 0; flex: none; gap: 20px; }
+.pf-intro-edit { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.pf-count { text-align: right; font-size: 11px; color: var(--ds-text-3); }
+.pf-intro-edit .pf-count { margin-top: -2px; }
+
+/* ---------- 수정: 활동 정보 / 종목별 프로필 ---------- */
+.pf-card .field + .field { margin-top: 20px; }
+.pf-card .pf-field-box { margin-top: 16px; }
+.pf-card .pf-region { width: 420px; max-width: 100%; }
+.pf-level-hint { margin-top: 12px; padding: 18px; border: 1px dashed var(--ds-border); border-radius: var(--r-8); background: var(--ds-bg-subtle); text-align: center; font-size: 11px; color: var(--ds-text-3); }
+.pf-levels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.pf-levels .level-block { padding: 12px 16px 14px; border: 1px solid var(--ds-border); border-radius: var(--r-8); background: var(--ds-bg-subtle); }
+.pf-levels .level-block > p { margin-top: 0; }
+.pf-levels .level-block .chip-group { margin-top: 8px; }
+
+@media (max-width: 1200px) {
+  .pf-edit-top { flex-direction: column; }
+  .pf-tiles { grid-template-columns: repeat(2, 1fr); }
+  .pf-levels { grid-template-columns: 1fr; }
+}

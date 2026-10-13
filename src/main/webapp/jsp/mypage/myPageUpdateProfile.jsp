@@ -28,6 +28,9 @@ function updateLevels() {
 		selectedSports.push(c.textContent.trim());
 	});
 
+	var hint = document.getElementById('levelHint');
+	if (hint) hint.style.display = selectedSports.length ? 'none' : '';
+
 	document.querySelectorAll('.level-block').forEach(function (block) {
 		var on = selectedSports.indexOf(block.getAttribute('data-sport')) !== -1;
 		block.style.display = on ? '' : 'none';
@@ -93,6 +96,9 @@ function readURL(input) {
 // 페이지를 처음 열 때 (form 이 그려진 뒤에 실행)
 document.addEventListener('DOMContentLoaded', function () {
 	updateLevels();
+	var intro = document.getElementById('introInput'), cnt = document.getElementById('introCnt');
+	function syncCnt() { cnt.textContent = intro.value.length; }
+	intro.addEventListener('input', syncCnt); syncCnt();
 	// 제출 시 관심 종목 / 주 활동 지역을 1~3번 칸으로 나눠서 전송
 	document.getElementById('edit-wrap').addEventListener('submit', function () {
 		splitValues('sports', 'preferredSport');
@@ -100,111 +106,129 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 </script>
-<form class="work-inner" id="edit-wrap" action="${ctx}/member/profile/edit" method="post" enctype="multipart/form-data" style="padding-left:24px">
-  <h1 class="sub-title">프로필 사진</h1>
-  <p class="section-desc">프로필에 표시될 사진을 등록할 수 있습니다.</p>
-  <div class="profile-photo">
-    <span class="avatar lg">
-      <c:choose>
-  	  <c:when test="${not empty loginUser.profileImage }">
-  		  <img class="avatar lg"
-  		  	   id="preview"
-  			   src="${ctx}${profilePath}/${loginUser.profileImage}"
-  			   alt="프로필 사진">
-	  </c:when>
-	  <c:otherwise>
-		  <img class="avatar lg"
-		       id="preview"
-			   src="${ctx }/img/default-profile.svg"
-			   alt="기본 프로필 사진">
-	  </c:otherwise>
-	</c:choose>
-    </span>
-    <div>
-      <div class="btn-group">
-        <label class="btn btn-primary btn-sm">사진 추가 / 변경<input type="file" id="profile" name="profileImg" accept="image/*" hidden onchange="readURL(this);"></label>
-        <input type="hidden" name="deleteImg" id="deleteImg" value="false">
-        <button type="button" class="btn btn-outline btn-sm" onclick="resetToDefault();">기본 이미지</button>
+<form class="work-inner full pf-page" id="edit-wrap" action="${ctx}/member/profile/edit" method="post" enctype="multipart/form-data">
+
+  <div class="pf-head">
+    <h1 class="section-title">내 프로필 수정</h1>
+    <p class="section-desc">변경할 항목을 수정한 뒤 저장해주세요.</p>
+  </div>
+
+  <%-- 프로필 사진 + 한 줄 소개 --%>
+  <section class="pf-card">
+    <h2 class="sub-title">프로필</h2>
+    <p class="section-desc">프로필에 표시될 사진과 한 줄 소개를 등록할 수 있습니다.</p>
+    <div class="pf-edit-top">
+      <div class="profile-photo">
+        <span class="avatar lg">
+          <c:choose>
+            <c:when test="${not empty loginUser.profileImage}">
+              <img class="avatar lg" id="preview" src="${ctx}${profilePath}/${loginUser.profileImage}" alt="프로필 사진">
+            </c:when>
+            <c:otherwise>
+              <img class="avatar lg" id="preview" src="${ctx}/img/default-profile.svg" alt="기본 프로필 사진">
+            </c:otherwise>
+          </c:choose>
+        </span>
+        <div>
+          <div class="btn-group">
+            <label class="btn btn-primary btn-sm">사진 추가 / 변경<input type="file" id="profile" name="profileImg" accept="image/*" hidden onchange="readURL(this);"></label>
+            <input type="hidden" name="deleteImg" id="deleteImg" value="false">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetToDefault();">기본 이미지</button>
+          </div>
+          <p class="field-help mt-8">사진을 등록하지 않으면 기본 이미지가 사용됩니다.</p>
+        </div>
       </div>
-      <p class="field-help mt-8">사진을 등록하지 않으면 기본 이미지가 사용됩니다.</p>
+      <div class="pf-intro-edit">
+        <span class="field-label strong">한 줄 소개 <span class="hint">최대 50자</span></span>
+        <input class="input" id="introInput" name="intro" maxlength="50" value="${loginUser.bio}" placeholder="예) 주말마다 같이 뛸 팀원을 찾고 있어요!">
+        <p class="pf-count"><span id="introCnt">0</span> / 50</p>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="field mt-32"><span class="field-label" style="font-size:14px;color:var(--ds-text)">관심 종목 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
-    <div class="chip-group" data-select="multi" data-max="3" data-name="sports">
-    	<c:forTokens var="sp" items="축구/풋살,농구,테니스,배드민턴" delims=",">
-            <button type="button" class="chip ${loginUser.preferredSport1 == sp or loginUser.preferredSport2 == sp or loginUser.preferredSport3 == sp ? 'is-selected' : ''}">${sp}</button>
+  <%-- 관심 종목 / 주 활동 지역 --%>
+  <section class="pf-card">
+    <h2 class="sub-title">활동 정보</h2>
+    <div class="field pf-field-box">
+      <span class="field-label strong">관심 종목 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
+      <div class="chip-group" data-select="multi" data-max="3" data-name="sports">
+        <c:forTokens var="sp" items="축구/풋살,농구,테니스,배드민턴" delims=",">
+          <button type="button" class="chip ${loginUser.preferredSport1 == sp or loginUser.preferredSport2 == sp or loginUser.preferredSport3 == sp ? 'is-selected' : ''}">${sp}</button>
         </c:forTokens>
+      </div>
     </div>
-  </div>  
-  <div class="field mt-24" style="width:360px"><span class="field-label" style="font-size:14px;color:var(--ds-text)">주 활동 지역 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
-  <div class="field-row">
-    <select class="select" id="sido" aria-label="시·도">
-      <option value="">시 · 도</option>
-      <option value="서울시">서울시</option>
-      <option value="경기도">경기도</option>
-    </select>
-    <select class="select" id="sigungu" aria-label="시군구" disabled>
-      <option value="">시군구</option>
-    </select>
-  </div>
-  <p id="maxRegion" class="region-max" style="display:none">최대 3개까지 선택 가능합니다.</p>
-  <div class="picked" id="pickedRegions"></div>
-  <div id="regionInputs"></div>
-  </div>
-
-  <h2 class="sub-title mt-48">종목별 프로필 <span class="t-11 t-2" style="font-weight:400;margin-left:8px">종목을 선택해 실력을 설정하세요. 종목을 다시 누르면 선택이 취소돼요.</span></h2>
-  <%-- 종목 칩: 복수 선택(토글). 강조된 종목의 실력 블록이 보이고, 강조를 풀면 그 종목의 실력이 지워집니다.
-       서버로 전송하지 않음(data-name 없음). 저장된 실력이 있는 종목은 처음부터 강조됩니다. --%>
-  <div class="chip-group mt-16" id="sportGroup" data-select="multi">
-    <button type="button" class="chip ${not empty loginUser.soccerSkill ? 'is-selected' : ''}">축구/풋살</button>
-    <button type="button" class="chip ${not empty loginUser.basketballSkill ? 'is-selected' : ''}">농구</button>
-    <button type="button" class="chip ${not empty loginUser.tennisSkill ? 'is-selected' : ''}">테니스</button>
-    <button type="button" class="chip ${not empty loginUser.badmintonSkill ? 'is-selected' : ''}">배드민턴</button>
-  </div>
-
-  <%-- 실력 칩: data-name 이 곧 전송 파라미터 이름입니다. data-deselect 로 다시 누르면 해제(미설정)됩니다. --%>
-
-  <div class="level-block" data-sport="축구/풋살" style="display:none">
-    <p class="t-11 t-bold mt-16">축구/풋살 실력</p>
-    <div class="chip-group mt-8" data-select="single" data-deselect data-name="soccerSkill">
-      <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
-        <button type="button" class="chip ${loginUser.soccerSkill == lv ? 'is-selected' : ''}">${lv}</button>
-      </c:forTokens>
+    <div class="field pf-region">
+      <span class="field-label strong">주 활동 지역 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
+      <div class="field-row">
+        <select class="select" id="sido" aria-label="시·도">
+          <option value="">시 · 도</option>
+          <option value="서울시">서울시</option>
+          <option value="경기도">경기도</option>
+        </select>
+        <select class="select" id="sigungu" aria-label="시군구" disabled>
+          <option value="">시군구</option>
+        </select>
+      </div>
+      <p id="maxRegion" class="region-max" style="display:none">최대 3개까지 선택 가능합니다.</p>
+      <div class="picked" id="pickedRegions"></div>
+      <div id="regionInputs"></div>
     </div>
-  </div>
+  </section>
 
-  <div class="level-block" data-sport="농구" style="display:none">
-    <p class="t-11 t-bold mt-16">농구 실력</p>
-    <div class="chip-group mt-8" data-select="single" data-deselect data-name="basketballSkill">
-      <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
-        <button type="button" class="chip ${loginUser.basketballSkill == lv ? 'is-selected' : ''}">${lv}</button>
-      </c:forTokens>
+  <%-- 종목별 프로필
+       종목 칩: 복수 선택(토글). 강조된 종목의 실력 블록이 보이고, 강조를 풀면 그 종목의 실력이 지워집니다.
+       서버로 전송하지 않음(data-name 없음). 저장된 실력이 있는 종목은 처음부터 강조됩니다.
+       실력 칩: data-name 이 곧 전송 파라미터 이름입니다. data-deselect 로 다시 누르면 해제(미설정)됩니다. --%>
+  <section class="pf-card">
+    <h2 class="sub-title">종목별 프로필</h2>
+    <p class="section-desc">종목을 선택해 실력을 설정하세요. 종목을 다시 누르면 선택이 취소돼요.</p>
+    <div class="chip-group mt-16" id="sportGroup" data-select="multi">
+      <button type="button" class="chip ${not empty loginUser.soccerSkill ? 'is-selected' : ''}">축구/풋살</button>
+      <button type="button" class="chip ${not empty loginUser.basketballSkill ? 'is-selected' : ''}">농구</button>
+      <button type="button" class="chip ${not empty loginUser.tennisSkill ? 'is-selected' : ''}">테니스</button>
+      <button type="button" class="chip ${not empty loginUser.badmintonSkill ? 'is-selected' : ''}">배드민턴</button>
     </div>
-  </div>
-
-  <div class="level-block" data-sport="테니스" style="display:none">
-    <p class="t-11 t-bold mt-16">테니스 실력</p>
-    <div class="chip-group mt-8" data-select="single" data-deselect data-name="tennisSkill">
-      <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
-        <button type="button" class="chip ${loginUser.tennisSkill == lv ? 'is-selected' : ''}">${lv}</button>
-      </c:forTokens>
+    <p class="pf-level-hint" id="levelHint">종목을 선택하면 실력을 설정할 수 있어요.</p>
+    <div class="pf-levels">
+      <div class="level-block" data-sport="축구/풋살" style="display:none">
+        <p class="t-11 t-bold">축구/풋살 실력</p>
+        <div class="chip-group" data-select="single" data-deselect data-name="soccerSkill">
+          <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
+            <button type="button" class="chip ${loginUser.soccerSkill == lv ? 'is-selected' : ''}">${lv}</button>
+          </c:forTokens>
+        </div>
+      </div>
+      <div class="level-block" data-sport="농구" style="display:none">
+        <p class="t-11 t-bold">농구 실력</p>
+        <div class="chip-group" data-select="single" data-deselect data-name="basketballSkill">
+          <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
+            <button type="button" class="chip ${loginUser.basketballSkill == lv ? 'is-selected' : ''}">${lv}</button>
+          </c:forTokens>
+        </div>
+      </div>
+      <div class="level-block" data-sport="테니스" style="display:none">
+        <p class="t-11 t-bold">테니스 실력</p>
+        <div class="chip-group" data-select="single" data-deselect data-name="tennisSkill">
+          <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
+            <button type="button" class="chip ${loginUser.tennisSkill == lv ? 'is-selected' : ''}">${lv}</button>
+          </c:forTokens>
+        </div>
+      </div>
+      <div class="level-block" data-sport="배드민턴" style="display:none">
+        <p class="t-11 t-bold">배드민턴 실력</p>
+        <div class="chip-group" data-select="single" data-deselect data-name="badmintonSkill">
+          <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
+            <button type="button" class="chip ${loginUser.badmintonSkill == lv ? 'is-selected' : ''}">${lv}</button>
+          </c:forTokens>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="level-block" data-sport="배드민턴" style="display:none">
-    <p class="t-11 t-bold mt-16">배드민턴 실력</p>
-    <div class="chip-group mt-8" data-select="single" data-deselect data-name="badmintonSkill">
-      <c:forTokens var="lv" items="입문,초급,중급,상급" delims=",">
-        <button type="button" class="chip ${loginUser.badmintonSkill == lv ? 'is-selected' : ''}">${lv}</button>
-      </c:forTokens>
-    </div>
+  <div class="form-actions">
+    <a class="btn btn-outline" href="${ctx}/member/profile/view">취소</a>
+    <button type="submit" class="btn btn-primary">저장</button>
   </div>
-
-  <h2 class="sub-title mt-32">한 줄 소개</h2>
-  <p class="section-desc">프로필에 표시할 짧은 소개를 입력해주세요.</p>
-  <input class="input mt-8" name="intro" maxlength="50" value="${loginUser.bio}">
-  <div class="form-actions"><a class="btn btn-outline" href="${ctx}/member/profile/view">취소</a><button type="submit" class="btn btn-primary" style="width:92px">저장</button></div>
 </form>
 <script src="${ctx}/js/address.js"></script>
 <script>
