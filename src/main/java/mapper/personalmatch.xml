@@ -199,8 +199,9 @@
 		LIMIT
 		#{startIndex}, 4
 	</select>
+	
 	<!--지도기반 검색-->
-	<select id="selectMapPersonalMatchList"
+		<select id="selectMapPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
 		m.*,

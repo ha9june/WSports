@@ -56,7 +56,7 @@
 	
 	<!-- 관리자 회원 상세 정보 -->
 	<select id="selectAdminMemberDetailList" resultType="map">
-		select u.user_id, u.login_id, u.nickname, u.suspended, u.withdrawal_at, u.email,
+		select u.user_id, u.login_id, u.nickname, u.suspended, u.withdrawal_at, u.email, u.profile_image,
 			   p.score, p.permanent_suspension, p.received_at, p.suspension_start_at, p.suspension_end_at, p.reason, p.penalty_id
 		from user u
 		left join user_penalty p

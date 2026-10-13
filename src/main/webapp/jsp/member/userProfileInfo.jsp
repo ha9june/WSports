@@ -22,7 +22,7 @@
 			</c:when>
 			<c:otherwise>
 				<img class="avatar lg"
-					src="${ctx }/img/profile-default.png"
+					src="${ctx}/img/default-profile.svg"
 					alt="기본 프로필 사진">
 			</c:otherwise>
 		</c:choose>
