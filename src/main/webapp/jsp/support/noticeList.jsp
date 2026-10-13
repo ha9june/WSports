@@ -31,7 +31,7 @@
     <h2 class="sub-title" style="margin-bottom:14px">공지 ${pageInfo.totalCnt}건</h2>
     <div class="row-list">
     <c:forEach var="n" items="${noticeList}">
-      <a class="row-card" href="${ctx}/jsp/support/noticeDetail.jsp?noticeId=${n.notice_id}">
+      <a class="row-card" href="${ctx}/support/notice/detail?noticeId=${n.notice_id}">
       <div>
         <p class="title"><c:out value="${n.title}"/></p>
         <p class="meta"><c:out value="${n.created_at}"/> · <c:out value="${n.nickname}"/></p>

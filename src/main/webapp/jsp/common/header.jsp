@@ -409,8 +409,6 @@ window.addEventListener("fcmMessageReceived", function(e) {
 									alt="기본 프로필 사진">
 								</c:otherwise>
 							</c:choose>
-							title="마이페이지"> <img src="${headerProfileImg}" alt="내 프로필"
-							style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
 						</a>
 						<button type="button" class="logout-btn"
 							data-modal-open="logoutModal" title="로그아웃" aria-label="로그아웃">

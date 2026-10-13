@@ -27,7 +27,7 @@
   
   <div class="row-list">
     <c:forEach var="r" items="${reportList}"> 
-    <a class="row-card" href="${ctx}/jsp/support/reportDetail.jsp?reportId=${r.report_id}" style="padding:18px 24px">
+    <a class="row-card" href="${ctx}/support/report/detail?reportId=${r.report_id}" style="padding:18px 24px">
     <div><p class="title"><c:out value="${r.title}"/></p>
     <p class="meta"><c:out value="${r.type}"/> · <c:out value="${r.created_at}"/></p></div>
     <span class="status">
