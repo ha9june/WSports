@@ -442,4 +442,59 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 		return allSuccess;
 	}
+	//팀 경기 결제 취소 : 주최팀 모집자 본인 + 상대 팀 결제 전 + 모집 마감 전
+	@Override
+	public void refundTeamPayment(String paymentKey, Long userId, String reason, String secretKey) throws Exception {
+		Map<String, Object> search = new HashMap<>();
+		search.put("paymentKey", paymentKey);
+		search.put("userId", userId);
+		//본인이 결제한 주최팀 결제만 조회됨
+		Map<String, Object> target = teamPaymentDao.selectTeamRefundTarget(search);
+		if(target == null) throw new IllegalStateException("본인이 결제한 모집팀 결제만 환불할 수 있습니다.");
+		
+		//검증 (취소 전에 전부 확인)
+		if("CANCELED".equals(target.get("payment_status")))
+			throw new IllegalStateException("이미 환불된 결제입니다.");
+		if(!"모집중".equals(target.get("status")))
+			throw new IllegalStateException("상대 팀이 이미 결제해 환불할 수 없습니다.");
+		
+		LocalDateTime deadline = ((Timestamp) target.get("deadline")).toLocalDateTime();
+		if(!LocalDateTime.now().isBefore(deadline))
+			throw new IllegalStateException("모집 마감 이후에는 환불할 수 없습니다.");
+		
+		//결제 취소(성공해야 다음 단계 진행)
+		JSONObject result = cancelPayment(paymentKey, reason, secretKey);
+		JSONArray cancels = result.getJSONArray("cancels");
+		JSONObject cancel = cancels.getJSONObject(cancels.length() -1);
+		int cancelAmount = cancel.getInt("cancelAmount");
+		
+		//DB 변경 : 결제 취소 + 참가 취소 + 경기 취소 (한 트랜잭션)
+		Long teamMatchId = ((Number) target.get("team_match_id")).longValue();
+		Map<String, Object> param = new HashMap<>();
+		param.put("paymentId", ((Number) target.get("payment_id")).longValue());
+		param.put("canceledAt", OffsetDateTime.parse(cancel.getString("canceledAt")).toLocalDateTime());
+		param.put("cancelReason", cancel.optString("cancelReason", reason));
+		param.put("cancelAmount", cancelAmount);
+		param.put("teamMatchId", teamMatchId);
+		
+		int canceled = teamPaymentDao.updateTeamHostRefund(param);
+		if(canceled == 0) {
+			//검증 직후 상대팀이 결제한 아주 드문 경우 : 환불은 완료, 경기 상태는 관리자 확인 필요
+			System.err.println("[팀 환불] 환불은 완료됐으나 경기 취소 실패(상태 확인 필요) teamMatchId=" + teamMatchId);
+		}
+		
+		//알림 : 결제한 본인에게 (실패해도 환불은 유지)
+		try {
+			String title = (String) target.get("title");
+			Notification alarm = new Notification();
+			alarm.setUserId(userId);
+			alarm.setTitle("경기 취소 및 환불 완료");
+			alarm.setContent("'" + title + "' 경기가 취소되어 결제하신"
+					+ String.format("%, d", cancelAmount)+"원이 환불되었습니다.");
+			alarm.setLink("/team-match/detail/view?teamMatchId=" + teamMatchId);
+			notificationService.sendNotification(alarm);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

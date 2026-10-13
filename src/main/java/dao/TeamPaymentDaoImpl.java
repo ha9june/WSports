@@ -190,4 +190,29 @@ public class TeamPaymentDaoImpl implements TeamPaymentDao {
 			}
 		}
 	}
+	//팀 환불 대상 조회 (본인 + 주최팀 결제)
+	@Override
+	public Map<String, Object> selectTeamRefundTarget(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.teampayment.selectTeamRefundTarget", param);
+		}
+	}
+	//주최팀 환불 : 결제 취소 + 참가 취소 + 경기 취소(한 트랜잭션), 경기 취소된 행 수 반환
+	@Override
+	public Integer updateTeamHostRefund(Map<String, Object> param) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			try {
+				sqlSession.update("mapper.teampayment.updateTeamPaymentCanceled", param);
+				sqlSession.update("mapper.teampayment.updateTeamParticipantCanceled", param);
+				int cnt = sqlSession.update("mapper.teampayment.updateTeamMatchHostCancel", param);
+				sqlSession.commit();
+				return cnt;
+			} catch (Exception e) {
+				sqlSession.rollback();
+				throw e;
+			}finally {
+				sqlSession.close();
+			}
+		}
+	}
 }

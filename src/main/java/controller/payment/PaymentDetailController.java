@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import dto.PersonalMatch;
 import dto.PersonalPayment;
+import dto.TeamMatch;
+import dto.TeamPayment;
 import dto.User;
 import service.payment.PaymentService;
 import service.payment.PaymentServiceImpl;
@@ -39,6 +41,7 @@ public class PaymentDetailController extends HttpServlet {
         
 		try {
 			PaymentService paymentService = new PaymentServiceImpl();
+			User loginUser = (User) request.getSession().getAttribute("user");
 			//paymentKey로 개인 결제를 먼저 찾고, 없으면 팀 결제
 			PersonalPayment personalPayment = paymentService.getPersonalPaymentByPaymentKey(paymentKey);
 			boolean isTeam = (personalPayment == null);
@@ -46,15 +49,24 @@ public class PaymentDetailController extends HttpServlet {
 			Object payment;
 			
 			if (isTeam) {
-				payment = paymentService.getTeamPaymentByPaymentKey(paymentKey);
-				request.setAttribute("match", paymentService.getTeamPaymentMatch(paymentKey));
+				TeamPayment teamPayment = paymentService.getTeamPaymentByPaymentKey(paymentKey);
+				TeamMatch teamMatch = paymentService.getTeamPaymentMatch(paymentKey);
+				payment = teamPayment;
+				request.setAttribute("match", teamMatch);
+				
+				// 환불 가능 여부 : 본인 로그인 + 환불 전 + 모집자 아님 + 모집 마감 전
+				canRefund = loginUser != null && teamPayment != null && teamMatch != null
+						&& !"CANCELED".equals(teamPayment.getPaymentStatus())
+						&& loginUser.getUserId().equals(teamMatch.getUserId())
+						&& "모집중".equals(teamMatch.getStatus())
+						&& teamMatch.getDeadline() != null
+						&& LocalDateTime.now().isBefore(teamMatch.getDeadline());
 			} else {
 				PersonalMatch personalMatch = paymentService.getPersonalPaymentMatch(paymentKey);
 				payment = personalPayment;
 				request.setAttribute("match", personalMatch);
 
 				// 환불 가능 여부 : 본인 로그인 + 환불 전 + 모집자 아님 + 모집 마감 전
-				User loginUser = (User) request.getSession().getAttribute("user");
 				canRefund = loginUser != null && personalMatch != null
 						&& !"CANCELED".equals(personalPayment.getPaymentStatus())
 						&& !loginUser.getUserId().equals(personalMatch.getUserId())
