@@ -33,11 +33,11 @@
 				</foreach>
 			</if>
 			<if test="regions != null and regions.length > 0">
-				AND m.region IN
-				<foreach collection="regions" item="region" open="("
-					separator="," close=")">
-					#{region}
-				</foreach>
+				AND (
+			        <foreach collection="regions" item="region" separator=" OR ">
+			            m.region LIKE CONCAT('%', #{region}, '%')
+			        </foreach>
+			    )
 			</if>
 		</if>
 		GROUP BY m.personal_match_id

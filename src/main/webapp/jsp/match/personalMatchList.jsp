@@ -317,15 +317,10 @@
             </div>
             <div class="filter-more">
               <button type="button" class="btn btn-outline btn-sm" data-filter-toggle>필터 더보기 +</button>
-              <span class="count">
-              0
-              </span>
-              <span class="newCount">
-              </span>
               <div class="filter-panel">
                 <div class="chip-group" data-select="single" data-name="gender">
                   <span class="chip-label">성별</span>
-                  <button type="button" class="chip is-selected" data-value="혼성">성별무관</button>
+                  <button type="button" class="chip" data-value="혼성">성별무관</button>
                   <button type="button" class="chip" data-value="남성">남성</button>
                   <button type="button" class="chip" data-value="여성">여성</button>
                 </div>
@@ -376,13 +371,14 @@
 		    <div class="picked" id="pickedRegions"></div>
 		    <div id="regionInputs"></div>
 		</div>
+        <div class="filter-more" style="padding-top:5px;">
+			<span class="count">
+             </span>
+		</div>
       </form>
       
       
-      
-      
-      
-      
+ 
       
       <form class="mapGroup search-shell is-hidden" id="mapMatchSearchForm" method="post">
         <div class="filter-row">

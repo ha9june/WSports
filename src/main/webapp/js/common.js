@@ -216,7 +216,7 @@
     }
   });
 
-
+	
 	/*function updateFilterCount(group) {
 	  var more = group.closest('.filter-more');
 	  if (!more) return;
@@ -230,7 +230,7 @@
 	  countEl.textContent = labels.length ? labels.join(', ') : '0';
 	}*/
 	function updateFilterCount(group) {
-	  var more = group.closest('.filter-more');
+	  var more = group.closest('.search-shell');
 	  if (!more) return;
 	  //var countEl = more.querySelector('.count');
 	  var countEl = more.querySelector('.count');
