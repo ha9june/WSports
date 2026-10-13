@@ -357,7 +357,6 @@
 								${m.appliedAt}</p>
 						</div>
 
-						<%-- 기존에 예쁘게 나오던 가입한 팀 레이아웃은 일절 건드리지 않고 그대로 유지합니다 --%>
 						<div class="card-right" onclick="event.stopPropagation()">
 							<c:if test="${not empty m.myRole}">
 								<c:choose>
