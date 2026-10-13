@@ -394,3 +394,12 @@
 	padding: 4px 14px;
 	flex: 0 0 auto;
 }
+.btn-danger-soft {
+  color: #d9433c;
+  border-color: #f1c7c4;
+  background: #fff;
+}
+.btn-danger-soft:hover {
+  background: #fdf1f0;
+  border-color: #e9a9a5;
+}

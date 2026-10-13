@@ -260,21 +260,13 @@ $('#thumbs').on('click', '.subImg', function() {
 									<p style="margin-top: 8px">
 										<span class="pill pill-success">모집중</span>
 									</p>
-									<div class="actions">
-										<a class="btn btn-outline"
-											href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기
-											수정</a>
-										<button type="button" class="btn btn-danger"
-											data-modal-open="hostCancelModal">경기 취소</button>
-									</div>
-									<div class="actions row">
-										<button type="button" class="btn btn-outline btn-sm" disabled>출석
-											체크</button>
-										<button type="button" class="btn btn-outline btn-sm" disabled>양
-											팀 참가자</button>
-									</div>
-									<p class="note">상대 팀이 신청하기 전까지는 취소하면 전액 환불돼요. 상대 팀이 확정되면 경기
-										관리 기능을 사용할 수 있어요.</p>
+								<div class="actions">
+								<a class="btn btn-primary"
+									href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기 수정</a>
+									<button type="button" class="btn btn-outline btn-danger-soft"
+										data-modal-open="hostCancelModal">경기 취소</button>
+								</div>
+								<p class="note">상대 팀이 신청하기 전까지는 취소하면 전액 환불돼요. 상대 팀이 확정되면 출석 체크와 참가 팀 확인을 사용할 수 있어요.</p>
 								</div>
 							</c:when>
 							<c:when test="${isMyTeamList}">
@@ -334,17 +326,13 @@ $('#thumbs').on('click', '.subImg', function() {
 									<p style="margin-top: 8px">
 										<span class="pill pill-info">모집 마감</span>
 									</p>
-									<div class="actions">
-										<a class="btn btn-primary"
-											href="${ctx}/team-match/result?teamMatchId=${t.teamMatchId}">출석
-											체크</a> <a class="btn btn-outline"
-											href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가
-											팀 확인</a> <a class="btn btn-outline"
-											href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기
-											정보 수정</a>
-									</div>
-									<p class="note">수정 시 상대 팀에 알림이 전송돼요. 상대 팀이 확정되어 취소와 환불은
-										불가해요.</p>
+								<div class="actions">
+									<a class="btn btn-primary"
+										href="${ctx}/team-match/result?teamMatchId=${t.teamMatchId}">출석 체크</a>
+									<a class="btn btn-outline"
+										href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가 팀 확인</a>
+								</div>
+								<p class="note">상대 팀이 확정되어 경기 수정, 취소, 환불은 불가해요.</p>
 								</div>
 							</c:when>
 							<c:when test="${applied}">

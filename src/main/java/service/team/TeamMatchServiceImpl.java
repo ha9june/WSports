@@ -110,4 +110,9 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 	public int getTeamPostsCnt(Long teamId) throws Exception {
 		return teamMatchDao.selectTeamPostCnt(teamId);
 	}
+
+	@Override
+	public int modifyTeamMatchToCancel(Long teamMatchId) throws Exception {
+		return teamMatchDao.updateStatusToCancel(teamMatchId);
+	}
 }

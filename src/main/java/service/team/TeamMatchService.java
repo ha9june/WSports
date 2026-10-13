@@ -19,6 +19,7 @@ public interface TeamMatchService {
 	int modifyTeamMatch(TeamMatch teamMatch, List<String> keepImages, String realPath, List<Part> files) throws Exception;
 	List<TeamMatch> getTeamPostList(Long teamId, PageInfo pafeInfo) throws Exception;
 	int getTeamPostsCnt(Long teamId) throws Exception;
+	int modifyTeamMatchToCancel(Long teamMatchId) throws Exception;
 	
 
 }

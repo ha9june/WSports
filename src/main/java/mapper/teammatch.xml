@@ -580,4 +580,5 @@
 		where team_id = #{teamId}
 		  and coalesce(deleted, 0) = 0
 	</select>
+	
 </mapper>
