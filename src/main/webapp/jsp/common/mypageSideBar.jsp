@@ -1,4 +1,13 @@
 <%@ page pageEncoding="UTF-8" %>
+<%@ page import="java.util.Map, dto.User, service.member.MemberService, service.member.MemberServiceImpl" %>
+<%
+  // 사이드바 상단 뱃지용 내 평점
+  Object sideScore = null;
+  User sideUser = (User) session.getAttribute("user");
+  Map<String, Object> sideMe = new MemberServiceImpl().publicProfile(sideUser.getUserId());
+  sideScore = sideMe.get("score");
+  pageContext.setAttribute("myScore", sideScore);
+%>
 <%--
   마이페이지 사이드바 (워크스페이스 시작 태그 포함)
    - sideMenu : user | profile | personalMatch | createdMatch | heartMatch | myTeam | teamMatch
@@ -8,9 +17,13 @@
 --%>
 <div class="workspace">
   <aside class="side" aria-label="마이페이지 메뉴">
-    <a class="me" href="${ctx}/jsp/mypage/myPageProfile.jsp">
-      <span class="avatar sm default"></span>
-      <span><strong>매치온 회원</strong><small>내 평점 ★ 4.6</small></span>
+    <a class="me" href="${ctx}/member/publicProfile/view?userId=${user.userId}">
+      <span class="avatar sm ${empty user.profileImage? 'default' : ''}">
+        <c:if test="${not empty user.profileImage}">
+          <img class="avatar sm" src="${ctx}${profilePath}/${user.profileImage}" alt="프로필 사진">
+        </c:if>
+      </span>
+      <span><strong><c:out value="${user.nickname}" /></strong><small>내 평점 ★ ${empty myScore ? '-' : myScore}</small></span>
     </a>
 
     <div class="group">

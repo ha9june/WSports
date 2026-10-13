@@ -53,6 +53,20 @@ public class MemberServiceImpl implements MemberService {
 		return userDao.selectLoginId(user.getLoginId());
 	}
 	
+	@Override
+	public boolean withdraw(Long userId) throws Exception {
+		return userDao.withdraw(userId);
+	}
+	
+	@Override
+	public boolean passwordChange(Long userId, String oldPassword, String newPassword) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("oldPassword", oldPassword);
+		param.put("newPassword", newPassword);
+		return userDao.passwordChange(param);
+	}	
+	
 	// 공개프로필
 	@Override
 	public Map<String, Object> publicProfile(Long userId) throws Exception {

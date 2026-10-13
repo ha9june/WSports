@@ -10,6 +10,9 @@ import dto.User;
 public interface MemberService {
 	User mypageEdit (User user) throws Exception;
 	User profileEdit (User user, String uploadPath, Part profileImage, boolean deleteImg) throws Exception;
+	boolean withdraw (Long userId) throws Exception;
+	boolean passwordChange (Long userId, String oldPassword, String newPassword) throws Exception;
+	
 	// 공개프로필
 	Map<String, Object> publicProfile(Long userId) throws Exception;
 	// 공개프로필 팀

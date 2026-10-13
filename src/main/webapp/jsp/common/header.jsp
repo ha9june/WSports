@@ -386,8 +386,17 @@ window.addEventListener("fcmMessageReceived", function(e) {
 							<span id="bellBadge" class="badge">0</span>
 						</button>
 						<a class="header-profile" href="${ctx}/member/mypage/view"
-							title="마이페이지"> <img src="${ctx}/img/profile-default.png"
-							alt="내 프로필">
+							title="마이페이지">
+							<c:choose>
+  								<c:when test="${not empty sessionScope.user.profileImage }">
+  									<img src="${ctx}${profilePath}/${sessionScope.user.profileImage}"
+  									alt="프로필 사진">
+								</c:when>
+								<c:otherwise>
+									<img src="${ctx }/img/profile-default.png"
+									alt="기본 프로필 사진">
+								</c:otherwise>
+							</c:choose>
 						</a>
 						<button type="button" class="logout-btn" data-modal-open="logoutModal"
 							title="로그아웃" aria-label="로그아웃">

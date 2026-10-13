@@ -1,9 +1,13 @@
 package service.payment;
 
+import java.util.List;
+import java.util.Map;
+
 import dto.PersonalMatch;
 import dto.PersonalPayment;
 import dto.TeamMatch;
 import dto.TeamPayment;
+import util.PageInfo;
 
 public interface PaymentService {
 	void completePersonalPayment(String responseJson, Long userId, Long matchId) throws Exception;
@@ -24,4 +28,8 @@ public interface PaymentService {
 	TeamMatch getTeamMatch(Long matchId) throws Exception;
 	//중복 참가 확인
 	boolean isAlreadyJoined(Long userId, Long matchId, boolean isTeam) throws Exception;
+	
+	// 마이페이지 결제내역
+	List<Map<String, Object>> MypagePaymentList(PageInfo pageInfo, String keyword, Long userId, String status, String type, String period) throws Exception;
+	Map<String, Object> MypagePaymentSummary(String keyword, Long userId, String status, String type, String period) throws Exception;
 }

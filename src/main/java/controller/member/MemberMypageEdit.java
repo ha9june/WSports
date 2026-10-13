@@ -45,7 +45,7 @@ public class MemberMypageEdit extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-User loginUser = (User)request.getSession().getAttribute("user");
+		User loginUser = (User)request.getSession().getAttribute("user");
 		
 		User user = new User();
 		user.setLoginId(loginUser.getLoginId());

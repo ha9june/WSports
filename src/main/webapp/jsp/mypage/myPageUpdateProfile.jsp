@@ -56,39 +56,22 @@ function splitValues(groupName, prefix) {
 	$('input[type=hidden][name="' + groupName + '"]').prop('disabled', true);
 }
 
-//선택한 지역을 태그로 표시합니다. 태그의 ✕ 를 누르면 선택이 해제됩니다.
-//(태그는 기존 칩과 같은 클래스를 써서 디자인이 그대로 적용됩니다)
-function renderRegionTags() {
-	var box = document.getElementById('regionTags');
-	if (!box) return;
-	box.innerHTML = '';
-	document.querySelectorAll('.chip-group[data-name="regions"] .chip.is-selected').forEach(function (c) {
-		var name = c.textContent.trim();
-		var tag = document.createElement('button');
-		tag.type = 'button';
-		tag.className = 'chip chip-sm is-selected';
-		tag.setAttribute('data-tag', name);
-		tag.appendChild(document.createTextNode(name));
-		var x = document.createElement('span');
-		x.textContent = '✕';
-		x.setAttribute('aria-label', name + ' 삭제');
-		x.style.marginLeft = '6px';
-		box.appendChild(tag).appendChild(x);
+<%-- address.js가 만든 regions hidden input → preferredRegion1~3 으로 분리 저장 --%>
+function splitRegions() {
+	var values = [];
+	$('#regionInputs input[name="regions"]').each(function() {
+		values.push($(this).val());
 	});
-}
-
-document.addEventListener('click', function (e) {
-	var tag = e.target.closest('#regionTags [data-tag]');
-	if (tag) {
-		// 드롭다운 안의 같은 지역 칩을 눌러서 해제 (common.js 가 선택 해제와 hidden 값 갱신을 처리)
-		var name = tag.getAttribute('data-tag');
-		document.querySelectorAll('.chip-group[data-name="regions"] .chip.is-selected').forEach(function (c) {
-			if (c.textContent.trim() === name) c.click();
-		});
+	
+	for (var i=0; i<3; i++) {
+		$('input[name="preferredRegion' + (i+1) + '"]').remove();
+		if (values[i]) {
+			$('<input type="hidden">').attr('name', 'preferredRegion' + (i+1)).val(values[i]).appendTo('#edit-wrap');
+		}
 	}
-	// 지역 칩을 누르거나 태그를 누르면 태그 목록을 다시 그림 (common.js 처리 후 실행되도록 한 박자 늦춤)
-	if (tag || e.target.closest('.chip-group[data-name="regions"] .chip')) setTimeout(renderRegionTags, 0);
-});
+	<%-- 중복 전송 방지 --%>
+	$('#regionInputs input[name="regions"]').prop('disabled', true);
+}
 
 function resetToDefault() {
 	document.getElementById('preview').src = '${ctx}/img/profile-default.png';
@@ -110,11 +93,10 @@ function readURL(input) {
 // 페이지를 처음 열 때 (form 이 그려진 뒤에 실행)
 document.addEventListener('DOMContentLoaded', function () {
 	updateLevels();
-	renderRegionTags();
 	// 제출 시 관심 종목 / 주 활동 지역을 1~3번 칸으로 나눠서 전송
 	document.getElementById('edit-wrap').addEventListener('submit', function () {
 		splitValues('sports', 'preferredSport');
-		splitValues('regions', 'preferredRegion');
+		splitRegions();
 	});
 });
 </script>
@@ -156,18 +138,19 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
   </div>  
   <div class="field mt-24" style="width:360px"><span class="field-label" style="font-size:14px;color:var(--ds-text)">주 활동 지역 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
-    <div class="chip-group mt-8" id="regionTags"></div>
-    <div class="dropdown" style="display:block">
-      <button type="button" class="select" data-dropdown-toggle style="text-align:left">지역을 검색하거나 선택하세요</button>
-      <div class="dropdown-menu" style="left:0;right:auto;width:360px;padding:14px">
-        <input class="input sm" placeholder="예: 마포구, 성남시">
-        <div class="chip-group mt-16" data-select="multi" data-max="3" data-name="regions">
-          <c:forTokens var="rg" items="서울 마포구,서울 영등포구,서울 강남구,서울 송파구,경기 성남시,경기 고양시" delims=",">
-            <button type="button" class="chip chip-sm ${loginUser.preferredRegion1 == rg or loginUser.preferredRegion2 == rg or loginUser.preferredRegion3 == rg ? 'is-selected' : ''}">${rg}</button>
-          </c:forTokens>
-        </div>
-      </div>
-    </div>
+  <div class="field-row">
+    <select class="select" id="sido" aria-label="시·도">
+      <option value="">시 · 도</option>
+      <option value="서울시">서울시</option>
+      <option value="경기도">경기도</option>
+    </select>
+    <select class="select" id="sigungu" aria-label="시군구" disabled>
+      <option value="">시군구</option>
+    </select>
+  </div>
+  <p id="maxRegion" class="region-max" style="display:none">최대 3개까지 선택 가능합니다.</p>
+  <div class="picked" id="pickedRegions"></div>
+  <div id="regionInputs"></div>
   </div>
 
   <h2 class="sub-title mt-48">종목별 프로필 <span class="t-11 t-2" style="font-weight:400;margin-left:8px">종목을 선택해 실력을 설정하세요. 종목을 다시 누르면 선택이 취소돼요.</span></h2>
@@ -223,4 +206,44 @@ document.addEventListener('DOMContentLoaded', function () {
   <input class="input mt-8" name="intro" maxlength="50" value="${loginUser.bio}">
   <div class="form-actions"><a class="btn btn-outline" href="${ctx}/member/profile/view">취소</a><button type="submit" class="btn btn-primary" style="width:92px">저장</button></div>
 </form>
+<script src="${ctx}/js/address.js"></script>
+<script>
+// 저장된 주 활동 지역을 칩으로 복원 (address.js 수정 없이 select 의 change 이벤트를 발생시켜 선택)
+(function () {
+	var saved = [];
+	<c:if test="${not empty loginUser.preferredRegion1}">saved.push('${loginUser.preferredRegion1}');</c:if>
+	<c:if test="${not empty loginUser.preferredRegion2}">saved.push('${loginUser.preferredRegion2}');</c:if>
+	<c:if test="${not empty loginUser.preferredRegion3}">saved.push('${loginUser.preferredRegion3}');</c:if>
+
+	var sido = document.getElementById('sido');
+	var sigungu = document.getElementById('sigungu');
+
+	function fire(el) { el.dispatchEvent(new Event('change')); }
+
+	// 예전 방식으로 저장된 "서울 마포구" 도 "서울시 마포구" 로 맞춰서 읽음
+	function normalizeSido(s) {
+		if (s.indexOf('서울') === 0) return '서울시';
+		if (s.indexOf('경기') === 0) return '경기도';
+		return s;
+	}
+
+	saved.forEach(function (region) {
+		var idx = region.indexOf(' ');
+		if (idx < 0) return;
+		var sd = normalizeSido(region.substring(0, idx));
+		var sg = region.substring(idx + 1).trim();
+
+		sido.value = sd;
+		if (sido.value !== sd) return;        // 목록에 없는 시·도
+		fire(sido);                           // 시군구 목록 채움
+		sigungu.value = sg;
+		if (sigungu.value !== sg) return;     // 목록에 없는 시군구
+		fire(sigungu);                        // 칩 추가
+	});
+
+	// 선택 상태 초기화 (처음 화면처럼 비워둠)
+	sido.value = '';
+	fire(sido);
+})();
+</script>
 <%@ include file="/jsp/common/footer.jsp" %>

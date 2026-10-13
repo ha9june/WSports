@@ -1,6 +1,11 @@
 package service.payment;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -10,18 +15,46 @@ import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
 import dao.TeamPaymentDao;
 import dao.TeamPaymentDaoImpl;
+import dao.UserDao;
+import dao.UserDaoImpl;
 import dto.PersonalMatch;
 import dto.PersonalPayment;
 import dto.TeamMatch;
 import dto.TeamPayment;
+import util.PageInfo;
 
 public class PaymentServiceImpl implements PaymentService {
 	private PersonalPaymentDao personalPaymentDao;
 	private TeamPaymentDao teamPaymentDao;
+	// 마이페이지 결제 내역 생성
+	private UserDao userDao;	
+	
 	public PaymentServiceImpl() {
 		this.personalPaymentDao = new PersonalPaymentDaoImpl();
 		this.teamPaymentDao = new TeamPaymentDaoImpl();
+		// 마이페이지 결제 내역 생성
+		this.userDao = new UserDaoImpl();		
 	}
+	
+	// 마이페이지 결제 내역
+	private static final int PAGE_SIZE = 10;
+	private static final Map<String, String> CARD_ISSUER = new HashMap<>();
+	static {
+		// 토스페이먼츠 카드사 코드
+		CARD_ISSUER.put("11", "국민카드");   CARD_ISSUER.put("21", "하나카드");
+		CARD_ISSUER.put("41", "신한카드");   CARD_ISSUER.put("51", "삼성카드");
+		CARD_ISSUER.put("61", "현대카드");   CARD_ISSUER.put("71", "롯데카드");
+		CARD_ISSUER.put("91", "NH농협카드"); CARD_ISSUER.put("W1", "우리카드");
+		CARD_ISSUER.put("33", "우리BC카드"); CARD_ISSUER.put("31", "BC카드");
+		CARD_ISSUER.put("3K", "기업BC카드"); CARD_ISSUER.put("15", "카카오뱅크");
+		CARD_ISSUER.put("24", "토스뱅크");   CARD_ISSUER.put("3A", "케이뱅크");
+		CARD_ISSUER.put("36", "씨티카드");   CARD_ISSUER.put("37", "우체국카드");
+		CARD_ISSUER.put("34", "수협카드");   CARD_ISSUER.put("38", "새마을금고");
+		CARD_ISSUER.put("39", "저축은행");   CARD_ISSUER.put("62", "신협카드");
+		CARD_ISSUER.put("30", "KDB산업은행"); CARD_ISSUER.put("35", "전북은행");
+		CARD_ISSUER.put("42", "제주은행");   CARD_ISSUER.put("46", "광주은행");
+	}
+	
 	//결제 내역 + 참가자 등록
 	@Override
 	public void completePersonalPayment(String responseJson, Long userId, Long matchId) throws Exception {
@@ -160,5 +193,69 @@ public class PaymentServiceImpl implements PaymentService {
 				: personalPaymentDao.selectPersonalJoinCnt(userId, matchId);
 		return cnt > 0;
 	}
-
+	
+	// 마이페이지 결제내역
+	private Map<String, Object> buildHistoryParam(String keyword, Long userId, String status, String type, String period) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("keyword", keyword == null ? null : keyword.trim());
+		param.put("status", ("PAID".equals(status) || "REFUND".equals(status)) ? status : null);
+		param.put("type", ("PERSONAL".equals(type) || "TEAM".equals(type)) ? type : null);
+ 
+		LocalDate today = LocalDate.now();
+		LocalDate start;
+		if ("6m".equals(period)) start = today.minusMonths(6);
+		else if ("year".equals(period)) start = LocalDate.of(today.getYear(), 1, 1);
+		else start = today.minusMonths(3); // 기본 3개월
+		param.put("startDate", Timestamp.valueOf(start.atStartOfDay()));
+		return param;
+	}
+	
+	//마이페이지 결재내역 페이징
+	@Override
+	public List<Map<String, Object>> MypagePaymentList(PageInfo pageInfo, String keyword, Long userId, String status,
+			String type, String period) throws Exception {
+		Map<String, Object> param = buildHistoryParam(keyword, userId, status, type, period);
+		 
+		int total = userDao.selectHistoryCount(param).intValue();
+		
+		int allPage = (int) Math.ceil(total / (double) PAGE_SIZE);
+		int cur = (total == 0) ? 1 : Math.min(Math.max(pageInfo.getCurPage(), 1), allPage);
+		int startPage = (cur - 1) / 10 * 10 + 1;
+		int endPage = Math.min(startPage + 9, allPage);
+		pageInfo.setTotalCnt(total);
+		pageInfo.setCurPage(cur);
+		pageInfo.setAllPage(allPage);
+		pageInfo.setStartPage(startPage);
+		pageInfo.setEndPage(endPage);
+ 
+		param.put("limit", PAGE_SIZE);
+		param.put("offset", (cur - 1) * PAGE_SIZE);
+		List<Map<String, Object>> list = userDao.selectHistoryList(param);
+ 
+		// 결제수단 표시 문자열 만들기 (간편결제 > 카드)
+		for (Map<String, Object> row : list) {
+			String easy = (String) row.get("easyPaymentProvider");
+			String issuer = (String) row.get("cardCompany");
+			String number = (String) row.get("cardNumber");
+			String label;
+			if (easy != null && !easy.isEmpty()) {
+				label = easy;
+			} else if (issuer != null && !issuer.isEmpty()) {
+				label = CARD_ISSUER.getOrDefault(issuer, "카드")
+						+ (number != null && !number.isEmpty() ? " " + number : "");
+			} else {
+				label = (String) row.get("paymentMethod");
+			}
+			row.put("methodLabel", label);
+		}
+		return list;
+	}
+	
+	//마이페이지 결재내역 탭 카운트
+	@Override
+	public Map<String, Object> MypagePaymentSummary(String keyword, Long userId, String status, String type,
+			String period) throws Exception {
+		return userDao.selectHistorySummary(buildHistoryParam(keyword, userId, null, null, period));
+	}
 }

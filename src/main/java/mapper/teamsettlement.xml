@@ -79,4 +79,100 @@
 		where settlement_id = #{settlementId}
 		and settlement_status = '정산대기'
 	</update>
+	
+	<!-- 마이페이지 팀 경기 정산 리스트 -->
+	<select id="selectMyPageTeamSettlementList" parameterType="Map" resultType="Map">
+		select tm.team_match_id, t.team_id, t.team_name,
+           date_format(tm.match_date,'%Y.%m.%d') as match_date_fmt,
+           elt(dayofweek(tm.match_date),'일','월','화','수','목','금','토') as match_day,
+           date_format(tm.start_time,'%H:%i') as start_time_fmt, tm.match_people,
+           tm.title, tm.sport, tm.region, tm.place_name, tm.status as match_status,
+           tm.participation_fee, tm.fee,
+           ts.settlement_status, date_format(ts.settled_at,'%c/%d') as settled_fmt
+  		from team_match tm join team t on (t.team_id = tm.team_id)
+         				   left join team_settlement ts on (ts.team_match_id = tm.team_match_id)
+	    where tm.status = '경기 종료' and ifnull(tm.deleted, 0) = 0 and tm.match_date between #{startDate} and #{endDate}
+      		  and exists (select 1 from team_user tu
+        				  where tu.team_id = tm.team_id and tu.user_id = #{userId} 
+        				        and tu.team_role = 'CAPTAIN' and ifnull(tu.withdrawn, 0) = 0)
+        	  and exists (select 1 from team_match_participant tmp
+           				  where tmp.team_match_id = tm.team_match_id and tmp.status = '결제완료')			        
+    	<if test="keyword != null and keyword != ''">
+    	and tm.title like concat('%', #{keyword}, '%')
+    	</if>
+    	<if test="settlementStatus != null">
+      	and ts.settlement_status = #{settlementStatus}
+    	</if>
+    	<if test="teamId != null">
+      	and tm.team_id = #{teamId}
+    	</if>
+    	order by tm.match_date desc, tm.start_time desc limit #{row}, 10
+	</select>
+	
+	<!-- 마이페이지 팀 경기 정산 리스트 페이징 -->
+	<select id="selectMyPageTeamSettlementCnt" parameterType="Map" resultType="int">
+		select count(*)
+   		from team_match tm join team t on (t.team_id = tm.team_id)
+         left join team_settlement ts on (ts.team_match_id = tm.team_match_id)
+	    where tm.status = '경기 종료' and ifnull(tm.deleted, 0) = 0 and tm.match_date between #{startDate} and #{endDate}
+   			  and exists (select 1 from team_user tu
+                  		  where tu.team_id = tm.team_id and tu.user_id = #{userId}
+                    		    and tu.team_role = 'CAPTAIN' and ifnull(tu.withdrawn, 0) = 0)
+        	  and exists (select 1 from team_match_participant tmp
+           				  where tmp.team_match_id = tm.team_match_id and tmp.status = '결제완료')                    		    
+    	<if test="keyword != null and keyword != ''">
+      	and tm.title like concat('%', #{keyword}, '%')
+    	</if>
+    	<if test="settlementStatus != null">
+      	and ts.settlement_status = #{settlementStatus}
+    	</if>
+    	<if test="teamId != null">
+      	and tm.team_id = #{teamId}
+    	</if>
+	</select>
+	
+	<!-- 마이페이지 팀 경기 정산 리스트 총내역 조회 -->
+	<select id="selectMyPageTeamSettlementSummary" parameterType="long" resultType="map">
+    	select ifnull(sum(case when ts.settlement_status='정산대기' then ts.amount end),0) as wait_amount,
+         	   ifnull(sum(case when ts.settlement_status='지급완료' and year(ts.settled_at)=year(curdate())
+                      and month(ts.settled_at)=month(curdate()) then ts.amount end),0) as month_done_amount,
+          	   ifnull(sum(case when ts.settlement_status='지급완료' then ts.amount end),0) as total_done_amount,
+          			  month(curdate()) as cur_month
+   		from team_settlement ts join team_match tm on (tm.team_match_id = ts.team_match_id)
+	    where tm.status = '경기 종료'
+	    	  and exists (select 1 from team_user tu
+                  	  where tu.team_id = tm.team_id and tu.user_id = #{userId}
+                    	    and tu.team_role = 'CAPTAIN' and ifnull(tu.withdrawn, 0) = 0)
+        	  and exists (select 1 from team_match_participant tmp
+           				  where tmp.team_match_id = tm.team_match_id and tmp.status = '결제완료')                    	    
+	</select>
+	
+	<!-- 마이페이지 팀 경기 정산 리스트 탭별 건수 조회 -->
+	<select id="selectMyPageTeamSettlementTabCnt" parameterType="Map" resultType="Map">
+	    select count(*) as all_cnt,
+ 	          count(case when ts.settlement_status='정산대기' then 1 end) as wait_cnt,
+ 	          count(case when ts.settlement_status='지급완료' then 1 end) as done_cnt
+	    from team_match tm join team t on (t.team_id = tm.team_id)
+        				   left join team_settlement ts on (ts.team_match_id = tm.team_match_id)
+ 		where tm.status = '경기 종료' and ifnull(tm.deleted, 0) = 0 and tm.match_date between #{startDate} and #{endDate}
+     		  and exists (select 1 from team_user tu
+                  		  where tu.team_id = tm.team_id and tu.user_id = #{userId}
+                    			and tu.team_role = 'CAPTAIN' and ifnull(tu.withdrawn, 0) = 0)
+        	  and exists (select 1 from team_match_participant tmp
+           				  where tmp.team_match_id = tm.team_match_id and tmp.status = '결제완료')                    			
+  	    <if test="keyword != null and keyword != ''">
+      	and tm.title like concat('%', #{keyword}, '%')
+    	</if>
+    	<if test="teamId != null">
+      	and tm.team_id = #{teamId}
+    	</if>
+	</select>
+	
+	<!-- 마이페이지 팀 경기 정산 리스트 팀선택 조회 -->
+	<select id="selectMyPageTeamList" parameterType="long" resultType="Map">
+    	select t.team_id, t.team_name
+    	from team_user tu join team t on t.team_id = tu.team_id
+    	where tu.user_id = #{userId} and tu.team_role = 'CAPTAIN' and ifnull(tu.withdrawn, 0) = 0 and ifnull(t.deleted, 0) = 0
+    	order by t.team_name
+	</select>
 </mapper>
