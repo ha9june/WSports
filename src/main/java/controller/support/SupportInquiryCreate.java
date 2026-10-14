@@ -23,7 +23,7 @@ public class SupportInquiryCreate extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SupportInquiryCreate() {
+    public SupportInquiryCreate() { 
         super();
         // TODO Auto-generated constructor stub
     }
