@@ -23,8 +23,8 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-.cal {
-	--dot-color: #1a6bff;
+.cal { -
+	-dot-color: #1a6bff;
 }
 
 .cal .flatpickr-calendar.inline {
@@ -50,12 +50,11 @@
 	color: #1a6bff !important;
 }
 
-.cal .flatpickr-day.has-match,
-.cal .flatpickr-day.inRange.has-match,
-.cal .flatpickr-day.startRange.has-match,
-.cal .flatpickr-day.endRange.has-match,
-.cal .flatpickr-day.selected.has-match {
-	background-image: radial-gradient(circle at 50% calc(100% - 7px), var(--dot-color) 2.5px, transparent 3px) !important;
+.cal .flatpickr-day.has-match, .cal .flatpickr-day.inRange.has-match,
+	.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
+	.cal .flatpickr-day.selected.has-match {
+	background-image: radial-gradient(circle at 50% calc(100% - 7px),
+		var(- -dot-color) 2.5px, transparent 3px) !important;
 	background-repeat: no-repeat !important;
 }
 
@@ -69,7 +68,8 @@
 }
 
 /* 선택 시작/끝/단일 */
-.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange {
+.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
+	{
 	background: #102A43 !important;
 	border-color: #102A43 !important;
 	color: #BCCCDC !important;
@@ -89,9 +89,10 @@
 }
 
 /* 짧게 선택(붙어 있는 두 날짜)했을 때 사이를 메우는 기본 파란색 → 남색 */
-.cal .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)),
-.cal .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)),
-.cal .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+.cal .flatpickr-day.selected.startRange+.endRange:not(:nth-child(7n+1)),
+	.cal .flatpickr-day.startRange.startRange+.endRange:not(:nth-child(7n+1)),
+	.cal .flatpickr-day.endRange.startRange+.endRange:not(:nth-child(7n+1))
+	{
 	box-shadow: -10px 0 0 #102A43 !important;
 }
 
@@ -115,9 +116,8 @@
 	pointer-events: none;
 }
 
-.cal .flatpickr-day.today.selected::before,
-.cal .flatpickr-day.today.startRange::before,
-.cal .flatpickr-day.today.endRange::before {
+.cal .flatpickr-day.today.selected::before, .cal .flatpickr-day.today.startRange::before,
+	.cal .flatpickr-day.today.endRange::before {
 	border-color: #BCCCDC !important;
 }
 
@@ -134,7 +134,7 @@
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
-	background: var(--dot-color);
+	background: var(- -dot-color);
 }
 
 .cal .legend-today {
@@ -145,8 +145,9 @@
 	border-radius: 50%;
 	margin-left: 10px;
 }
+
 .pill-info.bd {
-	border: 1px solid var(--ds-info-bd);
+	border: 1px solid var(- -ds-info-bd);
 }
 
 .match-left img {
@@ -175,6 +176,7 @@
 	border: 1px solid #e5e7eb;
 	border-radius: 16px;
 }
+
 .act-card {
 	margin-bottom: 16px;
 }
@@ -319,8 +321,17 @@
 							<!-- 경기 장소 -->
 							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
 							<!-- 경기 최소/최대 인원 -->
-							<span><img src="${ctx}/img/icon-user-12.svg" alt="">8/10
-								· 최소 8명 <span class="cap"><i style="width: 80%"> </i> </span> </span>
+							<c:set var="cur"
+								value="${empty m.currentPeople ? 0 : m.currentPeople}" />
+							<c:set var="pct"
+								value="${m.maxPeople > 0 ? cur * 100 / m.maxPeople : 0}" />
+							<c:set var="pct" value="${pct > 100 ? 100 : pct}" />
+
+							<span><img src="${ctx}/img/icon-user-12.svg" alt="">
+								${cur}/${m.maxPeople}명 &nbsp; 최소 ${m.minPeople}명 <span
+								class="cap"><i
+									style="width: <fmt:formatNumber value='${pct}' pattern='0'/>%"></i></span>
+							</span>
 						</p>
 					</div>
 					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그
@@ -379,8 +390,8 @@
 		<aside class="cal">
 			<div id="periodPicker"></div>
 			<p class="legend">
-				<span class="legend-dot"></span> 경기 있음
-				<span class="legend-today"></span> Today
+				<span class="legend-dot"></span> 경기 있음 <span class="legend-today"></span>
+				Today
 			</p>
 		</aside>
 		<%--
