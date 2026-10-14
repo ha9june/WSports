@@ -23,7 +23,6 @@
   <a class="seg-item ${status eq 'ALL' ? 'is-active' : ''}" href="?status=ALL">전체</a>
   <a class="seg-item ${status eq 'WAIT' ? 'is-active' : ''}" href="?status=WAIT">답변 대기</a>
   <a class="seg-item ${status eq 'DONE' ? 'is-active' : ''}" href="?status=DONE">답변 완료</a></div>
-  <h2 class="sub-title" style="margin-bottom:14px">내 문의</h2>
   <div class="row-list">
     <c:forEach var="i" items="${inquiryList}"> 
     <a class="row-card" href="${ctx}/support/inquiry/detail?inquiryId=${i.inquiry_id}" style="padding:18px 24px">
