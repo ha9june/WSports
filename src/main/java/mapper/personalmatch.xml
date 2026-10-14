@@ -702,7 +702,6 @@
 	<update id="updateStatusCancelOfHost" parameterType="Long">
 		update personal_match
 		set status = '경기 취소',
-			deleted = 0,
 			updated_at = now()
 		where personal_match_id = #{matchId}
 		and status = '모집중'
