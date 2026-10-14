@@ -354,7 +354,7 @@
 										onclick="event.stopPropagation()">후기 작성</a>
 									<a class="btn btn-primary btn-xs"
 										href="${ctx}/team-match/result/view?teamMatchId=${m.teamMatchId}"
-										onclick="event.stopPropagation()">참가 팀 평가</a>
+										onclick="event.stopPropagation()">출석 및 평가</a>
 								</c:when>
 								<%-- 그 외: 기존 버튼 --%>
 								<c:otherwise>
