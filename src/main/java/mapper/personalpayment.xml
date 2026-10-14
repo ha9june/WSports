@@ -238,7 +238,5 @@
 	            AND pm2.status = '결제완료'
 	      )
 	</select>
-	
-	
-	
+
 </mapper>
