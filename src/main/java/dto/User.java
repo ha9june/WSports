@@ -1,6 +1,7 @@
 package dto;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -48,6 +49,11 @@ public class User {
     private Boolean attendance;
     //추가 : 팀 가입 시간
     private LocalDateTime joinedAt;
+    
+    private BigDecimal myScore;
+	 // getter / setter
+	 public BigDecimal getMyScore() { return myScore; }
+	 public void setMyScore(BigDecimal myScore) { this.myScore = myScore; }
 
     
 	public User() {
