@@ -96,7 +96,12 @@ public class MatchWriteForm extends HttpServlet {
             String levels = request.getParameter("levels");
             
             String[] addressArr = address.split(" ");
-            String region = addressArr[0]+"시 "+addressArr[1];
+            String region = "";
+            if (address.contains("경기")) {
+                region = "경기도 " + addressArr[1];
+            } else if (address.contains("서울")) {
+                region = "서울시 " + addressArr[1];
+            }
 
             
             pm.setUserId(userId);
