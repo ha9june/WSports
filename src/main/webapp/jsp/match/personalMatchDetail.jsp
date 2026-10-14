@@ -458,7 +458,7 @@
 		<form method="post" action="${ctx}/payment/match/detail/refund" id="refundForm">
 			<input type="hidden" name="matchType" value="Personal"/>
 			<div class="modal-body">
-				<p>환불금액 : <b><fmt:formatNumber value="${personalMatch.participationFee - personalMatch.fee}"  pattern="#,###"/>원</b></p>
+				<p>환불금액 : <b><fmt:formatNumber value="${personalMatch.participationFee}"  pattern="#,###"/>원</b></p>
 				<div class="field mt-16">
 					<label class="field-label">환불사유</label>
 					<select class="select" name="cancelReason" required>

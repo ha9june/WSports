@@ -250,7 +250,7 @@
 						<div class="top">
 							<span class="sport-tag ${rSport}">${review.sport}</span> <span
 								class="date">${fn:replace(fn:substring(review.createdAt, 0, 10), '-', '.')}</span>
-						</div> <strong><c:out value="${review.matchTitle}" /></strong>
+						</div> <strong><c:out value="${review.title}" /></strong>
 						<p>
 							<c:out value="${review.content}" />
 						</p>

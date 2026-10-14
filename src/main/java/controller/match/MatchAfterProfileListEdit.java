@@ -2,6 +2,7 @@ package controller.match;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dto.PersonalMatch;
 import dto.PersonalMatchParticipant;
+import dto.TeamMatch;
 import dto.User;
 import dto.UserRating;
 import service.match.PersonalMatchParticipantService;
@@ -38,6 +40,11 @@ public class MatchAfterProfileListEdit extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    // 경기 날짜 다음날 23:59:59까지만 출석/평점 수정 가능
+    private boolean isEditable(PersonalMatch pMatch) {
+    	LocalDateTime limit = pMatch.getMatchDate().plusDays(1).atTime(23, 59, 59);
+    	return !LocalDateTime.now().isAfter(limit);
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,11 +61,19 @@ public class MatchAfterProfileListEdit extends HttpServlet {
 		pm.setPersonalMatchId(personalMatchId);
 		
 		PersonalMatchParticipantService pmpservice = new PersonalMatchParticipantServiceImpl();
-		PersonalMatchService pㅜervice = new PersonalMatchServiceImpl();
+		PersonalMatchService pservice = new PersonalMatchServiceImpl();
 		try {
 
 			List<User> userList = pmpservice.getOtherPersonalMatchParticipantList(personalMatchId,user.getUserId());
-			PersonalMatch pMatch = pㅜervice.getPersonalMatchDetail(pm);			
+			User me = pmpservice.getMyPersonalMatchParticipant(personalMatchId, user.getUserId());
+			PersonalMatch pMatch = pservice.getPersonalMatchDetail(pm);	
+			
+			if (!isEditable(pMatch)) {
+				request.getSession().setAttribute("toast", "경기 종료 다음날 23:59까지만 출석과 평점을 수정할 수 있어요.");
+				response.sendRedirect(request.getContextPath() + "/match/after/profile/list?personalMatchId=" + personalMatchId);
+				return;
+			}
+			request.setAttribute("me", me);
 			request.setAttribute("userList", userList);
 			request.setAttribute("personalMatch", pMatch);
 			request.getRequestDispatcher("/jsp/match/personalMatchAfterProfileListEdit.jsp").forward(request, response);;			
@@ -82,66 +97,84 @@ public class MatchAfterProfileListEdit extends HttpServlet {
 		}
 		Long personalMatchId = Long.parseLong(request.getParameter("personalMatchId"));
 
-		Boolean isHost = false;
+		boolean isHost = false;
 		PersonalMatchService pmService = new PersonalMatchServiceImpl();
 		PersonalMatch pm = new PersonalMatch();
 		pm.setPersonalMatchId(personalMatchId);
 		try {
 			PersonalMatch pMatch = pmService.getPersonalMatchDetail(pm);
-			if (pMatch.getUserId().equals(user.getUserId())) {
-				isHost = true;
+			if (pMatch == null) {
+				AlertUtil.back(response, "존재하지 않는 경기입니다.");
+				return;
 			}
+			if (!isEditable(pMatch)) {
+				request.getSession().setAttribute("toast", "경기 종료 다음날 23:59까지만 출석과 평점을 수정할 수 있어요.");
+				response.sendRedirect(request.getContextPath() + "/match/after/profile/list?personalMatchId=" + personalMatchId);
+				return;
+			}
+			isHost = pMatch.getUserId().equals(user.getUserId());
 		} catch (Exception e) {
 			e.printStackTrace();
-
+			AlertUtil.back(response, "경기 정보 조회에 실패했습니다. 관리자에게 문의하여 주세요");
+			return;
 		}
 
 		PersonalMatchParticipantService pmpService = new PersonalMatchParticipantServiceImpl();
+		UserRatingService urService = new UserRatingServiceImpl();
 
-		for (int i = 0;; i++) {
-			String userIdStr = request.getParameter("userId_" + i);
-			if (userIdStr == null)
-				break; // null 체크는 변환 전에
-
-			Long userId = Long.parseLong(userIdStr);
-			String attend = request.getParameter("attend_" + i); // "Y" / "N" (호스트만)
-			String scoreStr = request.getParameter("score_" + i);
-			BigDecimal score = (scoreStr == null || scoreStr.isEmpty()) ? BigDecimal.ZERO : new BigDecimal(scoreStr);
-
-			UserRating ur = new UserRating();
-			ur.setReceiverUserId(userId);
-			ur.setEvaluatorUserId(user.getUserId());
-			ur.setScore(score);
-			ur.setMatchId(personalMatchId);
-			ur.setMatchType("PersonalMatch");
-			PersonalMatchParticipant pmp = new PersonalMatchParticipant();
-
+		try {
+			// 본인 출석: 호스트만 변경 가능 (참가자는 값이 와도 무시)
 			if (isHost) {
-
-				pmp.setAttendance(attend.equals("Y"));
-				pmp.setUserId(userId);
-				pmp.setPersonalMatchId(personalMatchId);
+				String attendMe = request.getParameter("attendMe"); // "Y" / "N"
+				if (attendMe != null) {
+					PersonalMatchParticipant mine = new PersonalMatchParticipant();
+					mine.setAttendance("Y".equals(attendMe));
+					mine.setUserId(user.getUserId());
+					mine.setPersonalMatchId(personalMatchId);
+					pmpService.updateAttendacne(mine);
+				}
 			}
 
+			for (int i = 0;; i++) {
+				String userIdStr = request.getParameter("userId_" + i);
+				if (userIdStr == null)
+					break;
 
-			UserRatingService urService = new UserRatingServiceImpl();
-			
-			  try { 
-				  urService.saveUserRating(ur);
-				  if(isHost) 
-					  pmpService.updateAttendacne(pmp);
-				  
-				 response.sendRedirect(request.getContextPath() + "/match/after/profile/list?personalMatchId=" + personalMatchId);
+				Long userId = Long.parseLong(userIdStr);
+				if (userId.equals(user.getUserId()))
+					continue; // 본인은 평가 불가
 
-			  }
-			  catch (Exception e) { 
-				  e.printStackTrace();
-				  AlertUtil.back(response, "별점 평가에 실패하였습니다. 관리자에게 문의하여 주세요");
-				  return;
+				// 참가자 출석: 호스트만 변경 가능
+				if (isHost) {
+					String attend = request.getParameter("attend_" + i); // "Y" / "N"
+					if (attend != null) {
+						PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+						pmp.setAttendance("Y".equals(attend));
+						pmp.setUserId(userId);
+						pmp.setPersonalMatchId(personalMatchId);
+						pmpService.updateAttendacne(pmp);
+					}
+				}
 
-			  }
+				// 평점: 0점(미선택)은 저장하지 않음
+				String scoreStr = request.getParameter("score_" + i);
+				BigDecimal score = (scoreStr == null || scoreStr.isEmpty()) ? BigDecimal.ZERO : new BigDecimal(scoreStr);
+				if (score.compareTo(BigDecimal.ZERO) > 0) {
+					UserRating ur = new UserRating();
+					ur.setReceiverUserId(userId);
+					ur.setEvaluatorUserId(user.getUserId());
+					ur.setScore(score);
+					ur.setMatchId(personalMatchId);
+					ur.setMatchType("PersonalMatch");
+					urService.saveUserRating(ur);
+				}
+			}
 
+			response.sendRedirect(request.getContextPath() + "/match/after/profile/list?personalMatchId=" + personalMatchId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			AlertUtil.back(response, "별점 평가에 실패하였습니다. 관리자에게 문의하여 주세요");
+			return;
 		}
 	}
-
 }

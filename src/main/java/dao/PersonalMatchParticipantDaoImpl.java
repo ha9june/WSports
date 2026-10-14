@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,7 +92,31 @@ public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipant
 	@Override
 	public List<Long> selectParticipantUserIds(Long personalMatchId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return sqlSession.selectList("mapper.personalmatchparticipant.selectParticipantUserIds");
+			return sqlSession.selectList("mapper.personalmatchparticipant.selectParticipantUserIds", personalMatchId);
+		}
+	}
+
+	@Override
+	public User selectMyPersonalMatchParticipant(Long personalMatchId, Long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			Map<String, Object> param = new HashMap<>();
+			param.put("personalMatchId", personalMatchId);
+			param.put("userId", userId);
+			return sqlSession.selectOne("mapper.personalmatchparticipant.selectMyPersonalMatchParticipant", param);
+		}catch(Exception e) {
+			throw e;
+		}
+	}
+
+	@Override
+	public List<User> selectOtherPersonalMatchParticipantList(Long personalMatchId, Long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			Map<String, Object> param = new HashMap<>();
+			param.put("personalMatchId", personalMatchId);
+			param.put("userId", userId);
+			return sqlSession.selectList("mapper.personalmatchparticipant.selectOtherPersonalMatchParticipantList", param);
+		}catch(Exception e) {
+			throw e;
 		}
 	}
 
