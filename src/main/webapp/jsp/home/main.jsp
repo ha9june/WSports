@@ -208,6 +208,7 @@
 					<a class="team-mini"
 						href="${ctx}/team/detail/view?teamId=${team.teamId}">
 						<div class="top">
+							<%-- <img src="${ctx}/img/team-${sportClass}.png" alt=""> --%>
 							<img src="${ctx}/img/team-${sportClass}.png" alt="">
 							<div>
 								<strong>${team.teamName}</strong>
