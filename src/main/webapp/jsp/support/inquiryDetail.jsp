@@ -14,18 +14,22 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 <c:set var="demoStates" value="answered:답변 완료|waiting:답변 대기" />
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
-
 <c:set var="isDone" value="${inquiry.answer_status eq '답변완료'}" />
-
 <%-- ※ 아래 스타일은 mypage.css 로 옮겨도 됩니다 --%>
 <style>
-.inq { -
-	-ink: #12151c; -
-	-muted: #6b7280; -
-	-line: #e6e8ec; -
-	-accent: #2f5bea;
+.inq-sec {
+	display: block !important;
+	width: 100% !important;
+	text-align: left !important;  /* 상자와 글자 모두 왼쪽으로 밀착 */
 }
 
+.inq { 
+	--ink: #12151c; 
+	--muted: #6b7280; 
+	--line: #e6e8ec; 
+	--accent: #2f5bea;
+	align-items: stretch !important; 
+}
 /* 상단 */
 .inq .page-head {
 	margin-bottom: 22px;
@@ -140,26 +144,31 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 	color: var(- -ink);
 }
 
-/* 내용 / 답변 */
 .inq-sec h3 {
 	margin: 0 0 10px;
 	font-size: 14px;
 	font-weight: 700;
-	color: var(- -ink);
+	color: var(--ink);
+	text-align: left !important;  /* '내용' 타이틀도 왼쪽 */
 }
 
 .inq-sec .body {
-	margin: 0;
+	margin: 0 !important;
 	padding: 18px 20px;
 	min-height: 90px;
 	box-sizing: border-box;
-	border: 1px solid var(- -line);
+	background: #f8f9fb;          /* 연한 회색 배경 */
+	border: 1px solid #eef0f3;
 	border-radius: 12px;
 	font-size: 15px;
 	line-height: 1.7;
-	color: var(- -ink);
+	color: var(--ink);
 	white-space: pre-wrap;
 	word-break: break-all;
+	
+	display: block !important;    /* 중앙 정렬 차단 */
+	text-align: left !important;  /* 글씨 왼쪽 정렬 */
+	width: 100% !important;       /* 가로로 길게 채우기 */
 }
 
 .inq-sec.answer h3 {
