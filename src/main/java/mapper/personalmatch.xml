@@ -643,7 +643,6 @@
 	<update id="updateStatusToUnderMinCancel" parameterType="Long">
 		update personal_match
 		set status = '경기 취소',
-			deleted = 1,
 			updated_at = now()
 		where personal_match_id = #{matchId}
 		and status = '모집중'
@@ -676,6 +675,7 @@
 		and status = '모집 마감'
 		and coalesce(deleted, 0) = 0
 	</update>
+	
 	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기)-->
 	<select id="selectFinishedSuccess" resultType="personalMatch">
 		SELECT personal_match_id, user_id, title

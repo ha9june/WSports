@@ -42,7 +42,7 @@ public class AuthLogoutSubmit extends HttpServlet {
 
 			userFcmTokenService.changeActiveUserFcmToken(userId, fcmToken);
 			request.getSession().removeAttribute("user");
-			request.getRequestDispatcher("/home/main").forward(request, response);
+			response.sendRedirect(request.getContextPath() + "/home/main");
 		} catch (Exception e) {
 			e.printStackTrace();
 
