@@ -118,7 +118,7 @@ public class MatchWriteForm extends HttpServlet {
             pm.setLongitude(lng);
             
             pm.setParticipationFee(participationFee);
-            pm.setFee((int)(participationFee * 0.8));
+            pm.setFee((int)(participationFee *0.08));
             pm.setMinPeople(minPeople);
             pm.setMaxPeople(maxPeople);
             

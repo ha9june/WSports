@@ -27,8 +27,8 @@
     margin-top: 12px;
 }
 /* 달력  */
-.input#periodPicker,
-.input#periodPicker[readonly] {
+.input.periodPicker,
+.input.periodPicker[readonly] {
 	background-color: #fff;
 	border-color: var(--ds-border);
 	cursor: pointer;
@@ -37,10 +37,10 @@
 	background-repeat: no-repeat;
 	background-position: right 14px center;
 }
-.input#periodPicker:hover {
+.input.periodPicker:hover {
 	border-color: #c5ccd3;
 }
-.input#periodPicker.active {
+.input.periodPicker.active {
 	border-color: #1677ff;
 	box-shadow: 0 0 0 3px rgba(22, 119, 255, .12);
 }
