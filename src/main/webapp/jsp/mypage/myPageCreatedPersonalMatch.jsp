@@ -23,8 +23,8 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-.cal { -
-	-dot-color: #1a6bff;
+.cal { 
+	--dot-color: #1a6bff;
 }
 
 .cal .flatpickr-calendar.inline {
@@ -51,10 +51,9 @@
 }
 
 .cal .flatpickr-day.has-match, .cal .flatpickr-day.inRange.has-match,
-	.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
-	.cal .flatpickr-day.selected.has-match {
-	background-image: radial-gradient(circle at 50% calc(100% - 7px),
-		var(- -dot-color) 2.5px, transparent 3px) !important;
+.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
+.cal .flatpickr-day.selected.has-match {
+	background-image: radial-gradient(circle at 50% calc(100% - 7px), #1a6bff 2.5px, transparent 3px) !important;
 	background-repeat: no-repeat !important;
 }
 
@@ -134,7 +133,7 @@
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
-	background: var(- -dot-color);
+	background: #1a6bff;
 }
 
 .cal .legend-today {
@@ -147,7 +146,7 @@
 }
 
 .pill-info.bd {
-	border: 1px solid var(- -ds-info-bd);
+	border: 1px solid var(--ds-info-bd);
 }
 
 .match-left img {
@@ -266,8 +265,7 @@
 			<div class="act-head"></div>
 			<c:if test="${empty match}">
 				<p class="empty-msg"
-					style="text-align: center; color: #9ca3af; padding: 60px 0;">참가
-					경기가 없습니다.</p>
+					style="text-align: center; color: #9ca3af; padding: 60px 0;">만든 경기가 없습니다.</p>
 			</c:if>
 
 
@@ -355,8 +353,8 @@
 										href="${ctx}/review/create?matchNo=PERSONAL:${m.personalMatchId}"
 										onclick="event.stopPropagation()">후기 작성</a>
 									<a class="btn btn-primary btn-xs"
-										href="${ctx}/personal-match/rating?personalMatchId=${m.personalMatchId}"
-										onclick="event.stopPropagation()">참가자 평가</a>
+										href="${ctx}/match/after/profile/list?personalMatchId=${m.personalMatchId}"
+										onclick="event.stopPropagation()">출석 및 평가</a>
 								</c:when>
 								<c:otherwise>
 									<a class="btn btn-primary btn-xs"
@@ -423,6 +421,11 @@
 		        dateFormat: 'Y-m-d',
 		        defaultDate: initDates,
 		        onDayCreate: function(dObj, dStr, inst, dayElem) {
+		            // 앞 달 / 다음 달 칸(회색 날짜)은 점 표시 안 함
+		            if (dayElem.classList.contains('prevMonthDay') ||
+		                dayElem.classList.contains('nextMonthDay')) {
+		                return;
+		            }
 		            var d = inst.formatDate(dayElem.dateObj, 'Y-m-d');
 		            if (matchDates.indexOf(d) !== -1) {
 		                dayElem.classList.add('has-match');

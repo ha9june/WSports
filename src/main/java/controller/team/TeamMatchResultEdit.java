@@ -1,6 +1,7 @@
 package controller.team;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -36,6 +37,12 @@ public class TeamMatchResultEdit extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+ // 경기 날짜 다음날 23:59:59까지만 출석/평점 수정 가능
+    private boolean isEditable(TeamMatch teamMatch) {
+    	LocalDateTime limit = teamMatch.getMatchDate().plusDays(1).atTime(23, 59, 59);
+    	return !LocalDateTime.now().isAfter(limit);
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,6 +63,12 @@ public class TeamMatchResultEdit extends HttpServlet {
 			if (!"경기 종료".equals(teamMatch.getStatus())) {
 				request.setAttribute("error", "경기가 종료된 후에 이용할 수 있어요.");
 				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+				return;
+			}
+			
+			if (!isEditable(teamMatch)) {
+				request.getSession().setAttribute("toast", "경기 종료 다음날 23:59까지만 출석과 평점을 수정할 수 있어요.");
+				response.sendRedirect(request.getContextPath() + "/team-match/result/view?teamMatchId=" + teamMatchId);
 				return;
 			}
 			
@@ -125,6 +138,19 @@ public class TeamMatchResultEdit extends HttpServlet {
 			
 			Long teamMatchId = Long.parseLong(request.getParameter("teamMatchId"));
 			TeamMatch teamMatch = teamMatchService.getTeamMatchNotUser(teamMatchId);
+			
+			if (!"경기 종료".equals(teamMatch.getStatus())) {
+				request.setAttribute("error", "경기가 종료된 후에 이용할 수 있어요.");
+				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+				return;
+			}
+			if (!isEditable(teamMatch)) {
+				request.getSession().setAttribute("toast", "경기 종료 다음날 23:59까지만 출석과 평점을 수정할 수 있어요.");
+				response.sendRedirect(request.getContextPath() + "/team-match/result/view?teamMatchId=" + teamMatchId);
+				return;
+			}
+			
+//		Long targetTeamId = Long.parseLong(request.getParameter("targetTeamId"));
 //			Long targetTeamId = Long.parseLong(request.getParameter("targetTeamId"));
 			Double score = Double.parseDouble(request.getParameter("score"));
 			

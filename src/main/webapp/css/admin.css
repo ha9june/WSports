@@ -1,5 +1,5 @@
 @charset "UTF-8";
-:root { --settle-w: 900px; }
+:root { --settle-w: 900px; --ctl-h: 34px;}
 /* 관리자(사이트) 화면 */
 .admin-inner { width: 1000px; max-width: 100%;  margin-left: 80px; padding-left: 24px; box-sizing: border-box; }
 .admin-inner .list-toolbar { display: flex; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: nowrap; }
@@ -51,10 +51,39 @@
 .history-row b.minus { color: var(--ds-text); }
 .answer-box { margin-top: 20px; }
 .admin-title-row { display: flex; align-items: center; gap: 12px; }
-.field .notice-type{width: 100px; align-self: flex-start}
+.field .notice-type{width: 110px; align-self: flex-start;}
 .empty-state {width: var(--settle-w); box-sizing: border-box; max-width: 100%;display: flex;flex-direction: column;align-items: center;text-align: center;gap: 8px;padding: 56px 24px;border: 1px dashed #d8dde6;border-radius: 16px;background: #fafbfd;	}
 .empty-state .empty-icon {width: 56px;height: 56px;border-radius: 50%;	display: flex;	align-items: center;justify-content: center;background: #e8f0ff;color: var(--ds-brand, #1a5cff);margin-bottom: 8px;}
 .empty-state strong { font-size: 16px; }
 .empty-state p { font-size: 13px; color: #6b7280; margin: 0 0 8px; }
 .settle-wrap .pill {justify-self: center;font: inherit;font-size: 12px;}
 .cell-ellipsis { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 필터 줄 (탭 + 날짜) */
+.list-toolbar.filter-bar { display: flex; align-items: center; gap: 12px; margin: 20px 0; padding: 0; }
+.list-toolbar.filter-bar > * { margin: 0 !important; }
+.list-toolbar.filter-bar .seg { display: flex; align-items: center; gap: 8px; padding: 0 !important; height: var(--ctl-h) !important; border: 0 !important; }
+.list-toolbar.filter-bar .seg-item { display: inline-flex; align-items: center; margin: 0 !important; box-sizing: border-box; }
+.list-toolbar.filter-bar .date-stepper { display: flex; align-items: center; height: var(--ctl-h); padding: 0; border: none; }
+.list-toolbar.filter-bar .date-input { width: 190px; margin: 0; padding: 0 12px; box-sizing: border-box;
+	border: 1px solid var(--ds-border); border-radius: 999px; background: #fff; text-align: center; outline: none; }
+.list-toolbar.filter-bar .seg-item,
+.list-toolbar.filter-bar .date-input { height: var(--ctl-h) !important; }
+/* 수익 관리 기간 조회 */
+.period-panel { align-items: center; }
+.period-panel .period-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.period-panel .date-stepper { height: var(--ctl-h); padding: 0; border: none; }
+.period-panel .date-input { width: 190px; height: var(--ctl-h); margin: 0; padding: 0 12px; box-sizing: border-box;
+	border: 1px solid var(--ds-border); border-radius: 999px; background: #fff; text-align: center; outline: none; }
+.period-panel .btn { height: var(--ctl-h); margin: 0; }
+/* 팀 상세 → 사용자 팀 페이지 링크 */
+.team-link {margin-left: auto;}
+/* 파란 테두리 알약 버튼 (팀 페이지 보기, 제재 버튼 공통) */
+.btn-brand-line {
+	display: inline-flex; align-items: center; justify-content: center;
+	height: 34px; padding: 0 14px;
+	border: 1px solid var(--ds-brand, #1677FF); border-radius: 999px;
+	background: #fff; color: var(--ds-brand, #1677FF);
+	font-size: 13px; font-weight: 400; text-decoration: none;
+	box-sizing: border-box; cursor: pointer; font-family: inherit;
+}
+.btn-brand-line.danger { border-color: var(--ds-danger-fg, #e5484d); color: var(--ds-danger-fg, #e5484d); }

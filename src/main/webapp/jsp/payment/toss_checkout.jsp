@@ -47,7 +47,7 @@
     <section class="pay-card">
     	<h2>${itemName}</h2>
       	<p class="when">${itemWhen}</p>
-      	<div class="pay-lines">
+      	<div class="pay-lines" style="width: auto; max-width: none; grid-column: 1 / -1; margin-right: 20px">
         	<div class="ln">
         		<span>참가비</span>
         		<span>${fee}원</span>

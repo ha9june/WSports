@@ -23,7 +23,7 @@
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
 .pill-info.bd {
-	border: 1px solid var(- -ds-info-bd);
+	border: 1px solid var(--ds-info-bd);
 }
 
 .match-left img {
@@ -53,11 +53,6 @@
 	border-radius: 16px;
 }
 
-/* 달력 점 색: 여기 한 줄만 바꾸면 전체 적용 */
-.cal { -
-	-dot-color: #1a6bff;
-}
-
 .cal .flatpickr-calendar.inline {
 	box-shadow: none;
 	border: 0;
@@ -85,7 +80,7 @@
 	.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
 	.cal .flatpickr-day.selected.has-match {
 	background-image: radial-gradient(circle at 50% calc(100% - 7px),
-		var(- -dot-color) 2.5px, transparent 3px) !important;
+		#1a6bff 2.5px, transparent 3px) !important;
 	background-repeat: no-repeat !important;
 }
 
@@ -166,7 +161,7 @@
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
-	background: var(- -dot-color);
+	background: #1a6bff;
 }
 
 /* 카드 */
@@ -323,6 +318,7 @@
 								class="cap"><i
 									style="width: <fmt:formatNumber value='${pct}' pattern='0'/>%"></i></span>
 							</span>
+						</p>
 					</div>
 					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그
 		      					pattern="#,###" 출력형식(5,000)-->
@@ -348,8 +344,8 @@
 										href="${ctx}/review/create?matchNo=PERSONAL:${m.personalMatchId}"
 										onclick="event.stopPropagation()">후기 작성</a>
 									<a class="btn btn-primary btn-xs"
-										href="${ctx}/match/after/profile/list/edit?personalMatchId=${m.personalMatchId}"
-										onclick="event.stopPropagation()">참가 팀 평가</a>
+										href="${ctx}/match/after/profile/list?personalMatchId=${m.personalMatchId}"
+										onclick="event.stopPropagation()">출석 및 평가</a>
 								</c:when>
 
 								<%-- 그 외: 기존 버튼 --%>
@@ -418,6 +414,11 @@
 		        dateFormat: 'Y-m-d',
 		        defaultDate: initDates,
 		        onDayCreate: function(dObj, dStr, inst, dayElem) {
+		            // 앞 달 / 다음 달 칸(회색 날짜)은 점 표시 안 함
+		            if (dayElem.classList.contains('prevMonthDay') ||
+		                dayElem.classList.contains('nextMonthDay')) {
+		                return;
+		            }
 		            var d = inst.formatDate(dayElem.dateObj, 'Y-m-d');
 		            if (matchDates.indexOf(d) !== -1) {
 		                dayElem.classList.add('has-match');

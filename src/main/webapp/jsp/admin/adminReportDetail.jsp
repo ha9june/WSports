@@ -34,7 +34,7 @@
 		</dl>
   	</section>
   	<div class="mt-8" style="display:flex;gap:8px;flex-shrink:0">
-      	<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="actionModal" style="width:70px">조치</button>
+      	<button type="button" class="btn-brand-line" data-modal-open="actionModal" style="width:70px">조치</button>
     </div>
 </div>
 

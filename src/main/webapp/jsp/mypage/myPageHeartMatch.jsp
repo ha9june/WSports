@@ -50,10 +50,9 @@
 }
 
 .cal .flatpickr-day.has-match, .cal .flatpickr-day.inRange.has-match,
-	.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
-	.cal .flatpickr-day.selected.has-match {
-	background-image: radial-gradient(circle at 50% calc(100% - 7px),
-		var(- -dot-color) 2.5px, transparent 3px) !important;
+.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
+.cal .flatpickr-day.selected.has-match {
+	background-image: radial-gradient(circle at 50% calc(100% - 7px), #1a6bff 2.5px, transparent 3px) !important;
 	background-repeat: no-repeat !important;
 }
 
@@ -133,7 +132,7 @@
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
-	background: var(- -dot-color);
+	background: #1a6bff;
 }
 
 .cal .legend-today {
@@ -152,23 +151,23 @@
 }
 
 .pill-green {
-	color: var(- -ds-success-fg);
-	background: var(- -ds-success-bg);
-	border: var(- -ds-success-bd);
+	color: var(--ds-success-fg);
+	background: var(--ds-success-bg);
+	border: var(--ds-success-bd);
 	font-weight: bold;
 }
 
 .pill-blue {
-	color: var(- -ds-info-fg);
-	background: var(- -ds-info-bg);
-	border: var(- -ds-info-bd);
+	color: var(--ds-info-fg);
+	background: var(--ds-info-bg);
+	border: var(--ds-info-bd);
 	font-weight: bold;
 }
 
 .pill-red {
-	color: var(- -ds-danger-fg);
-	background: var(- -ds-danger-bg);
-	border: var(- -ds-danger-bd);
+	color: var(--ds-danger-fg);
+	background: var(--ds-danger-bg);
+	border: var(--ds-danger-bd);
 	font-weight: bold;
 }
 
@@ -344,9 +343,6 @@
 								~ ${fn:substring(m.endTime, 0, 5)}</span> <span><img
 								src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
 						</p>
-						<p class="meta"
-							style="display: flex; align-items: center; gap: 8px; margin: 0;">
-						</p>
 					</div>
 
 
@@ -366,8 +362,8 @@
 										href="${ctx}/review/create?matchNo=${mt}:${m.matchId}"
 										onclick="event.stopPropagation()">후기 작성</a>
 									<a class="btn btn-primary btn-xs"
-										href="${ctx}/${mt eq 'TEAM' ? 'team-match/rating?teamMatchId=' : 'personal-match/rating?personalMatchId='}${m.matchId}"
-										onclick="event.stopPropagation()">경기 팀 평가</a>
+										href="${ctx}/${mt eq 'TEAM' ? '/team-match/result/view?teamMatchId=' : '/match/after/profile/list?personalMatchId='}${m.matchId}"
+										onclick="event.stopPropagation()">출석 및 평가</a>
 								</c:when>
 								<%-- 그 외: 상세 보기 --%>
 								<c:otherwise>
@@ -414,7 +410,7 @@
 		<script>
 		
 		$(function() {
-		    // ★ 내가 참가한 경기 날짜
+		    // ★ 관심 경기 날짜
 		    var favDates = [
 		    <c:forEach var="f" items="${favDates}" varStatus="st">
 		        '${f}'${st.last ? '' : ','}
@@ -435,8 +431,13 @@
 		        dateFormat: 'Y-m-d',
 		        defaultDate: initDates,
 		        onDayCreate: function(dObj, dStr, inst, dayElem) {
+		            // 앞 달 / 다음 달 칸(회색 날짜)은 점 표시 안 함
+		            if (dayElem.classList.contains('prevMonthDay') ||
+		                dayElem.classList.contains('nextMonthDay')) {
+		                return;
+		            }
 		            var d = inst.formatDate(dayElem.dateObj, 'Y-m-d');
-		            if (favDates.indexOf(d) !== -1) {
+		            if (favDates.indexOf(d) !== -1) {        
 		                dayElem.classList.add('has-match');
 		            }
 		        }

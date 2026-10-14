@@ -379,8 +379,7 @@
 									<c:when test="${m.myRole eq 'CAPTAIN' or m.myRole eq 'LEADER'}">
 										<span class="role-pill pill-blue">주장</span>
 									</c:when>
-									<c:when
-										test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">
+									<c:when test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">
 										<span class="role-pill pill-blue">부주장</span>
 									</c:when>
 								</c:choose>
