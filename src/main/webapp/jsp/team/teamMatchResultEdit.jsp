@@ -103,12 +103,12 @@
 				</c:choose>
 				<c:choose>
 					<c:when test="${not hostIsOur}">
-						<div class="rate star-input">
-							<c:forEach var="i" begin="1" end="5">
-								<button type="button" aria-label="${i}점">★</button>
-							</c:forEach>
-							<span class="score">-</span><input type="hidden" name="score" value="">
-						</div>
+					<div class="rate star-input">
+						<c:forEach var="i" begin="1" end="5">
+							<button type="button" aria-label="${i}점" class="${not empty score and score >= i ? 'is-on' : ''}">★</button>
+						</c:forEach>
+						<span class="score"><c:out value="${empty score ? '-' : score}" /></span><input type="hidden" name="score" value="${score}">
+					</div>
 					</c:when>
 					<c:otherwise><div></div></c:otherwise>
 				</c:choose>
@@ -128,7 +128,7 @@
 					<c:when test="${hostIsOur}">
 						<div class="chip-group att-toggle" data-select="single" data-name="attendGuest">
 							<button type="button" class="chip ${guestP.attendance ne false ? 'is-selected' : ''}" data-value="true">출석</button>
-							<button type="button" class="chip ${hosguestPtP.attendance eq false ? 'is-selected' : ''}" data-value="false">미출석</button>
+							<button type="button" class="chip ${guestP.attendance eq false ? 'is-selected' : ''}" data-value="false">미출석</button>
 						</div>
 					</c:when>
 					<c:otherwise>
@@ -143,9 +143,9 @@
 					<c:when test="${hostIsOur}">
 						<div class="rate star-input">
 							<c:forEach var="i" begin="1" end="5">
-								<button type="button" aria-label="${i}점">★</button>
+								<button type="button" aria-label="${i}점" class="${not empty score and score >= i ? 'is-on' : ''}">★</button>
 							</c:forEach>
-							<span class="score">-</span><input type="hidden" name="score" value="">
+							<span class="score"><c:out value="${empty score ? '-' : score}" /></span><input type="hidden" name="score" value="${score}">
 						</div>
 					</c:when>
 					<c:otherwise><div></div></c:otherwise>
