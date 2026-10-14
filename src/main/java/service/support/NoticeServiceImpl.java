@@ -24,7 +24,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		if("NOTICE".equalsIgnoreCase(type)) param.put("type", "공지");
 		if("POLICY".equalsIgnoreCase(type)) param.put("type", "정책");
-		if("INSPECTION".equalsIgnoreCase(type)) param.put("type", "점검");
+		if("CHECK".equalsIgnoreCase(type)) param.put("type", "점검");
 		if("EVENT".equalsIgnoreCase(type)) param.put("type", "이벤트");
 		if("UPDATE".equalsIgnoreCase(type)) param.put("type", "업데이트");
 		

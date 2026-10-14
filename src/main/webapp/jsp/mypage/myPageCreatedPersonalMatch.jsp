@@ -358,7 +358,7 @@
 								</c:when>
 								<c:otherwise>
 									<a class="btn btn-primary btn-xs"
-										href="${ctx}/personal-match/participants/list?personalMatchId=${m.personalMatchId}"
+										href="${ctx}/match/profile/list?personalMatchId=${m.personalMatchId}"
 										onclick="event.stopPropagation()">참가자 확인</a>
 								</c:otherwise>
 							</c:choose>

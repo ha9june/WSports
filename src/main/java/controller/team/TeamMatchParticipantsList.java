@@ -58,6 +58,7 @@ public class TeamMatchParticipantsList extends HttpServlet {
 				}
 			}
 			
+			request.setAttribute("teamMatch", teamMatch);
 			request.setAttribute("teamMatchId", teamMatchId);
 			request.setAttribute("hostTeam", hostTeam);
 			request.setAttribute("guestTeam", guestTeam);
