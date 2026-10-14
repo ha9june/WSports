@@ -1,8 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/jsp/common/init.jsp"%>
 <%--
-  문의 상세 (adminInquiryDetail.jsp)
-  피그마: Admin / Inquiry Detail / Desktop
+문의 상세 (adminInquiryDetail.jsp) - 담당: 임태균
+피그마: Admin / Inquiry Detail / Desktop
+state : waiting(답변 작성) | answered(등록된 답변 - 수정 가능)
 --%>
 <c:set var="role" value="admin" />
 <c:set var="pageTitle" value="문의 상세" />

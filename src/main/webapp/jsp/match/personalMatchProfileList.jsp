@@ -13,8 +13,8 @@
 /* 경기 정보 박스: 참가자 박스와 같은 톤 */
 .match-summary {
 	position: relative;
-	background: #fff !important;
-	border: 1px solid #e5e7eb;
+	background: #f8f9fb !important;
+	border: 0;
 	border-radius: 12px;
 	padding: 20px 24px;
 	margin-bottom: 24px;
@@ -84,6 +84,30 @@
 .match-summary .target small {
 	font-size: 11px;
 }
+
+.person-row {
+	align-items: center;
+	gap: 12px;
+	padding: 12px 16px;
+}
+.person-row .avatar {
+	width: 36px;
+	height: 36px;
+	flex-shrink: 0;
+}
+.person-row .info strong {
+	display: block;
+	font-size: 14px;
+	font-weight: 700;
+	color: #111827;
+	margin-bottom: 2px;
+}
+.person-row .info .meta {
+	margin: 0;
+	font-size: 11px;
+	color: #6b7280;
+	font-weight: 500;
+}
 </style>
 
 <main class="page">
@@ -138,15 +162,19 @@
               </c:otherwise>
             </c:choose>
           </span>
-          <strong><c:out value="${user.nickname}" /></strong>
-          <c:choose>
-            <c:when test="${not empty user.avgRatingScore and user.avgRatingScore > 0}">
-              <span class="rating">${user.avgRatingScore}</span>
-            </c:when>
-            <c:otherwise>
-              <span class="t-11 t-2">평가 없음</span>
-            </c:otherwise>
-          </c:choose>
+			<c:choose>
+				<c:when test="${personalMatch.sport eq '축구/풋살'}"><c:set var="userSkill" value="${user.soccerSkill}" /></c:when>
+				<c:when test="${personalMatch.sport eq '농구'}"><c:set var="userSkill" value="${user.basketballSkill}" /></c:when>
+				<c:when test="${personalMatch.sport eq '테니스'}"><c:set var="userSkill" value="${user.tennisSkill}" /></c:when>
+				<c:otherwise><c:set var="userSkill" value="${user.badmintonSkill}" /></c:otherwise>
+			</c:choose>
+			<div class="info">
+				<strong><c:out value="${user.nickname}" /></strong>
+				<p class="meta">
+					<c:out value="${user.preferredRegion1}" default="지역 미설정" /> ·
+					<c:out value="${userSkill}" default="실력 미설정" />
+				</p>
+			</div>
         </a>
       </c:forEach> 
     </div>
