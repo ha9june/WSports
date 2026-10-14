@@ -48,9 +48,10 @@
 }
 
 .cal .flatpickr-day.has-match, .cal .flatpickr-day.inRange.has-match,
-.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
-.cal .flatpickr-day.selected.has-match {
-	background-image: radial-gradient(circle at 50% calc(100% - 7px), #1a6bff 2.5px, transparent 3px) !important;
+	.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
+	.cal .flatpickr-day.selected.has-match {
+	background-image: radial-gradient(circle at 50% calc(100% - 7px),
+		#1a6bff 2.5px, transparent 3px) !important;
 	background-repeat: no-repeat !important;
 }
 
@@ -132,6 +133,7 @@
 	border-radius: 50%;
 	background: #1a6bff;
 }
+
 .cal .legend-today {
 	width: 12px;
 	height: 12px;
@@ -148,23 +150,23 @@
 }
 
 .pill-green {
-	color: var(--ds-success-fg);
-	background: var(--ds-success-bg);
-	border: var(--ds-success-bd);
+	color: var(- -ds-success-fg);
+	background: var(- -ds-success-bg);
+	border: var(- -ds-success-bd);
 	font-weight: bold;
 }
 
 .pill-blue {
-	color: var(--ds-info-fg);
-	background: var(--ds-info-bg);
-	border: var(--ds-info-bd);
+	color: var(- -ds-info-fg);
+	background: var(- -ds-info-bg);
+	border: var(- -ds-info-bd);
 	font-weight: bold;
 }
 
 .pill-red {
-	color: var(--ds-danger-fg);
-	background: var(--ds-danger-bg);
-	border: var(--ds-danger-bd);
+	color: var(- -ds-danger-fg);
+	background: var(- -ds-danger-bg);
+	border: var(- -ds-danger-bd);
 	font-weight: bold;
 }
 
@@ -324,8 +326,8 @@
 						<p class="meta">
 							<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${m.matchDate}</span>
 							<!-- 경기 날짜 / 시간 -->
-							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${m.startTime}
-								~ ${m.endTime}</span>
+							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(m.startTime, 0, 2)}:${fn:substring(m.startTime, 3, 5)}
+								~ ${fn:substring(m.endTime, 0, 2)}:${fn:substring(m.endTime, 3, 5)}</span>
 							<!-- 경기 장소 -->
 							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
 						</p>
