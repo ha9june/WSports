@@ -11,7 +11,7 @@ state : processing(처리 중) | done(처리 완료 - 처리 결과 노출)
 <c:set var="demoRoles" value="member" />
 <c:set var="demoStates" value="processing:처리 중|done:처리 완료" />
 <%@ include file="/jsp/common/header.jsp" %>
-
+<%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <%-- 처리 완료 여부 / 진행 단계 (2: 처리 중, 3: 처리 완료) --%>
 <c:set var="isDone" value="${report.status eq '처리완료'}" />
 <c:set var="step" value="${isDone ? 3 : 2}" />
