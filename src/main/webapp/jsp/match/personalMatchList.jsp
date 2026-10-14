@@ -371,7 +371,7 @@
 			</select>
 		    <input type="text"
 		           id="periodPicker"
-		           class="input mapPeriodPicker" 
+		           class="input periodPicker" 
 		           placeholder="날짜 선택 "  
 		           style="width:220px;">
 		    <input type="hidden" id="startDate" name="startDate">
@@ -440,7 +440,7 @@
 			  </div>
 			    <input type="text"
 				       id="mapPeriodPicker"
-				       class="input mapPeriodPicker"
+				       class="input periodPicker"
 				       placeholder="날짜 선택 "
 				       style="width:220px;">
 				<input type="hidden" id="mapStartDate" name="startDate">
