@@ -198,13 +198,12 @@ public class MatchEditForm extends HttpServlet {
 	    	    continue;
 	    	}
 
-	        System.out.println(part.getSubmittedFileName());
-	        System.out.println(part.getName());
+
 	    }
 	    System.out.println("----------");
 	    try {
             service.updatePersonalMatch(pm,parts,realPath);
-            response.sendRedirect(request.getContextPath() + "/match/detail/view?psersonalMatchId=" + personalMatchId);
+            response.sendRedirect(request.getContextPath() + "/match/detail/view?personalMatchId=" + personalMatchId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			AlertUtil.back(response,"수정에 실패하였습니다. 관리자에게 문의하여 주세요.");

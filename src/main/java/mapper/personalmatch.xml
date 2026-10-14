@@ -414,8 +414,7 @@
 			ON m.personal_match_id = p.personal_match_id
 			AND p.status = "결제완료"
 		LEFT JOIN user u
-		ON m.user_id
-		= u.user_id
+		ON m.user_id = u.user_id
 		LEFT JOIN favorite f
 			ON f.match_id = m.personal_match_id
 		AND
@@ -719,9 +718,7 @@
 	</update>
 	
 	
-	
-	
-	
+
 
 </mapper>
 

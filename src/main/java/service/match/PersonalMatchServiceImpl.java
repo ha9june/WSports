@@ -255,10 +255,40 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	public Long updatePersonalMatch(PersonalMatch personalMatch, Collection<Part> parts, String realPath)
 			throws Exception {
 
-        Long personalMatchId = personalMatchDao.updatePersonalMatch(personalMatch);
-		return personalMatchId;
-	}
+		List<String> images = new ArrayList<>();
 
+		// 1. 남길 기존 사진 (hidden keepImage)
+		for (Part part : parts) {
+			if ("keepImage".equals(part.getName())) {
+				String name = readPartText(part);
+				if (!name.isEmpty() && images.size() < 5) images.add(name);
+			}
+		}
+
+		// 2. 새로 올린 사진
+		for (Part part : parts) {
+			if (!"photos".equals(part.getName())) continue;
+			String submitted = part.getSubmittedFileName();
+			if (submitted == null || submitted.isEmpty() || part.getSize() == 0) continue;
+			if (images.size() >= 5) break;
+			images.add(fileUpload(realPath, part));
+		}
+
+		// 3. image1~5 채우기 (없으면 null)
+		personalMatch.setImage1(images.size() > 0 ? images.get(0) : null);
+		personalMatch.setImage2(images.size() > 1 ? images.get(1) : null);
+		personalMatch.setImage3(images.size() > 2 ? images.get(2) : null);
+		personalMatch.setImage4(images.size() > 3 ? images.get(3) : null);
+		personalMatch.setImage5(images.size() > 4 ? images.get(4) : null);
+
+		return personalMatchDao.updatePersonalMatch(personalMatch);
+	}
+	private String readPartText(Part part) throws Exception {
+		try (java.util.Scanner sc = new java.util.Scanner(part.getInputStream(), "UTF-8")) {
+			sc.useDelimiter("\\A");
+			return sc.hasNext() ? sc.next().trim() : "";
+		}
+	}
 
 
 
