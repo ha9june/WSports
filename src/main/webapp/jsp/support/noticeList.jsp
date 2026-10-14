@@ -25,7 +25,7 @@ TODO: <c:forEach var="n" items="${noticeList}">
 <a class="seg-item ${type eq 'POLICY' ? 'is-active' : ''}" href="?type=POLICY">정책</a>
 <a class="seg-item ${type eq 'CHECK' ? 'is-active' : ''}" href="?type=CHECK">점검</a>
 <a class="seg-item ${type eq 'EVENT' ? 'is-active' : ''}" href="?type=EVENT">이벤트</a>
-<a class="seg-item ${type eq 'UPDATE' ? 'is-active' : ''}" href="?type=UPDATE">업데이트</a>
+<a class="seg-item ${type eq 'UPDATE' ? 'is-active' : ''}" href="?type=UPDATE">업데이트</a> 
 </div>
 <label class="field-label" for="noticeKeyword" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">검색</label>
 <div class="notice-find">
