@@ -38,21 +38,40 @@ $(function () {
 </script>
 
 <main class="page">
-  <div class="rail">
-    <nav class="breadcrumb"><a href="${ctx}/support/notice/list">공지사항</a><span class="sep">›</span><span>상세</span></nav>
-    <div class="page-head"><h1 class="page-title">공지사항</h1><p class="page-desc">서비스 운영 안내와 변경 내용을 확인합니다.</p></div>
-    <h2 class="section-title" style="font-size:22px">${notice.title}</h2>
-    <p class="t-11 t-2 mt-16">${notice.updated_at eq null ? notice.created_at : notice.updated_at} · ${notice.nickname}</p>
-    <div class="detail-card mt-24" style="padding:24px 24px 28px">
-      <p class="body" style="margin:0; font-size:13px; white-space:pre-wrap; word-break:break-all"><c:out value="${notice.content}"/></p>
+<div class="rail">
+<nav class="breadcrumb"><a href="${ctx}/support/notice/list">공지사항</a><span class="sep">›</span><span>상세</span></nav>
+
+<span class="pill pill-brand ntd-pill">공지</span>
+<h1 class="ntd-title">${notice.title}</h1>
+
+<a class="ntd-author" href="${ctx}/member/publicProfile/view?userId=${notice.admin_id}">
+<c:choose>
+<c:when test="${not empty notice.profile_image}">
+<img class="ntd-avatar" src="${ctx}${profilePath}/${notice.profile_image}" alt="프로필 사진">
+</c:when>
+<c:otherwise>
+<img class="ntd-avatar" src="${ctx}/img/default-profile.svg" alt="기본 프로필 사진">
+</c:otherwise>
+</c:choose>
+<div class="ntd-author-info">
+<b>${notice.nickname}</b>
+<small>작성자 · ${notice.updated_at eq null ? notice.created_at : notice.updated_at}</small>
+</div>
+</a>
+
+<div class="ntd-card">
+  <div class="ntd-content"><c:out value="${fn:trim(notice.content)}"/></div>
+  <c:if test="${sessionScope.user.grade eq 'Admin'}">
+    <div class="ntd-actions">
+      <div class="btn-group"><a class="btn btn-outline btn-sm" href="${ctx}/admin/notice/modify?noticeId=${notice.notice_id}">수정</a>
+      <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${notice.notice_id}">삭제</button></div>
     </div>
-    <div class="form-actions" style="justify-content:space-between">
-      <a class="btn btn-outline btn-sm" href="${ctx}/support/notice/list" style="width:92px">목록으로</a>
-      <c:if test="${sessionScope.user.grade eq 'Admin'}">
-        <div class="btn-group"><a class="btn btn-outline btn-sm" href="${ctx}/admin/notice/modify?noticeId=${notice.notice_id}">수정</a>
-        <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${notice.notice_id}">삭제</button></div>
-      </c:if>
-    </div>
-  </div>
+  </c:if>
+</div>
+
+<div class="ntd-list-btn">
+  <a class="btn btn-primary" href="${ctx}/support/notice/list">목록으로</a>
+</div>
+</div>
 </main>
 <%@ include file="/jsp/common/footer.jsp" %>
