@@ -23,9 +23,6 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-.cal { 
-	--dot-color: #1a6bff;
-}
 
 .cal .flatpickr-calendar.inline {
 	box-shadow: none;
@@ -353,8 +350,8 @@
 										href="${ctx}/review/create?matchNo=PERSONAL:${m.personalMatchId}"
 										onclick="event.stopPropagation()">후기 작성</a>
 									<a class="btn btn-primary btn-xs"
-										href="${ctx}/personal-match/rating?personalMatchId=${m.personalMatchId}"
-										onclick="event.stopPropagation()">참가자 평가</a>
+										href="${ctx}/match/after/profile/list?personalMatchId=${m.personalMatchId}"
+										onclick="event.stopPropagation()">출석 및 평가</a>
 								</c:when>
 								<c:otherwise>
 									<a class="btn btn-primary btn-xs"

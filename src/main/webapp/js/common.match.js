@@ -1,11 +1,14 @@
 $(function () {
 	
 	
-	//사진 등록하기
-	  var input = document.querySelector('input[name="photos"]');
-	  var box = input.closest('.photo-upload');
-	  var max = parseInt(input.getAttribute('data-max') || '5', 10);
-	  var dt = new DataTransfer();   // 누적 저장소
+	 // 사진 등록하기
+	    var input = document.querySelector('input[name="photos"]');
+	    if (!input) return;
+	    var box = input.closest('.photo-upload');
+	    if (!box) return;
+	    var max = parseInt(input.getAttribute('data-max') || '5', 10);
+	    var dt = new DataTransfer();
+	    // 아래 기존 코드 그대로
 
 	  function same(a, b) {
 	    return a.name === b.name && a.size === b.size && a.lastModified === b.lastModified;

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.Comment;
 import dto.Notification;
 import dto.Review;
 import dto.User;
@@ -58,10 +59,10 @@ public class ReviewComment extends HttpServlet {
 			Notification alarm = new Notification();
 			
 			service.writeComment(reviewId, user.getUserId(), content);
-			
+			Comment comment = new Comment();
 			Review review = service.getReviewDetail(reviewId);
-			alarm.setTitle("'"+review.getTitle()+"'"+"게시글에 댓글이 달렸습니다.");
-			alarm.setContent("'"+user.getNickname()+"'"+"님이 댓글을 남겼습니다.");
+			alarm.setTitle("'"+review.getTitle()+"'"+" 후기에 댓글이 달렸습니다.");
+			alarm.setContent("'"+user.getNickname()+"'"+"님이 후기 댓글을 남겼습니다.");
 			alarm.setUserId(review.getUserId());
 			alarm.setLink("/review/detail?reviewId="+ reviewId);
 			

@@ -14,16 +14,31 @@
 <c:set var="demoStates" value="recent:최근 후기|grouped:경기별 모아보기" />
 <%@ include file="/jsp/common/header.jsp"%>
 <style>
+.review-card .thumb {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	border-bottom: 1px solid #eef0f3; /* 본문과 구분선 */
+}
+
+.review-card .thumb img {
+	height: 56px; /* 로고가 꽉 차 보이지 않게 */
+	object-fit: contain;
+}
+
 .review-toolbar .chip.is-selected {
 	background: #eef4ff;
 	border: 1px solid #1a6bff;
 	color: #1a6bff;
 	font-weight: 700;
 }
+
 .review-toolbar .chip:hover {
 	border-color: #1a6bff;
 	color: #1a6bff;
 }
+
 .review-toolbar .search-btn {
 	height: 44px;
 	padding: 0 22px;
@@ -162,16 +177,16 @@
 							<a class="review-card"
 								href="${ctx}/review/detail?reviewId=${r.reviewId}">
 								<div class="thumb">
-									<c:choose>
-										<c:when test="${not empty r.image}">
-											<img src="${ctx}/uploads/${r.image}"
-												style="width: 100%; height: 100%; object-fit: cover;">
-										</c:when>
-										<c:otherwise>
-											<c:out value="${r.title}" />
-										</c:otherwise>
-									</c:choose>
-								</div>
+								<c:choose>
+									<c:when test="${not empty r.image}">
+										<img src="${ctx}/uploads/${r.image}"
+											style="width: 100%; height: 100%; object-fit: cover;" alt="">
+									</c:when>
+									<c:otherwise>
+										<img src="${ctx}/img/w-sports-5e-logo.svg" alt="">
+									</c:otherwise>
+								</c:choose>
+							</div>
 								<div class="body">
 									<strong><c:out value="${r.title}" /></strong>
 									<p class="by">
@@ -207,10 +222,10 @@
 								<c:choose>
 									<c:when test="${not empty r.image}">
 										<img src="${ctx}/uploads/${r.image}"
-											style="width: 100%; height: 100%; object-fit: cover;">
+											style="width: 100%; height: 100%; object-fit: cover;" alt="">
 									</c:when>
 									<c:otherwise>
-										<c:out value="${r.title}" />
+										<img src="${ctx}/img/w-sports-5e-logo.svg" alt="">
 									</c:otherwise>
 								</c:choose>
 							</div>

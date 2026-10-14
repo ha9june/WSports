@@ -97,7 +97,7 @@ public class MatchListNormal extends HttpServlet {
 			searchInfo.setUserId(user.getUserId());
 		}
 
-		
+		System.out.println("Normal");
 		System.out.println(searchInfo);
 		
 		

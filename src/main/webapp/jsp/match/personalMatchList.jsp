@@ -371,7 +371,7 @@
 			</select>
 		    <input type="text"
 		           id="periodPicker"
-		           class="input" 
+		           class="input mapPeriodPicker" 
 		           placeholder="날짜 선택 "  
 		           style="width:220px;">
 		    <input type="hidden" id="startDate" name="startDate">
@@ -419,7 +419,7 @@
                   <span class="chip-label">연령대</span>
                   <button type="button" class="chip">20대</button><button type="button" class="chip">30대</button>
                   <button type="button" class="chip">40대</button><button type="button" class="chip">50대</button>
-                  <button type="button" class="chip" data-value="60대">60대+</button>
+                  <button type="button" class="chip" data-value="60대">연령무관</button>
                 </div>
                 <div class="chip-group" data-select="multi" data-name="skills">
                   <span class="chip-label">실력</span>
@@ -438,6 +438,13 @@
 	          <div class="map-query">
 	            <input id="keyword" type="text" name="keyword" placeholder="지역을 검색해 주세요" aria-label="키워드" data-value="서울시청">
 			  </div>
+			    <input type="text"
+				       id="mapPeriodPicker"
+				       class="input mapPeriodPicker"
+				       placeholder="날짜 선택 "
+				       style="width:220px;">
+				<input type="hidden" id="mapStartDate" name="startDate">
+				<input type="hidden" id="mapEndDate" name="endDate">
 		  </div>
 		  
 		  
@@ -687,23 +694,30 @@
 <script src="${ctx}/js/common.match.js"></script>
 
 <script>
-	const periodPicker = document.getElementById('periodPicker');
-	if (periodPicker) {
-		flatpickr(periodPicker, {
-			mode: 'range',                    // 기간 선택
+	function initPeriodPicker(pickerId, startId, endId, onPicked) {
+		const el = document.getElementById(pickerId);
+		if (!el) return;
+		flatpickr(el, {
+			mode: 'range',
 			locale: 'ko',
 			dateFormat: 'Y-m-d',
 			disableMobile: true,
-			defaultDate: ['${startDate}', '${endDate}'],   // 현재 조회 중인 기간 표시
 			onClose: function (selectedDates, dateStr, instance) {
-				// 시작일, 종료일 둘 다 골랐을 때만 조회
 				if (selectedDates.length === 2) {
-					document.getElementById('startDate').value = instance.formatDate(selectedDates[0], 'Y-m-d');
-					document.getElementById('endDate').value = instance.formatDate(selectedDates[1], 'Y-m-d');
+					document.getElementById(startId).value = instance.formatDate(selectedDates[0], 'Y-m-d');
+					document.getElementById(endId).value = instance.formatDate(selectedDates[1], 'Y-m-d');
+					if (onPicked) onPicked();
 				}
 			}
 		});
 	}
+
+	// 일반 검색
+	initPeriodPicker('periodPicker', 'startDate', 'endDate');
+
+	// 지도 검색: 날짜 고르면 바로 지도 재검색
+	initPeriodPicker('mapPeriodPicker', 'mapStartDate', 'mapEndDate', function () {
+	});
 </script>
 	
 

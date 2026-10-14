@@ -54,12 +54,17 @@ public class MatchAfterProfileList extends HttpServlet {
 		try {
 			
 			List<User> userList = pmpservice.getOtherPersonalMatchParticipantList(personalMatchId,user.getUserId());
-
-			PersonalMatch pMatch = pservice.getPersonalMatchDetail(pm);			
+			User me = pmpservice.getMyPersonalMatchParticipant(personalMatchId, user.getUserId());
+			PersonalMatch pMatch = pservice.getPersonalMatchDetail(pm);	
+			
+			for (User u : userList) {
+			    System.out.println(u.getUserId() + " / myScore=" + u.getMyScore());
+			}
+			
 			request.setAttribute("userList", userList);
+			request.setAttribute("me", me);
 			request.setAttribute("personalMatch", pMatch);
-			System.out.println(userList);
-			System.out.println(pMatch);
+
 			request.getRequestDispatcher("/jsp/match/personalMatchAfterProfileList.jsp").forward(request, response);;			
 
 		} catch (Exception e) {
