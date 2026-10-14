@@ -14,16 +14,28 @@
 <c:set var="demoStates" value="recent:최근 후기|grouped:경기별 모아보기" />
 <%@ include file="/jsp/common/header.jsp"%>
 <style>
+.review-card .thumb {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.post-thumb img {
+	height: 30px;
+	object-fit: contain;
+}
+
 .review-toolbar .chip.is-selected {
 	background: #eef4ff;
 	border: 1px solid #1a6bff;
 	color: #1a6bff;
 	font-weight: 700;
 }
+
 .review-toolbar .chip:hover {
 	border-color: #1a6bff;
 	color: #1a6bff;
 }
+
 .review-toolbar .search-btn {
 	height: 44px;
 	padding: 0 22px;
@@ -161,31 +173,50 @@
 						<c:forEach var="r" items="${g.value}">
 							<a class="review-card"
 								href="${ctx}/review/detail?reviewId=${r.reviewId}">
-								<div class="thumb">
-									<c:choose>
-										<c:when test="${not empty r.image}">
-											<img src="${ctx}/uploads/${r.image}"
-												style="width: 100%; height: 100%; object-fit: cover;">
-										</c:when>
-										<c:otherwise>
-											<c:out value="${r.title}" />
-										</c:otherwise>
-									</c:choose>
-								</div>
-								<div class="body">
-									<strong><c:out value="${r.title}" /></strong>
-									<p class="by">
-										작성자 ·
-										<c:out value="${r.nickname}" />
-									</p>
-									<p class="link">
-										참여 경기 ·
-										<c:out value="${r.matchTitle}" />
-									</p>
-									<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
-										&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
-								</div>
-							</a>
+									<div class="thumb">
+										<c:choose>
+											<c:when test="${not empty r.image}">
+												<img src="${ctx}/uploads/${r.image}"
+													style="width: 100%; height: 100%; object-fit: cover;"
+													alt="">
+											</c:when>
+											<c:otherwise>
+												<c:choose>
+													<c:when test="${r.sport eq '축구/풋살'}">
+														<c:set var="art" value="art-football.png" />
+													</c:when>
+													<c:when test="${r.sport eq '농구'}">
+														<c:set var="art" value="art-basketball.png" />
+													</c:when>
+													<c:when test="${r.sport eq '테니스'}">
+														<c:set var="art" value="art-tennis.png" />
+													</c:when>
+													<c:when test="${r.sport eq '배드민턴'}">
+														<c:set var="art" value="art-badminton.png" />
+													</c:when>
+													<c:otherwise>
+														<c:set var="art" value="match-default.png" />
+													</c:otherwise>
+												</c:choose>
+												<img src="${ctx}/img/${art}" alt=""
+													style="height: 45px; object-fit: contain;"
+													onerror="this.onerror=null; this.src='${ctx}/img/w-sports-5e-logo.svg';">
+											</c:otherwise>
+										</c:choose>
+									</div>
+									<div class="body">
+										<strong><c:out value="${r.title}" /></strong>
+										<p class="by">
+											작성자 ·
+											<c:out value="${r.nickname}" />
+										</p>
+										<p class="link">
+											참여 경기 ·
+											<c:out value="${r.matchTitle}" />
+										</p>
+										<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
+											&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
+									</div></a>
 						</c:forEach>
 					</div>
 				</c:forEach>
@@ -207,10 +238,29 @@
 								<c:choose>
 									<c:when test="${not empty r.image}">
 										<img src="${ctx}/uploads/${r.image}"
-											style="width: 100%; height: 100%; object-fit: cover;">
+											style="width: 100%; height: 100%; object-fit: cover;" alt="">
 									</c:when>
 									<c:otherwise>
-										<c:out value="${r.title}" />
+										<c:choose>
+											<c:when test="${r.sport eq '축구/풋살'}">
+												<c:set var="art" value="art-football.png" />
+											</c:when>
+											<c:when test="${r.sport eq '농구'}">
+												<c:set var="art" value="art-basketball.png" />
+											</c:when>
+											<c:when test="${r.sport eq '테니스'}">
+												<c:set var="art" value="art-tennis.png" />
+											</c:when>
+											<c:when test="${r.sport eq '배드민턴'}">
+												<c:set var="art" value="art-badminton.png" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="art" value="match-default.png" />
+											</c:otherwise>
+										</c:choose>
+										<img src="${ctx}/img/${art}" alt=""
+											style="height: 45px; object-fit: contain;"
+											onerror="this.onerror=null; this.src='${ctx}/img/w-sports-5e-logo.svg';">
 									</c:otherwise>
 								</c:choose>
 							</div>

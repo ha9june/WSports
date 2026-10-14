@@ -21,10 +21,6 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-/* ===== 달력 공통 ===== */
-.cal { 
-	--dot-color: #1a6bff;
-}
 
 .cal .flatpickr-calendar.inline {
 	box-shadow: none;
