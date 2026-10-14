@@ -16,53 +16,123 @@
 		<h1 class="page-title">회원 관리</h1>
 		<p class="page-desc">회원 상태와 제재 이력을 확인합니다.</p>
 	</div>
-	<c:set var="status" value="${empty param.status ? 'ALL' : param.status}" /><!-- 주소에 있는 status 값을 꺼내 status에 담음, 값이 없으면 ALL을 대신 넣음 -->
-	<form class="list-toolbar" method="get" style="flex-direction: column; align-items: flex-start; gap: 20px; margin-bottom: 24px">
+	<c:set var="status"
+		value="${empty param.status ? 'ALL' : param.status}" />
+	<!-- 주소에 있는 status 값을 꺼내 status에 담음, 값이 없으면 ALL을 대신 넣음 -->
+	<form class="list-toolbar" method="get"
+		style="flex-direction: column; align-items: flex-start; gap: 20px; margin-bottom: 24px">
 		<input type="hidden" name="status" value="${status}">
-			<div class="field" style="width: 280px">
-				<label class="field-label">아이디, 닉네임 검색</label>
-				<div style="display: flex; gap: 8px">
-					<input class="input" name="keyword" value="${param.keyword}">
-					<button type="submit" class="btn btn-primary">검색</button>
-				</div>
+		<div class="field" style="width: 280px">
+			<label class="field-label">아이디, 닉네임 검색</label>
+			<div style="display: flex; gap: 8px">
+				<input class="input" name="keyword" value="${param.keyword}">
+				<button type="submit" class="btn btn-primary">검색</button>
 			</div>
-			<div>
-				<div class="seg pill neutral" style="padding-left: 0">
-					<a class="seg-item ${status eq 'ALL' ? 'is-active' : ''} "href="?status=ALL">전체</a> 
-					<a class="seg-item ${status eq 'NORMAL' ? 'is-active' : ''} "href="?status=NORMAL">정상</a> 
-					<a class="seg-item ${status eq 'SUSPENDED' ? 'is-active' : ''} "href="?status=SUSPENDED">정지</a> 
-					<a class="seg-item ${status eq 'PENALTY' ? 'is-active' : ''} "href="?status=PENALTY">패널티점수</a>
-				</div>
-			</div>
-	</form>
-	
-	<div style="width: fit-content; max-width: 100%">
-		<div class="tbl-head" style="grid-template-columns: 100px 100px 100px 100px 100px; justify-self: start; justify-items: center; padding-left: 0px">
-			<span>로그인 아이디</span> 
-			<span>닉네임</span> 
-			<span>회원 정지 상태</span> 
-			<span>패널티 점수</span>
-			<span>회원 상세정보</span>
 		</div>
-	
-		<c:forEach var="m" items="${memberlist}">
-			<div class="tbl-row" style="grid-template-columns: 100px 100px 100px 100px 100px; justify-self: start; justify-items: center; padding-left: 0px">
-				<span>${m.login_id}</span>
-				<span>${m.nickname}</span>
-				<span class="${m.suspended ? 't-danger' : '' }">${m.suspended ? '정지' : '정상'}</span>
-				<span>${empty m.score ? 0 : m.score}</span> 
-				<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/member/detail?userId=${m.user_id}">보기</a>
+		<div>
+			<div class="seg pill neutral" style="padding-left: 0">
+				<a class="seg-item ${status eq 'ALL' ? 'is-active' : ''} "
+					href="?status=ALL">전체</a> <a
+					class="seg-item ${status eq 'NORMAL' ? 'is-active' : ''} "
+					href="?status=NORMAL">정상</a> <a
+					class="seg-item ${status eq 'SUSPENDED' ? 'is-active' : ''} "
+					href="?status=SUSPENDED">정지</a> <a
+					class="seg-item ${status eq 'PENALTY' ? 'is-active' : ''} "
+					href="?status=PENALTY">패널티점수</a>
+			</div>
+		</div>
+	</form>
+
+	<div style="width: var(--settle-w); max-width: 100%">
+	<div class="tbl-head"
+		style="grid-template-columns: minmax(0,1fr) minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr) 100px; 
+			justify-items: center; padding: 0 12px; box-sizing: border-box; border: 1px solid transparent">
+		<span style="justify-self: start; padding-left: 24px">로그인 아이디</span>
+		<span>닉네임</span>
+		<span>회원 정지 상태</span>
+		<span>패널티 점수</span>
+		<span>회원 상세정보</span>
+	</div>
+
+	<c:forEach var="m" items="${memberlist}">
+		<div class="tbl-row"
+			style="grid-template-columns: minmax(0,1fr) minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr) 100px; justify-items: center; padding: 0 12px; box-sizing: border-box">
+				<span class="cell-ellipsis" title="${m.login_id}"
+					style="justify-self: start; padding-left: 24px">${m.login_id}</span>
+				<span>${m.nickname}</span> <span
+					class="${m.suspended ? 't-danger' : '' }">${m.suspended ? '정지' : '정상'}</span>
+				<span>${empty m.score ? 0 : m.score}</span> <a
+					class="btn btn-outline btn-xs t-brand"
+					href="${ctx}/admin/member/detail?userId=${m.user_id}">보기</a>
 			</div>
 		</c:forEach>
-		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">
-			<a href="${pageInfo.curPage > 1 ? ctx += '/admin/member?status=' += status += '&keyword=' += param.keyword += '&page=' += (pageInfo.curPage - 1) : '#'}">&lt;</a>
-			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" var="page">
-				<a href="${ctx}/admin/member?status=${status}&amp;keyword=${param.keyword}&amp;page=${page}" class="${pageInfo.curPage eq page ? 'is-active' : ''}">${page}</a>
-			</c:forEach>
-			<a href="${pageInfo.curPage < pageInfo.allPage ? ctx += '/admin/member?status=' += status += '&keyword=' += param.keyword += '&page=' += (pageInfo.curPage + 1) : '#'}">&gt;</a>
-		</nav>
+		<!-- 목록이 없을때 -->
+		<c:if test="${empty memberlist}">
+			<div class="empty-state">
+				<div class="empty-icon">
+					<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+						stroke="currentColor" stroke-width="2" stroke-linecap="round"
+						stroke-linejoin="round" aria-hidden="true">
+						<c:choose>
+							<c:when test="${not empty param.keyword}">
+								<circle cx="11" cy="11" r="7" />
+								<path d="m20 20-3.5-3.5" />
+							</c:when>
+							<c:otherwise>
+								<circle cx="12" cy="8" r="4" />
+								<path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
+							</c:otherwise>
+						</c:choose>
+					</svg>
+				</div>
+				<c:choose>
+					<c:when test="${not empty param.keyword}">
+						<strong>'${param.keyword}' 검색 결과가 없어요</strong>
+						<p>아이디나 닉네임을 다시 확인해 주세요.</p>
+						<a class="btn btn-outline btn-sm" href="?status=${status}">검색
+							초기화</a>
+					</c:when>
+					<c:when test="${status eq 'NORMAL'}">
+						<strong>정상 상태인 회원이 없어요</strong>
+						<p>모든 회원이 정지 상태이거나 가입한 회원이 없습니다.</p>
+						<a class="btn btn-outline btn-sm" href="?status=ALL">전체 회원 보기</a>
+					</c:when>
+					<c:when test="${status eq 'SUSPENDED'}">
+						<strong>정지된 회원이 없어요</strong>
+						<p>패널티 점수가 기준에 도달하면 자동으로 정지되어 여기에 표시됩니다.</p>
+						<a class="btn btn-outline btn-sm" href="?status=ALL">전체 회원 보기</a>
+					</c:when>
+					<c:when test="${status eq 'PENALTY'}">
+						<strong>패널티 점수가 있는 회원이 없어요</strong>
+						<p>신고 처리로 패널티가 부여되면 여기에 표시됩니다.</p>
+						<a class="btn btn-outline btn-sm" href="?status=ALL">전체 회원 보기</a>
+					</c:when>
+					<c:otherwise>
+						<strong>가입한 회원이 없어요</strong>
+						<p>회원이 가입하면 여기에 목록이 표시됩니다.</p>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</c:if>
 	</div>
-	
+	<c:if test="${not empty memberlist}">
+		<nav class="pagination"
+			style="display: flex; justify-content: center; padding: 0px">
+			<a
+				href="${pageInfo.curPage > 1 ? ctx += '/admin/member?status=' += status += '&keyword=' += param.keyword += '&page=' += (pageInfo.curPage - 1) : '#'}">&lt;</a>
+			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}"
+				var="page">
+				<a
+					href="${ctx}/admin/member?status=${status}&amp;keyword=${param.keyword}&amp;page=${page}"
+					class="${pageInfo.curPage eq page ? 'is-active' : ''}">${page}</a>
+			</c:forEach>
+			<a
+				href="${pageInfo.curPage < pageInfo.allPage ? ctx += '/admin/member?status=' += status += '&keyword=' += param.keyword += '&page=' += (pageInfo.curPage + 1) : '#'}">&gt;</a>
+		</nav>
+	</c:if>
 </div>
-</main></div>
+
+</div>
+</main>
+</div>
 <%@ include file="/jsp/common/footer.jsp"%>

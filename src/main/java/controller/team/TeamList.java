@@ -54,6 +54,8 @@ public class TeamList extends HttpServlet {
 		String sportsParam = request.getParameter("sports");
 		String daysParam = request.getParameter("days");
 		String skillsParam = request.getParameter("skills");
+		String agesParam = request.getParameter("ages");
+		String timesParam = request.getParameter("times");
 
 		String[] sports = sportsParam != null && !sportsParam.isBlank()
 		        ? sportsParam.split(",")
@@ -66,12 +68,20 @@ public class TeamList extends HttpServlet {
 		String[] skills = skillsParam != null && !skillsParam.isBlank()
 		        ? skillsParam.split(",")
 		        : null;
+		String[] ages = agesParam != null && !agesParam.isBlank()
+		        ? agesParam.split(",")
+		        : null;
+		String[] times = timesParam != null && !timesParam.isBlank()
+		        ? timesParam.split(",")
+		        : null;
+		
 
 		String[] regions = request.getParameterValues("regions");
 
 		String gender = request.getParameter("gender");
 		String keyword = request.getParameter("keyword");
 		String sort = request.getParameter("sort");
+
 		
 		TeamSearchCondition condition = new TeamSearchCondition();
 		condition.setOffset(offset);
@@ -82,7 +92,9 @@ public class TeamList extends HttpServlet {
 		condition.setRegions(regions);
 		condition.setKeyword(keyword);
 		condition.setSort(sort);
-		
+		condition.setAges(ages);
+		condition.setTimes(times);
+
 		TeamService teamService = new TeamServiceImpl();
 		String requestType = request.getParameter("requestType");
 		try {

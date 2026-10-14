@@ -23,5 +23,8 @@ public interface TeamDao {
 	
 	//메인 경기 추천 팀
 	List<Team> selectNowTeamList(TeamSearchCondition condition) throws Exception;
+	
+	int deleteTeamWithMembers(Long teamId, String reason) throws Exception;
+	List<Long> selectActiveMemberUserIds(Long teamId) throws Exception;
 
 }

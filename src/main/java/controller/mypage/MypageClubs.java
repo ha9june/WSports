@@ -12,15 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.TeamApplicationDao;
-import dao.TeamApplicationDaoImpl;
-import dto.PersonalMatch;
-import dto.TeamApplication;
 import dto.User;
-import service.match.PersonalMatchService;
-import service.match.PersonalMatchServiceImpl;
-import service.match.TeamMatchService;
-import service.match.TeamMatchServiceImpl;
 import service.team.TeamApplicationService;
 import service.team.TeamApplicationServiceImpl;
 import util.PageInfo;
@@ -50,7 +42,7 @@ public class MypageClubs extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		User user = (session == null) ? null : (User) session.getAttribute("user");
 		if (user == null) {
-			response.sendRedirect(request.getContextPath() + "/login");
+			response.sendRedirect(request.getContextPath() + "/auth/login");
 			return;// 로그인 경로 수정
 		}
 		long userId = user.getUserId();

@@ -276,7 +276,8 @@
 								<span class="pill pill-danger bd">경기 취소</span>
 							</c:when>
 							<c:otherwise>
-								<span class="pill pill-neutral bd">${m.status}</span>
+								<span class="pill pill-neutral bd"
+								style="width: auto; min-width: 70px; padding: 0 8px; white-space: nowrap;">${m.status}</span>
 							</c:otherwise>
 						</c:choose>
 

@@ -152,14 +152,15 @@
 	margin-right: 16px;
 	flex-shrink: 0;
 	background: none !important;
-	border-radius: 0;
+	border-radius: 50%;
+	overflow: hidden;
 	display: block;
 }
 
 .sport-circle img {
 	width: 100%;
 	height: 100%;
-	object-fit: contain;
+	object-fit: cover;
 	display: block;
 }
 
@@ -181,6 +182,34 @@
 
 .sc-default {
 	background-color: #e5e7eb;
+}
+/* 더보기 페이징 */
+.myteam-card.is-hidden {
+	display: none !important;
+}
+
+.more-wrap {
+	display: flex;
+	justify-content: center;
+	margin-top: 24px;
+}
+
+.btn-more {
+	min-width: 140px;
+	height: 44px;
+	padding: 0 24px;
+	border: 1px solid #1a6bff;
+	border-radius: 999px;
+	background: #fff;
+	color: #1a6bff;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background .15s;
+}
+
+.btn-more:hover {
+	background: #eff6ff;
 }
 </style>
 
@@ -207,7 +236,7 @@
 						style="grid-column: span 2; text-align: center; color: #9ca3af; padding: 40px 0;">신청
 						중인 팀이 없습니다.</p>
 				</c:if>
-				<c:forEach var="m" items="${match}">
+				<c:forEach var="m" items="${match}" >
 					<c:choose>
 						<c:when test="${m.sport eq '축구/풋살'}">
 							<c:set var="sportCls" value="sc-football" />
@@ -230,12 +259,20 @@
 							<c:set var="sportImg" value="match-default.png" />
 						</c:otherwise>
 					</c:choose>
+					<%-- 기본: 종목별 기본 이미지 --%>
+					<c:set var="imgSrc" value="${ctx}/img/${sportImg}" />
+					<%-- 팀 프로필 이미지가 있으면 덮어쓰기 --%>
+					<c:if test="${not empty m.profileImage}">
+						<c:set var="imgSrc" value="${ctx}/uploads/${m.profileImage}" />
+					</c:if>
 
 					<div class="myteam-card"
+							data-href="${ctx}/team/detail/view?teamId=${m.teamId}"
 						style="display: flex; align-items: center; padding: 16px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); position: relative; height: 110px; box-sizing: border-box;">
 
 						<div class="sport-circle ${sportCls}">
-							<img src="${ctx}/img/${sportImg}" alt="${m.sport}">
+							<img src="${imgSrc}" alt="${m.teamName}"
+								onerror="this.onerror=null; this.src='${ctx}/img/${sportImg}';">
 						</div>
 
 						<div class="main-info"
@@ -309,13 +346,20 @@
 							<c:set var="sportImg" value="match-default.png" />
 						</c:otherwise>
 					</c:choose>
+					<%-- 기본: 종목별 기본 이미지 --%>
+					<c:set var="imgSrc" value="${ctx}/img/${sportImg}" />
+					<%-- 팀 프로필 이미지가 있으면 덮어쓰기 --%>
+					<c:if test="${not empty m.profileImage}">
+						<c:set var="imgSrc" value="${ctx}/uploads/${m.profileImage}" />
+					</c:if>
 
 					<div class="myteam-card"
 						data-href="${ctx}/team/detail/view?teamId=${m.teamId}"
 						style="display: flex; align-items: center; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff;">
 
 						<div class="sport-circle ${sportCls}">
-							<img src="${ctx}/img/${sportImg}" alt="${m.sport}">
+							<img src="${imgSrc}" alt="${m.teamName}"
+								onerror="this.onerror=null; this.src='${ctx}/img/${sportImg}';">
 						</div>
 
 						<div class="main" style="flex: 1;">
@@ -329,7 +373,6 @@
 								${m.appliedAt}</p>
 						</div>
 
-						<%-- 기존에 예쁘게 나오던 가입한 팀 레이아웃은 일절 건드리지 않고 그대로 유지합니다 --%>
 						<div class="card-right" onclick="event.stopPropagation()">
 							<c:if test="${not empty m.myRole}">
 								<c:choose>
@@ -349,27 +392,31 @@
 								<div class="kebab-menu">
 									<c:choose>
 										<c:when test="${m.myRole eq 'CAPTAIN'}">
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+											<a href="${ctx}/team/manage/applications?teamId=${m.teamId}">가입신청
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+											<a href="${ctx}/team/manage/members?teamId=${m.teamId}">팀원
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
+											<hr>
+											<a href="#" class="danger btn-delete-team"
+												data-team-id="${m.teamId}"
+												data-team-name="<c:out value='${m.teamName}' />">팀 삭제</a>
 										</c:when>
 										<c:when test="${m.myRole eq 'VICE_CAPTAIN'}">
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=apply">가입신청
+											<a href="${ctx}/team/manage/applications?teamId=${m.teamId}">가입신청
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=member">팀원
+											<a href="${ctx}/team/manage/members?teamId=${m.teamId}">팀원
 												관리</a>
-											<a href="${ctx}/team/manage?teamId=${m.teamId}&tab=post">팀
+											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
 											<hr>
 											<a href="#" class="danger btn-leave"
 												data-team-id="${m.teamId}">탈퇴하기</a>
 										</c:when>
 										<c:otherwise>
-											<a href="${ctx}/team/members?teamId=${m.teamId}">팀원 보기</a>
-											<a href="${ctx}/team/posts?teamId=${m.teamId}">팀 작성글 보기</a>
+											<a href="${ctx}/team/info/members?teamId=${m.teamId}">팀원 보기</a>
+											<a href="${ctx}/team/info/posts?teamId=${m.teamId}">팀 작성글 보기</a>
 											<hr>
 											<a href="#" class="danger btn-leave"
 												data-team-id="${m.teamId}">탈퇴하기</a>
@@ -410,11 +457,46 @@
 		</div>
 	</div>
 </div>
+<!-- 팀 삭제 모달 -->
+<div class="modal" id="teamDeleteModal" role="dialog" aria-modal="true">
+	<div class="modal-card">
+		<h2 class="modal-title">팀을 삭제할까요?</h2>
+		<p class="modal-desc"><b id="deleteTeamName"></b> 팀이 삭제되고 모든 팀원이 탈퇴 처리돼요. 복구할 수 없고, 진행 중인 경기가 있으면 삭제할 수 없어요.</p>
+		<form action="${ctx}/team/delete" method="post">
+			<input type="hidden" name="teamId" id="deleteTeamId">
+			<input type="hidden" name="from" value="mypage">
+			<div class="modal-actions">
+				<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
+				<button type="submit" class="btn btn-danger">삭제</button>
+			</div>
+		</form>
+	</div>
+</div>
 
 <script>
 	$(function() {
 		var targetId = null;
+	
+		// 더보기: 6개씩 표시
+		var PAGE = 6;
+		$('.myteam-grid').each(function() {
+			var $grid = $(this);
+			var $cards = $grid.children('.myteam-card');
+			if ($cards.length <= PAGE) return;   // 6개 이하면 버튼 없음
 
+			$cards.slice(PAGE).addClass('is-hidden');
+
+			var $wrap = $('<div class="more-wrap"><button type="button" class="btn-more">↓ 더보기</button></div>');
+			$grid.after($wrap);
+
+			$wrap.find('.btn-more').on('click', function() {
+				$cards.filter('.is-hidden').slice(0, PAGE).removeClass('is-hidden');
+				if ($cards.filter('.is-hidden').length === 0) {
+					$wrap.remove();   // 다 보여줬으면 버튼 제거
+				}
+			});
+		});
+		
 		// 드롭다운 토글
 		$('[data-dropdown-toggle]').on('click', function(e) {
 			e.stopPropagation();
@@ -472,6 +554,16 @@
 					showToast('탈퇴 처리에 실패했어요.');
 				}
 			});
+		});
+		// 팀 삭제: 메뉴의 "팀 삭제" 클릭 시 모달 열기
+		$('.btn-delete-team').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+			$('.dropdown').removeClass('is-open');
+			$('#deleteTeamId').val($(this).data('team-id'));
+			$('#deleteTeamName').text($(this).data('team-name'));
+			$('#teamDeleteModal').addClass('is-open');
 		});
 	});
 </script>

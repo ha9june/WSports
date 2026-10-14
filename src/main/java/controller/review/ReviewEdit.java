@@ -143,7 +143,7 @@ public class ReviewEdit extends HttpServlet {
 				response.sendError(403);
 				return;
 			}
-			response.sendRedirect(request.getContextPath() + "/mypage/reviews");
+			response.sendRedirect(request.getContextPath() + "/review/detail?reviewId=" + reviewId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			for (String n : savedNew)

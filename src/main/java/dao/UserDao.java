@@ -24,6 +24,7 @@ public interface UserDao {
 	//관리자 인원수 세기
 	Long selectUserCnt() throws Exception;
 	
+	User selectUserAccountInfo(Long userId) throws Exception;
 	// 마이페이지 결제 내역
 	Long selectHistoryCount(Map<String, Object> param) throws Exception;
 	// 마이페이지 결제 내역 리스트

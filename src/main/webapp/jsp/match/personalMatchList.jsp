@@ -16,6 +16,22 @@
 <%@ include file="/jsp/common/header.jsp" %>
 <style>
 	.is-hidden { display: none !important; }
+	
+	.map-title-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+	}
+	.map-title-row strong {
+		flex: 1;
+		min-width: 0;
+	}
+	.map-title-row .fav-btn {
+		position: static !important;
+		flex-shrink: 0;
+		margin: 0;
+	}
 </style>
 <script src="${ctx}/js/common.format.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
@@ -79,7 +95,7 @@
 					    html += `
 					    	<a class="match-card `+sportsType+`" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
 						    <img class="art" src="${ctx}/img/art-`+sportsType+`.png" alt="">
-						    <span class="sport-tag football">
+						    <span class="sport-tag `+sportsType+`">
 						    `+item.sport+`
 						    </span>
 						    `+favBtn(item, "bare")+`
@@ -158,7 +174,7 @@
 					    	sportsType="tennis";
 					    }
 					    				    
-						
+						/* 개인경기 리스트 */
 						html+=`
 							<a class="match-row" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
 				            <div class="left"><span class="pill pill-success bd">`+item.status+`</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
@@ -168,7 +184,7 @@
 				              </p>
 				              <div class="meta">
 				                <span class="it people">
-				                	<img src="${ctx}/img/icon-person.svg" alt="">`+item.currentPeople+`/`+item.maxPeople+` &nbsp; 최소 8명 
+				                	<img src="${ctx}/img/icon-person.svg" alt="">`+item.currentPeople+`/`+item.maxPeople+` &nbsp; 최소 `+item.minPeople+`명 
 				                	<span class="cap">
 				                		<i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i>
 			                		</span>
@@ -392,7 +408,6 @@
             </div>
             <div class="filter-more">
               <button type="button" class="btn btn-outline btn-sm" data-filter-toggle>필터 더보기 +</button>
-              <span class="count">0</span>
               <div class="filter-panel">
                 <div class="chip-group" data-select="single" data-name="gender">
                   <span class="chip-label">성별</span>
@@ -427,6 +442,10 @@
 		  
 		  
 		  <button type="submit" class="btn btn-primary btn-lg">검색</button>
+		</div>
+		<div class="filter-more" style="padding-top:5px;">
+			<span class="count">
+             </span>
 		</div>
       </form>
     </section>
@@ -465,9 +484,12 @@
   </div>
 </main>
 
-<a class="fab" href="${ctx}/match/write/form" data-auth>
-  <span class="fab-label">경기 만들기</span><span class="fab-btn" aria-hidden="true"></span>
-</a>
+	<a id=matchMakeButton class="fab" href="${ctx}/match/write/form" data-auth 
+		data-account="${not empty sessionScope.user.bankName
+	    and not empty sessionScope.user.accountNumber
+	    and not empty sessionScope.user.accountHolder}">
+	  <span class="fab-label">경기 만들기</span><span class="fab-btn" aria-hidden="true"></span>
+	</a>
 
 <%@ include file="/jsp/common/footer.jsp" %>
 
@@ -635,14 +657,17 @@
 	            removeMarkers();
 				let html = "<h3>지도 주변 경기</h3>";
 	            data.forEach(function(item) {	
-					html+= `
-			            <a href="${ctx}/match/detail/view?="`+item.personalMatchId+` 
-			            class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
-			            <small>`+item.sport+`</small>`+favBtn(item, "bare")+`
-			            <strong>`+item.title+`</strong>
-		                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
-			            </a>
-					`;
+	            	html += `
+	            		<a href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`"
+	            		   class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
+	            			<small>`+item.sport+`</small>
+	            			<div class="map-title-row">
+	            				<strong>`+item.title+`</strong>
+	            				`+favBtn(item, "bare")+`
+	            			</div>
+	            			<span>`+FormatDate(item.matchDate, item.startTime)+`</span>
+	            		</a>
+	            	`;
 	            	//마커찍기
 	                const marker = createMarker(item);
 	                markers.push(marker);
@@ -659,6 +684,7 @@
 
 </script>
 <script src="${ctx}/js/address.js"></script>
+<script src="${ctx}/js/common.match.js"></script>
 
 <script>
 	const periodPicker = document.getElementById('periodPicker');

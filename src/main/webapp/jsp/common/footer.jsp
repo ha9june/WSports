@@ -37,9 +37,30 @@
 	</div>
 </div>
 </c:if>
+<c:if test="${not empty sessionScope.user
+		and (empty sessionScope.user.bankName
+		or empty sessionScope.user.accountNumber
+		or empty sessionScope.user.accountHolder)}">
+	<div class="modal" id="accountRequiredModal" role="dialog"
+	     aria-modal="true" aria-labelledby="accountRequiredTitle">
+	  <div class="modal-card sm" style="text-align: center">
+	    <h2 class="modal-title" id="accountRequiredTitle">계좌번호가 필요한 기능입니다</h2>
+	    <p class="modal-desc">계좌번호 생성 후 기능을 이용할 수 있어요.</p>
+	    <div class="modal-actions" style="justify-content: center">
+	      <button type="button" class="btn btn-outline" data-modal-close>취소</button>
+	      <a class="btn btn-primary" href="${ctx}/member/mypage/view">계좌번호 생성하러 가기</a>
+	    </div>
+	  </div>
+	</div>
+</c:if>
+
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<c:if test="${not empty sessionScope.toast}">
+	<script>$(function() { showToast('<c:out value="${sessionScope.toast}" />'); });</script>
+	<c:remove var="toast" scope="session" />
+</c:if>
 
 <script src="${ctx}/js/common.js"></script>
 <c:forTokens items="${pageJs}" delims="," var="jsName">

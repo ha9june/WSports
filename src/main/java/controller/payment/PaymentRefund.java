@@ -39,7 +39,15 @@ public class PaymentRefund extends HttpServlet {
 			return;
 		}
 		
+		
+		
 		String paymentKey = request.getParameter("paymentKey");
+		if (paymentKey == null || paymentKey.isEmpty()) {
+		    Object attr = request.getAttribute("paymentKey");
+		    if (attr != null) 
+		    	paymentKey = String.valueOf(attr);
+		}
+
 		String cancelReason = request.getParameter("cancelReason");
 		if (cancelReason == null || cancelReason.isBlank()) {
 			cancelReason = "참가자 환불 요청";
@@ -57,6 +65,7 @@ public class PaymentRefund extends HttpServlet {
 		try {
 			//개인 결제에 없으면 팀 결제
 			isTeam = (service.getPersonalPaymentByPaymentKey(paymentKey) == null);
+
 			
 			if(isTeam) {
 				service.refundTeamPayment(paymentKey, loginUser.getUserId(), cancelReason, TossKey.SECRET_KEY);

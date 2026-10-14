@@ -75,10 +75,11 @@
                                 '</div>' +
                             '</div>' +
                             '<p class="cond">' +
-	                            team.days + '<br>' +
-	                            team.ages + '<br>' +
-	                            team.skill + ' · ' + team.gender +
-                            '</p>' +
+	                        	team.days + '<br>' +
+	                        	team.times + '<br>' +
+	                        	team.ages + '<br>' +
+	                        	team.skill + ' · ' + team.gender +
+	                        '</p>' +
                             '<input type="hidden" name="teamId" value="' + team.teamId +'">' +
                         '</a>';
                 });
@@ -163,7 +164,6 @@
 					<div class="filter-more">
 						<button type="button" class="btn btn-outline btn-sm"
 							data-filter-toggle>필터 더보기 +</button>
-						<span class="count">0</span>
 						<div class="filter-panel">
 							<div class="chip-group" data-select="single" data-name="gender">
 								<span class="chip-label">성별</span>
@@ -188,6 +188,26 @@
 								<button type="button" class="chip" data-value="초급">초급</button>
 								<button type="button" class="chip" data-value="중급">중급</button>
 								<button type="button" class="chip" data-value="상급">상급</button>
+							</div>
+							<div class="chip-group" data-select="multi" data-name="ages">
+								<span class="chip-label">나이대</span>
+								<div class="chips">
+									<button type="button" class="chip" data-value="20대">20대</button>
+									<button type="button" class="chip" data-value="30대">30대</button>
+									<button type="button" class="chip" data-value="40대">40대</button>
+									<button type="button" class="chip" data-value="50대 이상">50대 이상</button>
+									<button type="button" class="chip" data-value="연령 무관">연령 무관</button>
+								</div>
+							</div>
+							<div class="chip-group" data-select="multi" data-name="times">
+								<span class="chip-label">시간대</span>
+								<div class="chips">
+									<button type="button" class="chip" data-value="아침">아침</button>
+									<button type="button" class="chip" data-value="오전">오전</button>
+									<button type="button" class="chip" data-value="오후">오후</button>
+									<button type="button" class="chip" data-value="저녁">저녁</button>
+									<button type="button" class="chip" data-value="야간">야간</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -260,8 +280,7 @@
 							</p>
 						</div>
 					</div>
-					<p class="cond">${team.days}<br>${team.ages }<br>${team.skill} · ${team.gender }
-					</p>
+					<p class="cond">${team.days}<br>${team.times}<br>${team.ages }<br>${team.skill} · ${team.gender }</p>
 				</a>
 			</c:forEach>
 		</div>

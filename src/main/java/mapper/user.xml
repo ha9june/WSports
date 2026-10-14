@@ -100,6 +100,16 @@
 		select count(*) from user
 	</select>
 	
+	<!--은행정보 불러오기-->
+	<select id="selectUserAccountInfo" parameterType="long" resultType="user">
+		select 
+			back_name, account_number, account_holder
+		from user
+			where user_id=#{userId}
+	</select>
+	
+	
+
 	<!-- 마이페이지 결제 내역 -->
 	<sql id="historyUnion">
 		select 'PERSONAL' as matchType,pp.payment_id as paymentId,pp.payment_key as paymentKey,
