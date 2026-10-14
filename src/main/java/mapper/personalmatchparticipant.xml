@@ -98,6 +98,7 @@
 		    FROM personal_match_participant
 		    WHERE user_id = #{userId}
 		      AND personal_match_id = #{personalMatchId}
+		      AND status='결제완료'
 			
 	</select>
 	<select id="selectParticipantUserIds" parameterType="Long"
