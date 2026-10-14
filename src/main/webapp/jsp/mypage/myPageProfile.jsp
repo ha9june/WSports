@@ -128,6 +128,5 @@
     <a class="btn btn-primary" href="${ctx}/member/profile/edit">수정</a>
   </div>
 
->>>>>>> branch 'master' of https://github.com/ha9june/WSports
 </div>
 <%@ include file="/jsp/common/footer.jsp" %>
