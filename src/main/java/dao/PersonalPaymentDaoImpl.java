@@ -121,13 +121,17 @@ public class PersonalPaymentDaoImpl implements PersonalPaymentDao {
 	public void insertPersonalPaymentParticipant(PersonalPayment personalPayment, Long userId, Long matchId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
+			//개인경기 결제내역 삽입
 			sqlSession.insert("mapper.personalpayment.insertPersonalPaymentHistory", personalPayment);
 			Map<String, Object> param = new HashMap<>();
 			param.put("userId", userId);
 			param.put("matchId", matchId);
 			param.put("paymentId", personalPayment.getPaymentId());
+			//결제 완료 참가자 등록
 			sqlSession.insert("mapper.personalpayment.insertPaidParticipant", param);
-			sqlSession.update("mapper.personalpayment.updatePersonalMatchOpen", param); //결제 완료시 0으로 업데이트
+
+			//경기 모집자 결제 완료시 0으로 업데이트
+			sqlSession.update("mapper.personalpayment.updatePersonalMatchOpen", param); 
 
 			sqlSession.commit();
 		} catch (Exception e) {

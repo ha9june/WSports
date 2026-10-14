@@ -13,6 +13,7 @@ public interface PersonalMatchParticipantService {
 	PersonalMatchParticipant getParticipant(Map<String,Object> param) throws Exception;
 	List<User> getPersonalMatchParticipantList(Long personalMatchId) throws Exception;
 	List<User> getOtherPersonalMatchParticipantList(Long personalMatchId,Long userId) throws Exception;
+	User getMyPersonalMatchParticipant(Long personalMatchId,Long userId) throws Exception;
 	
 	//출석여부변경
 	void updateAttendacne(PersonalMatchParticipant personalMatchParticipation) throws Exception;

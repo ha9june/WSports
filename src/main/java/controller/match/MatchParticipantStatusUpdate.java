@@ -64,9 +64,10 @@ public class MatchParticipantStatusUpdate extends HttpServlet {
 			HashMap<String, Object> param = new HashMap<>();
 			param.put("userId",user.getUserId());
 			param.put("personalMatchId",personalMatchId);
+			//먼저 조회
 			PersonalMatchParticipant participant = pmpService.getParticipant(param);
 			Boolean applied = false;
-			
+			//
 			if(participant==null) {
 				if(updateType.equals("participant")) {
 					pmpService.addPersonalMatchParticipant(pmp);

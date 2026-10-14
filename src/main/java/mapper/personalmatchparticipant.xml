@@ -77,27 +77,49 @@
 	</select>
 	<select id="selectOtherPersonalMatchParticipantList" parameterType="map" resultType="user">
 		SELECT
-		    u.user_id,
-		    u.nickname,
-		    p.attendance,
-		    COALESCE(AVG(r.score), 0) AS avg_rating_score
+		  u.user_id,
+		  u.nickname,
+		  u.profile_image,
+		  p.attendance,
+		  MAX(mr.score) AS my_score
 		FROM personal_match_participant p
 		JOIN user u
-		    ON p.user_id = u.user_id
-		LEFT JOIN user_rating r
-		    ON r.receiver_user_id = u.user_id
+		  ON p.user_id = u.user_id
+		LEFT JOIN user_rating mr
+		  ON mr.receiver_user_id = u.user_id
+		 AND mr.evaluator_user_id = #{userId}
+		 AND mr.match_id = #{personalMatchId}
+		 AND mr.match_type = 'PersonalMatch'
 		WHERE p.personal_match_id = #{personalMatchId}
 		  AND (p.status IS NULL OR p.status != '취소')
 		  AND u.user_id != #{userId}
 		GROUP BY
-		    u.user_id,
-		    u.nickname 
+		  u.user_id,
+		  u.nickname,
+		  u.profile_image,
+		  p.attendance
 	</select>
+			
+	<select id="selectMyPersonalMatchParticipant" parameterType="map" resultType="user">
+		SELECT
+		u.user_id,
+		u.nickname,
+		u.profile_image,
+		p.attendance
+		FROM personal_match_participant p
+		JOIN user u
+		ON p.user_id = u.user_id
+		WHERE p.personal_match_id = #{personalMatchId}
+		AND (p.status IS NULL OR p.status != '취소')
+		AND u.user_id = #{userId}
+	</select>
+	
 	<select id="selectIsPersonalMatchParticipation" parameterType="map" resultType="personalmatchparticipant">
 		    SELECT *
 		    FROM personal_match_participant
 		    WHERE user_id = #{userId}
 		      AND personal_match_id = #{personalMatchId}
+		      AND status='결제완료'
 			
 	</select>
 	<select id="selectParticipantUserIds" parameterType="Long"
@@ -108,4 +130,5 @@
 		personal_match_id = #{personalMatchId}
 		and status = '결제완료'
 	</select>
+	
 </mapper>

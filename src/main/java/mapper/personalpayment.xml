@@ -127,6 +127,7 @@
     	from personal_match
     	where personal_match_id = #{matchId}
 	</select>
+	
 	<!-- 결제 완료 참가자 등록 -->
 	<insert id="insertPaidParticipant" parameterType="map">
     	INSERT INTO personal_match_participant (
@@ -135,6 +136,8 @@
         	#{userId}, #{matchId}, 0, '결제완료', #{paymentId}, NOW()
     	)
 	</insert>
+	
+	
 	<!-- 경기 정보 -->
 	<select id="selectPersonalPaymentMatch" parameterType="String" resultType="personalMatch">
     	select m.*

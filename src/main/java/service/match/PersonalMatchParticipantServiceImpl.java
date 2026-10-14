@@ -41,7 +41,7 @@ public class PersonalMatchParticipantServiceImpl implements PersonalMatchPartici
 	
 	@Override
 	public List<User> getOtherPersonalMatchParticipantList(Long personalMatchId, Long userId) throws Exception {
-		List<User> userList = personalMatchParticipantDao.selectPersonalMatchParticipantList(personalMatchId);
+		List<User> userList = personalMatchParticipantDao.selectOtherPersonalMatchParticipantList(personalMatchId, userId);
 	    userList.removeIf(user -> Objects.equals(user.getUserId(), userId));
 	    return userList;
 	}
@@ -51,6 +51,11 @@ public class PersonalMatchParticipantServiceImpl implements PersonalMatchPartici
 	@Override
 	public void updateAttendacne(PersonalMatchParticipant personalMatchParticipation) throws Exception {
 		personalMatchParticipantDao.updateAttendance(personalMatchParticipation);
+	}
+
+	@Override
+	public User getMyPersonalMatchParticipant(Long personalMatchId, Long userId) throws Exception {
+		return personalMatchParticipantDao.selectMyPersonalMatchParticipant(personalMatchId, userId);
 	}
 
 	

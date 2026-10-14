@@ -21,10 +21,6 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-/* ===== 달력 공통 ===== */
-.cal { 
-	--dot-color: #1a6bff;
-}
 
 .cal .flatpickr-calendar.inline {
 	box-shadow: none;
@@ -362,8 +358,8 @@
 										href="${ctx}/review/create?matchNo=${mt}:${m.matchId}"
 										onclick="event.stopPropagation()">후기 작성</a>
 									<a class="btn btn-primary btn-xs"
-										href="${ctx}/${mt eq 'TEAM' ? 'team-match/rating?teamMatchId=' : 'personal-match/rating?personalMatchId='}${m.matchId}"
-										onclick="event.stopPropagation()">경기 팀 평가</a>
+										href="${ctx}/${mt eq 'TEAM' ? '/team-match/result/view?teamMatchId=' : '/match/after/profile/list?personalMatchId='}${m.matchId}"
+										onclick="event.stopPropagation()">출석 및 평가</a>
 								</c:when>
 								<%-- 그 외: 상세 보기 --%>
 								<c:otherwise>

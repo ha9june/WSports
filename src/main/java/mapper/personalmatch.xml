@@ -225,8 +225,7 @@
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
 		AND
 		m.longitude BETWEEN #{minLng} AND #{maxLng}
-		AND coalesce(m.deleted, 0)
-		= 0
+		AND coalesce(m.deleted, 0)= 0
 		AND m.status ='모집중'
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
@@ -283,6 +282,14 @@
 
 		<if test="gender != null and gender != ''">
 			AND m.gender = #{gender}
+		</if>
+		
+		<if test="startDate != null">
+			AND m.match_date &gt;= #{startDate}
+		</if>
+
+		<if test="endDate != null">
+			AND m.match_date &lt;= #{endDate}
 		</if>
 
 		GROUP BY m.personal_match_id

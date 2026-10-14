@@ -2,6 +2,7 @@ package controller.match;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -57,6 +58,9 @@ public class MatchListMap extends HttpServlet {
 		String agesParam = request.getParameter("ages");
 		String skillsParam = request.getParameter("skills");
 		
+		String startDataParam = request.getParameter("startDate");
+		String endDataParam = request.getParameter("endDate");
+		
 		BigDecimal minLat = new BigDecimal(request.getParameter("minLat"));
 		BigDecimal maxLat = new BigDecimal(request.getParameter("maxLat"));
 		BigDecimal minLng = new BigDecimal(request.getParameter("minLng"));
@@ -71,12 +75,23 @@ public class MatchListMap extends HttpServlet {
 		String[] skills = skillsParam != null && !skillsParam.isBlank()
 		        ? skillsParam.split(",")
 		        : null;
+		
+		
+		LocalDate startDate = startDataParam == null || startDataParam.isBlank()
+		        ? null
+		        : LocalDate.parse(startDataParam);
+
+		LocalDate endDate = endDataParam == null || endDataParam.isBlank()
+		        ? null
+		        : LocalDate.parse(endDataParam);
 
 		MatchSearchInfo searchInfo = new MatchSearchInfo();
 		searchInfo.setSports(sports);
 		searchInfo.setGender(gender);
 		searchInfo.setAges(ages);
 		searchInfo.setSkills(skills);
+		searchInfo.setStartDate(startDate);
+		searchInfo.setEndDate(endDate);
 		searchInfo.setMaxLat(maxLat);
 		searchInfo.setMinLat(minLat);
 		searchInfo.setMaxLng(maxLng);
@@ -86,6 +101,9 @@ public class MatchListMap extends HttpServlet {
 			searchInfo.setUserId(user.getUserId());
 		}
 		
+		System.out.println("Map");
+		System.out.println(searchInfo);
+
 		
 		PersonalMatchService service = new PersonalMatchServiceImpl();
 		if(requestType!=null &&  requestType.equals("ajax")) {
