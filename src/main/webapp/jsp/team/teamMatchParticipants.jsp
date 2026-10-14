@@ -6,22 +6,112 @@
   우리 팀 / 상대 팀의 팀 프로필을 나란히 보여줍니다.
 --%>
 <c:set var="pageTitle" value="참가 팀 확인" />
-<c:set var="pageCss" value="team" />
+<c:set var="pageCss" value="match,team" />
 <c:set var="activeNav" value="teamMatch" />
 <%@ include file="/jsp/common/header.jsp"%>
+<style>
+.match-summary {
+	position: relative;
+	background: #f8f9fb !important;
+	border: 0;
+	border-radius: 12px;
+	padding: 20px 24px;
+	margin-bottom: 24px;
+}
+.match-summary .meta span {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+}
+.match-summary .meta span img {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+.match-summary > div:first-of-type strong {
+	font-size: 21px;
+	line-height: 1.4;
+	margin: 6px 0 10px;
+}
+.match-summary .target {
+	font-size: 11px;
+}
+.match-summary .target b {
+	font-size: 18px;
+}
+.vs-card {
+	border-radius: 12px;
+}
+.vs-card .body > img {
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.match-summary .meta {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	gap: 8px 20px;
+	margin: 0;
+}
+
+.match-detail-link {
+	position: absolute;
+	top: 18px;
+	right: 22px;
+	color: #1a6bff;
+	font-size: 12px;
+	font-weight: 600;
+	text-decoration: none;
+}
+.match-detail-link:hover {
+	text-decoration: underline;
+}
+.match-summary .target {
+	margin-top: 22px;
+}
+</style>
 <main class="page">
 	<div class="container">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team-match/list">상대팀 찾기</a><span class="sep">›</span><span>참가
 				팀 확인</span>
 		</nav>
-		<div class="page-head head-with-action">
-			<div>
-				<h1 class="page-title">참가 팀 확인</h1>
-				<p class="page-desc">경기에 참가한 우리 팀과 상대 팀의 프로필을 확인합니다.</p>
-			</div>
-			<a class="back-link" href="${ctx}/team-match/detail/view?teamMatchId=${teamMatchId}">← 경기 상세로</a>
+		<div class="page-head">
+			<h1 class="page-title">참가 팀 확인</h1>
+			<p class="page-desc">경기에 참가한 우리 팀과 상대 팀의 프로필을 확인합니다.</p>
 		</div>
+
+		<%-- ===== 경기 정보 ===== --%>
+		<c:choose>
+			<c:when test="${teamMatch.sport eq '축구/풋살'}"><c:set var="sportCls" value="football" /></c:when>
+			<c:when test="${teamMatch.sport eq '농구'}"><c:set var="sportCls" value="basketball" /></c:when>
+			<c:when test="${teamMatch.sport eq '테니스'}"><c:set var="sportCls" value="tennis" /></c:when>
+			<c:when test="${teamMatch.sport eq '배드민턴'}"><c:set var="sportCls" value="badminton" /></c:when>
+		</c:choose>
+		<c:if test="${not empty teamMatch}">
+			<div class="match-summary">
+			<a class="match-detail-link" href="${ctx}/team-match/detail/view?teamMatchId=${teamMatchId}">경기 상세 보기 →</a>
+				<div>
+					<p class="tags">
+						<span class="sport-chip ${sportCls}"><c:out value="${teamMatch.sport}" /></span>
+						<span class="pill ${teamMatch.status eq '모집중' ? 'pill-success' : 'pill-info'} bd"><c:out value="${teamMatch.status}" /></span>
+					</p>
+					<strong><c:out value="${teamMatch.title}" /></strong>
+					<p class="meta">
+						<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${teamMatch.matchDate} (${teamMatch.dayOfWeekKorean})</span>
+						<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(teamMatch.startTime, 0, 5)} ~ ${fn:substring(teamMatch.endTime, 0, 5)}</span>
+						<span><img src="${ctx}/img/icon-pin-14.svg" alt=""><c:out value="${teamMatch.placeName}" /></span>
+					</p>
+				</div>
+				<div class="target">
+					경기 인원<b>${teamMatch.matchPeople} vs ${teamMatch.matchPeople}</b>
+				</div>
+			</div>
+		</c:if>
 		<div class="vs-grid">
 			<section class="vs-card">
 				<p class="who host">모집 팀</p>

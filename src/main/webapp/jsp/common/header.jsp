@@ -188,6 +188,11 @@ time {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+
+/* 로고 이미지 */
+.site-header .logo { display: inline-flex; align-items: center; }
+.site-header .logo::before { display: none !important; } /* 기존 파란 네모 마크 제거 */
+.site-header .logo .logo-img { display: block; height: 32px; width: auto; }
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -365,7 +370,9 @@ window.addEventListener("fcmMessageReceived", function(e) {
 	data-role="${empty sessionScope.user ? 'guest' : (sessionScope.user.grade eq 'Admin' ? 'admin' : 'user')}">
 	<header class="site-header">
 		<div class="inner">
-			<a class="logo" href="${ctx}/home/main">매치온</a>
+			<a class="logo" href="${ctx}/home/main">
+				<img class="logo-img" src="${ctx}/img/w-sports-5e-logo.svg" alt="매치온">
+			</a>
 
 			<nav class="gnb" aria-label="주요 메뉴">
 				<a href="${ctx}/match/list"

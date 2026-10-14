@@ -20,6 +20,69 @@
 <c:set var="demoStates"
 	value="select:경기 선택|pastMatch:개인 경기에서|clubMatch:팀 경기에서" />
 <%@ include file="/jsp/common/header.jsp"%>
+<style>
+/* 내용 입력칸과 사진 영역 사이 간격 */
+.photo-upload {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 14px;
+	margin-top: 28px;
+	padding-top: 4px;
+}
+
+/* 미리보기 목록 */
+#photoPreviewList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+}
+
+.photo-item {
+	position: relative;
+	width: 130px;
+	height: 120px;
+}
+
+.photo-item img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 12px;
+	border: 1px solid #e5e7eb;
+}
+
+/* 삭제 버튼: 사진 오른쪽 위 모서리 바깥으로 튀어나오게 */
+.photo-del {
+	position: absolute;
+	top: -9px;
+	right: -9px;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background: #0b5fff;
+	color: #fff;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1;
+	cursor: pointer;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+}
+
+.photo-del:hover {
+	background: #ef4444;
+}
+
+.field-help {
+	margin-top: 12px;
+}
+</style>
 <main class="page">
 	<form class="rail" action="${ctx}/review/create" method="post"
 		enctype="multipart/form-data"
@@ -62,8 +125,8 @@
 			<div class="field mt-24">
 				<label class="field-label" for="rvBody">내용</label>
 				<textarea class="textarea soft" id="rvBody" name="content" rows="7"
-					style="width: 100%" placeholder="경기에서 좋았던 점이나 참고할 내용을 적어주세요."
-					required></textarea>
+					style="width: 100%; display: block;"
+					placeholder="경기에서 좋았던 점이나 참고할 내용을 적어주세요." required></textarea>
 			</div>
 			<div class="photo-upload">
 				<label class="photo-add"><span class="plus">+</span>사진 추가 <input
@@ -77,7 +140,6 @@
 		<div class="form-actions">
 			<a class="btn btn-outline" href="${ctx}/review/list">취소</a>
 			<button type="submit" class="btn btn-primary">등록</button>
-		</div>
 		</div>
 	</form>
 	<script>
@@ -108,32 +170,33 @@
 				input.files = dt.files;
 
 				list.innerHTML = "";
-				selected
-						.forEach(function(file, idx) {
-							var wrap = document.createElement("div");
-							wrap.style.cssText = "display:inline-block;position:relative;margin:4px;";
+				selected.forEach(function(file, idx) {
+					var wrap = document.createElement("div");
+					wrap.className = "photo-item";
 
-							var img = document.createElement("img");
-							img.style.cssText = "width:80px;height:72px;object-fit:cover;border-radius:8px;";
-							var reader = new FileReader();
-							reader.onload = function(e) {
-								img.src = e.target.result;
-							};
-							reader.readAsDataURL(file);
+					var img = document.createElement("img");
+					img.alt = "첨부 사진 " + (idx + 1);
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						img.src = e.target.result;
+					};
+					reader.readAsDataURL(file);
 
-							var del = document.createElement("button");
-							del.type = "button";
-							del.textContent = "×";
-							del.style.cssText = "position:absolute;top:2px;right:2px;width:20px;height:20px;border:0;border-radius:50%;cursor:pointer;";
-							del.onclick = function() {
-								selected.splice(idx, 1);
-								render();
-							};
+					var del = document.createElement("button");
+					del.type = "button";
+					del.className = "photo-del";
+					del.textContent = "×";
+					del.title = "사진 삭제";
+					del.setAttribute("aria-label", "사진 삭제");
+					del.onclick = function() {
+						selected.splice(idx, 1);
+						render();
+					};
 
-							wrap.appendChild(img);
-							wrap.appendChild(del);
-							list.appendChild(wrap);
-						});
+					wrap.appendChild(img);
+					wrap.appendChild(del);
+					list.appendChild(wrap);
+				});
 			}
 		})();
 	</script>

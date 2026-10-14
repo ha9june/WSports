@@ -78,6 +78,7 @@
 <c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
 <c:set var="applied" value="${applied }" />
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
+
 <script>
 	$(function() {
 
@@ -322,10 +323,7 @@
 	        			<div class="side-card">
 			              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>
 			              <p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b>10,000원</b></div>
-			              <p>
-			              	<div class="kv">결제 완료 <b>9/16 10:24</b></div>
-			              </p>
+			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee }" /> 원</b></div>
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">			             
@@ -338,7 +336,7 @@
         			<c:when test="${isUser and !applied}">
 						<div class="side-card">
 			              <h2>결제 안내</h2>
-			              <div class="kv">참가비 <b class="lg">${personalMatch.participationFee }원</b></div>
+			              <div class="kv">참가비 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee }" />원</b></div>
 			              <hr>
 			              <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
 			              <div class="actions">
@@ -346,6 +344,15 @@
 			              </div>
 			            </div>
         			</c:when>
+        			<c:otherwise>
+						<div class="side-card">
+							<h2>경기 신청</h2>
+							<p class="sub">로그인 후 신청할 수 있어요.</p>
+							<div class="actions">
+								<a class="btn btn-primary" href="${ctx}/auth/login" data-auth>로그인</a>
+							</div>
+        				</div>
+        			</c:otherwise>
         		</c:choose>
         	</c:when>
         	<c:when test="${status eq '모집 마감'}">
@@ -354,10 +361,7 @@
 	              <p class="sub">모집 기간이 종료되어 더 이상 참가 신청을 받을 수 없습니다.</p>
 		            <c:if test="${applied }">
 		            	<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b>10,000원</b></div>
-			              <p>
-			              	<div class="kv">결제 완료 <b>9/16 10:24</b></div>
-			              </p>
+			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee }" /></b></div>
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">
