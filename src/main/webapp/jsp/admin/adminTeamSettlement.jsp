@@ -17,13 +17,6 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 
-<script>
-	//full calender 달력 api
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        // 속성, 이벤트 등 세팅
-    });
-</script>
 <div class="admin-inner">
 	<p class="eyebrow-path">관리자(사이트)</p>
 	<div class="page-head"><h1 class="page-title">정산 관리</h1>
@@ -44,23 +37,25 @@
 			<b><fmt:formatNumber value="${teamwaitmoney}" pattern="#,###"/>원</b>
 		</div>
 	</div>
-  	<div class="list-toolbar" style="margin: 20px 0 20px; padding-left: 0" >
-    	<div class="seg pill success" style="padding-left: 0; margin-left: 0">
-    		<a class="seg-item ${state ne 'completed' and state ne 'date' ? 'is-active' : ''}" href="?state=all">정산 대기</a>
-    		<a class="seg-item ${state eq 'completed' ? 'is-active' : ''}" href="?state=completed">지급 완료</a>
-    		<a class="seg-item ${state eq 'date' ? 'is-active' : ''}" href="?state=date">날짜별</a>
-    	</div>
-    	<c:if test="${state eq 'date'}">
-    		<form class="date-stepper" method="get" id="periodForm">
+	<br>
+	<br>
+  	<h2 class="sub-title">${state eq 'completed' ? '지급 완료 경기' : state eq 'date' ? '날짜별 정산 목록' : '정산 대상 경기'}</h2>
+  	<p class="section-desc" style="margin-bottom:16px">경기 날짜 기준</p>
+  	<div class="list-toolbar filter-bar">
+		<div class="seg pill success">
+			<a class="seg-item ${state ne 'completed' and state ne 'date' ? 'is-active' : ''}" href="?state=all">정산 대기</a>
+			<a class="seg-item ${state eq 'completed' ? 'is-active' : ''}" href="?state=completed">지급 완료</a>
+			<a class="seg-item ${state eq 'date' ? 'is-active' : ''}" href="?state=date">날짜별</a>
+		</div>
+		<c:if test="${state eq 'date'}">
+			<form class="date-stepper" method="get" id="periodForm">
 				<input type="hidden" name="state" value="date">
 				<input type="hidden" name="startDate" id="startDate" value="${startDate}">
 				<input type="hidden" name="endDate" id="endDate" value="${endDate}">
-				<input type="text" id="periodPicker" class="date-input" style="width:190px;text-align:center" readonly>
+				<input type="text" id="periodPicker" class="date-input" readonly>
 			</form>
-    	</c:if>
-  	</div>
-  	<h2 class="sub-title">${state eq 'completed' ? '지급 완료 경기' : state eq 'date' ? '날짜별 정산 목록' : '정산 대상 경기'}</h2>
-  	<p class="section-desc" style="margin-bottom:16px">경기 날짜 기준</p>
+		</c:if>
+	</div>
 	<c:choose>
     	<c:when test="${state eq 'completed'}">
         	<c:set var="displayList" value="${teamfinish}" />

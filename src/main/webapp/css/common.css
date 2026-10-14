@@ -279,8 +279,8 @@ a.tbl-row:hover { border-color: #c8ced3; }
 .seg .seg-item { height: 32px; padding: 0 22px; border-radius: var(--r-8); border: 1px solid var(--ds-border); background: #fff; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
 .seg .seg-item.is-active { background: var(--ds-brand-subtle); border-color: var(--ds-brand); color: var(--ds-brand); }
 .seg.pill .seg-item { border-radius: var(--r-full); padding: 0 16px; }
-.seg.neutral .seg-item.is-active { background: var(--ds-bg-muted); border-color: var(--ds-bg-muted); color: var(--ds-text); }
-.seg.success .seg-item.is-active { background: var(--ds-success-bg); border-color: var(--ds-success-bd); color: var(--ds-success-fg); }
+.seg.neutral .seg-item.is-active {background: var(--ds-brand-subtle); border-color: var(--ds-brand); color: var(--ds-brand); }
+.seg.success .seg-item.is-active {background: var(--ds-brand-subtle); border-color: var(--ds-brand); color: var(--ds-brand); }
 
 /* ---------- pagination / more ---------- */
 .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
