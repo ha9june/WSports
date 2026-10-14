@@ -44,7 +44,8 @@ public class PaymentRefund extends HttpServlet {
 		String paymentKey = request.getParameter("paymentKey");
 		if (paymentKey == null || paymentKey.isEmpty()) {
 		    Object attr = request.getAttribute("paymentKey");
-		    if (attr != null) paymentKey = String.valueOf(attr);
+		    if (attr != null) 
+		    	paymentKey = String.valueOf(attr);
 		}
 
 		String cancelReason = request.getParameter("cancelReason");

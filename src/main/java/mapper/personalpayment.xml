@@ -207,7 +207,7 @@
 	</select>
 	
 	
-	<!--결제번호 가져오기-->
+	<!--paymentKey 가져오기-->
 	<select id="selectPaymentKey" resultType="String">
 	    SELECT p.payment_key
 		FROM personal_match_participant pm
@@ -218,4 +218,24 @@
 		ORDER BY participant_id DESC
 		LIMIT 1
 	</select>
+	
+	<!--매치 아이디로 paymentKey List 가져오기 안씀-->
+	<select id="selectLatestPaymentKeysByMatchId" parameterType="Long" resultType="string">
+	    SELECT p.payment_key
+	    FROM personal_match_participant pm
+	    JOIN personal_payment p
+	        ON pm.payment_id = p.payment_id
+	    WHERE pm.personal_match_id = #{matchId}
+	      AND pm.status = '결제완료'
+	      AND pm.participant_iZd = (
+	          SELECT MAX(pm2.participant_id)
+	          FROM personal_match_participant pm2
+	          WHERE pm2.personal_match_id = pm.personal_match_id
+	            AND pm2.user_id = pm.user_id
+	            AND pm2.status = '결제완료'
+	      )
+	</select>
+	
+	
+	
 </mapper>

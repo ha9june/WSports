@@ -64,10 +64,10 @@ public class HomeMain extends HttpServlet {
 				};
 				searchInfo.setSearchType("RECOMAND");
 				searchInfo.setRegions(new String[] {
-						user.getPreferredRegion1(),
-					    user.getPreferredRegion2(),
-					    user.getPreferredRegion3()
-					});
+					user.getPreferredRegion1(),
+				    user.getPreferredRegion2(),
+				    user.getPreferredRegion3()
+				});
 				searchInfo.setSports(preferredSports);
 				searchInfo.setUserId(user.getUserId());
 				

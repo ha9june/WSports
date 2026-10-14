@@ -22,8 +22,8 @@
 			AND f.match_type = 'Personal'
 			AND f.user_id = #{userId}
 		WHERE 1=1
-		AND m.deleted = 0
-		AND m.status ='모집중'
+			AND coalesce(m.deleted, 0) = 0
+			AND m.status ='모집중'
 		<if test="searchType == 'RECOMAND'">
 			<if test="sports != null and sports.length > 0">
 				AND m.sport IN
@@ -56,8 +56,38 @@
 				ORDER BY m.created_at DESC
 			</when>
 		</choose>
-
 		LIMIT 4;
+	</select>
+	
+	<select id="selectLatestPersonalMatchList"
+	    parameterType="map"
+	    resultType="personalmatch">
+	    SELECT
+	        m.*,
+	        COUNT(p.participant_id) AS current_people,
+	        CASE
+	            WHEN f.match_id IS NOT NULL THEN 1
+	            ELSE 0
+	        END AS favorite
+	    FROM personal_match m
+	    LEFT JOIN personal_match_participant p
+	        ON m.personal_match_id = p.personal_match_id
+	    LEFT JOIN favorite f
+	        ON f.match_id = m.personal_match_id
+	        AND f.match_type = 'Personal'
+	        AND f.user_id = #{userId}
+	    WHERE coalesce(m.deleted, 0) = 0
+	        AND m.status = '모집중'
+	        <if test="excludeIds != null and excludeIds.size() > 0">
+	            AND m.personal_match_id NOT IN
+	            <foreach collection="excludeIds" item="id"
+	                open="(" separator="," close=")">
+	                #{id}
+	            </foreach>
+	        </if>
+	    GROUP BY m.personal_match_id
+	    ORDER BY m.created_at DESC
+	    LIMIT #{limit}
 	</select>
 
 	<select id="selectNormalPersonalMatchList"
@@ -81,7 +111,8 @@
 	        AND f.match_type = 'Personal'
 	        AND f.user_id = #{userId}
 		WHERE 1=1
-		AND m.deleted = 0
+		AND coalesce(m.deleted, 0) = 0
+		AND m.status ='모집중'
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
 			<foreach collection="sports" item="sport" open="("
@@ -169,7 +200,8 @@
 		#{startIndex}, 4
 	</select>
 	
-	<select id="selectMapPersonalMatchList"
+	<!--지도기반 검색-->
+		<select id="selectMapPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
 		m.*,
@@ -193,7 +225,8 @@
 		#{userId}
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
 		AND m.longitude BETWEEN #{minLng} AND #{maxLng}
-		AND m.deleted = 0
+		AND coalesce(m.deleted, 0) = 0
+		AND m.status ='모집중'
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
 			<foreach collection="sports" item="sport" open="("
@@ -362,7 +395,7 @@
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 	</select>
 
-
+	<!--경기 상세 조회-->
 	<select id="selectPersonalMatch" parameterType="personalMatch"
 		resultType="personalMatch">
 		SELECT
@@ -537,6 +570,7 @@
 		WHERE
 		personal_match_id = #{personalMatchId}
 	</update>
+	
 	<update id="updatePersonalMatchStatus"
 		parameterType="personalMatch">
 		UPDATE personal_match
@@ -590,12 +624,7 @@
 	</select>
 	
 	
-	
-	
-	
-	
-	
-	
+
 	
 	<!--스케줄러-->
 	<!-- 스케줄러 : 모집 마감 지났는데 최소 인원 미달인 개인 경기 -->
@@ -626,7 +655,7 @@
 		SELECT m.personal_match_id, m.user_id, m.title
 	    FROM personal_match m
 	    WHERE m.status = '모집중'
-	      AND m.deleted = 0
+	      AND coalesce(m.deleted, 0) = 0
 	      AND m.deadline &lt;= NOW()
 	      AND (
 	          SELECT COUNT(*)
@@ -649,11 +678,11 @@
 	</update>
 	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기)-->
 	<select id="selectFinishedSuccess" resultType="personalMatch">
-		SELECT m.personal_match_id, m.user_id, m.title
-		FROM personal_match m
-		WHERE m.status = '모집 마감'
+		SELECT personal_match_id, user_id, title
+		FROM personal_match
+		WHERE status = '모집 마감'
 		  AND coalesce(deleted, 0) = 0
-		  AND TIMESTAMP(m.match_date, m.end_time) &lt;= NOW();
+		  AND TIMESTAMP(match_date, end_time) &lt;= NOW();
 	</select>
 	<!--스케줄러 : 경기 종료로 업데이트-->
 	<update id="updateStatusToFinished" parameterType="Long">
@@ -667,6 +696,33 @@
 		and status = '모집 마감'
 		and coalesce(deleted, 0) = 0
 	</update>
+	
+	
+	<!--호스트 경기취소-->
+	<update id="updateStatusCancelOfHost" parameterType="Long">
+		update personal_match
+		set status = '경기 취소',
+			deleted = 0,
+			updated_at = now()
+		where personal_match_id = #{matchId}
+		and status = '모집중'
+		and deleted = 0
+	</update>
+	<!--관리자 경기삭제-->
+	<update id="updateStatusDeleteOfAdmin" parameterType="Long">
+		update personal_match
+		set status = '경기 취소',
+			deleted = 1,
+			updated_at = now()
+		where personal_match_id = #{matchId}
+		and status = '모집중'
+		and deleted = 0
+	</update>
+	
+	
+	
+	
+	
 
 </mapper>
 

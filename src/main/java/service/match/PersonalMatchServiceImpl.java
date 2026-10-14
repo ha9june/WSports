@@ -2,6 +2,7 @@ package service.match;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,21 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	
 	@Override
 	public List<PersonalMatch> getNowMatchList(MatchSearchInfo searchInfo) throws Exception {
-		return personalMatchDao.selectNowPersonalMatchList(searchInfo);
+		 List<PersonalMatch> matchList = personalMatchDao.selectNowPersonalMatchList(searchInfo);
+	    if (matchList.size() < 4) {
+	        int remainCount = 4 - matchList.size();
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("userId", searchInfo.getUserId());
+	        param.put("limit", remainCount);
+	        List<Long> excludeIds = new ArrayList<>();
+	        for (PersonalMatch match : matchList) {
+	            excludeIds.add(match.getPersonalMatchId());
+	        }
+	        param.put("excludeIds", excludeIds);
+	        List<PersonalMatch> newMatchList = personalMatchDao.selectLatestPersonalMatchList(param);
+	        matchList.addAll(newMatchList);
+	    }
+	    return matchList;
 	}
 
 	@Override
@@ -196,18 +211,6 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	}
 
 	@Override
-	public List<PersonalMatch> getNormalMatch(MatchSearchInfo searchInfo) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<PersonalMatch> getMapMatch(MatchSearchInfo searchInfo) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Long createPersonalMatch(PersonalMatch personalMatch,Collection<Part> parts,String realPath ) throws Exception {
 		int imageIndex = 1;
 		for (Part part : parts) {
@@ -293,6 +296,17 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 	@Override
 	public Long updateStatue(PersonalMatch personalMatch) throws Exception {
 		return personalMatchDao.updatePersonalMatchStatue(personalMatch);
+	}
+
+	@Override
+	public int updateStatusCancelOfHost(Long personalMatchId) throws Exception {
+		return personalMatchDao.updateStatusCancelOfHost(personalMatchId);
+	}
+
+	@Override
+	public int updateStatusDeleteOfAdmin(Long personalMatchId) throws Exception {
+		return personalMatchDao.updateStatusDeleteOfAdmin(personalMatchId);
+
 	}
 
 
