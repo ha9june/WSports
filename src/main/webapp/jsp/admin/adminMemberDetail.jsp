@@ -65,10 +65,10 @@
 			<p class="t-12 mt-8 t-2">정지 이력이 없습니다.</p>
 		</c:if>
 		</section>
-		<div class="mt-8" style="display:flex;gap:8px;flex-shrink:0">
-			<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="sanctionModal">제재 변경</button>
-			<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="scoreModal">패널티 점수 조정</button>
-			<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="permanentStop">영구 정지</button>
+		<div class="mt-8" style="display:flex; gap:8px; flex-shrink:0">
+			<button type="button" class="btn-brand-line" data-modal-open="sanctionModal">제재 변경</button>
+			<button type="button" class="btn-brand-line" data-modal-open="scoreModal">패널티 점수 조정</button>
+			<button type="button" class="btn-brand-line danger" data-modal-open="permanentStop">영구 정지</button>
 		</div>
   </div>
 </div>
