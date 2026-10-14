@@ -90,14 +90,16 @@
 		if (profileImage) {
 			imageSrc = '${ctx}/uploads/' + profileImage;
 		} else if (sport === '축구/풋살') {
-			imageSrc = '${ctx}/img/team-football.png';
+			imageSrc = '${ctx}/img/sport-icon-football.png';
 		} else if (sport === '농구') {
-			imageSrc = '${ctx}/img/team-basketball.png';
+			imageSrc = '${ctx}/img/sport-icon-basketball.png';
 		} else if (sport === '테니스') {
-			imageSrc = '${ctx}/img/team-tennis.png';
+			imageSrc = '${ctx}/img/sport-icon-tennis.png';
 		} else if (sport === '배드민턴') {
-			imageSrc = '${ctx}/img/team-badminton.png';
+			imageSrc = '${ctx}/img/sport-icon-badminton.png.png';
 		}
+		
+		
 
 		$('#mainPhoto').html('<img src="' + imageSrc + '" alt="팀 프로필 이미지">');
 

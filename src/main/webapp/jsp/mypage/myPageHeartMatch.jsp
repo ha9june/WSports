@@ -361,10 +361,6 @@
 										href="${ctx}/${mt eq 'TEAM' ? '/team-match/result/view?teamMatchId=' : '/match/after/profile/list?personalMatchId='}${m.matchId}"
 										onclick="event.stopPropagation()">출석 및 평가</a>
 								</c:when>
-								<%-- 그 외: 상세 보기 --%>
-								<c:otherwise>
-									<a class="btn btn-primary btn-xs" href="${detailUrl}">상세 보기</a>
-								</c:otherwise>
 							</c:choose>
 						</div>
 					</div>
