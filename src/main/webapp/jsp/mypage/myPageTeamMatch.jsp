@@ -24,11 +24,6 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-/* ===== 달력 공통 ===== */
-.cal {
-	--dot-color: #1a6bff;
-}
-
 .cal .flatpickr-calendar.inline {
 	box-shadow: none;
 	border: 0;
@@ -52,12 +47,10 @@
 	color: #1a6bff !important;
 }
 
-.cal .flatpickr-day.has-match,
-.cal .flatpickr-day.inRange.has-match,
-.cal .flatpickr-day.startRange.has-match,
-.cal .flatpickr-day.endRange.has-match,
+.cal .flatpickr-day.has-match, .cal .flatpickr-day.inRange.has-match,
+.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
 .cal .flatpickr-day.selected.has-match {
-	background-image: radial-gradient(circle at 50% calc(100% - 7px), var(--dot-color) 2.5px, transparent 3px) !important;
+	background-image: radial-gradient(circle at 50% calc(100% - 7px), #1a6bff 2.5px, transparent 3px) !important;
 	background-repeat: no-repeat !important;
 }
 
@@ -71,7 +64,8 @@
 }
 
 /* 선택 시작/끝/단일 */
-.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange {
+.cal .flatpickr-day.selected, .cal .flatpickr-day.startRange, .cal .flatpickr-day.endRange
+	{
 	background: #102A43 !important;
 	border-color: #102A43 !important;
 	color: #BCCCDC !important;
@@ -91,9 +85,10 @@
 }
 
 /* 짧게 선택(붙어 있는 두 날짜)했을 때 사이를 메우는 기본 파란색 → 남색 */
-.cal .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)),
-.cal .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)),
-.cal .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+.cal .flatpickr-day.selected.startRange+.endRange:not(:nth-child(7n+1)),
+	.cal .flatpickr-day.startRange.startRange+.endRange:not(:nth-child(7n+1)),
+	.cal .flatpickr-day.endRange.startRange+.endRange:not(:nth-child(7n+1))
+	{
 	box-shadow: -10px 0 0 #102A43 !important;
 }
 
@@ -117,9 +112,8 @@
 	pointer-events: none;
 }
 
-.cal .flatpickr-day.today.selected::before,
-.cal .flatpickr-day.today.startRange::before,
-.cal .flatpickr-day.today.endRange::before {
+.cal .flatpickr-day.today.selected::before, .cal .flatpickr-day.today.startRange::before,
+	.cal .flatpickr-day.today.endRange::before {
 	border-color: #BCCCDC !important;
 }
 
@@ -136,9 +130,8 @@
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
-	background: var(--dot-color);
+	background: #1a6bff;
 }
-
 .cal .legend-today {
 	width: 12px;
 	height: 12px;
@@ -147,6 +140,7 @@
 	border-radius: 50%;
 	margin-left: 10px;
 }
+
 .act-card .aside .btns {
 	display: flex;
 	gap: 8px;
@@ -250,7 +244,6 @@
 	background: #111;
 	color: #fff;
 }
-
 </style>
 <div class="work-inner full" style="max-width: 1000px">
 	<h1 class="section-title">팀 경기</h1>
@@ -394,8 +387,8 @@
 		<aside class="cal">
 			<div id="periodPicker"></div>
 			<p class="legend">
-				<span class="legend-dot"></span> 경기 있음
-				<span class="legend-today"></span> Today
+				<span class="legend-dot"></span> 경기 있음 <span class="legend-today"></span>
+				Today
 			</p>
 		</aside>
 		<%--
@@ -427,6 +420,11 @@
 		        dateFormat: 'Y-m-d',
 		        defaultDate: initDates,
 		        onDayCreate: function(dObj, dStr, inst, dayElem) {
+		            // 앞 달 / 다음 달 칸(회색 날짜)은 점 표시 안 함
+		            if (dayElem.classList.contains('prevMonthDay') ||
+		                dayElem.classList.contains('nextMonthDay')) {
+		                return;
+		            }
 		            var d = inst.formatDate(dayElem.dateObj, 'Y-m-d');
 		            if (matchDates.indexOf(d) !== -1) {
 		                dayElem.classList.add('has-match');

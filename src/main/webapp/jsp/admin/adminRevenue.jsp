@@ -78,14 +78,16 @@
   	</section>
   	<form class="admin-panel" method="get" id="periodForm">
     	<div class="period-panel">
-      		<strong class="t-13" style="padding-bottom:10px">기간 조회</strong>
-      			<div class="date-stepper">
+			<strong class="t-13">기간별 수익 정보 조회</strong>
+			<div class="period-right">
+				<div class="date-stepper">
 					<input type="hidden" name="startDate" id="startDate" value="${startDate}">
 					<input type="hidden" name="endDate" id="endDate" value="${endDate}">
-					<input type="text" id="periodPicker" class="date-input" style="width:190px;text-align:center" readonly>
-    			</div>
-      		<button type="submit" class="btn btn-primary btn-sm" style="margin-bottom:2px">조회</button>
-    	</div>
+					<input type="text" id="periodPicker" class="date-input" readonly>
+				</div>
+			<button type="submit" class="btn btn-primary btn-sm">조회</button>
+			</div>
+		</div>
     	<c:if test="${not empty periodPaymentCnt}">
     	<div id="test" class="period-result">
       		<div>

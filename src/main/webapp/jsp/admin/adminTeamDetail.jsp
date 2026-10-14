@@ -20,17 +20,19 @@
   	<div style="width:760px;max-width:100%">
     	<section class="admin-card">	
     		<div style="display:flex; align-items:center; gap:12px; margin-bottom:20px">
-    			<c:choose>
+    			<span class="avatar">
+    				<c:choose>
 					<c:when test="${not empty teaminfo.profile_image}">
-						<img src="${ctx}${uploadPath}/${teaminfo.profile_image}" alt="${teaminfo.team_name}"
-							style="width: 60px; height: 60px; object-fit: cover">
+						<img src="${ctx}${uploadPath}/${teaminfo.profile_image}" alt="${teaminfo.team_name}">
 					</c:when>
 					<c:otherwise>
-						<span class="avatar default"></span>
+						<img src="${ctx}/img/default-profile.svg" alt="기본 프로필 사진">
 					</c:otherwise>
-
-				</c:choose>	
-				<strong style="font-size:18px">${teaminfo.team_name}</strong>	
+					</c:choose>	
+				
+    			</span>
+    			<strong style="font-size:18px">${teaminfo.team_name}</strong>
+				<a class="team-link" href="${ctx}/team/detail/view?teamId=${teaminfo.team_id}">팀 페이지 보기</a>
     		</div>
 			<%-- 해제되지 않은 영구정지 기록이 있는지 확인 --%>
 			<c:set var="isPermanent" value="false" />
@@ -69,9 +71,9 @@
 			</c:if>
 		</section>
     	<div class="btn-group mt-24">
-    		<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="penaltyModal">팀 정지</button>
-    		<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="scoreModal">패널티 점수 조정</button>
-    		<button type="button" class="btn btn-success-outline btn-sm" data-modal-open="permanentStop">영구 정지</button>
+    		<button type="button" class="btn-brand-line" data-modal-open="penaltyModal">팀 정지</button>
+    		<button type="button" class="btn-brand-line" data-modal-open="scoreModal">패널티 점수 조정</button>
+    		<button type="button" class="btn-brand-line danger" data-modal-open="permanentStop">영구 정지</button>
     	</div>
   	</div>
 </div>

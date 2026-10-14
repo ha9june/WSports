@@ -21,15 +21,17 @@
 	<h1 class="page-title">공지사항 수정</h1>
 	<p class="page-desc">제목과 내용을 수정합니다.</p>
 </div>
-<form style="width:820px;max-width:100%" method="post" action="${ctx}/admin/notice/modify">
+<form style="width:760px;max-width:100%" method="post" action="${ctx}/admin/notice/modify">
 	<input type="hidden" name="noticeId" value="${detail.notice_id}">
+	
+	<section class="admin-card">
 	<div class="field">
 		<label class="field-label" for="nTitle">공지 제목</label>
 		<input class="input" id="nTitle" name="title" value="${detail.title}" required>
 	</div>
 	<div class="field mt-24">
 		<label class="field-label" for="nType">유형</label>
-		<select class="notice-type" id="nType" name="type">
+		<select class="select notice-type" id="nType" name="type">
 			<option value="공지">공지</option>
 			<option value="정책">정책</option>
 			<option value="점검">점검</option>
@@ -41,6 +43,8 @@
 		<label class="field-label" for="nBody">공지 내용</label>
 		<textarea class="textarea" id="nBody" name="content" rows="12" required>${detail.content}</textarea>
 	</div>
+	</section>
+	
 	<div class="form-actions">
 		<a class="btn btn-outline" href="${ctx}/admin/notice" style="width:110px">취소</a>
 		<button type="submit" class="btn btn-primary" style="width:125px">수정 완료</button>

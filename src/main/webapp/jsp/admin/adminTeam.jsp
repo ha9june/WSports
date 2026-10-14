@@ -35,26 +35,27 @@
 	</div>
 	<c:set var="status"
 		value="${empty param.status ? 'ALL' : param.status}" />
+	<h2 class="sub-title" style="margin: 48px 0 7px">팀 목록</h2>
+	<p class="page-desc">상태별로 팀을 확인합니다.</p>
 	<!-- 주소에 있는 status 값을 꺼내 status에 담음, 값이 없으면 ALL을 대신 넣음 -->
 	<form class="list-toolbar" method="get"
-		style="flex-direction: column; align-items: flex-start; margin-top: 24px; margin-bottom: 24px">
+	style="display: flex; justify-content: space-between; align-items: center; width: var(--settle-w); max-width: 100%; margin:20px 0 24px; padding: 0">
 		<input type="hidden" name="status" value="${status}">
-		<div class="field" style="width: 280px">
-			<label class="field-label">팀명 검색</label>
-			<div style="display: flex; gap: 8px">
-				<input class="input" name="keyword" value="${param.keyword}">
-				<button type="submit" class="btn btn-primary">검색</button>
-			</div>
+
+		<%-- 왼쪽: 상태 탭 --%>
+		<div class="seg pill neutral"
+			style="display: flex; align-items: center; gap: 8px; height: 34px; padding: 0; margin: 0">
+			<a class="seg-item ${status eq 'ALL' ? 'is-active' : ''}" style="margin: 0" href="?status=ALL&keyword=${param.keyword}">전체</a>
+			<a class="seg-item ${status eq 'PENALTY' ? 'is-active' : ''}" style="margin: 0" href="?status=PENALTY&keyword=${param.keyword}">페널티점수</a>
+			<a class="seg-item ${status eq 'LIMITED' ? 'is-active' : ''}" style="margin: 0" href="?status=LIMITED&keyword=${param.keyword}">활동제한</a>
 		</div>
-		<div>
-			<div class="seg pill neutral" style="padding-left: 0">
-				<a class="seg-item ${status eq 'ALL' ? 'is-active' : ''}"
-					href="?status=ALL">전체</a> <a
-					class="seg-item ${status eq 'PENALTY' ? 'is-active' : ''}"
-					href="?status=PENALTY">페널티점수</a> <a
-					class="seg-item ${status eq 'LIMITED' ? 'is-active' : ''}"
-					href="?status=LIMITED">활동제한</a>
-			</div>
+	
+		<%-- 오른쪽: 검색 --%>
+		<div style="display: flex; align-items: center; gap: 6px; height: 34px; margin: 0">
+			<input class="input" name="keyword" value="${param.keyword}"
+				placeholder="팀명 검색" aria-label="팀명 검색"
+					style="width: 220px; height: 34px; margin: 0; font-size: 12px; box-sizing: border-box">
+			<button type="submit" class="btn btn-primary btn-sm" style="height: 34px; margin: 0">검색</button>
 		</div>
 	</form>
 	<div style="width: var(--settle-w); max-width: 100%;">
