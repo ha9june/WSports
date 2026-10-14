@@ -19,30 +19,25 @@
 	<c:set var="status"
 		value="${empty param.status ? 'ALL' : param.status}" />
 	<!-- 주소에 있는 status 값을 꺼내 status에 담음, 값이 없으면 ALL을 대신 넣음 -->
-	<form class="list-toolbar" method="get"
-		style="flex-direction: column; align-items: flex-start; gap: 20px; margin-bottom: 24px">
+	<form class="list-toolbar" method="get"	style="justify-content: space-between; align-items: flex-end; width: var(--settle-w); max-width: 100%; margin-bottom: 24px">
 		<input type="hidden" name="status" value="${status}">
-		<div class="field" style="width: 280px">
-			<label class="field-label">아이디, 닉네임 검색</label>
-			<div style="display: flex; gap: 8px">
-				<input class="input" name="keyword" value="${param.keyword}">
-				<button type="submit" class="btn btn-primary">검색</button>
-			</div>
-		</div>
-		<div>
-			<div class="seg pill neutral" style="padding-left: 0">
-				<a class="seg-item ${status eq 'ALL' ? 'is-active' : ''} "
-					href="?status=ALL">전체</a> <a
-					class="seg-item ${status eq 'NORMAL' ? 'is-active' : ''} "
-					href="?status=NORMAL">정상</a> <a
-					class="seg-item ${status eq 'SUSPENDED' ? 'is-active' : ''} "
-					href="?status=SUSPENDED">정지</a> <a
-					class="seg-item ${status eq 'PENALTY' ? 'is-active' : ''} "
-					href="?status=PENALTY">패널티점수</a>
-			</div>
-		</div>
-	</form>
 
+		<%-- 왼쪽: 상태 탭 --%>
+		<div class="seg pill neutral" style="display: flex; align-items: center; gap: 8px; height: 34px; padding: 0; margin: 0">
+			<a class="seg-item ${status eq 'ALL' ? 'is-active' : ''}" href="?status=ALL&keyword=${param.keyword}">전체</a>
+			<a class="seg-item ${status eq 'NORMAL' ? 'is-active' : ''}" href="?status=NORMAL&keyword=${param.keyword}">정상</a>
+			<a class="seg-item ${status eq 'SUSPENDED' ? 'is-active' : ''}" href="?status=SUSPENDED&keyword=${param.keyword}">정지</a>
+			<a class="seg-item ${status eq 'PENALTY' ? 'is-active' : ''}" href="?status=PENALTY&keyword=${param.keyword}">패널티점수</a>
+		</div>
+	
+		<%-- 오른쪽: 검색 --%>
+		<div style="display: flex; align-items: center; gap: 6px; height: 34px; margin: 0">
+		<input class="input" name="keyword" value="${param.keyword}"
+			placeholder="아이디, 닉네임 검색" aria-label="아이디, 닉네임 검색"
+			style="width: 220px; height: 34px;margin: 0; font-size: 12px;  box-sizing: border-box">
+		<button type="submit" class="btn btn-primary btn-sm" style="height: 34px">검색</button>
+	</div>
+	</form>
 	<div style="width: var(--settle-w); max-width: 100%">
 	<div class="tbl-head"
 		style="grid-template-columns: minmax(0,1fr) minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr) 100px; 
