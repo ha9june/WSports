@@ -40,7 +40,7 @@ $(function () {
 <main class="page">
   <div class="rail">
     <nav class="breadcrumb"><a href="${ctx}/support/notice/list">공지사항</a><span class="sep">›</span><span>상세</span></nav>
-    <div class="page-head"><h1 class="page-title">공지사항</h1><p class="page-desc">서비스 운영 안내와 변경 내용을 확인합니다.</p></div>
+    <div class="page-head"><h1 class="page-title">공지사항</h1><p class="page-desc">서비스 운영 안내와 주요 변경사항을 확인하세요.</p></div>
     <h2 class="section-title" style="font-size:22px">${notice.title}</h2>
     <p class="t-11 t-2 mt-16">${notice.updated_at eq null ? notice.created_at : notice.updated_at} · ${notice.nickname}</p>
     <div class="detail-card mt-24" style="padding:24px 24px 28px">
