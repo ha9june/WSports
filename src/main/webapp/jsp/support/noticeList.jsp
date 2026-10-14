@@ -47,6 +47,12 @@ TODO: <c:forEach var="n" items="${noticeList}">
 </c:if>
 </a>
 </c:forEach>
+<c:if test="${empty noticeList}">
+<div class="empty-box">
+<img src="${ctx}/img/emptylist-image.png" alt="빈리스트 대체 이미지">
+<p>" 조회된 결과가 없어요 ! "</p>
+</div>
+</c:if>
 </div>
 <c:if test="${not empty noticeList }">
 <nav class="pagination" style="display: flex; justify-content:center; padding:0px">

@@ -198,8 +198,7 @@ public class MatchEditForm extends HttpServlet {
 	    	    continue;
 	    	}
 
-	        System.out.println(part.getSubmittedFileName());
-	        System.out.println(part.getName());
+
 	    }
 	    System.out.println("----------");
 	    try {

@@ -60,17 +60,17 @@ $(function () {
 </a>
 
 <div class="ntd-card">
-  <div class="ntd-content"><c:out value="${fn:trim(notice.content)}"/></div>
-  <c:if test="${sessionScope.user.grade eq 'Admin'}">
-    <div class="ntd-actions">
-      <div class="btn-group"><a class="btn btn-outline btn-sm" href="${ctx}/admin/notice/modify?noticeId=${notice.notice_id}">수정</a>
-      <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${notice.notice_id}">삭제</button></div>
-    </div>
-  </c:if>
+<div class="ntd-content"><c:out value="${fn:trim(notice.content)}"/></div>
+<c:if test="${sessionScope.user.grade eq 'Admin'}">
+<div class="ntd-actions">
+<div class="btn-group"><a class="btn btn-outline btn-sm" href="${ctx}/admin/notice/modify?noticeId=${notice.notice_id}">수정</a>
+<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${notice.notice_id}">삭제</button></div>
+</div>
+</c:if>
 </div>
 
 <div class="ntd-list-btn">
-  <a class="btn btn-primary" href="${ctx}/support/notice/list">목록으로</a>
+<a class="btn btn-primary" href="${ctx}/support/notice/list">목록으로</a>
 </div>
 </div>
 </main>

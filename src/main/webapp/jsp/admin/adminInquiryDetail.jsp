@@ -2,7 +2,7 @@
 <%@ include file="/jsp/common/init.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%--
-문의 상세 (adminInquiryDetail.jsp) - 담당: 
+문의 상세 (adminInquiryDetail.jsp) - 담당: 임태균
 피그마: Admin / Inquiry Detail / Desktop
 state : waiting(답변 작성) | answered(등록된 답변 - 수정 가능)
 --%>

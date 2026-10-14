@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
 <%--
-  경기 만들기 (personalMatchWriteForm.jsp) - 담당: 김도윤
+  경기 만들기 (personalMatchWriteForm.jsp) - 담당: 변재언
   피그마: Match / Write Form / Desktop
 --%>
 <c:set var="pageTitle" value="경기 만들기" />
@@ -14,7 +14,7 @@
 
 
 <main class="page">
-<form id="writeForm" class="form-rail" action="${ctx}/match/write/form" method="post" enctype="multipart/form-data">
+<form id="writeForm" class="form-rail" novalidate action="${ctx}/match/write/form" method="post" enctype="multipart/form-data">
   <nav class="breadcrumb"><a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a><span class="sep">›</span><span>경기 만들기</span></nav>
   <div class="page-head"><h1 class="page-title">경기 만들기</h1></div>
 
@@ -128,7 +128,7 @@
       </div>
       <div class="field">
         <span class="field-label strong">연령대 <span class="hint-gray">복수 선택 가능</span></span>
-        <div class="chip-group" data-select="multi" data-name="ages">
+        <div class="chip-group" data-select="multi" data-name="ages" required>
           <button type="button" class="chip">20대</button>
           <button type="button" class="chip">30대</button>
           <button type="button" class="chip">40대</button>
@@ -180,5 +180,42 @@
 			e.preventDefault();
 			searchPostAddress();
 		});
+		
+		
+		$('#writeForm').on('submit', function (e) {
+			var checks = [
+				{ type: 'input', sel: '#title',                msg: '제목을 입력해주세요.' },
+				{ type: 'input', sel: '#matchDate',            msg: '경기일자를 선택해주세요.' },
+				{ type: 'input', sel: '[name="startTime"]',    msg: '시작 시간을 선택해주세요.' },
+				{ type: 'input', sel: '[name="endTime"]',      msg: '종료 시간을 선택해주세요.' },
+				{ type: 'input', sel: '#address',              msg: '장소를 검색해주세요.' },
+				{ type: 'input', sel: '#addressDetail',        msg: '상세주소를 입력해주세요.' },
+				{ type: 'input', sel: '#fee',                  msg: '참가비를 입력해주세요.' },
+				{ type: 'input', sel: '#deadline',             msg: '모집 마감을 선택해주세요.' },
+				{ type: 'chip',  sel: '[data-name="gender"]',  msg: '모집 성별을 선택해주세요.' },
+				{ type: 'chip',  sel: '[data-name="ages"]',    msg: '연령대를 선택해주세요.' },
+				{ type: 'chip',  sel: '[data-name="levels"]',  msg: '실력을 선택해주세요.' },
+				{ type: 'input', sel: '#content',              msg: '상세 설명을 입력해주세요.' }
+			];
+
+			for (var i = 0; i < checks.length; i++) {
+				var c = checks[i];
+				var el = document.querySelector(c.sel);
+				var empty = (c.type === 'input')
+					? !el.value.trim()
+					: !el.querySelector('.chip.is-selected');
+
+				if (empty) {
+					e.preventDefault();
+					showToast(c.msg);
+					el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					if (c.type === 'input') el.focus();
+					return;
+				}
+			}
+		});
+		
+		
+		
 	})
 </script>
