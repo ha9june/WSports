@@ -445,7 +445,7 @@
 				       style="width:220px;">
 				<input type="hidden" id="mapStartDate" name="startDate">
 				<input type="hidden" id="mapEndDate" name="endDate">
-		  </div>
+		  	</div>
 		  
 		  
 		  <button type="submit" class="btn btn-primary btn-lg">검색</button>
