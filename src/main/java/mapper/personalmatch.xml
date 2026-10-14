@@ -5,25 +5,25 @@
 	<select id="selectNowPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
-			m.*,
-			COUNT(p.participant_id) AS current_people,
-			CASE
-				WHEN
-					f.match_id IS NOT NULL THEN 1
-				ELSE 0
-			END AS favorite
+		m.*,
+		COUNT(p.participant_id) AS current_people,
+		CASE
+		WHEN
+		f.match_id IS NOT NULL THEN 1
+		ELSE 0
+		END AS favorite
 		FROM personal_match
 		m
-		LEFT JOIN 
-			personal_match_participant p
-			ON m.personal_match_id = p.personal_match_id
+		LEFT JOIN
+		personal_match_participant p
+		ON m.personal_match_id = p.personal_match_id
 		LEFT JOIN favorite f
-			ON f.match_id = m.personal_match_id
-			AND f.match_type = 'Personal'
-			AND f.user_id = #{userId}
+		ON f.match_id = m.personal_match_id
+		AND f.match_type = 'Personal'
+		AND f.user_id = #{userId}
 		WHERE 1=1
-			AND coalesce(m.deleted, 0) = 0
-			AND m.status ='모집중'
+		AND coalesce(m.deleted, 0) = 0
+		AND m.status ='모집중'
 		<if test="searchType == 'RECOMAND'">
 			<if test="sports != null and sports.length > 0">
 				AND m.sport IN
@@ -34,10 +34,10 @@
 			</if>
 			<if test="regions != null and regions.length > 0">
 				AND (
-			        <foreach collection="regions" item="region" separator=" OR ">
-			            m.region LIKE CONCAT('%', #{region}, '%')
-			        </foreach>
-			    )
+				<foreach collection="regions" item="region" separator=" OR ">
+					m.region LIKE CONCAT('%', #{region}, '%')
+				</foreach>
+				)
 			</if>
 		</if>
 		GROUP BY m.personal_match_id
@@ -58,36 +58,35 @@
 		</choose>
 		LIMIT 4;
 	</select>
-	
-	<select id="selectLatestPersonalMatchList"
-	    parameterType="map"
-	    resultType="personalmatch">
-	    SELECT
-	        m.*,
-	        COUNT(p.participant_id) AS current_people,
-	        CASE
-	            WHEN f.match_id IS NOT NULL THEN 1
-	            ELSE 0
-	        END AS favorite
-	    FROM personal_match m
-	    LEFT JOIN personal_match_participant p
-	        ON m.personal_match_id = p.personal_match_id
-	    LEFT JOIN favorite f
-	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'Personal'
-	        AND f.user_id = #{userId}
-	    WHERE coalesce(m.deleted, 0) = 0
-	        AND m.status = '모집중'
-	        <if test="excludeIds != null and excludeIds.size() > 0">
-	            AND m.personal_match_id NOT IN
-	            <foreach collection="excludeIds" item="id"
-	                open="(" separator="," close=")">
-	                #{id}
-	            </foreach>
-	        </if>
-	    GROUP BY m.personal_match_id
-	    ORDER BY m.created_at DESC
-	    LIMIT #{limit}
+
+	<select id="selectLatestPersonalMatchList" parameterType="map"
+		resultType="personalmatch">
+		SELECT
+		m.*,
+		COUNT(p.participant_id) AS current_people,
+		CASE
+		WHEN f.match_id IS NOT NULL THEN 1
+		ELSE 0
+		END AS favorite
+		FROM personal_match m
+		LEFT JOIN personal_match_participant p
+		ON m.personal_match_id = p.personal_match_id
+		LEFT JOIN favorite f
+		ON f.match_id = m.personal_match_id
+		AND f.match_type = 'Personal'
+		AND f.user_id = #{userId}
+		WHERE coalesce(m.deleted, 0) = 0
+		AND m.status = '모집중'
+		<if test="excludeIds != null and excludeIds.size() > 0">
+			AND m.personal_match_id NOT IN
+			<foreach collection="excludeIds" item="id" open="("
+				separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		GROUP BY m.personal_match_id
+		ORDER BY m.created_at DESC
+		LIMIT #{limit}
 	</select>
 
 	<select id="selectNormalPersonalMatchList"
@@ -107,12 +106,13 @@
 		ON m.personal_match_id =
 		p.personal_match_id
 		LEFT JOIN favorite f
-	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'Personal'
-	        AND f.user_id = #{userId}
+		ON f.match_id = m.personal_match_id
+		AND f.match_type = 'Personal'
+		AND f.user_id = #{userId}
 		WHERE 1=1
 		AND coalesce(m.deleted, 0) = 0
-		AND m.status ='모집중'
+		AND
+		m.status ='모집중'
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
 			<foreach collection="sports" item="sport" open="("
@@ -199,9 +199,9 @@
 		LIMIT
 		#{startIndex}, 4
 	</select>
-	
-	<!--지도기반 검색-->
-		<select id="selectMapPersonalMatchList"
+
+	<!--지도기반 검색 -->
+	<select id="selectMapPersonalMatchList"
 		parameterType="util.MatchSearchInfo" resultType="personalmatch">
 		SELECT
 		m.*,
@@ -224,8 +224,10 @@
 		AND f.user_id =
 		#{userId}
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}
-		AND m.longitude BETWEEN #{minLng} AND #{maxLng}
-		AND coalesce(m.deleted, 0) = 0
+		AND
+		m.longitude BETWEEN #{minLng} AND #{maxLng}
+		AND coalesce(m.deleted, 0)
+		= 0
 		AND m.status ='모집중'
 		<if test="sports != null and sports.length > 0">
 			AND m.sport IN
@@ -293,21 +295,28 @@
 	<select id="selectMyPagePersonalMatchList" parameterType="map"
 		resultType="personalmatch">
 		SELECT m.*,
+		m.min_people AS minPeople,
+		m.max_people AS maxPeople,
+		(SELECT COUNT(*)
+		FROM personal_match_participant cp
+		WHERE cp.personal_match_id = m.personal_match_id
+		AND cp.status = '결제완료') AS currentPeople,
 		p.status AS participantStatus,
-		CASE WHEN f.favorite_id IS
-		NULL THEN 0 ELSE 1 END AS favorite
+		CASE WHEN f.favorite_id IS NULL THEN 0 ELSE 1 END AS favorite
 		FROM personal_match_participant p
 		JOIN personal_match m
 		ON m.personal_match_id = p.personal_match_id
 		LEFT
-		JOIN favorite f
+		JOIN
+		favorite f
 		ON f.match_id = m.personal_match_id
 		AND f.user_id =
 		#{userId}
 		AND f.match_type = 'Personal'
 		WHERE p.user_id = #{userId}
 		AND
-		p.status IN ('결제완료', '취소')
+		p.status IN
+		('결제완료', '취소')
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -353,6 +362,12 @@
 	<select id="selectMyPageCreatedPersonalMatchList"
 		parameterType="map" resultType="personalmatch">
 		SELECT m.*,
+		m.min_people AS minPeople,
+       	m.max_people AS maxPeople,
+       	 (SELECT COUNT(*)
+          FROM personal_match_participant cp
+         WHERE cp.personal_match_id = m.personal_match_id
+           AND cp.status = '결제완료') AS currentPeople,
 		CASE WHEN f.favorite_id IS NULL THEN 0 ELSE 1 END AS
 		favorite
 		FROM personal_match m
@@ -395,7 +410,7 @@
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 	</select>
 
-	<!--경기 상세 조회-->
+	<!--경기 상세 조회 -->
 	<select id="selectPersonalMatch" parameterType="personalMatch"
 		resultType="personalMatch">
 		SELECT
@@ -410,17 +425,23 @@
 		favorite
 		FROM personal_match m
 		LEFT JOIN
-			personal_match_participant p
-			ON m.personal_match_id = p.personal_match_id
-			AND p.status = "결제완료"
+		personal_match_participant p
+		ON m.personal_match_id = p.personal_match_id
+		AND p.status = "결제완료"
 		LEFT JOIN user u
 		ON m.user_id = u.user_id
 		LEFT JOIN favorite f
 			ON f.match_id = m.personal_match_id
+		ON m.user_id
+		= u.user_id
+		LEFT JOIN
+		favorite f
+		ON f.match_id = m.personal_match_id
 		AND
-			f.match_type = 'Personal'
+		f.match_type = 'Personal'
 		AND f.user_id = #{userId}
-		WHERE m.personal_match_id = #{personalMatchId}
+		WHERE m.personal_match_id =
+		#{personalMatchId}
 
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at
@@ -569,7 +590,7 @@
 		WHERE
 		personal_match_id = #{personalMatchId}
 	</update>
-	
+
 	<update id="updatePersonalMatchStatus"
 		parameterType="personalMatch">
 		UPDATE personal_match
@@ -587,9 +608,11 @@
 	<select id="selectMyPagePersonalMatchDates" parameterType="map"
 		resultType="string">
 		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
-		FROM personal_match_participant p
+		FROM
+		personal_match_participant p
 		JOIN personal_match m
-		ON m.personal_match_id = p.personal_match_id
+		ON
+		m.personal_match_id = p.personal_match_id
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료', '취소')
 		<if test="sport != null and sport != ''">
@@ -621,103 +644,114 @@
 		where status = '모집중'
 		and deleted = 0
 	</select>
-	
-	
 
-	
-	<!--스케줄러-->
+
+
+
+	<!--스케줄러 -->
 	<!-- 스케줄러 : 모집 마감 지났는데 최소 인원 미달인 개인 경기 -->
 	<select id="selectExpiredUnderMin" resultType="personalMatch">
-		select m.personal_match_id, m.user_id, m.title
+		select
+		m.personal_match_id, m.user_id, m.title
 		from personal_match m
-		where m.status = '모집중'
+		where
+		m.status = '모집중'
 		and m.deleted = 0
 		and m.deadline &lt;= now()
-		and (select count(*)
-			from personal_match_participant p
-		 	where p.personal_match_id = m.personal_match_id
-		 	and p.status = '결제완료') &lt; m.min_people
+		and (select
+		count(*)
+		from personal_match_participant p
+		where p.personal_match_id = m.personal_match_id
+		and p.status = '결제완료') &lt; m.min_people
 	</select>
 	<!-- 스케줄러 : 최소 인원 미달 경기 취소 -->
 	<update id="updateStatusToUnderMinCancel" parameterType="Long">
-		update personal_match
+		update
+		personal_match
 		set status = '경기 취소',
-			updated_at = now()
+		updated_at = now()
 		where personal_match_id = #{matchId}
 		and status = '모집중'
-		and deleted = 0
+		and
+		deleted = 0
 	</update>
-	
-	<!--스케줄러 : 마감시간인데 최소 인원 채운 것 조회-->
+
+	<!--스케줄러 : 마감시간인데 최소 인원 채운 것 조회 -->
 	<select id="selectExpiredSuccess" resultType="personalMatch">
-		SELECT m.personal_match_id, m.user_id, m.title
-	    FROM personal_match m
-	    WHERE m.status = '모집중'
-	      AND coalesce(m.deleted, 0) = 0
-	      AND m.deadline &lt;= NOW()
-	      AND (
-	          SELECT COUNT(*)
-	          FROM personal_match_participant p
-	          WHERE p.personal_match_id = m.personal_match_id
-	            AND p.status = '결제완료' ) &gt;= m.min_people
+		SELECT
+		m.personal_match_id, m.user_id, m.title
+		FROM personal_match m
+		WHERE m.status = '모집중'
+		AND coalesce(m.deleted, 0) = 0
+		AND m.deadline &lt;= NOW()
+		AND (
+		SELECT COUNT(*)
+		FROM personal_match_participant p
+		WHERE p.personal_match_id = m.personal_match_id
+		AND p.status = '결제완료' ) &gt;= m.min_people
 	</select>
-	
-	<!--스케줄러 : 모집마감으로 업데이트-->
+
+	<!--스케줄러 : 모집마감으로 업데이트 -->
 	<update id="updateStatusToExpired" parameterType="Long">
 		update
-			personal_match
-		set 
-			status = '모집중',
+		personal_match
+		set
+		status = '모집중',
 		updated_at = now()
-		where 
-			personal_match_id = #{personalMatchId}
+		where
+		personal_match_id = #{personalMatchId}
 		and status = '모집 마감'
 		and coalesce(deleted, 0) = 0
 	</update>
-	
-	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기)-->
+
+	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기) -->
 	<select id="selectFinishedSuccess" resultType="personalMatch">
-		SELECT personal_match_id, user_id, title
+		SELECT
+		personal_match_id, user_id, title
 		FROM personal_match
-		WHERE status = '모집 마감'
-		  AND coalesce(deleted, 0) = 0
-		  AND TIMESTAMP(match_date, end_time) &lt;= NOW();
+		WHERE status = '모집
+		마감'
+		AND coalesce(deleted, 0) = 0
+		AND TIMESTAMP(match_date, end_time) &lt;= NOW();
 	</select>
-	<!--스케줄러 : 경기 종료로 업데이트-->
+	<!--스케줄러 : 경기 종료로 업데이트 -->
 	<update id="updateStatusToFinished" parameterType="Long">
 		update
-			personal_match
-		set 
-			status = '경기 종료',
+		personal_match
+		set
+		status = '경기 종료',
 		updated_at = now()
-		where 
-			personal_match_id = #{personalMatchId}
+		where
+		personal_match_id = #{personalMatchId}
 		and status = '모집 마감'
 		and coalesce(deleted, 0) = 0
 	</update>
-	
-	
-	<!--호스트 경기취소-->
+
+
+	<!--호스트 경기취소 -->
 	<update id="updateStatusCancelOfHost" parameterType="Long">
-		update personal_match
+		update
+		personal_match
 		set status = '경기 취소',
-			updated_at = now()
+		updated_at = now()
 		where personal_match_id = #{matchId}
 		and status = '모집중'
-		and deleted = 0
+		and
+		deleted = 0
 	</update>
-	<!--관리자 경기삭제-->
+	<!--관리자 경기삭제 -->
 	<update id="updateStatusDeleteOfAdmin" parameterType="Long">
-		update personal_match
+		update
+		personal_match
 		set status = '경기 취소',
-			deleted = 1,
-			updated_at = now()
+		deleted = 1,
+		updated_at = now()
 		where personal_match_id = #{matchId}
 		and status = '모집중'
-		and deleted = 0
+		and
+		deleted = 0
 	</update>
-	
-	
+
 
 
 </mapper>

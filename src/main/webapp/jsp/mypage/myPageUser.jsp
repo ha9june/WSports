@@ -66,7 +66,7 @@ $(function () {
 	});
 });
 </script>
-<form class="work-inner" action="${ctx}/member/mypage/view" method="post" style="padding-left:24px">
+<form class="work-inner full info-page" action="${ctx}/member/mypage/view" method="post">
   <h1 class="section-title">회원정보</h1>
   <p class="section-desc">회원정보와 정산 계좌를 확인할 수 있습니다.</p>
   <div class="form-grid">
@@ -79,9 +79,9 @@ $(function () {
     <div class="field"><label class="field-label">성별</label><input class="input" value="${loginUser.gender == 'M' ? '남성' : '여성'}" readonly></div>
   </div>
 
-  <h2 class="section-title mt-32">정산 계좌</h2>
+  <h2 class="sub-title mt-32">정산 계좌</h2>
   <p class="section-desc">정산·환불 받을 본인 명의 계좌를 등록해주세요.</p>
-  <div class="acct-row" style="grid-template-columns:167px 360px 167px">
+  <div class="acct-row">
     <div class="field"><label class="field-label">은행</label>
       <input class="input" value="${loginUser.bankName}" readonly></div>
     <div class="field"><label class="field-label">계좌번호</label><input class="input" name="accountNo" value="${loginUser.accountNumber}" readonly></div>
@@ -95,7 +95,7 @@ $(function () {
   <section class="security">
     <h2 class="sub-title">보안 및 계정</h2>
     <div class="line"><b>비밀번호</b><span>최근 변경일을 확인하고 필요할 때 변경합니다.</span><button type="button" class="btn btn-outline btn-sm" data-modal-open="pwModal">비밀번호 변경</button></div>
-    <div class="line"><b class="danger">회원 탈퇴</b><span>탈퇴 전 주의사항을 확인한 뒤 진행합니다.</span><button type="button" class="btn-text danger t-12" data-modal-open="withdrawModal">탈퇴하기</button></div>
+    <div class="line"><b class="danger">회원 탈퇴</b><span>탈퇴 전 주의사항을 확인한 뒤 진행합니다.</span><button type="button" class="btn btn-danger-soft btn-sm" data-modal-open="withdrawModal">탈퇴하기</button></div>
   </section>
 </form>
 </main></div>

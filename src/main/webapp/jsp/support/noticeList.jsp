@@ -13,13 +13,13 @@
 <%@ include file="/jsp/common/header.jsp" %>
 <main class="page">
   <div class="rail">
-    <div class="page-head"><h1 class="page-title lg">공지사항</h1><p class="page-desc">서비스 운영 안내와 주요 변경사항을 확인하세요.</p></div>
+    <div class="page-head"><h1 class="page-title">공지사항</h1><p class="page-desc">서비스 운영 안내와 주요 변경사항을 확인하세요.</p></div>
     <form class="list-toolbar" method="get" style="align-items:flex-end;gap:20px;margin-bottom:28px">
       <input type="hidden" name="type" value="${type}">
       <c:set var="keyword" value="${empty param.keyword ? '' : param.keyword}" />
       <div class="field" style="width:340px"><label class="field-label">검색</label><input class="input" name="keyword" value="<c:out value='${keyword}'/>" placeholder="제목 · 내용 · 작성자 검색"></div>
       <c:set var="type" value="${empty param.type ? 'ALL' : param.type}" />
-      <div class="seg pill neutral">
+      <div class="seg pill neutral" style="height:44px;padding:0;border:0">
         <a class="seg-item ${type eq 'ALL' ? 'is-active' : ''}" href="?type=ALL">전체</a>
         <a class="seg-item ${type eq 'NOTICE' ? 'is-active' : ''}" href="?type=NOTICE">공지</a>
         <a class="seg-item ${type eq 'POLICY' ? 'is-active' : ''}" href="?type=POLICY">정책</a>
@@ -41,6 +41,12 @@
       </c:if>
 	  </a>
     </c:forEach>
+    <c:if test="${empty noticeList}">
+      <div class="empty-box">
+        <img src="${ctx}/img/emptylist-image.png" alt="빈리스트 대체 이미지">
+        <p>" 조회된 결과가 없어요 ! "</p>
+      </div>
+    </c:if>
     </div>
     	<c:if test="${not empty noticeList }">
 		<nav class="pagination" style="display: flex; justify-content:center; padding:0px">
