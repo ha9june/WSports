@@ -39,12 +39,12 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 	font-size: 28px;
 	font-weight: 800;
 	letter-spacing: -0.02em;
-	color: var(- -ink);
+	color: var(--ink);
 }
 
 .inq .page-desc {
 	font-size: 15px;
-	color: var(- -muted);
+	color: var(--muted);
 }
 
 /* 카드 */
@@ -55,7 +55,7 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 	box-sizing: border-box;
 	padding: 28px 32px 32px;
 	background: #fff;
-	border: 1px solid var(- -line);
+	border: 1px solid var(--line);
 	border-radius: 16px;
 	box-shadow: 0 2px 16px rgba(18, 21, 28, .04);
 	display: flex;
@@ -77,7 +77,7 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 .inq .detail-card .head .eyebrow {
 	display: block;
 	font-size: 12px;
-	color: var(- -muted);
+	color: var(--muted);
 	margin-bottom: 4px;
 }
 
@@ -85,7 +85,7 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 	margin: 0;
 	font-size: 21px;
 	font-weight: 700;
-	color: var(- -ink);
+	color: var(--ink);
 	word-break: break-all;
 }
 
@@ -134,14 +134,14 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 .inq-info dt {
 	margin: 0 0 4px;
 	font-size: 12px;
-	color: var(- -muted);
+	color: var(--muted);
 }
 
 .inq-info dd {
 	margin: 0;
 	font-size: 15px;
 	font-weight: 700;
-	color: var(- -ink);
+	color: var(--ink);
 }
 
 .inq-sec h3 {
@@ -163,7 +163,7 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 	font-size: 15px;
 	line-height: 1.7;
 	color: var(--ink);
-	white-space: pre-wrap;
+	white-space: pre-line;
 	word-break: break-all;
 	
 	display: block !important;    /* 중앙 정렬 차단 */
@@ -172,7 +172,7 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 }
 
 .inq-sec.answer h3 {
-	color: var(- -accent);
+	color: var(--accent);
 }
 
 .inq-sec.answer .body {
@@ -193,7 +193,7 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 	background: #fcfcfd;
 	font-size: 14px;
 	line-height: 1.7;
-	color: var(- -muted);
+	color: var(--muted);
 }
 
 /* 버튼 */
@@ -279,18 +279,14 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 
 		<div class="inq-sec">
 			<h3>내용</h3>
-			<p class="body">
-				<c:out value="${inquiry.content}" />
-			</p>
+			<p class="body"><c:out value="${inquiry.content}" /></p>
 		</div>
 
 		<div class="inq-sec answer">
 			<h3>답변</h3>
 			<c:choose>
 				<c:when test="${isDone}">
-					<p class="body">
-						<c:out value="${inquiry.answer}" />
-					</p>
+					<p class="body"><c:out value="${inquiry.answer}" /></p>
 				</c:when>
 				<c:otherwise>
 					<div class="empty">
@@ -302,14 +298,11 @@ state : answered(답변 완료) | waiting(답변 대기 - 답변 영역 대신 �
 	</section>
 
 	<div class="form-actions">
-		<a class="btn btn-outline btn-sm inq-back"
-			href="${ctx}/support/inquiry/list"> <svg width="16" height="16"
-				viewBox="0 0 24 24" fill="none" stroke="currentColor"
-				stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+		<a class="btn btn-outline btn-sm inq-back" href="${ctx}/support/inquiry/list"> <svg width="16" height="16"
+				viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
 				aria-hidden="true">
       <path d="M15 18l-6-6 6-6" />
-    </svg> 목록으로
-		</a>
+    </svg> 목록으로 </a>
 	</div>
 </div>
 </main>

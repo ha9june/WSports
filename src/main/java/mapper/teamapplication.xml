@@ -153,8 +153,7 @@
 		where
 		application_id = #{applicationId}
 		and user_id=#{userId}
-		and status = '승인
-		대기'
+		and status = '승인 대기'
 	</update>
 	<update id="updateMypageJoinTeam">
 		UPDATE team_user

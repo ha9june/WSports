@@ -41,11 +41,13 @@
 		t.participationFee,
 		t.maxPeople,
 		t.minPeople,
-		t.currentPeople
+		t.currentPeople,
+		t.favoriteId
 		FROM (
 		SELECT
 		'Personal' AS matchType,
 		m.personal_match_id AS matchId,
+		f.favorite_id AS favoriteId,
 		m.title,
 		m.sport,
 		m.status,
@@ -56,9 +58,9 @@
 		m.participation_fee AS participationFee,
 		m.max_people AS maxPeople,
 		m.min_people AS minPeople,
-		(SELECT COUNT(*) FROM personal_match_participant pp WHERE
-		pp.personal_match_id = m.personal_match_id AND pp.status = '결제완료') AS
-		currentPeople
+		(SELECT COUNT(*) FROM personal_match_participant pp
+		WHERE pp.personal_match_id = m.personal_match_id
+		AND pp.status = '결제완료') AS currentPeople
 		FROM favorite f
 		JOIN personal_match m ON m.personal_match_id = f.match_id
 		WHERE f.user_id = #{userId}
@@ -67,10 +69,13 @@
 		<if test="status != null and status != ''"> AND m.status = #{status} </if>
 		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
+
 		UNION ALL
+
 		SELECT
 		'Team' AS matchType,
 		m.team_match_id AS matchId,
+		f.favorite_id AS favoriteId,
 		m.title,
 		m.sport,
 		m.status,
@@ -79,10 +84,11 @@
 		m.end_time AS endTime,
 		m.place_name AS placeName,
 		m.participation_fee AS participationFee,
-		m.match_people AS maxPeople, 
+		m.match_people AS maxPeople,
 		0 AS minPeople,
-		(SELECT COUNT(*) FROM team_match_participant tp WHERE tp.team_match_id =
-		m.team_match_id AND tp.status = '결제완료') AS currentPeople
+		(SELECT COUNT(*) FROM team_match_participant tp
+		WHERE tp.team_match_id = m.team_match_id
+		AND tp.status = '결제완료') AS currentPeople
 		FROM favorite f
 		JOIN team_match m ON m.team_match_id = f.match_id
 		WHERE f.user_id = #{userId}
@@ -92,7 +98,7 @@
 		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
 		) t
-		ORDER BY t.matchDate ASC, t.matchType ASC, t.matchId ASC
+		ORDER BY t.favoriteId DESC
 		LIMIT #{size} OFFSET #{offset}
 	</select>
 
