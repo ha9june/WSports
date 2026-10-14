@@ -108,4 +108,5 @@
 		personal_match_id = #{personalMatchId}
 		and status = '결제완료'
 	</select>
+	
 </mapper>
