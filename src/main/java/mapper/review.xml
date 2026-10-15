@@ -15,59 +15,34 @@
 		NOW())
 	</insert>
 
-	<select id="selectReviewablePersonal" parameterType="long"
-		resultType="Review">
-		SELECT 'PERSONAL' AS matchType,
-		m.personal_match_id AS
-		matchId,
-		m.title AS title
-		FROM personal_match_participant p
-		JOIN
-		personal_match m
-		ON m.personal_match_id = p.personal_match_id
-		WHERE
-		p.user_id = #{userId}
-		AND p.status = '결제완료'
-		AND m.deleted = '0'
-		AND
-		m.status = '경기 종료'
-		AND
-		p.attendance = true
-		AND NOT EXISTS (SELECT 1 FROM
-		review r
-		WHERE r.user_id = #{userId}
-		AND r.match_type = 'PERSONAL'
-		AND
-		r.match_id = m.personal_match_id
-		AND r.deleted = 0)
-		ORDER BY
-		m.match_date DESC
-	</select>
 
 	<select id="selectReviewableTeam" parameterType="long"
 		resultType="Review">
+		SELECT * FROM (
 		SELECT 'TEAM' AS matchType,
 		m.team_match_id AS matchId,
-		m.title AS title
+		m.title AS title,
+		m.match_date AS matchDate
 		FROM team_match_participant p
-		JOIN team_match m
-		ON
-		m.team_match_id = p.team_match_id
+		JOIN team_match m ON m.team_match_id = p.team_match_id
 		WHERE p.user_id = #{userId}
-		AND
-		p.status = '결제완료'
+		AND p.status = '결제완료'
 		AND m.deleted = 0
 		AND m.status = '경기 종료'
-		AND
-		p.attendance = true
-		AND NOT EXISTS (SELECT 1 FROM review r
-		WHERE
-		r.user_id = #{userId}
+		AND p.attendance = true
+		UNION
+		SELECT 'TEAM', m.team_match_id, m.title, m.match_date
+		FROM team_match m
+		WHERE m.user_id = #{userId}
+		AND m.deleted = 0
+		AND m.status = '경기 종료'
+		) t
+		WHERE NOT EXISTS (SELECT 1 FROM review r
+		WHERE r.user_id = #{userId}
 		AND r.match_type = 'TEAM'
-		AND r.match_id =
-		m.team_match_id
+		AND r.match_id = t.matchId
 		AND r.deleted = '0')
-		ORDER BY m.match_date DESC
+		ORDER BY t.matchDate DESC
 	</select>
 
 	<select id="selectMainReviewList" parameterType="map"
@@ -351,16 +326,21 @@
 	<select id="selectPersonalMatchForReview" parameterType="map"
 		resultType="map">
 		SELECT m.personal_match_id AS matchId,
-		m.title AS matchTitle,
+		m.title AS
+		matchTitle,
 		'PERSONAL' AS matchType
-		FROM personal_match_participant p
-		JOIN personal_match m
-		ON m.personal_match_id = p.personal_match_id
-		WHERE m.personal_match_id = #{matchId}
-		AND p.user_id = #{userId}
-		AND p.status = '결제완료'
+		FROM personal_match m
+		WHERE
+		m.personal_match_id = #{matchId}
 		AND m.deleted = '0'
 		AND m.status = '경기 종료'
+		AND (m.user_id = #{userId}
+		OR EXISTS (SELECT 1 FROM
+		personal_match_participant p
+		WHERE p.personal_match_id =
+		m.personal_match_id
+		AND p.user_id = #{userId}
+		AND p.status = '결제완료'))
 	</select>
 	<!-- 팀 매치 -->
 	<select id="selectTeamMatchForReview" parameterType="map"
@@ -368,15 +348,49 @@
 		SELECT m.team_match_id AS matchId,
 		m.title AS matchTitle,
 		'TEAM' AS matchType
-		FROM team_match_participant p
-		JOIN team_match m
-		ON
-		m.team_match_id = p.team_match_id
+		FROM team_match m
 		WHERE m.team_match_id = #{matchId}
-		AND p.user_id = #{userId}
-		AND p.status = '결제완료'
 		AND m.deleted = 0
+		AND m.status = '경기 종료'
+		AND (m.user_id = #{userId}
+		OR
+		EXISTS (SELECT 1 FROM team_match_participant p
+		WHERE p.team_match_id =
+		m.team_match_id
+		AND p.user_id = #{userId}
+		AND p.status = '결제완료'))
+	</select>
+	<select id="selectReviewablePersonal" parameterType="long"
+		resultType="Review">
+		SELECT * FROM (
+		SELECT 'PERSONAL' AS matchType,
+		m.personal_match_id AS matchId,
+		m.title AS title,
+		m.match_date AS
+		matchDate
+		FROM personal_match_participant p
+		JOIN personal_match m ON
+		m.personal_match_id = p.personal_match_id
+		WHERE p.user_id = #{userId}
+		AND p.status = '결제완료'
+		AND m.deleted = '0'
+		AND m.status = '경기 종료'
 		AND
-		m.status = '경기 종료'
+		p.attendance = true
+		UNION
+		SELECT 'PERSONAL', m.personal_match_id,
+		m.title, m.match_date
+		FROM personal_match m
+		WHERE m.user_id = #{userId}
+		AND m.deleted = '0'
+		AND m.status = '경기 종료'
+		) t
+		WHERE NOT EXISTS (SELECT 1
+		FROM review r
+		WHERE r.user_id = #{userId}
+		AND r.match_type = 'PERSONAL'
+		AND r.match_id = t.matchId
+		AND r.deleted = 0)
+		ORDER BY t.matchDate DESC
 	</select>
 </mapper>

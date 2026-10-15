@@ -429,12 +429,17 @@
 							<div class="actions">
 								<c:if test="${isHost}">
 									<a class="btn btn-primary"
+										href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
+									<a class="btn btn-primary"
 										href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석
 										체크 · 참가자 평가</a>
 								</c:if>
-								<c:if test="${isUser and applied}">
-									<a class="btn btn-primary" href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
-									<a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 평가</a>
+								<c:if test="${isUser and applied and not isHost}">
+									<a class="btn btn-primary"
+										href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
+									<a class="btn btn-primary"
+										href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자
+										평가</a>
 								</c:if>
 							</div>
 						</div>

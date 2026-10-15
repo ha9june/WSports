@@ -23,7 +23,6 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
-
 .cal .flatpickr-calendar.inline {
 	box-shadow: none;
 	border: 0;
