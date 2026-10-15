@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.User;
 import service.review.ReviewService;
 import service.review.ReviewServiceImpl;
 
@@ -31,10 +32,10 @@ public class AdminContentReviewDelete extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/plain;charset=UTF-8");
 
-		Object role = request.getSession().getAttribute("role");
-		if (role == null || !"admin".equals(role.toString())) {
-			response.getWriter().write("false");
-			return;
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null || !"Admin".equals(user.getGrade())) {
+		    response.getWriter().write("false");
+		    return;
 		}
 
 		String idParam = request.getParameter("reviewId");

@@ -32,7 +32,7 @@ public interface ReviewService {
 	boolean removeComment(Long commentId, Long userId) throws Exception;
 	boolean removeReviewByAdmin(Long reviewId) throws Exception;
 	Map<String, Object> getPersonalMatchForReview(Long matchId, Long userId) throws Exception;
-
+	int deleteReviewByAdmin(Long reviewId) throws Exception;
 	Map<String, Object> getTeamMatchForReview(Long matchId, Long userId) throws Exception;
 
 	// 후기 저장 전 참여 여부 검증용

@@ -10,6 +10,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 --%>
 <c:set var="state"
 	value="${sessionScope.user.userId eq review.userId ? 'mine' : 'default'}" />
+<c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
 <c:set var="pageTitle" value="후기 상세" />
 <c:set var="pageCss" value="review,match" />
 <c:set var="activeNav" value="review" />
@@ -206,55 +207,61 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 	object-fit: cover !important;
 	border-radius: 8px;
 	display: block;
-	aspect-ratio: 4 / 3;
+	aspect-ratio: 4/3;
 	grid-column: span 2; /* 기본: 한 줄에 3개 */
 }
 /* 1장: 크게 한 장 */
 .review-detail .photos img:only-child {
 	grid-column: span 6;
-	aspect-ratio: 16 / 10;
+	aspect-ratio: 16/10;
 }
-.review-detail .photos img:first-child:nth-last-child(2),
-.review-detail .photos img:first-child:nth-last-child(2) ~ img {
+
+.review-detail .photos img:first-child:nth-last-child(2), .review-detail .photos img:first-child:nth-last-child(2) 
+	 ~ img {
 	grid-column: span 3;
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 1/1;
 }
 /* 3장: 큰 1장(위) + 작은 2장(아래) */
 .review-detail .photos img:first-child:nth-last-child(3) {
 	grid-column: span 6;
-	aspect-ratio: 16 / 9;
+	aspect-ratio: 16/9;
 }
 /* 4장: 큰 1장(위) + 작은 3장(아래) */
 .review-detail .photos img:first-child:nth-last-child(4) {
 	grid-column: span 6;
-	aspect-ratio: 16 / 9;
+	aspect-ratio: 16/9;
 }
+
 .review-detail .photos img:first-child:nth-last-child(4) ~ img {
 	grid-column: span 2;
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 1/1;
 }
 
 /* 5장: 위 2장(반반) + 아래 3장(3등분) */
-.review-detail .photos img:first-child:nth-last-child(5),
-.review-detail .photos img:first-child:nth-last-child(5) + img {
+.review-detail .photos img:first-child:nth-last-child(5), .review-detail .photos img:first-child:nth-last-child(5)+img
+	{
 	grid-column: span 3;
-	aspect-ratio: 4 / 3;
+	aspect-ratio: 4/3;
 }
-.review-detail .photos img:first-child:nth-last-child(5) ~ img:nth-child(n+3) {
+
+.review-detail .photos img:first-child:nth-last-child(5) ~ img:nth-child(n+3)
+	{
 	grid-column: span 2;
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 1/1;
 }
+
 .review-detail .photos img:first-child:nth-last-child(3) ~ img {
 	grid-column: span 3;
-	aspect-ratio: 4 / 3;
+	aspect-ratio: 4/3;
 }
-.host-inline a,
-.host-inline a strong {
+
+.host-inline a, .host-inline a strong {
 	color: #111827 !important;
 }
+
 .host-inline a:hover strong {
-  text-decoration: underline;
-  }
+	text-decoration: underline;
+}
 </style>
 <main class="page">
 	<div class="rail">
@@ -271,7 +278,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				<h1>
 					<c:out value="${review.title}" />
 				</h1>
-				<c:if test="${role eq 'admin'}">
+				<c:if test="${isAdmin}">
 					<button type="button" class="btn btn-danger btn-sm"
 						data-modal-open="deleteModal">후기 삭제</button>
 				</c:if>
@@ -291,8 +298,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 						</c:otherwise>
 					</c:choose>
 				<div>
-					<a
-						href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong>${review.nickname}</strong></a>
+					<a href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong>${review.nickname}</strong></a>
 					<small>작성자 · ${review.createdAtStr}</small>
 				</div>
 			</div>
@@ -430,17 +436,19 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 
 <script>
 	$(function() {
-		$("#confirmReviewDelete").on("click", function() {
-			$.post('${ctx}/admin/content/review-delete', {
-				reviewId : $("#reviewId").val()
-			}, function(result) {
-				if (result.trim() === 'true') {
-					location.href = '${ctx}/review/list';
-				} else {
-					showToast("삭제에 실패했습니다.");
-				}
-			}, 'text');
-		});
+		$("#confirmReviewDelete").on("click",function() {
+					var isAdmin = ${isAdmin};
+					var url = isAdmin ? '${ctx}/admin/content/review-delete': '${ctx}/mypage/reviews';
+					var data = isAdmin ? {reviewId : $("#reviewId").val()} : {action : 'delete',reviewId : $("#reviewId").val()};
+					$.post(url, data, function(result) {
+						result = result.trim();
+						if (result === 'true' || result === 'ok') {
+							location.href = '${ctx}/review/list';
+						} else {
+							showToast("삭제에 실패했습니다.");
+						}
+					}, 'text');
+				});
 		$(".review-detail .fav-btn").off("click").click(function(e) {
 			e.preventDefault();
 			e.stopPropagation();

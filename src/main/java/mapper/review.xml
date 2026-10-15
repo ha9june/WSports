@@ -20,26 +20,34 @@
 		resultType="Review">
 		SELECT * FROM (
 		SELECT 'TEAM' AS matchType,
-		m.team_match_id AS matchId,
+		m.team_match_id
+		AS matchId,
 		m.title AS title,
 		m.match_date AS matchDate
-		FROM team_match_participant p
-		JOIN team_match m ON m.team_match_id = p.team_match_id
+		FROM
+		team_match_participant p
+		JOIN team_match m ON m.team_match_id =
+		p.team_match_id
 		WHERE p.user_id = #{userId}
 		AND p.status = '결제완료'
-		AND m.deleted = 0
+		AND
+		m.deleted = 0
 		AND m.status = '경기 종료'
 		AND p.attendance = true
 		UNION
-		SELECT 'TEAM', m.team_match_id, m.title, m.match_date
+		SELECT
+		'TEAM', m.team_match_id, m.title, m.match_date
 		FROM team_match m
-		WHERE m.user_id = #{userId}
+		WHERE
+		m.user_id = #{userId}
 		AND m.deleted = 0
 		AND m.status = '경기 종료'
 		) t
-		WHERE NOT EXISTS (SELECT 1 FROM review r
+		WHERE
+		NOT EXISTS (SELECT 1 FROM review r
 		WHERE r.user_id = #{userId}
-		AND r.match_type = 'TEAM'
+		AND
+		r.match_type = 'TEAM'
 		AND r.match_id = t.matchId
 		AND r.deleted = '0')
 		ORDER BY t.matchDate DESC
@@ -316,10 +324,8 @@
 	</select>
 	<update id="deleteReviewByAdmin" parameterType="long">
 		UPDATE review
-		SET
-		deleted = 1, deleted_at = NOW(), updated_at = NOW()
-		WHERE review_id =
-		#{reviewId}
+		SET deleted = 1, updated_at = NOW()
+		WHERE review_id = #{reviewId}
 		AND deleted = 0
 	</update>
 	<!-- 개인 매치 -->
@@ -333,7 +339,8 @@
 		WHERE
 		m.personal_match_id = #{matchId}
 		AND m.deleted = '0'
-		AND m.status = '경기 종료'
+		AND m.status = '경기
+		종료'
 		AND (m.user_id = #{userId}
 		OR EXISTS (SELECT 1 FROM
 		personal_match_participant p
@@ -393,4 +400,5 @@
 		AND r.deleted = 0)
 		ORDER BY t.matchDate DESC
 	</select>
+
 </mapper>

@@ -298,4 +298,9 @@ public class ReviewServiceImpl implements ReviewService {
 		            : getPersonalMatchForReview(matchId, userId);
 		    return match != null;
 		}
+
+	@Override
+	public int deleteReviewByAdmin(Long reviewId) throws Exception {
+		  return reviewDao.deleteReviewByAdmin(reviewId);
+	}
 }
