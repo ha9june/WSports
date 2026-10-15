@@ -42,20 +42,19 @@
 .review-toolbar .search-btn {
 	height: 44px;
 	padding: 0 22px;
-	border: 1px solid #d1d5db;
+	border: 1px solid #1a6bff;
 	border-radius: 10px;
-	background: #fff;
-	color: #111;
+	background: #1a6bff;
+	color: #fff;
 	font-size: 14px;
 	font-weight: 600;
 	white-space: nowrap;
 	cursor: pointer;
-	transition: background .2s, color .2s, border-color .2s;
 }
 
 .review-toolbar .search-btn:hover {
-	background: #1a6bff;
-	border-color: #1a6bff;
+	background: #1558d6;
+	border-color: #1558d6;
 	color: #fff;
 }
 
