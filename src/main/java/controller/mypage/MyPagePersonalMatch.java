@@ -60,6 +60,7 @@ public class MyPagePersonalMatch extends HttpServlet {
 				page = 1;
 			}
 		}
+		
 	    String status = request.getParameter("status");
 	    String sport = request.getParameter("sport");
 	    //달력

@@ -31,4 +31,10 @@ public interface ReviewService {
 	boolean writeComment(Long reviewId, Long userId, String content) throws Exception;
 	boolean removeComment(Long commentId, Long userId) throws Exception;
 	boolean removeReviewByAdmin(Long reviewId) throws Exception;
+	Map<String, Object> getPersonalMatchForReview(Long matchId, Long userId) throws Exception;
+
+	Map<String, Object> getTeamMatchForReview(Long matchId, Long userId) throws Exception;
+
+	// 후기 저장 전 참여 여부 검증용
+	boolean isParticipated(String matchType, Long matchId, Long userId) throws Exception;
 }

@@ -20,4 +20,8 @@ public interface ReviewDao {
 	 int deleteMypageReview(Map<String, Object> param) throws Exception;
 	 Map<String, Object> selectMyReview(Map<String, Object> param) throws Exception;
 	 int deleteReviewByAdmin(Long reviewId) throws Exception;
+	 // 참여한 개인 매치 1건 조회 (참여 여부 검증 포함)
+	 Map<String, Object> selectPersonalMatchForReview(Map<String, Object> param) throws Exception;
+	 // 참여한 팀 매치 1건 조회 (참여 여부 검증 포함)
+	 Map<String, Object> selectTeamMatchForReview(Map<String, Object> param) throws Exception;
 }

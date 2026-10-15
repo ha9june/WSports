@@ -255,7 +255,8 @@
 		r.user_id AS userId,
 		u.nickname AS nickname,
 		u.profile_image AS profileImage,
-		r.match_type AS matchType,
+		r.match_type AS
+		matchType,
 		r.match_id AS
 		matchId,
 		r.title AS title,
@@ -264,7 +265,8 @@
 		r.deleted AS deleted,
 		r.created_at AS createdAt,
 		DATE_FORMAT(r.created_at, '%m/%d %H:%i') AS createdAtStr,
-		r.updated_at AS updatedAt,
+		r.updated_at
+		AS updatedAt,
 		COALESCE(pm.match_date,
 		tm.match_date) AS matchDate,
 		COALESCE(pm.sport, tm.sport) AS sport,
@@ -274,18 +276,22 @@
 		comment c WHERE c.review_id =
 		r.review_id AND c.deleted
 		= 0) AS commentCount,
-		(SELECT COUNT(*) FROM review_like l WHERE l.review_id =
+		(SELECT COUNT(*) FROM
+		review_like l WHERE l.review_id =
 		r.review_id) AS likeCount
-		FROM review r
+		FROM review
+		r
 		JOIN user u
 		ON u.user_id =
 		r.user_id
 		LEFT JOIN
-		personal_match pm ON r.match_type =
+		personal_match pm ON
+		r.match_type =
 		'PERSONAL' AND
 		pm.personal_match_id
 		= r.match_id
-		LEFT JOIN team_match tm
+		LEFT JOIN
+		team_match tm
 		ON r.match_type
 		= 'TEAM' AND
 		tm.team_match_id =
@@ -334,11 +340,43 @@
 		r.match_id, r.created_at DESC
 	</select>
 	<update id="deleteReviewByAdmin" parameterType="long">
-	UPDATE review
-	SET deleted = 1, deleted_at = NOW(), updated_at = NOW()
-	WHERE review_id = #{reviewId}
-	  AND deleted = 0
-</update>
-
-
+		UPDATE review
+		SET
+		deleted = 1, deleted_at = NOW(), updated_at = NOW()
+		WHERE review_id =
+		#{reviewId}
+		AND deleted = 0
+	</update>
+	<!-- 개인 매치 -->
+	<select id="selectPersonalMatchForReview" parameterType="map"
+		resultType="map">
+		SELECT m.personal_match_id AS matchId,
+		m.title AS matchTitle,
+		'PERSONAL' AS matchType
+		FROM personal_match_participant p
+		JOIN personal_match m
+		ON m.personal_match_id = p.personal_match_id
+		WHERE m.personal_match_id = #{matchId}
+		AND p.user_id = #{userId}
+		AND p.status = '결제완료'
+		AND m.deleted = '0'
+		AND m.status = '경기 종료'
+	</select>
+	<!-- 팀 매치 -->
+	<select id="selectTeamMatchForReview" parameterType="map"
+		resultType="map">
+		SELECT m.team_match_id AS matchId,
+		m.title AS matchTitle,
+		'TEAM' AS matchType
+		FROM team_match_participant p
+		JOIN team_match m
+		ON
+		m.team_match_id = p.team_match_id
+		WHERE m.team_match_id = #{matchId}
+		AND p.user_id = #{userId}
+		AND p.status = '결제완료'
+		AND m.deleted = 0
+		AND
+		m.status = '경기 종료'
+	</select>
 </mapper>
