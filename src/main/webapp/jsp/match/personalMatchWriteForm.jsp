@@ -7,7 +7,13 @@
 <c:set var="pageTitle" value="경기 만들기" />
 <c:set var="pageCss" value="match,team" />
 <c:set var="activeNav" value="match" />
-<c:set var="demoRoles" value="member" />
+
+<c:set var="minPeopleStart" value="2" />
+<c:set var="minPeopleEnd" value="20" />
+<c:set var="maxPeopleStart" value="2" />
+<c:set var="maxPeopleEnd" value="30" />
+<c:set var="defaultMinPeople" value="8" />
+<c:set var="defaultMaxPeople" value="10" />
 <%@ include file="/jsp/common/header.jsp" %>
 <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
@@ -101,9 +107,9 @@
         <div class="field">
           <span class="field-label strong">참가 인원</span>
           <div class="time-range">
-            <select class="select" name="minPeople" aria-label="최소 인원" required><c:forEach var="n" begin="2" end="20"><option value="${n}" ${n eq 8 ? 'selected' : ''}>최소 ${n}명</option></c:forEach></select>
+            <select class="select" name="minPeople" aria-label="최소 인원" required><c:forEach var="n" begin="${minPeopleStart}" end="${minPeopleEnd}"><option value="${n}" ${n eq defaultMinPeople ? 'selected' : ''}>최소 ${n}명</option></c:forEach></select>
             <span>~</span>
-            <select class="select" name="maxPeople" aria-label="최대 인원" required><c:forEach var="n" begin="2" end="30"><option value="${n}" ${n eq 10 ? 'selected' : ''}>최대 ${n}명</option></c:forEach></select>
+            <select class="select" name="maxPeople" aria-label="최대 인원" required><c:forEach var="n" begin="${maxPeopleStart}" end="${maxPeopleEnd}"><option value="${n}" ${n eq defaultMaxPeople ? 'selected' : ''}>최대 ${n}명</option></c:forEach></select>
           </div>
         </div>
       </div>
@@ -128,7 +134,7 @@
       </div>
       <div class="field">
         <span class="field-label strong">연령대 <span class="hint-gray">복수 선택 가능</span></span>
-        <div class="chip-group" data-select="multi" data-name="ages" required>
+        <div class="chip-group" data-select="multi" data-name="ages">
           <button type="button" class="chip">20대</button>
           <button type="button" class="chip">30대</button>
           <button type="button" class="chip">40대</button>
@@ -180,15 +186,44 @@
 			e.preventDefault();
 			searchPostAddress();
 		});
-		
+
+		function pad2(n) { return (n < 10 ? '0' : '') + n; }
+		var now = new Date();
+		var todayStr = now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate());
+		$('#matchDate').attr('min', todayStr);
+
+		var submitting = false;
+
+		// 뒤로가기로 돌아왔을 때 버튼이 잠겨 있지 않도록 복구
+		$(window).on('pageshow', function () {
+			submitting = false;
+			$('#writeForm .form-actions button[type="submit"]').prop('disabled', false);
+		});
+
+		function fail(e, msg, el) {
+			e.preventDefault();
+			showToast(msg);
+			if (el) {
+				el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				if (typeof el.focus === 'function') el.focus();
+			}
+		}
 		
 		$('#writeForm').on('submit', function (e) {
+
+			if (submitting) {
+				e.preventDefault();
+				return;
+			}
+
 			var checks = [
 				{ type: 'input', sel: '#title',                msg: '제목을 입력해주세요.' },
 				{ type: 'input', sel: '#matchDate',            msg: '경기일자를 선택해주세요.' },
 				{ type: 'input', sel: '[name="startTime"]',    msg: '시작 시간을 선택해주세요.' },
 				{ type: 'input', sel: '[name="endTime"]',      msg: '종료 시간을 선택해주세요.' },
 				{ type: 'input', sel: '#address',              msg: '장소를 검색해주세요.' },
+				{ type: 'input', sel: '#lat',                  msg: '주소를 다시 검색해주세요. (좌표를 가져오지 못했어요)' },
+				{ type: 'input', sel: '#lng',                  msg: '주소를 다시 검색해주세요. (좌표를 가져오지 못했어요)' },
 				{ type: 'input', sel: '#addressDetail',        msg: '상세주소를 입력해주세요.' },
 				{ type: 'input', sel: '#fee',                  msg: '참가비를 입력해주세요.' },
 				{ type: 'input', sel: '#deadline',             msg: '모집 마감을 선택해주세요.' },
@@ -206,13 +241,51 @@
 					: !el.querySelector('.chip.is-selected');
 
 				if (empty) {
-					e.preventDefault();
-					showToast(c.msg);
-					el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-					if (c.type === 'input') el.focus();
+					fail(e, c.msg, el);
 					return;
 				}
 			}
+
+			var feeRaw = $('#fee').val().replace(/,/g, '').trim();
+			if (!/^\d+$/.test(feeRaw)) {
+				fail(e, '참가비는 숫자만 입력해주세요.', document.getElementById('fee'));
+				return;
+			}
+
+			var minP = parseInt($('[name="minPeople"]').val(), 10);
+			var maxP = parseInt($('[name="maxPeople"]').val(), 10);
+			if (minP > maxP) {
+				fail(e, '최소 인원은 최대 인원보다 클 수 없어요.', document.querySelector('[name="minPeople"]'));
+				return;
+			}
+
+			var st = $('[name="startTime"]').val();
+			var et = $('[name="endTime"]').val();
+			if (st >= et) {
+				fail(e, '종료 시간은 시작 시간보다 늦어야 해요.', document.querySelector('[name="endTime"]'));
+				return;
+			}
+
+			var matchDate = $('#matchDate').val();
+			var startAt = new Date(matchDate + 'T' + st);   // 예: 2026-10-20T19:30
+			var deadlineAt = new Date($('#deadline').val());
+			var nowAt = new Date();
+
+			if (startAt < nowAt) {
+				fail(e, '이미 지난 시간에는 경기를 만들 수 없어요.', document.getElementById('matchDate'));
+				return;
+			}
+			if (deadlineAt < nowAt) {
+				fail(e, '모집 마감은 현재 시각 이후여야 해요.', document.getElementById('deadline'));
+				return;
+			}
+			if (deadlineAt > startAt) {
+				fail(e, '모집 마감은 경기 시작 전이어야 해요.', document.getElementById('deadline'));
+				return;
+			}
+
+			submitting = true;
+			$(this).find('button[type="submit"]').prop('disabled', true);
 		});
 		
 		

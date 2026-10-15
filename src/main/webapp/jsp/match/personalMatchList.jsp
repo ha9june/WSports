@@ -12,7 +12,6 @@
 <c:set var="pageJs" value="home" />
 <c:set var="activeNav" value="match" />
 <c:set var="showFooter" value="true" />
-<c:set var="demoStates" value="list:일반 검색|map:지도 검색|mapTyping:지도-입력 중|mapPin:지도-핀 선택" />
 <%@ include file="/jsp/common/header.jsp" %>
 <style>
 	.is-hidden { display: none !important; }
@@ -44,6 +43,43 @@
 
 	
 	let page =1;
+
+	const PAGE_SIZE = 4;
+
+	const SPORT_TYPE = {
+		'축구/풋살': 'football',
+		'축구': 'football',
+		'농구': 'basketball',
+		'배드민턴': 'badminton',
+		'테니스': 'tennis'
+	};
+	function getSportType(sport) {
+		return SPORT_TYPE[sport] || '';
+	}
+
+	const SEARCH_TYPE_TEXT = {
+		RECOMAND: '지역 · 실력 일치',
+		POPULAR: '인기 경기',
+		NEW: '최신 경기',
+		END: '마감임박 경기'
+	};
+
+	const STATUS_PILL = {
+		'모집중': 'pill-success',
+		'모집 마감': 'pill-info',
+		'경기 종료': 'pill-info',
+		'경기 취소': 'pill-danger'
+	};
+
+	function esc(value) {
+		if (value === null || value === undefined) return "";
+		return String(value)
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#39;");
+	}
 	
 	function favBtn(item, extraClass){
 	    return `<button type="button" class="fav-btn `+(extraClass||"")+(item.favorite ? " is-on" : "")+`"
@@ -65,51 +101,29 @@
 		    	},
 				success:function(result){
 					let html = "";
-					let searchtypeText = "";
+					let searchtypeText = SEARCH_TYPE_TEXT[searchType] || "";
 					result.forEach(function(item) {
 						
-					    let sportsType = "";
-					    if(item.sport == "축구/풋살" || item.sport == "축구"){
-					    	sportsType="football";
-					    }else if(item.sport == "농구"){
-					    	sportsType="basketball";
-					    }else if(item.sport == "배드민턴"){
-					    	sportsType="badminton";
-					    }else if(item.sport == "테니스"){
-					    	sportsType="tennis";
-					    }
-					    
-					    if(searchType=="RECOMAND"){
-					    	searchtypeText="지역 · 실력 일치";
-					    }else if(searchType=="POPULAR"){
-					    	searchtypeText="인기 경기";
-
-					    }else if(searchType=="NEW"){
-					    	searchtypeText="최신 경기";
-
-					    }else if(searchType=="END"){
-					    	searchtypeText="마감임박 경기";
-					    }
-					    
+					    let sportsType = getSportType(item.sport);
 
 					    html += `
 					    	<a class="match-card `+sportsType+`" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
 						    <img class="art" src="${ctx}/img/art-`+sportsType+`.png" alt="">
 						    <span class="sport-tag `+sportsType+`">
-						    `+item.sport+`
+						    `+esc(item.sport)+`
 						    </span>
 						    `+favBtn(item, "bare")+`
 						    <span class="signal"><img src="${ctx}/img/icon-pin-14.svg" alt="">`+searchtypeText+`</span>
 						    <div class="body">
 						      <p class="title">
-						      	`+item.title+`
+						      	`+esc(item.title)+`
 						      </p>
 						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
 				                `+FormatDate(item.matchDate, item.startTime)+`
-						      `+item.region+`
+						      `+esc(item.region)+`
 						      </p>
 						      <p class="price">
-						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
+						      	`+Number(item.participationFee + item.fee).toLocaleString('ko-KR')+`원
 						      </p>
 						    </div>
 						    <p class="count">
@@ -124,7 +138,6 @@
 					 $("#nowMatchListDiv").html(html);		
 				},
 				error:function(err){
-					console.log("err");
 					console.log(err);
 				}
 			});
@@ -146,9 +159,8 @@
 	        });
 	        data.push({
 	            name: 'userLng',
-	            value: 'userLng'
+	            value: userLng  
 	        });
-	        console.log(data);
 			$.ajax({
 				url:"${ctx}/match/list/normal",
 				type:"post",
@@ -156,31 +168,21 @@
 			    data: data,
 				success:function(result){
 					let html = "";
-					let searchTypeText="";
 					
-					
-					if(result.length < 4){
+					if(result.length < PAGE_SIZE){
 						$("#moreBtn").addClass("is-hidden");
 					}
 					result.forEach(function(item) {
-						let sportsType = "";
-					    if(item.sport == "축구/풋살" || item.sport == "축구"){
-					    	sportsType="football";
-					    }else if(item.sport == "농구"){
-					    	sportsType="basketball";
-					    }else if(item.sport == "배드민턴"){
-					    	sportsType="badminton";
-					    }else if(item.sport == "테니스"){
-					    	sportsType="tennis";
-					    }
+						let sportsType = getSportType(item.sport);
 					    				    
 						/* 개인경기 리스트 */
+
 						html+=`
 							<a class="match-row" href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
-				            <div class="left"><span class="pill pill-success bd">`+item.status+`</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="축구/풋살"></div>
+				            <div class="left"><span class="pill `+(STATUS_PILL[item.status] || 'pill-neutral')+` bd">`+esc(item.status)+`</span><img src="${ctx}/img/sport-icon-`+sportsType+`.png" alt="`+esc(item.sport)+`"></div>
 				            <div class="main">
 				              <p class="title">
-				              `+item.title+`
+				              `+esc(item.title)+`
 				              </p>
 				              <div class="meta">
 				                <span class="it people">
@@ -190,8 +192,8 @@
 			                		</span>
 			                	</span>
 				                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">`+FormatDate(item.matchDate, item.startTime)+`</span>
-				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">`+item.region+`</span>
-				                <span class="price">`+Number(item.participationFee).toLocaleString('ko-KR')+`원</span>
+				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">`+esc(item.region)+`</span>
+				                <span class="price">`+Number(item.participationFee + item.fee).toLocaleString('ko-KR')+`원</span>
 				                `+favBtn(item)+`
 				              </div>
 				            </div>
@@ -223,25 +225,10 @@
 
 		});
 		
-		$("#nowRecomandBtn").on("click", function() {
+		$(".btnGroup1").on("click", function() {
 			$(this).siblings("a").removeClass("is-active");
 			$(this).addClass("is-active");
-			NowList("RECOMAND");
-		});
-		$("#nowPopularBtn").on("click", function() {
-			$(this).siblings("a").removeClass("is-active");
-			$(this).addClass("is-active");
-			NowList("POPULAR");
-		});
-		$("#nowEndBtn").on("click", function() {
-			$(this).siblings("a").removeClass("is-active");
-			$(this).addClass("is-active");
-			NowList("END");
-		});
-		$("#nowNewBtn").on("click", function() {
-			$(this).siblings("a").removeClass("is-active");
-			$(this).addClass("is-active");
-			NowList("NEW");
+			NowList($(this).data("type"));
 		});
 		
 		
@@ -260,6 +247,7 @@
 			$(".normalGroup").addClass("is-hidden");
 		  	$(".mapGroup").removeClass("is-hidden");
 		  	map.relayout();
+		  	map.setCenter(mapCenter); 
 			searchMapMatch();
 			
 		});
@@ -298,10 +286,10 @@
         </c:choose>
       </p>
       <div class="feature-tabs">
-        <c:if test="${sessionScope.user != null}"><a id="nowRecomandBtn" class="btnGroup1 is-active">추천 경기</a></c:if>
-        <a id="nowPopularBtn" class="btnGroup1 ${sessionScope.user == null ? 'is-active' : ''}">인기 경기</a>
-        <a id="nowEndBtn" class="btnGroup1">마감 임박</a>
-        <a id="nowNewBtn" class="btnGroup1">신규 모집</a>
+        <c:if test="${sessionScope.user != null}"><a id="nowRecomandBtn" class="btnGroup1 is-active" data-type="RECOMAND">추천 경기</a></c:if>
+        <a id="nowPopularBtn" class="btnGroup1 ${sessionScope.user == null ? 'is-active' : ''}" data-type="POPULAR">인기 경기</a>
+        <a id="nowEndBtn" class="btnGroup1" data-type="END">마감 임박</a>
+        <a id="nowNewBtn" class="btnGroup1" data-type="NEW">신규 모집</a>
       </div>
 		<div id="nowMatchListDiv" class="feature-row">
 		</div>
@@ -491,7 +479,7 @@
   </div>
 </main>
 
-	<a id=matchMakeButton class="fab" href="${ctx}/match/write/form" data-auth 
+	<a id="matchMakeButton" class="fab" href="${ctx}/match/write/form" data-auth 
 		data-account="${not empty sessionScope.user.bankName
 	    and not empty sessionScope.user.accountNumber
 	    and not empty sessionScope.user.accountHolder}">
@@ -501,11 +489,16 @@
 <%@ include file="/jsp/common/footer.jsp" %>
 
 <script>
+	const DEFAULT_MAP_LAT = 37.5700;
+	const DEFAULT_MAP_LNG = 126.979;
+	const DEFAULT_MAP_LEVEL = 7;
+
 	let markers = [];
+	let overlays = []; 
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	mapOption = {
-	    center: new kakao.maps.LatLng(37.5675000, 126.9790000), // 지도의 중심좌표
-	    level: 5 // 지도의 확대 레벨
+	    center: new kakao.maps.LatLng(DEFAULT_MAP_LAT, DEFAULT_MAP_LNG), // 지도의 중심좌표
+	    level: DEFAULT_MAP_LEVEL // 지도의 확대 레벨
 	};
 	var map = new kakao.maps.Map(mapContainer, mapOption);
 	let mapCenter = map.getCenter();                         // 현재 기준 중심 저장
@@ -556,16 +549,7 @@
 	
 	function createMarker(item) {
     	 
-	    let sportsType = "";
-	    if(item.sport == "축구/풋살" || item.sport == "축구"){
-	    	sportsType="football";
-	    }else if(item.sport == "농구"){
-	    	sportsType="basketball";
-	    }else if(item.sport == "배드민턴"){
-	    	sportsType="badminton";
-	    }else if(item.sport == "테니스"){
-	    	sportsType="tennis";
-	    }
+	    let sportsType = getSportType(item.sport);
 		 const position = new kakao.maps.LatLng(
 		 	item.latitude,
 		 	item.longitude
@@ -582,13 +566,14 @@
 	       //image: markerImage
 	    });
 
+
 	    const content = `
 	        <div class="map-list">
-	            <a href="${ctx}/match/detail/view?personalMatchId="`+item.personalMatchId+`
-	               class="football ${state eq 'mapPin' ? '' : 'is-active'}"
-	               data-pin="m1">
-	                <small>`+item.sport+`</small>
-	                <strong>`+item.title+`</strong>
+	            <a href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`"
+	               class="`+sportsType+` is-active"
+	               data-pin="`+item.personalMatchId+`">
+	                <small>`+esc(item.sport)+`</small>
+	                <strong>`+esc(item.title)+`</strong>
 	                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
 
 	            </a>
@@ -599,7 +584,7 @@
 	        position: position,
 	        yAnchor: 1.35
 	    });
-
+	    overlays.push(overlay);
 	    kakao.maps.event.addListener(marker, "mouseover", function() {
 	        overlay.setMap(map);
 	    });
@@ -623,16 +608,19 @@
 	        marker.setMap(null);
 	    });
 	    markers = [];
+	    overlays.forEach(function(overlay) {
+	        overlay.setMap(null);
+	    });
+	    overlays = [];
 	}
 
 	function searchMapMatch() {
+		overlays.forEach(function(overlay) {
+	        overlay.setMap(null);
+	    });
 	    const bounds = map.getBounds();
 	    const sw = bounds.getSouthWest();
 	    const ne = bounds.getNorthEast();
-	    const minLat = sw.getLat();
-	    const maxLat = ne.getLat();
-	    const minLng = sw.getLng();
-	    const maxLng = ne.getLng();
         var data = $('#mapMatchSearchForm').serializeArray();
         data.push({
             name: 'minLat',
@@ -666,13 +654,15 @@
 	            data.forEach(function(item) {	
 	            	html += `
 	            		<a href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`"
-	            		   class="football ${state eq 'mapPin' ? '' : 'is-active'}" data-pin="m1">
-	            			<small>`+item.sport+`</small>
+	            		   class="`+getSportType(item.sport)+` is-active" data-pin="`+item.personalMatchId+`">
+	            			<small>`+esc(item.sport)+`</small>
 	            			<div class="map-title-row">
-	            				<strong>`+item.title+`</strong>
+	            				<strong>`+esc(item.title)+`</strong>
 	            				`+favBtn(item, "bare")+`
 	            			</div>
 	            			<span>`+FormatDate(item.matchDate, item.startTime)+`</span>
+	            			<span>`+Number(item.participationFee + item.fee).toLocaleString('ko-KR')+`원</span>
+	            			
 	            		</a>
 	            	`;
 	            	//마커찍기
@@ -719,7 +709,3 @@
 	initPeriodPicker('mapPeriodPicker', 'mapStartDate', 'mapEndDate', function () {
 	});
 </script>
-	
-
-
-

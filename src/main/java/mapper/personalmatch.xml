@@ -704,8 +704,7 @@
 		SELECT
 		personal_match_id, user_id, title
 		FROM personal_match
-		WHERE status = '모집
-		마감'
+		WHERE status = '모집 마감'
 		AND coalesce(deleted, 0) = 0
 		AND TIMESTAMP(match_date, end_time) &lt;= NOW();
 	</select>

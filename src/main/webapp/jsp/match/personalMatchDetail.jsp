@@ -46,7 +46,7 @@
 	}
 	.team-tabs {
 		position: sticky;
-		top: var(--header-h); /* [수정 2] 세미콜론 누락 → z-index가 무시되던 문제 해결 */
+		top: var(--header-h); 
 		z-index: 40;
 		background: #fff;
 	}
@@ -66,12 +66,10 @@
 
 </style>
 
-<%-- [수정 7] isHost 등을 activeNav에서 쓰기 전에 먼저 정의하도록 위로 이동 (기존엔 정의 전에 사용됨) --%>
 <c:set var="status" value="${personalMatch.status}" />
 <c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
 <c:set var="isUser" value="${sessionScope.user.grade eq 'User'}" />
 <c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
-<%-- [수정 8] <c:set var="applied" value="${applied }" /> 삭제 (자기 자신을 대입하는 무의미한 코드) --%>
 
 <c:set var="pageTitle" value="경기 상세" />
 <c:set var="pageCss" value="match" />
@@ -85,11 +83,9 @@
 <script>
 	$(function() {
 
-		// [수정 9] 값에 따옴표가 있어도 JS가 깨지지 않도록 c:out 사용
 		const profileImage = '<c:out value="${personalMatch.image}" />';
 		const sport = '<c:out value="${personalMatch.sport}" />';
 
-		// [수정 3] 종목별 if-else 분기 → 객체 맵으로 정리 + badminton.png.png 오타 수정
 		const sportIcons = {
 			'축구/풋살': 'sport-icon-football.png',
 			'농구': 'sport-icon-basketball.png',
@@ -101,13 +97,11 @@
 
 		if (profileImage) {
 			imageSrc = '${ctx}/uploads/' + profileImage;
-		} else if (sportIcons[sport]) {
-			imageSrc = '${ctx}/img/' + sportIcons[sport];
+			$('#mainPhoto').html('<img src="' + imageSrc + '" alt="경기 이미지">');
 		}
 
-		$('#mainPhoto').html('<img src="' + imageSrc + '" alt="경기 이미지">');
+		//$('#mainPhoto').html('<img src="' + imageSrc + '" alt="경기 이미지">');
 
-		// [수정 9] c:out 적용 + 빈 값 제외 (첫 번째가 비어 있어도 대표 사진이 정상 표시됨)
 		const images = [
 			'<c:out value="${personalMatch.image1}" />',
 			'<c:out value="${personalMatch.image2}" />',
@@ -186,7 +180,6 @@
 	      	<span class="avatar">
 				<c:choose>
 					<c:when test="${not empty personalMatch.profileImage}"> 
-						<%-- [수정 1] profileImagey → profileImage (오타 수정, 호스트 프로필 사진 미표시 원인) --%>
 						<img src="${ctx}/uploads/<c:out value='${personalMatch.profileImage}' />" alt=""
 							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
 							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
@@ -209,10 +202,14 @@
 
     <div class="detail-grid">
       <div class="detail-main">
-        <div class="gallery">
-			<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
-			<div class="thumbs" id="thumbs"></div>
-        </div>
+      
+      	<c:if test="${not empty personalMatch.image}">
+	      	<div class="gallery">
+				<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
+				<div class="thumbs" id="thumbs"></div>
+	        </div>
+      	</c:if>
+
 
 
         <section class="info-card">
@@ -225,7 +222,7 @@
             </dd></div>
             <div class="info-row"><dt>주소</dt><dd>${personalMatch.address}</dd></div>
             <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee }" />원</dd></div>
+            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee +personalMatch.fee }" />원</dd></div>
             
             <div class="info-row"><dt>참가 인원</dt>
 	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
@@ -237,7 +234,6 @@
 	            			<small style="color:red;">최소 진행 ${personalMatch.minPeople }명 · 미충족</small>
 	            		</c:otherwise>
 	            	</c:choose>
-	            	<%-- [수정 4] 위 c:when과 같은 조건이라 문구가 두 번 출력되던 c:if 블록 삭제 --%>
 	           	</dd>
            	</div>
             <div class="info-row"><dt>마감</dt><dd>
@@ -250,7 +246,7 @@
 					<c:if test="${personalMatch.age30s}">30대 </c:if>
 					<c:if test="${personalMatch.age40s}">40대 </c:if>
 					<c:if test="${personalMatch.age50s}">50대 </c:if>
-					<c:if test="${personalMatch.age60Plus}">60대+ </c:if>
+					<c:if test="${personalMatch.age60Plus}">연령무관 </c:if>
             	</dd>
             </div>
             
@@ -261,7 +257,7 @@
 				<c:if test="${personalMatch.skillIntermediate}">중급 </c:if>
 				<c:if test="${personalMatch.skillAdvanced}">고급 </c:if>
             	</dd>
-            </div> <%-- [수정 5] 닫히지 않았던 info-row </div> 추가 --%>
+            </div> 
           </dl>
           <div class="desc">
             <h3>상세 설명</h3>
@@ -270,7 +266,6 @@
         </section>
 
         <section class="map-card">
-          <%-- [수정 6] 하드코딩된 "서울 마포구 망원 풋살장" → 실제 장소명으로 교체 --%>
           <div class="head"><strong>경기 위치</strong><span>${personalMatch.address} ${personalMatch.placeName}</span></div>
           <div id="map" style="width:100%;height:300px;">
           </div>
@@ -285,7 +280,6 @@
       </div>
 
 
-      <%-- ===== 우측 패널 : 상태별 액션 ===== --%>
       <aside class="detail-side">
         <c:choose>
         	
@@ -320,7 +314,7 @@
 	        			<div class="side-card">
 			              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>
 			              <p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee }" /> 원</b></div>
+			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" /> 원</b></div>
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">			             
@@ -333,7 +327,7 @@
         			<c:when test="${isUser and !applied}">
 						<div class="side-card">
 			              <h2>결제 안내</h2>
-			              <div class="kv">참가비 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee }" />원</b></div>
+			              <div class="kv">참가비 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" />원</b></div>
 			              <hr>
 			              <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
 			              <div class="actions">
@@ -358,7 +352,7 @@
 	              <p class="sub">모집 기간이 종료되어 더 이상 참가 신청을 받을 수 없습니다.</p>
 		            <c:if test="${applied }">
 		            	<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee }" />원</b></div> <%-- [수정 10] 다른 곳과 맞춰 "원" 단위 추가 --%>
+			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" />원</b></div> 
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">
@@ -388,7 +382,6 @@
 	            <div class="side-card">
 	              <span class="pill pill-danger bd">경기 취소</span>
 	              <p class="status-title">경기가 취소되었습니다.</p>
-	              <%-- [수정 11] status-title과 중복되던 sub 문구 → 안내 문구로 변경 --%>
 	              <p class="sub">호스트 또는 운영 사정으로 경기가 진행되지 않아요.</p>
 	              <p class="note">결제한 참가비는 환불 규정에 따라 처리됩니다.</p>
 	            </div>
@@ -437,7 +430,6 @@
 			<input type="hidden" name="matchType" value="Personal">
 			<input type="hidden" name="matchId" value="${personalMatch.personalMatchId}">			
 			<input type="hidden" name="matchTitle" value="${personalMatch.title}">			
-			<%-- [수정 12] 닫기 버튼 텍스트 "삭제" → "취소" --%>
 			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
         	<button type="submit" class="btn btn-danger">삭제</button>
 		</form>
@@ -448,7 +440,6 @@
 <div class="modal" id="refundModal" role="dialog" aria-modal="true">
 	<div class="modal-card md">
 		<h2 class="modal-title">환불할까요?</h2>
-		<%-- [수정 13] <p> 안에 <p>가 중첩되던 구조 → 바깥을 div로 변경 --%>
 		<div class="modal-desc">
 			<p class="t-12 t-danger" style="margin-bottom:12px">
 			환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br>
@@ -458,7 +449,7 @@
 		<form method="post" action="${ctx}/payment/match/detail/refund" id="refundForm">
 			<input type="hidden" name="matchType" value="Personal"/>
 			<div class="modal-body">
-				<p>환불금액 : <b><fmt:formatNumber value="${personalMatch.participationFee}"  pattern="#,###"/>원</b></p>
+				<p>환불금액 : <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}"  pattern="#,###"/>원</b></p>
 				<div class="field mt-16">
 					<label class="field-label">환불사유</label>
 					<select class="select" name="cancelReason" required>
