@@ -68,7 +68,7 @@
 
 <c:set var="status" value="${personalMatch.status}" />
 <c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
-<c:set var="isUser" value="${sessionScope.user.grade eq 'User'}" />
+<c:set var="isUser" value="${not empty sessionScope.user}" />
 <c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
 
 <c:set var="pageTitle" value="경기 상세" />
@@ -156,7 +156,6 @@
 		<c:set var="pillCls" value="pill-neutral" /><c:set var="pillText" value="${status}" />
 	</c:otherwise>
 </c:choose>
-
 <c:if test="${isAdmin}">
 	<div class="admin-post-bar">관리자(사이트) 보기 · 운영 정책에 맞지 않는 경기는 삭제할
 		수 있어요.</div>
@@ -166,7 +165,8 @@
   <div class="container">
     <nav class="breadcrumb">
     </nav>
-      ${personalMatch.profileImage }
+    
+    
     <%-- ===== 상단 : 종목 / 제목 / 호스트 ===== --%>
     <section class="detail-top">
       <span class="sport-chip">${personalMatch.sport }</span>
@@ -175,6 +175,10 @@
         	${personalMatch.title }
         </h1>
         <span class="pill pill-lg ${pillCls}">${status }</span>
+        <c:if test="${isAdmin && !personalMatch.deleted}">
+			<button type="button" class="btn btn-danger btn-sm"
+				data-modal-open="adminDeleteModal">팀 경기 삭제</button>
+		</c:if>
       </div>
       <div class="host-inline">
 	      	<span class="avatar">
@@ -275,11 +279,8 @@
           <div class="detail-actions">
             <button type="button" class="fav-btn sq ${personalMatch.favorite ? 'is-on' : ''}" 
             data-fav2 data-auth data-match-id="${personalMatch.personalMatchId }" data-match-type="Personal" aria-label="관심 경기">${heart}</button>
-<<<<<<< HEAD
-            <a class="btn btn-outline btn-sm" href="${ctx}/support/inquiry/create?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
-=======
+
             <a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=personalMatch&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
           </div>
       </div>
 
@@ -289,18 +290,16 @@
         	
         	<c:when test="${status eq '모집중'}">
         		<c:choose>
-        			<c:when test="${isAdmin}">
+        			<%-- <c:when test="${isAdmin}">
         				<div class="side-card">
-							<h2>내가 작성한 경기</h2>
 							<p style="margin-top:8px"><span class="pill ${pillCls}">${status}</span></p>
 								<div class="actions">
 									<a class="btn btn-primary" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople})</a>
-									<button type="button" class="btn btn-outline btn-danger-soft"
-										data-modal-open="adminDeleteModal">경기 삭제</button>
+									
 								</div>
 							<p class="note">삭제 시 참가자에게 알림이 전송돼요.</p>
 						</div>
-        			</c:when>
+        			</c:when> --%>
         			<c:when test="${isHost}">
 						<div class="side-card">
 							<h2>내가 작성한 경기</h2>
