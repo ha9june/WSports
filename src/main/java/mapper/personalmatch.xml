@@ -340,6 +340,7 @@
 		WHERE p.user_id = #{userId}
 		AND p.status IN
 		('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -367,6 +368,7 @@
 		WHERE p.user_id =
 		#{userId}
 		AND p.status IN ('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -389,16 +391,21 @@
 		m.max_people AS maxPeople,
 		(SELECT COUNT(*)
 		FROM personal_match_participant cp
-		WHERE cp.personal_match_id = m.personal_match_id
-		AND cp.status = '결제완료') AS currentPeople,
-		CASE WHEN f.favorite_id IS NULL THEN 0 ELSE 1 END AS favorite
+		WHERE
+		cp.personal_match_id = m.personal_match_id
+		AND cp.status = '결제완료') AS
+		currentPeople,
+		CASE WHEN f.favorite_id IS NULL THEN 0 ELSE 1 END AS
+		favorite
 		FROM personal_match m
 		LEFT JOIN favorite f
-		ON f.match_id = m.personal_match_id
+		ON f.match_id =
+		m.personal_match_id
 		AND f.user_id = #{userId}
-		AND f.match_type = 'Personal'
+		AND f.match_type =
+		'Personal'
 		WHERE m.user_id = #{userId}
-		AND m.deleted = '0'
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -412,7 +419,8 @@
 			AND m.created_at &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
 		ORDER BY m.created_at DESC, m.personal_match_id DESC
-		LIMIT #{size} OFFSET #{offset}
+		LIMIT #{size}
+		OFFSET #{offset}
 	</select>
 
 	<!-- 내가만든 경기 목록 갯수 조회 -->
@@ -422,7 +430,7 @@
 		FROM personal_match m
 		WHERE m.user_id = #{userId}
 		AND
-		m.deleted = '0'
+		coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -437,27 +445,33 @@
 	<select id="selectPersonalMatch" parameterType="personalMatch"
 		resultType="personalMatch">
 		SELECT
-	        m.*,
-	        u.nickname,
-	        u.profile_image,
-	        COUNT(p.participant_id) AS current_people,
-	        CASE
-	            WHEN f.match_id IS NOT NULL THEN 1
-	            ELSE 0
-	        END AS favorite
-	    FROM personal_match m
-	    LEFT JOIN personal_match_participant p
-	        ON m.personal_match_id = p.personal_match_id
-	        AND p.status = '결제완료'
-	    LEFT JOIN user u
-	        ON m.user_id = u.user_id
-	    LEFT JOIN favorite f
-	        ON f.match_id = m.personal_match_id
-	        AND f.match_type = 'Personal'
-	        AND f.user_id = #{userId}
-	    WHERE m.personal_match_id = #{personalMatchId}
-	    GROUP BY m.personal_match_id
-	    ORDER BY m.created_at DESC
+		m.*,
+		u.nickname,
+		u.profile_image,
+		COUNT(p.participant_id) AS current_people,
+		CASE
+		WHEN f.match_id IS NOT
+		NULL THEN 1
+		ELSE 0
+		END AS favorite
+		FROM personal_match m
+		LEFT JOIN
+		personal_match_participant p
+		ON m.personal_match_id =
+		p.personal_match_id
+		AND p.status = '결제완료'
+		LEFT JOIN user u
+		ON m.user_id =
+		u.user_id
+		LEFT JOIN favorite f
+		ON f.match_id = m.personal_match_id
+		AND
+		f.match_type = 'Personal'
+		AND f.user_id = #{userId}
+		WHERE
+		m.personal_match_id = #{personalMatchId}
+		GROUP BY m.personal_match_id
+		ORDER BY m.created_at DESC
 	</select>
 
 	<insert id="insertPersonalMatch" parameterType="personalMatch"
@@ -627,6 +641,7 @@
 		m.personal_match_id = p.personal_match_id
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -640,7 +655,8 @@
 		FROM
 		personal_match m
 		WHERE m.user_id = #{userId}
-		AND m.deleted = '0'
+		AND coalesce(m.deleted, 0)
+		= 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -654,7 +670,7 @@
 		select count(*)
 		from personal_match
 		where status = '모집중'
-		and deleted = 0
+		AND coalesce(deleted, 0) = 0
 	</select>
 
 
@@ -668,9 +684,11 @@
 		from personal_match m
 		where
 		m.status = '모집중'
-		and m.deleted = 0
-		and m.deadline &lt;= now()
-		and (select
+		and coalesce(m.deleted, 0) = 0
+		and m.deadline &lt;=
+		now()
+		and (
+		select
 		count(*)
 		from personal_match_participant p
 		where p.personal_match_id =
@@ -726,11 +744,14 @@
 	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기) -->
 	<select id="selectFinishedSuccess" resultType="personalMatch">
 		SELECT
-		personal_match_id, user_id, title
-		FROM personal_match
-		WHERE status = '모집 마감'
+		personal_match_id, user_id, title, participation_fee, fee
+		FROM
+		personal_match
+		WHERE status = '모집
+		마감'
 		AND coalesce(deleted, 0) = 0
-		AND TIMESTAMP(match_date, end_time)
+		AND
+		TIMESTAMP(match_date, end_time)
 		&lt;= NOW();
 	</select>
 	<!--스케줄러 : 경기 종료로 업데이트 -->
@@ -758,7 +779,8 @@
 		personal_match_id = #{matchId}
 		and status = '모집중'
 		and
-		deleted = 0
+		and
+		coalesce(deleted, 0) = 0
 	</update>
 	<!--관리자 경기삭제 -->
 	<update id="updateStatusDeleteOfAdmin" parameterType="Long">
@@ -766,11 +788,15 @@
 		personal_match
 		set status = '경기 취소',
 		deleted = 1,
-		updated_at = now()
+		updated_at = now(),
+		deleted_at = now()
 		where personal_match_id = #{matchId}
-		and status = '모집중'
+		and status =
+		'모집중'
 		and
 		deleted = 0
+		and status = '모집중'
+		and coalesce(deleted, 0) = 0
 	</update>
 
 

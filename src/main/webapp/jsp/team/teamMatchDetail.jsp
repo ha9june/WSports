@@ -98,16 +98,20 @@ $('#thumbs').on('click', '.subImg', function() {
 
 <c:choose>
 	<c:when test="${status eq '모집중'}">
-		<c:set var="pillCls" value="pill-success" /><c:set var="pillText" value="모집중" />
+		<c:set var="pillCls" value="pill-success" />
+		<c:set var="pillText" value="모집중" />
 	</c:when>
 	<c:when test="${status eq '모집 마감' or status eq '경기 종료'}">
-		<c:set var="pillCls" value="pill-info" /><c:set var="pillText" value="${status}" />
+		<c:set var="pillCls" value="pill-info" />
+		<c:set var="pillText" value="${status}" />
 	</c:when>
 	<c:when test="${status eq '경기 취소'}">
-		<c:set var="pillCls" value="pill-danger" /><c:set var="pillText" value="경기 취소" />
+		<c:set var="pillCls" value="pill-danger" />
+		<c:set var="pillText" value="경기 취소" />
 	</c:when>
 	<c:otherwise>
-		<c:set var="pillCls" value="pill-neutral" /><c:set var="pillText" value="${status}" />
+		<c:set var="pillCls" value="pill-neutral" />
+		<c:set var="pillText" value="${status}" />
 	</c:otherwise>
 </c:choose>
 
@@ -125,38 +129,48 @@ $('#thumbs').on('click', '.subImg', function() {
 
 		<section class="detail-top">
 			<c:choose>
-				<c:when test="${t.sport eq '축구/풋살'}"><c:set var="sportCls" value="football" /></c:when>
-				<c:when test="${t.sport eq '농구'}"><c:set var="sportCls" value="basketball" /></c:when>
-				<c:when test="${t.sport eq '테니스'}"><c:set var="sportCls" value="tennis" /></c:when>
-				<c:when test="${t.sport eq '배드민턴'}"><c:set var="sportCls" value="badminton" /></c:when>
+				<c:when test="${t.sport eq '축구/풋살'}">
+					<c:set var="sportCls" value="football" />
+				</c:when>
+				<c:when test="${t.sport eq '농구'}">
+					<c:set var="sportCls" value="basketball" />
+				</c:when>
+				<c:when test="${t.sport eq '테니스'}">
+					<c:set var="sportCls" value="tennis" />
+				</c:when>
+				<c:when test="${t.sport eq '배드민턴'}">
+					<c:set var="sportCls" value="badminton" />
+				</c:when>
 			</c:choose>
 			<span class="sport-chip ${sportCls}"><c:out value="${t.sport}" /></span>
 			<div class="title-row">
 				<h1>
 					<c:out value="${t.title}" />
 				</h1>
-				<span class="pill pill-lg ${pillCls} bd">${pillText}</span>
+				<span class="pill pill-lg ${pillCls}">${pillText}</span>
 				<c:if test="${isAdmin}">
 					<button type="button" class="btn btn-danger btn-sm"
 						data-modal-open="adminDeleteModal">팀 경기 삭제</button>
 				</c:if>
 			</div>
 			<div class="host-inline">
-				<span class="avatar">
-					<c:choose>
-						<c:when test="${not empty t.hostProfileImage}"> 
-							<img src="${ctx}/profiles/<c:out value='${t.hostProfileImage}' />" alt=""
+				<span class="avatar"> <c:choose>
+						<c:when test="${not empty t.hostProfileImage}">
+							<img
+								src="${ctx}/profiles/<c:out value='${t.hostProfileImage}' />"
+								alt=""
 								onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-								style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+								style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
 						</c:when>
 						<c:otherwise>
 							<img src="${ctx}/img/default-profile.svg" alt=""
-								style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+								style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
 						</c:otherwise>
 					</c:choose>
 				</span>
 				<div>
-					<a class="host-name" href="${ctx}/member/publicProfile/view?userId=${t.userId}"><strong><c:out
+					<a class="host-name"
+						href="${ctx}/member/publicProfile/view?userId=${t.userId}"><strong><c:out
 								value="${t.hostNickname}" /></strong></a> <small>호스트 · <c:out
 							value="${t.teamName}" /> ${t.hostRole eq 'VICE_CAPTAIN' ? '부주장' : '주장'}
 					</small>
@@ -177,7 +191,7 @@ $('#thumbs').on('click', '.subImg', function() {
 						<dl class="info-list">
 							<div class="info-row">
 								<dt>일시</dt>
-								<dd>${t.matchDate} (${t.dayOfWeekKorean}) ${t.startTime} ~
+								<dd>${t.matchDate}(${t.dayOfWeekKorean})${t.startTime} ~
 									${t.endTime}</dd>
 							</div>
 							<div class="info-row">
@@ -195,7 +209,9 @@ $('#thumbs').on('click', '.subImg', function() {
 							<div class="info-row">
 								<dt>모집 팀</dt>
 								<dd>
-									<a class="team-link" href="${ctx}/team/detail/view?teamId=${t.teamId}"><c:out value="${t.teamName}" /></a>
+									<a class="team-link"
+										href="${ctx}/team/detail/view?teamId=${t.teamId}"><c:out
+											value="${t.teamName}" /></a>
 									<c:choose>
 										<c:when test="${t.teamRating != null}">
 											<span class="rating">${t.teamRating}</span>
@@ -209,7 +225,7 @@ $('#thumbs').on('click', '.subImg', function() {
 							</div>
 							<div class="info-row">
 								<dt>경기 인원</dt>
-								<dd>${t.matchPeople}vs ${t.matchPeople}</dd>
+								<dd>${t.matchPeople}vs${t.matchPeople}</dd>
 							</div>
 							<div class="info-row">
 								<dt>참가비</dt>
@@ -222,7 +238,7 @@ $('#thumbs').on('click', '.subImg', function() {
 								<dt>마감</dt>
 								<dd>${fn:replace(t.deadline, 'T', ' ')}</dd>
 							</div>
-							<div class="info-row"> 
+							<div class="info-row">
 								<dt>성별</dt>
 								<dd>
 									<c:out value="${t.gender}" />
@@ -258,7 +274,7 @@ $('#thumbs').on('click', '.subImg', function() {
 							data-auth aria-label="관심 경기" data-match-type="Team"
 							data-match-id="${t.teamMatchId}">${heart}</button>
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/support/reportWrite.jsp?targetType=team&targetNo=${t.teamMatchId}"
+							href="${ctx}/support/report/create?targetType=teamMatch&targetNo=${t.teamMatchId}"
 							data-auth style="height: 36px">신고</a>
 					</div>
 				</div>
@@ -275,20 +291,23 @@ $('#thumbs').on('click', '.subImg', function() {
 									<p style="margin-top: 8px">
 										<span class="pill pill-success">모집중</span>
 									</p>
-								<div class="actions">
-								<a class="btn btn-primary"
-									href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기 수정</a>
-									<button type="button" class="btn btn-outline btn-danger-soft"
-										data-modal-open="hostCancelModal">경기 취소</button>
-								</div>
-								<p class="note">상대 팀이 신청하기 전까지는 취소하면 전액 환불돼요. 상대 팀이 확정되면 출석 체크와 참가 팀 확인을 사용할 수 있어요.</p>
+									<div class="actions">
+										<a class="btn btn-primary"
+											href="${ctx}/team-match/edit?teamMatchId=${t.teamMatchId}">경기
+											수정</a>
+										<button type="button" class="btn btn-outline btn-danger-soft"
+											data-modal-open="hostCancelModal">경기 취소</button>
+									</div>
+									<p class="note">상대 팀이 신청하기 전까지는 취소하면 전액 환불돼요. 상대 팀이 확정되면 출석
+										체크와 참가 팀 확인을 사용할 수 있어요.</p>
 								</div>
 							</c:when>
 							<c:when test="${isMyTeamList}">
 								<div class="side-card">
-									<h2>팀 매칭 신청</h2> 
+									<h2>팀 매칭 신청</h2>
 									<div class="field mt-16">
-										<label class="field-label" for="myTeam">내 ${t.sport} 팀 선택</label>
+										<label class="field-label" for="myTeam">내 ${t.sport} 팀
+											선택</label>
 										<%-- TODO: 내가 주장/부주장인 팀 목록 (서블릿에서 myTeamList로 전달) --%>
 										<select class="select" id="myTeam" name="teamNo">
 											<c:forEach var="mt" items="${myTeamList}">
@@ -297,11 +316,21 @@ $('#thumbs').on('click', '.subImg', function() {
 											</c:forEach>
 										</select>
 									</div>
+									<div class="kv">
+										참가비 <b><fmt:formatNumber value="${t.participationFee}" />원</b>
+									</div>
+									<div class="kv">
+										수수료 (참가비의 8%) <b><fmt:formatNumber value="${t.fee}" />원</b>
+									</div>
+									<hr>
+									<div class="kv">
+										합계 <b class="lg"><fmt:formatNumber value="${t.participationFee + t.fee}" />원</b>
+									</div>
 									<p class="note">결제하면 바로 확정돼요. 확정 후에는 취소와 환불이 어려워요.</p>
 									<div class="actions">
 										<a class="btn btn-primary" id="payBtn"
-										   href="${ctx}/payment/confirm?state=teamMatch&matchId=${t.teamMatchId}"
-										   data-auth>결제하기</a>
+											href="${ctx}/payment/confirm?state=teamMatch&matchId=${t.teamMatchId}"
+											data-auth>결제하기</a>
 									</div>
 								</div>
 							</c:when>
@@ -313,17 +342,22 @@ $('#thumbs').on('click', '.subImg', function() {
 											<h2>팀 매칭 신청</h2>
 											<p class="sub">로그인 후 주장 또는 부주장 계정으로 신청할 수 있어요.</p>
 											<div class="actions">
-												<a class="btn btn-primary" href="${ctx}/auth/login" data-auth>로그인</a>
+												<a class="btn btn-primary" href="${ctx}/auth/login"
+													data-auth>로그인</a>
 											</div>
 										</c:when>
 										<%-- 로그인했지만 주장/부주장이 아님 --%>
 										<c:otherwise>
 											<h2>팀 매칭 신청</h2>
-											<p class="sub">이 경기는 <b>${t.sport}</b> 종목 팀의 <b>주장 또는 부주장</b>만 신청할 수 있어요.</p>
-											<p class="note">팀원이라면 주장이나 부주장에게 이 경기를 공유해 신청을 요청해 보세요. 팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
+											<p class="sub">
+												이 경기는 <b>${t.sport}</b> 종목 팀의 <b>주장 또는 부주장</b>만 신청할 수 있어요.
+											</p>
+											<p class="note">팀원이라면 주장이나 부주장에게 이 경기를 공유해 신청을 요청해 보세요.
+												팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
 											<div class="actions row">
-												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀 찾기</a>
-												<a class="btn btn-primary btn-sm" href="${ctx}/team/create">팀 만들기</a>
+												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀
+													찾기</a> <a class="btn btn-primary btn-sm"
+													href="${ctx}/team/create">팀 만들기</a>
 											</div>
 										</c:otherwise>
 									</c:choose>
@@ -341,13 +375,14 @@ $('#thumbs').on('click', '.subImg', function() {
 									<p style="margin-top: 8px">
 										<span class="pill pill-info">모집 마감</span>
 									</p>
-								<div class="actions">
-									<a class="btn btn-primary"
-										href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">출석 체크</a>
-									<a class="btn btn-outline"
-										href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가 팀 확인</a>
-								</div>
-								<p class="note">상대 팀이 확정되어 경기 수정, 취소, 환불은 불가해요.</p>
+									<div class="actions">
+										<a class="btn btn-primary"
+											href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">출석
+											체크</a> <a class="btn btn-outline"
+											href="${ctx}/team-match/participants/list?teamMatchId=${t.teamMatchId}">참가
+											팀 확인</a>
+									</div>
+									<p class="note">상대 팀이 확정되어 경기 수정, 취소, 환불은 불가해요.</p>
 								</div>
 							</c:when>
 							<c:when test="${applied}">
@@ -360,8 +395,11 @@ $('#thumbs').on('click', '.subImg', function() {
 										참가비 <b><fmt:formatNumber value="${t.participationFee}" />원</b>
 									</div>
 									<div class="kv">
-										결제 금액 <b><fmt:formatNumber
-												value="${t.participationFee + t.fee}" />원</b>
+										수수료 (참가비의 8%) <b><fmt:formatNumber value="${t.fee}" />원</b>
+									</div>
+									<hr>
+									<div class="kv">
+										합계 <b class="lg"><fmt:formatNumber value="${t.participationFee + t.fee}" />원</b>
 									</div>
 									<div class="actions">
 										<a class="btn btn-primary"
@@ -388,16 +426,22 @@ $('#thumbs').on('click', '.subImg', function() {
 								<c:when test="${isHost or applied}">
 									<p class="sub">우리 팀과 상대 팀의 경기 매너를 팀 단위로 평가해주세요.</p>
 									<div class="actions">
+<<<<<<< HEAD
+										<a class="btn btn-primary" href="${ctx}/review/create?matchNo=TEAM:${t.teamMatchId}">후기작성</a>
+										<a class="btn btn-outline" href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">참가 팀 평가</a>
+=======
 										<a class="btn btn-primary"
 											href="${ctx}/review/create">후기 작성</a>
 										<a class="btn btn-outline"
-											href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">참가 팀 평가</a>
+											href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">상대 팀 평가 및 출석 확인</a>
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 									</div>
 								</c:when>
 								<c:otherwise>
 									<p class="sub">이미 끝난 경기예요. 다른 경기를 찾아보세요.</p>
 									<div class="actions">
-										<a class="btn btn-primary" href="${ctx}/team-match/list">상대팀 찾기</a>
+										<a class="btn btn-primary" href="${ctx}/team-match/list">상대팀
+											찾기</a>
 									</div>
 								</c:otherwise>
 							</c:choose>
@@ -407,7 +451,7 @@ $('#thumbs').on('click', '.subImg', function() {
 					<%-- 경기 취소 --%>
 					<c:when test="${status eq '경기 취소'}">
 						<div class="side-card">
-							<span class="pill pill-danger bd">경기 취소</span>
+							<span class="pill pill-danger">경기 취소</span>
 							<p class="status-title">경기가 취소되었습니다</p>
 							<p class="sub">이 경기는 취소되어 더 이상 신청할 수 없어요.</p>
 							<c:if test="${isHost}">
@@ -431,7 +475,8 @@ $('#thumbs').on('click', '.subImg', function() {
 			class="modal-actions">
 			<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
 			<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
-			<button type="submit" class="btn btn-danger" data-modal-open="refundModal">경기 취소</button>
+			<button type="submit" class="btn btn-danger"
+				data-modal-open="refundModal">경기 취소</button>
 		</form>
 	</div>
 </div>
@@ -443,9 +488,11 @@ $('#thumbs').on('click', '.subImg', function() {
 		<div class="modal-card sm">
 			<h2 class="modal-title">팀 경기를 삭제할까요?</h2>
 			<p class="modal-desc">삭제한 경기는 복구할 수 없습니다.</p>
-			<form action="${ctx}/admin/team-match/delete" method="post"
+			<form action="${ctx}/payment/match/detail/allrefund" method="post"
 				class="modal-actions">
-				<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
+				<input type="hidden" name="matchType" value="Team">
+				<input type="hidden" name="matchId" value="${t.teamMatchId}">
+				<input type="hidden" name="matchTitle" value="${t.title}">
 				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
 				<button type="submit" class="btn btn-danger">삭제</button>
 			</form>
@@ -457,18 +504,25 @@ $('#thumbs').on('click', '.subImg', function() {
 	<div class="modal-card md">
 		<h2 class="modal-title">환불할까요?</h2>
 		<p class="modal-desc">
-				<p class="t-12 t-danger" style="margin-bottom:12px">
-				환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br>
-				모집 마감 전까지만 환불할 수 있어요.
-				</p>  
+		<p class="t-12 t-danger" style="margin-bottom: 12px">
+			환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br> 모집 마감 전까지만 환불할 수 있어요.
 		</p>
-		<form method="post" action="${ctx}/payment/match/detail/refund" id="refundForm">
-			<input type="hidden" name="matchType" value="Team"/>
+		</p>
+		<form method="post" action="${ctx}/payment/match/detail/refund"
+			id="refundForm">
+			<input type="hidden" name="matchType" value="Team" />
 			<div class="modal-body">
-				<p>환불금액 : <b><fmt:formatNumber value="${t.participationFee - t.fee}"  pattern="#,###"/>원</b></p>
+<<<<<<< HEAD
+				<p>
+					환불금액 : <b><fmt:formatNumber
+							value="${t.participationFee - t.fee}" pattern="#,###" />원</b>
+				</p>
+=======
+				<p>환불금액 : <b><fmt:formatNumber value="${t.participationFee + t.fee}"  pattern="#,###"/>원</b></p>
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 				<div class="field mt-16">
-					<label class="field-label">환불사유</label>
-					<select class="select" name="cancelReason" required>
+					<label class="field-label">환불사유</label> <select class="select"
+						name="cancelReason" required>
 						<option>일정이 맞지 않음</option>
 						<option>개인 사정</option>
 						<option>잘못 결제함</option>
@@ -476,7 +530,7 @@ $('#thumbs').on('click', '.subImg', function() {
 					</select>
 				</div>
 			</div>
-			<input type="hidden" name="matchId" value="${t.teamMatchId }"/>
+			<input type="hidden" name="matchId" value="${t.teamMatchId }" />
 			<div class="modal-actions">
 				<button type="submit" class="btn btn-danger" id="refundSubmit">환불하기</button>
 				<button type="button" class="btn btn-outline" data-modal-close>취소</button>

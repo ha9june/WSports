@@ -222,6 +222,7 @@
 		and p.user_id = #{userId}
 		and p.team_id = m.team_id
 	</select>
+
 	<!-- 주최팀 환불 시 팀 경기 취소 (상대팀 결제 전만) -->
 	<update id="updateTeamMatchHostCancel" parameterType="map">
 		update team_match
@@ -244,6 +245,16 @@
 		  AND tm.status = '결제완료'
 		ORDER BY participant_id DESC
 		LIMIT 1
+	</select>
+	
+	<!-- 어드민 삭제 버튼 누르면 리스트 가져오는 쿼리 -->
+	<select id="selectPaidPaymentsByMatch" parameterType="Long" resultType="map">
+		select pay.payment_id, pay.payment_key, t.user_id
+		from team_match_participant t
+		join team_payment pay on pay.payment_id = t.payment_id
+		where t.team_match_id = #{matchId}
+		and t.status = '결제완료'
+		and pay.payment_status = 'DONE'
 	</select>
 	
 	

@@ -274,4 +274,33 @@ public class ReviewServiceImpl implements ReviewService {
 	public boolean removeReviewByAdmin(Long reviewId) throws Exception {
 		return reviewDao.deleteReviewByAdmin(reviewId) > 0;
 	}
+
+	@Override
+	public Map<String, Object> getPersonalMatchForReview(Long matchId, Long userId) throws Exception {
+		  Map<String, Object> param = new HashMap<>();
+		    param.put("matchId", matchId);
+		    param.put("userId", userId);
+		    return reviewDao.selectPersonalMatchForReview(param);
+		}
+
+	@Override
+	public Map<String, Object> getTeamMatchForReview(Long matchId, Long userId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+	    param.put("matchId", matchId);
+	    param.put("userId", userId);
+	    return reviewDao.selectTeamMatchForReview(param);
+	}
+
+	@Override
+	public boolean isParticipated(String matchType, Long matchId, Long userId) throws Exception {
+		 Map<String, Object> match = "TEAM".equals(matchType)
+		            ? getTeamMatchForReview(matchId, userId)
+		            : getPersonalMatchForReview(matchId, userId);
+		    return match != null;
+		}
+
+	@Override
+	public int deleteReviewByAdmin(Long reviewId) throws Exception {
+		  return reviewDao.deleteReviewByAdmin(reviewId);
+	}
 }

@@ -21,7 +21,7 @@
 
 <main class="page">
 <form id="writeForm" class="form-rail" novalidate action="${ctx}/match/write/form" method="post" enctype="multipart/form-data">
-  <nav class="breadcrumb"><a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a><span class="sep">›</span><span>경기 만들기</span></nav>
+  <nav class="breadcrumb"><a href="${ctx}/match/list">경기 찾기</a><span class="sep">›</span><span>경기 만들기</span></nav>
   <div class="page-head"><h1 class="page-title">경기 만들기</h1></div>
 
   <div class="team-form-inner">

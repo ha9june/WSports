@@ -164,8 +164,8 @@
 .info-card .info-row { grid-template-columns: 96px 1fr; font-size: 13px; }
 .info-card .info-row dd small { display: block; margin-top: 4px; font-size: 10px; color: var(--ds-brand); font-weight: 500; }
 .info-card .desc { border-top: 1px solid var(--ds-border); margin-top: 28px; padding-top: 22px; }
-.info-card .desc h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
-.info-card .desc p { font-size: 12px; color: var(--ds-text-2); line-height: 1.7; }
+.info-card .desc h3 { font-size: 13px; font-weight: 400; color: var(--ds-text-2); margin-bottom: 10px; }
+.info-card .desc p { font-size: 13px; color: var(--ds-text); line-height: 1.7; }
 .detail-actions { display: flex; gap: 12px; }
 
 /* ---------- 우측 패널 ---------- */

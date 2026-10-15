@@ -149,7 +149,8 @@
 	</select>
 	<update id="updateMypageMyTeam">
 		update team_application
-		set status = #{status}
+		set status = #{status},
+		processed_at = NOW()
 		where
 		application_id = #{applicationId}
 		and user_id=#{userId}

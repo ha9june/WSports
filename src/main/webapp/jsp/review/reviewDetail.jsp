@@ -10,6 +10,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 --%>
 <c:set var="state"
 	value="${sessionScope.user.userId eq review.userId ? 'mine' : 'default'}" />
+<c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
 <c:set var="pageTitle" value="후기 상세" />
 <c:set var="pageCss" value="review,match" />
 <c:set var="activeNav" value="review" />
@@ -192,28 +193,75 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 }
 /* 2. 이미지를 감싸는 부모 박스 (.photos) 공백 조절 및 3정렬 정렬 */
 .review-detail .photos {
-	margin-top: 8px !important; /* 본문 글씨와 사진 사이의 간격을 밀착 (원하는 만큼 조절 가능) */
-	padding-top: 0px !important;
-	display: flex !important;
-	flex-wrap: wrap !important; /* 사진이 3개 이상일 때 다음 줄로 넘김 */
-	gap: 8px !important; /* 사진과 사진 사이의 간격 */
+	margin-top: 8px !important;
+	padding-top: 0 !important;
+	display: grid !important;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 8px !important;
 }
 
-/* 3. 각각의 이미지 태그 크기 제어 (3등분) */
 .review-detail .photos img {
-	/* gap 공간을 제외하고 정확히 한 줄에 3개씩 분할하기 위한 계산식 */
-	width: calc(( 100% - 16px)/3) !important;
-	height: 230px !important; /* 사진 높이를 고정하여 균일하게 정렬 */
-	object-fit: cover !important; /* 사진이 고정 높이에서 찌그러지지 않게 방지 */
-	border-radius: 4px; /* 사진 모서리를 약간 둥글게 (선택사항) */
+	width: 100% !important;
+	height: 100% !important;
+	min-height: 0;
+	object-fit: cover !important;
+	border-radius: 8px;
+	display: block;
+	aspect-ratio: 4/3;
+	grid-column: span 2; /* 기본: 한 줄에 3개 */
 }
-.host-inline a,
-.host-inline a strong {
+/* 1장: 크게 한 장 */
+.review-detail .photos img:only-child {
+	grid-column: span 6;
+	aspect-ratio: 16/10;
+}
+
+.review-detail .photos img:first-child:nth-last-child(2), .review-detail .photos img:first-child:nth-last-child(2) 
+	 ~ img {
+	grid-column: span 3;
+	aspect-ratio: 1/1;
+}
+/* 3장: 큰 1장(위) + 작은 2장(아래) */
+.review-detail .photos img:first-child:nth-last-child(3) {
+	grid-column: span 6;
+	aspect-ratio: 16/9;
+}
+/* 4장: 큰 1장(위) + 작은 3장(아래) */
+.review-detail .photos img:first-child:nth-last-child(4) {
+	grid-column: span 6;
+	aspect-ratio: 16/9;
+}
+
+.review-detail .photos img:first-child:nth-last-child(4) ~ img {
+	grid-column: span 2;
+	aspect-ratio: 1/1;
+}
+
+/* 5장: 위 2장(반반) + 아래 3장(3등분) */
+.review-detail .photos img:first-child:nth-last-child(5), .review-detail .photos img:first-child:nth-last-child(5)+img
+	{
+	grid-column: span 3;
+	aspect-ratio: 4/3;
+}
+
+.review-detail .photos img:first-child:nth-last-child(5) ~ img:nth-child(n+3)
+	{
+	grid-column: span 2;
+	aspect-ratio: 1/1;
+}
+
+.review-detail .photos img:first-child:nth-last-child(3) ~ img {
+	grid-column: span 3;
+	aspect-ratio: 4/3;
+}
+
+.host-inline a, .host-inline a strong {
 	color: #111827 !important;
 }
+
 .host-inline a:hover strong {
-  text-decoration: underline;
-  }
+	text-decoration: underline;
+}
 </style>
 <main class="page">
 	<div class="rail">
@@ -230,7 +278,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				<h1>
 					<c:out value="${review.title}" />
 				</h1>
-				<c:if test="${role eq 'admin'}">
+				<c:if test="${isAdmin}">
 					<button type="button" class="btn btn-danger btn-sm"
 						data-modal-open="deleteModal">후기 삭제</button>
 				</c:if>
@@ -250,8 +298,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 						</c:otherwise>
 					</c:choose>
 				<div>
-					<a
-						href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong>${review.nickname}</strong></a>
+					<a href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong>${review.nickname}</strong></a>
 					<small>작성자 · ${review.createdAtStr}</small>
 				</div>
 			</div>
@@ -273,12 +320,12 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				<c:choose>
 					<c:when test="${review.matchType eq 'TEAM'}">
 						<a
-							href="${ctx}/jsp/match/teamMatchDetail.jsp?teamMatchId=${review.matchId}"><c:out
+							href="${ctx}/team-match/detail/view?teamMatchId=${review.matchId}"><c:out
 								value="${review.matchTitle}" /></a>
 					</c:when>
 					<c:otherwise>
 						<a
-							href="${ctx}/jsp/match/personalMatchDetail.jsp?personalMatchId=${review.matchId}"><c:out
+							href="${ctx}/match/detail/view?personalMatchId=${review.matchId}"><c:out
 								value="${review.matchTitle}" /></a>
 					</c:otherwise>
 				</c:choose>
@@ -389,17 +436,19 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 
 <script>
 	$(function() {
-		$("#confirmReviewDelete").on("click", function() {
-			$.post('${ctx}/admin/content/review-delete', {
-				reviewId : $("#reviewId").val()
-			}, function(result) {
-				if (result.trim() === 'true') {
-					location.href = '${ctx}/review/list';
-				} else {
-					showToast("삭제에 실패했습니다.");
-				}
-			}, 'text');
-		});
+		$("#confirmReviewDelete").on("click",function() {
+					var isAdmin = ${isAdmin};
+					var url = isAdmin ? '${ctx}/admin/content/review-delete': '${ctx}/mypage/reviews';
+					var data = isAdmin ? {reviewId : $("#reviewId").val()} : {action : 'delete',reviewId : $("#reviewId").val()};
+					$.post(url, data, function(result) {
+						result = result.trim();
+						if (result === 'true' || result === 'ok') {
+							location.href = '${ctx}/review/list';
+						} else {
+							showToast("삭제에 실패했습니다.");
+						}
+					}, 'text');
+				});
 		$(".review-detail .fav-btn").off("click").click(function(e) {
 			e.preventDefault();
 			e.stopPropagation();

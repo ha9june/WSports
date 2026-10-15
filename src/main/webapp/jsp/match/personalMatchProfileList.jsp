@@ -112,7 +112,7 @@
 
 <main class="page">
   <div class="container">
-    <nav class="breadcrumb"><a href="${ctx}/jsp/mypage/myPagePersonalMatch.jsp">마이페이지 내 경기</a><span class="sep">›</span><span>참가자 프로필</span></nav>
+    <nav class="breadcrumb"><a href="${ctx}/mypage/matches/participating">마이페이지 내 경기</a><span class="sep">›</span><span>참가자 프로필</span></nav>
     <div class="page-head">
       <h1 class="page-title">참가자 프로필</h1>
     </div>

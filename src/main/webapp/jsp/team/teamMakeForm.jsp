@@ -66,7 +66,7 @@
 	<form class="form-rail" action="${ctx}/team/create" method="post"
 		enctype="multipart/form-data">
 		<nav class="breadcrumb">
-			<a href="${ctx}/jsp/team/teamList.jsp">팀</a><span class="sep">›</span><span>팀
+			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><span>팀
 				만들기</span>
 		</nav>
 		<div class="page-head">

@@ -103,7 +103,7 @@
 	<!--은행정보 불러오기-->
 	<select id="selectUserAccountInfo" parameterType="long" resultType="user">
 		select 
-			back_name, account_number, account_holder
+			bank_name, account_number, account_holder
 		from user
 			where user_id=#{userId}
 	</select>

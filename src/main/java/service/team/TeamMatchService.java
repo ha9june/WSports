@@ -20,6 +20,7 @@ public interface TeamMatchService {
 	List<TeamMatch> getTeamPostList(Long teamId, PageInfo pafeInfo) throws Exception;
 	int getTeamPostsCnt(Long teamId) throws Exception;
 	int modifyTeamMatchToCancel(Long teamMatchId) throws Exception;
+	int modifyTeamMatchToDeleted(Long teamMatchId) throws Exception;
 	
 
 }

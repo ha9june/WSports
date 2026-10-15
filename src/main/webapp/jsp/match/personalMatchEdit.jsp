@@ -16,7 +16,7 @@
 <form id="editForm" class="form-rail" action="${ctx}/match/edit/form" method="post" enctype="multipart/form-data">
   <input type="hidden" name="personalMatchId" value="${personalMatch.personalMatchId}">
 
-  <nav class="breadcrumb"><a href="${ctx}/jsp/mypage/myPageCreatedPersonalMatch.jsp">내 경기</a><span class="sep">›</span><span>만든 경기</span><span class="sep">›</span><span>경기 수정</span></nav>
+  <nav class="breadcrumb"><a href="${ctx}/mypage/matches/created">내 경기</a><span class="sep">›</span><span>만든 경기</span><span class="sep">›</span><span>경기 수정</span></nav>
   <div class="page-head"><h1 class="page-title">경기 수정</h1>
     <p class="page-desc">수정하면 참가자에게 알림이 전송돼요.</p>
   </div>

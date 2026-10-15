@@ -15,59 +15,42 @@
 		NOW())
 	</insert>
 
-	<select id="selectReviewablePersonal" parameterType="long"
-		resultType="Review">
-		SELECT 'PERSONAL' AS matchType,
-		m.personal_match_id AS
-		matchId,
-		m.title AS title
-		FROM personal_match_participant p
-		JOIN
-		personal_match m
-		ON m.personal_match_id = p.personal_match_id
-		WHERE
-		p.user_id = #{userId}
-		AND p.status = '결제완료'
-		AND m.deleted = '0'
-		AND
-		m.status = '경기 종료'
-		AND
-		p.attendance = true
-		AND NOT EXISTS (SELECT 1 FROM
-		review r
-		WHERE r.user_id = #{userId}
-		AND r.match_type = 'PERSONAL'
-		AND
-		r.match_id = m.personal_match_id
-		AND r.deleted = 0)
-		ORDER BY
-		m.match_date DESC
-	</select>
 
 	<select id="selectReviewableTeam" parameterType="long"
 		resultType="Review">
+		SELECT * FROM (
 		SELECT 'TEAM' AS matchType,
-		m.team_match_id AS matchId,
-		m.title AS title
-		FROM team_match_participant p
-		JOIN team_match m
-		ON
-		m.team_match_id = p.team_match_id
+		m.team_match_id
+		AS matchId,
+		m.title AS title,
+		m.match_date AS matchDate
+		FROM
+		team_match_participant p
+		JOIN team_match m ON m.team_match_id =
+		p.team_match_id
 		WHERE p.user_id = #{userId}
+		AND p.status = '결제완료'
 		AND
-		p.status = '결제완료'
+		m.deleted = 0
+		AND m.status = '경기 종료'
+		AND p.attendance = true
+		UNION
+		SELECT
+		'TEAM', m.team_match_id, m.title, m.match_date
+		FROM team_match m
+		WHERE
+		m.user_id = #{userId}
 		AND m.deleted = 0
 		AND m.status = '경기 종료'
-		AND
-		p.attendance = true
-		AND NOT EXISTS (SELECT 1 FROM review r
+		) t
 		WHERE
-		r.user_id = #{userId}
-		AND r.match_type = 'TEAM'
-		AND r.match_id =
-		m.team_match_id
+		NOT EXISTS (SELECT 1 FROM review r
+		WHERE r.user_id = #{userId}
+		AND
+		r.match_type = 'TEAM'
+		AND r.match_id = t.matchId
 		AND r.deleted = '0')
-		ORDER BY m.match_date DESC
+		ORDER BY t.matchDate DESC
 	</select>
 
 	<select id="selectMainReviewList" parameterType="map"
@@ -255,7 +238,8 @@
 		r.user_id AS userId,
 		u.nickname AS nickname,
 		u.profile_image AS profileImage,
-		r.match_type AS matchType,
+		r.match_type AS
+		matchType,
 		r.match_id AS
 		matchId,
 		r.title AS title,
@@ -264,7 +248,8 @@
 		r.deleted AS deleted,
 		r.created_at AS createdAt,
 		DATE_FORMAT(r.created_at, '%m/%d %H:%i') AS createdAtStr,
-		r.updated_at AS updatedAt,
+		r.updated_at
+		AS updatedAt,
 		COALESCE(pm.match_date,
 		tm.match_date) AS matchDate,
 		COALESCE(pm.sport, tm.sport) AS sport,
@@ -274,18 +259,22 @@
 		comment c WHERE c.review_id =
 		r.review_id AND c.deleted
 		= 0) AS commentCount,
-		(SELECT COUNT(*) FROM review_like l WHERE l.review_id =
+		(SELECT COUNT(*) FROM
+		review_like l WHERE l.review_id =
 		r.review_id) AS likeCount
-		FROM review r
+		FROM review
+		r
 		JOIN user u
 		ON u.user_id =
 		r.user_id
 		LEFT JOIN
-		personal_match pm ON r.match_type =
+		personal_match pm ON
+		r.match_type =
 		'PERSONAL' AND
 		pm.personal_match_id
 		= r.match_id
-		LEFT JOIN team_match tm
+		LEFT JOIN
+		team_match tm
 		ON r.match_type
 		= 'TEAM' AND
 		tm.team_match_id =
@@ -334,11 +323,82 @@
 		r.match_id, r.created_at DESC
 	</select>
 	<update id="deleteReviewByAdmin" parameterType="long">
-	UPDATE review
-	SET deleted = 1, deleted_at = NOW(), updated_at = NOW()
-	WHERE review_id = #{reviewId}
-	  AND deleted = 0
-</update>
-
+		UPDATE review
+		SET deleted = 1, updated_at = NOW()
+		WHERE review_id = #{reviewId}
+		AND deleted = 0
+	</update>
+	<!-- 개인 매치 -->
+	<select id="selectPersonalMatchForReview" parameterType="map"
+		resultType="map">
+		SELECT m.personal_match_id AS matchId,
+		m.title AS
+		matchTitle,
+		'PERSONAL' AS matchType
+		FROM personal_match m
+		WHERE
+		m.personal_match_id = #{matchId}
+		AND m.deleted = '0'
+		AND m.status = '경기
+		종료'
+		AND (m.user_id = #{userId}
+		OR EXISTS (SELECT 1 FROM
+		personal_match_participant p
+		WHERE p.personal_match_id =
+		m.personal_match_id
+		AND p.user_id = #{userId}
+		AND p.status = '결제완료'))
+	</select>
+	<!-- 팀 매치 -->
+	<select id="selectTeamMatchForReview" parameterType="map"
+		resultType="map">
+		SELECT m.team_match_id AS matchId,
+		m.title AS matchTitle,
+		'TEAM' AS matchType
+		FROM team_match m
+		WHERE m.team_match_id = #{matchId}
+		AND m.deleted = 0
+		AND m.status = '경기 종료'
+		AND (m.user_id = #{userId}
+		OR
+		EXISTS (SELECT 1 FROM team_match_participant p
+		WHERE p.team_match_id =
+		m.team_match_id
+		AND p.user_id = #{userId}
+		AND p.status = '결제완료'))
+	</select>
+	<select id="selectReviewablePersonal" parameterType="long"
+		resultType="Review">
+		SELECT * FROM (
+		SELECT 'PERSONAL' AS matchType,
+		m.personal_match_id AS matchId,
+		m.title AS title,
+		m.match_date AS
+		matchDate
+		FROM personal_match_participant p
+		JOIN personal_match m ON
+		m.personal_match_id = p.personal_match_id
+		WHERE p.user_id = #{userId}
+		AND p.status = '결제완료'
+		AND m.deleted = '0'
+		AND m.status = '경기 종료'
+		AND
+		p.attendance = true
+		UNION
+		SELECT 'PERSONAL', m.personal_match_id,
+		m.title, m.match_date
+		FROM personal_match m
+		WHERE m.user_id = #{userId}
+		AND m.deleted = '0'
+		AND m.status = '경기 종료'
+		) t
+		WHERE NOT EXISTS (SELECT 1
+		FROM review r
+		WHERE r.user_id = #{userId}
+		AND r.match_type = 'PERSONAL'
+		AND r.match_id = t.matchId
+		AND r.deleted = 0)
+		ORDER BY t.matchDate DESC
+	</select>
 
 </mapper>

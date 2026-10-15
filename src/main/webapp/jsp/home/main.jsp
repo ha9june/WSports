@@ -6,7 +6,7 @@
   권한별 차이 : 비회원은 추천 대신 인기 경기 기준 문구, 헤더 로그인 버튼
 --%>
 <c:set var="pageTitle" value="메인" />
-<c:set var="pageCss" value="home" />
+<c:set var="pageCss" value="home,team" />
 <c:set var="pageJs" value="" />
 <c:set var="showFooter" value="true" />
 <%@ include file="/jsp/common/header.jsp"%>
@@ -95,6 +95,8 @@
 	font-weight: 700;
 	color: #1a6bff;
 }
+
+
 </style>
 <script>
 	$(function() {
@@ -131,11 +133,11 @@
 </script>
 <section class="hero">
 	<div class="container">
-		<p class="eyebrow">혼자여도, 팀이어도, 매치온에서</p>
+		<p class="eyebrow">혼자여도, 팀이어도, WSports에서</p>
 		<h1>
 			경기를 찾고, 팀에 들어가고,<br>뛴 후엔 후기를 남겨보세요
 		</h1>
-		<p>경기 찾기, 팀, 후기까지 · 매치온 하나로 축구·농구·테니스·배드민턴을 즐겨보세요.</p>
+		<p>경기 찾기, 팀, 후기까지 · WSports 하나로 축구·농구·테니스·배드민턴을 즐겨보세요.</p>
 		<a class="btn btn-primary" href="${ctx}/match/list">경기 찾아보기</a>
 	</div>
 </section>
@@ -208,15 +210,16 @@
 					<a class="team-mini"
 						href="${ctx}/team/detail/view?teamId=${team.teamId}">
 						<div class="top">
-		
-							<c:choose>
-								<c:when test="${not empty team.profileImage}"> 
-									<img src="${ctx}/uploads/<c:out value='${team.profileImage}'/>" alt="">
-								</c:when>
-								<c:otherwise>
-									<img src="${ctx}/img/team-${sportClass}.png" alt="">
-								</c:otherwise>
-							</c:choose>
+							<span class="logo-ph" id="profileImg">
+								<c:choose>
+									<c:when test="${not empty team.profileImage}"> 
+										<img src="${ctx}/uploads/<c:out value='${team.profileImage}'/>" style="border-radius:50%;" alt="">
+									</c:when>
+									<c:otherwise>
+										<img src="${ctx}/img/team-${sportClass}.png" alt="">
+									</c:otherwise>
+								</c:choose>
+							</span>
 
 							
 							<div>

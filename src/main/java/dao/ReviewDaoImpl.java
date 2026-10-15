@@ -175,4 +175,16 @@ public class ReviewDaoImpl implements ReviewDao {
 			sqlSession.close();
 		}
 	}
+
+	@Override
+	public Map<String, Object> selectPersonalMatchForReview(Map<String, Object> param) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		return sqlSession.selectOne("mapper.review.selectPersonalMatchForReview", param);
+	}
+
+	@Override
+	public Map<String, Object> selectTeamMatchForReview(Map<String, Object> param) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		return sqlSession.selectOne("mapper.review.selectTeamMatchForReview", param);
+	}
 }

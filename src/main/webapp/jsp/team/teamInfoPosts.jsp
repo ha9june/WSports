@@ -57,7 +57,7 @@
 						</c:choose>
 					</p>
 					<p>${tm.matchDate} (${tm.dayOfWeekKorean}) ${tm.startTime} ~ ${tm.endTime} ·
-						${tm.placeName }</p>
+						${tm.region }</p>
 				</div>
 			</c:forEach>
 		</div>

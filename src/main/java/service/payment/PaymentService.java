@@ -50,6 +50,7 @@ public interface PaymentService {
 	String getPaymentKey(Long userId,Long matchId,String matchType) throws Exception;
 
 	boolean allRefundPersonalMatch(Long matchId, String title, String secretKey) throws Exception;
+	boolean allRefundTeamMatch(Long matchId, String title, String secretKey) throws Exception;
 
 	
 }
