@@ -397,7 +397,7 @@
 									(${match.dayOfWeekKorean}) 
 									<c:out value="${match.startTime }"></c:out> - 
 									<c:out value="${match.endTime }"></c:out> · 
-									<c:out value="${match.placeName }"></c:out> 
+									<c:out value="${match.region }"></c:out> 
 								</p>
 							</a>
 						</c:forEach>

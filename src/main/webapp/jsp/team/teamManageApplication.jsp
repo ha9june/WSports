@@ -49,7 +49,7 @@
 								<c:choose>
 									<c:when test="${not empty a.profileImage}">
 										<span class="avatar sm"><img
-											src="${ctx}/uploads/${a.profileImage}" alt=""></span>
+											src="${ctx}/profiles/${a.profileImage}" alt=""></span>
 									</c:when>
 									<c:otherwise>
 										<span class="avatar sm"><img src="${ctx}/img/default-profile.svg" alt=""></span>

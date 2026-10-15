@@ -68,7 +68,7 @@
 				            '<p class="meta">' +
 				                '<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">' + t.matchDate + '</span>' +
 				                '<span><img src="${ctx}/img/icon-clock-16.svg" alt="">' + t.startTime + ' ~ ' + t.endTime + '</span>' +
-				                '<span><img src="${ctx}/img/icon-pin-14.svg" alt="">' + t.placeName + '</span>' +
+				                '<span><img src="${ctx}/img/icon-pin-14.svg" alt="">' + t.region + '</span>' +
 				            '</p>' +
 				        '</div>' +
 				        '<div class="aside">' +
@@ -329,7 +329,7 @@ $(function(){
 					<p class="meta">
 						<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${t.matchDate}</span><span><img
 							src="${ctx}/img/icon-clock-16.svg" alt="">${t.startTime} ~ ${t.endTime}</span><span><img
-							src="${ctx}/img/icon-pin-14.svg" alt="">${t.placeName}</span>
+							src="${ctx}/img/icon-pin-14.svg" alt="">${t.region}</span>
 					</p>
 				</div>
 				<div class="aside">

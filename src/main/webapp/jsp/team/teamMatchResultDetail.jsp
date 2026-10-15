@@ -124,9 +124,10 @@
 			</div>
 
 			<div class="form-actions" style="margin-right: 20px">
-				<c:if test="${hostIsOur or empty score}">
-					<a class="btn btn-primary" href="${ctx}/team-match/result/edit?teamMatchId=${teamMatch.teamMatchId}">${empty score ? '평가하기' : '정보 수정'}</a>
-				</c:if>
+				<a class="btn btn-primary"
+					href="${ctx}/team-match/result/edit?teamMatchId=${teamMatch.teamMatchId}">
+					${empty score ? '평가하기' : (hostIsOur ? '정보 수정' : '평가 수정')}
+				</a>
 			</div>
 		</div>
 	</div>

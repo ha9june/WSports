@@ -7,7 +7,7 @@
    - pageJs     : 추가 js 파일명(콤마 구분, 확장자 제외)
 --%>
 <c:if test="${showFooter}">
-	<footer class="site-footer">© 매치온</footer>
+	<footer class="site-footer">© WSports</footer>
 </c:if>
 
 <c:if test="${empty sessionScope.user}">
@@ -38,19 +38,22 @@
 </div>
 </c:if>
 <c:if test="${not empty sessionScope.user
-		and (empty sessionScope.user.bankName
-		or empty sessionScope.user.accountNumber
-		or empty sessionScope.user.accountHolder)}">
+	and (empty sessionScope.user.bankName
+	or empty sessionScope.user.accountNumber
+	or empty sessionScope.user.accountHolder)}">
 	<div class="modal" id="accountRequiredModal" role="dialog"
-	     aria-modal="true" aria-labelledby="accountRequiredTitle">
-	  <div class="modal-card sm" style="text-align: center">
-	    <h2 class="modal-title" id="accountRequiredTitle">계좌번호가 필요한 기능입니다</h2>
-	    <p class="modal-desc">계좌번호 생성 후 기능을 이용할 수 있어요.</p>
-	    <div class="modal-actions" style="justify-content: center">
-	      <button type="button" class="btn btn-outline" data-modal-close>취소</button>
-	      <a class="btn btn-primary" href="${ctx}/member/mypage/view">계좌번호 생성하러 가기</a>
-	    </div>
-	  </div>
+		aria-modal="true" aria-labelledby="accountRequiredTitle">
+		<div class="modal-card sm" style="text-align: center">
+			<h2 class="modal-title" id="accountRequiredTitle">정산받을 계좌를 등록해 주세요</h2>
+			<p class="modal-desc">
+				경기가 끝나면 참가비를 정산해 드려요.<br>
+				계좌를 한 번만 등록해 두면 바로 글을 쓸 수 있어요.
+			</p>
+			<div class="modal-actions" style="justify-content: center">
+				<button type="button" class="btn btn-outline" data-modal-close>나중에 할게요</button>
+				<a class="btn btn-primary" href="${ctx}/member/mypage/view">계좌 등록하기</a>
+			</div>
+		</div>
 	</div>
 </c:if>
 
