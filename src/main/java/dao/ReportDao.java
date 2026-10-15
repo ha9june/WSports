@@ -23,4 +23,5 @@ public interface ReportDao {
 	List<Map<String, Object>> selectReportList(Map<String, Object> param) throws Exception;
 	Integer selectReportCnt(Map<String, Object> param) throws Exception;
 	Map<String, Object> selectDetailReport(Map<String, Object> param) throws Exception;
+	Map<String, Object> selectTarget(Map<String, Object> param) throws Exception;
 }

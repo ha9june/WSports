@@ -86,4 +86,24 @@
 		from report
 		where report_id=#{reportId}
 	</select>
+	
+	<select id="selectTarget" parameterType="Map" resultType="Map">
+		<choose>
+        <when test="targetType == 'user'">
+        select nickname as userNickname from user where user_id = #{targetId}
+        </when>
+        <when test="targetType == 'team'">
+        select team_name as teamName from team where team_id = #{targetId}
+        </when>
+        <when test="targetType == 'review'">
+        select title as reviewTitle from review where review_id = #{targetId}
+        </when>
+        <when test="targetType == 'personalMatch'">
+        select title as personalMatchTitle from personal_match where personal_match_id = #{targetId}
+        </when>
+        <when test="targetType == 'teamMatch'">
+        select title as teamMatchTitle from team_match where team_match_id = #{targetId}
+        </when>
+        </choose>
+	</select>
 </mapper>

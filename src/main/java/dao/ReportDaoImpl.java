@@ -114,4 +114,12 @@ public class ReportDaoImpl implements ReportDao {
 			throw e;
 		}
 	}
+	@Override
+	public Map<String, Object> selectTarget(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.report.selectTarget", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
 }
