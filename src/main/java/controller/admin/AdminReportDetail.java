@@ -1,6 +1,7 @@
 package controller.admin;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.User;
+import service.admin.AdminReportService;
 import service.admin.AdminReportServiceImpl;
 
 /**
@@ -36,7 +38,14 @@ public class AdminReportDetail extends HttpServlet {
 		try {
 			Long reportId = Long.parseLong(request.getParameter("reportId"));
 			Map<String, Object> reportdetail = service.getAdminReportDetail(reportId);
+			
+			Map<String, Object> param = new HashMap<>();
+			param.put("postType", reportdetail.get("post_type"));
+			param.put("postId", reportdetail.get("post_id"));
+			boolean targetExists = service.countReportTarget(param) > 0;
+			
 			request.setAttribute("reportdetail", reportdetail);
+			request.setAttribute("targetExists", targetExists);
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "신고관리 상세 목록 조회 오류");
