@@ -437,33 +437,27 @@
 	<select id="selectPersonalMatch" parameterType="personalMatch"
 		resultType="personalMatch">
 		SELECT
-		m.*,
-		u.nickname,
-		COUNT(p.participant_id) AS
-		current_people,
-		CASE
-		WHEN f.match_id IS NOT NULL THEN 1
-		ELSE 0
-		END AS
-		favorite
-		FROM personal_match m
-		LEFT JOIN personal_match_participant p
-		ON
-		m.personal_match_id = p.personal_match_id
-		AND p.status = '결제완료'
-		LEFT
-		JOIN user u
-		ON m.user_id = u.user_id
-		LEFT JOIN favorite f
-		ON f.match_id =
-		m.personal_match_id
-		AND f.match_type = 'Personal'
-		AND f.user_id =
-		#{userId}
-		WHERE m.personal_match_id = #{personalMatchId}
-		GROUP BY
-		m.personal_match_id
-		ORDER BY m.created_at DESC
+	        m.*,
+	        u.nickname,
+	        u.profile_image,
+	        COUNT(p.participant_id) AS current_people,
+	        CASE
+	            WHEN f.match_id IS NOT NULL THEN 1
+	            ELSE 0
+	        END AS favorite
+	    FROM personal_match m
+	    LEFT JOIN personal_match_participant p
+	        ON m.personal_match_id = p.personal_match_id
+	        AND p.status = '결제완료'
+	    LEFT JOIN user u
+	        ON m.user_id = u.user_id
+	    LEFT JOIN favorite f
+	        ON f.match_id = m.personal_match_id
+	        AND f.match_type = 'Personal'
+	        AND f.user_id = #{userId}
+	    WHERE m.personal_match_id = #{personalMatchId}
+	    GROUP BY m.personal_match_id
+	    ORDER BY m.created_at DESC
 	</select>
 
 	<insert id="insertPersonalMatch" parameterType="personalMatch"
@@ -734,8 +728,7 @@
 		SELECT
 		personal_match_id, user_id, title
 		FROM personal_match
-		WHERE status = '모집
-		마감'
+		WHERE status = '모집 마감'
 		AND coalesce(deleted, 0) = 0
 		AND TIMESTAMP(match_date, end_time)
 		&lt;= NOW();

@@ -28,6 +28,8 @@
     	</div>
     	
     	<dl class="kv1">
+    		<dt>회원번호</dt><dd>${info.user_id}</dd>
+    		<dt>이름</dt><dd>${info.name}</dd>
         	<dt>닉네임</dt><dd>${info.nickname}</dd>
         	<dt>이메일</dt><dd>${info.email}</dd>
         	<dt>상태</dt>	<dd class="${info.suspend ? 't-danger' : ''}">${info.suspended ? '정지' : '정상'}</dd>

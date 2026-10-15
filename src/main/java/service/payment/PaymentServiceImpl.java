@@ -38,6 +38,8 @@ import dto.PersonalSettlement;
 import dto.TeamMatch;
 import dto.TeamPayment;
 import util.PageInfo;
+import service.match.PersonalMatchService;
+import service.match.PersonalMatchServiceImpl;
 import service.notification.NotificationService;
 import service.notification.NotificationServiceImpl;
 import util.CardCompany;
@@ -127,7 +129,25 @@ public class PaymentServiceImpl implements PaymentService {
 		// 5. 응답 원본 전체 보관
 		personal.setRawResponse(responseJson);
 		personalPaymentDao.insertPersonalPaymentParticipant(personal, userId, matchId);
-
+		
+		
+		
+		//인원수 꽉 찼을 때 모집감으로 상태  변경
+		PersonalMatchService pmService = new PersonalMatchServiceImpl();
+		PersonalMatch pm = new PersonalMatch();
+		pm.setUserId(userId);
+		pm.setPersonalMatchId(matchId);
+		PersonalMatch pMatch = pmService.getPersonalMatchDetail(pm);
+		if(pMatch.getMaxPeople() <= pMatch.getCurrentPeople()) {
+			pm.setStatus("모집 마감");
+			pmService.updateStatue(pm);
+		}
+		
+		
+		System.out.println("----------------");
+			
+		System.out.println("----------------");
+		
 		// 6. 알림 : 참가자 + 모집자
 		try {
 			Map<String, Object> match = personalPaymentDao.selectPersonalMatchWriter(matchId);

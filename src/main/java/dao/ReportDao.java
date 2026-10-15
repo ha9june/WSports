@@ -19,6 +19,8 @@ public interface ReportDao {
 
 	//관리자 사이드바 - 신고 개수
 	Integer selectTotalReportCnt() throws Exception;
+	//관리자 신고관리 회원, 팀, 개인-팀 경기 모집글, 후기글 번호 유무 확인
+	Integer countReportTarget(Map<String, Object> param);
 
 	List<Map<String, Object>> selectReportList(Map<String, Object> param) throws Exception;
 	Integer selectReportCnt(Map<String, Object> param) throws Exception;
