@@ -147,7 +147,7 @@ $('#thumbs').on('click', '.subImg', function() {
 				<h1>
 					<c:out value="${t.title}" />
 				</h1>
-				<span class="pill pill-lg ${pillCls} bd">${pillText}</span>
+				<span class="pill pill-lg ${pillCls}">${pillText}</span>
 				<c:if test="${isAdmin}">
 					<button type="button" class="btn btn-danger btn-sm"
 						data-modal-open="adminDeleteModal">팀 경기 삭제</button>
@@ -316,6 +316,16 @@ $('#thumbs').on('click', '.subImg', function() {
 											</c:forEach>
 										</select>
 									</div>
+									<div class="kv">
+										참가비 <b><fmt:formatNumber value="${t.participationFee}" />원</b>
+									</div>
+									<div class="kv">
+										수수료 (참가비의 8%) <b><fmt:formatNumber value="${t.fee}" />원</b>
+									</div>
+									<hr>
+									<div class="kv">
+										합계 <b class="lg"><fmt:formatNumber value="${t.participationFee + t.fee}" />원</b>
+									</div>
 									<p class="note">결제하면 바로 확정돼요. 확정 후에는 취소와 환불이 어려워요.</p>
 									<div class="actions">
 										<a class="btn btn-primary" id="payBtn"
@@ -385,8 +395,11 @@ $('#thumbs').on('click', '.subImg', function() {
 										참가비 <b><fmt:formatNumber value="${t.participationFee}" />원</b>
 									</div>
 									<div class="kv">
-										결제 금액 <b><fmt:formatNumber
-												value="${t.participationFee + t.fee}" />원</b>
+										수수료 (참가비의 8%) <b><fmt:formatNumber value="${t.fee}" />원</b>
+									</div>
+									<hr>
+									<div class="kv">
+										합계 <b class="lg"><fmt:formatNumber value="${t.participationFee + t.fee}" />원</b>
 									</div>
 									<div class="actions">
 										<a class="btn btn-primary"
@@ -413,8 +426,15 @@ $('#thumbs').on('click', '.subImg', function() {
 								<c:when test="${isHost or applied}">
 									<p class="sub">우리 팀과 상대 팀의 경기 매너를 팀 단위로 평가해주세요.</p>
 									<div class="actions">
+<<<<<<< HEAD
 										<a class="btn btn-primary" href="${ctx}/review/create?matchNo=TEAM:${t.teamMatchId}">후기작성</a>
 										<a class="btn btn-outline" href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">참가 팀 평가</a>
+=======
+										<a class="btn btn-primary"
+											href="${ctx}/review/create">후기 작성</a>
+										<a class="btn btn-outline"
+											href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">상대 팀 평가 및 출석 확인</a>
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 									</div>
 								</c:when>
 								<c:otherwise>
@@ -431,7 +451,7 @@ $('#thumbs').on('click', '.subImg', function() {
 					<%-- 경기 취소 --%>
 					<c:when test="${status eq '경기 취소'}">
 						<div class="side-card">
-							<span class="pill pill-danger bd">경기 취소</span>
+							<span class="pill pill-danger">경기 취소</span>
 							<p class="status-title">경기가 취소되었습니다</p>
 							<p class="sub">이 경기는 취소되어 더 이상 신청할 수 없어요.</p>
 							<c:if test="${isHost}">
@@ -468,9 +488,11 @@ $('#thumbs').on('click', '.subImg', function() {
 		<div class="modal-card sm">
 			<h2 class="modal-title">팀 경기를 삭제할까요?</h2>
 			<p class="modal-desc">삭제한 경기는 복구할 수 없습니다.</p>
-			<form action="${ctx}/admin/team-match/delete" method="post"
+			<form action="${ctx}/payment/match/detail/allrefund" method="post"
 				class="modal-actions">
-				<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
+				<input type="hidden" name="matchType" value="Team">
+				<input type="hidden" name="matchId" value="${t.teamMatchId}">
+				<input type="hidden" name="matchTitle" value="${t.title}">
 				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
 				<button type="submit" class="btn btn-danger">삭제</button>
 			</form>
@@ -490,10 +512,14 @@ $('#thumbs').on('click', '.subImg', function() {
 			id="refundForm">
 			<input type="hidden" name="matchType" value="Team" />
 			<div class="modal-body">
+<<<<<<< HEAD
 				<p>
 					환불금액 : <b><fmt:formatNumber
 							value="${t.participationFee - t.fee}" pattern="#,###" />원</b>
 				</p>
+=======
+				<p>환불금액 : <b><fmt:formatNumber value="${t.participationFee + t.fee}"  pattern="#,###"/>원</b></p>
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 				<div class="field mt-16">
 					<label class="field-label">환불사유</label> <select class="select"
 						name="cancelReason" required>

@@ -45,6 +45,7 @@
 		AND
 		p.user_id = #{userId}
 		AND p.status IN ('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="startDate != null and startDate != ''">
 			AND p.applied_at &gt;= #{startDate}
 		</if>
@@ -75,6 +76,7 @@
 		p.user_id = #{userId}
 		AND p.status IN ('결제완료', '취소')
 		)
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -99,6 +101,7 @@
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료',
 		'취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -549,7 +552,7 @@
 	<!-- 모집 마감 상태이고 경기 종료 시각이 지난 경기 -->
 	<select id="selectFinishedMatches" resultType="teammatch">
 		select
-		team_match_id, team_id, user_id, title
+		team_match_id, team_id, user_id, title, participation_fee
 		from team_match
 		where status =
 		'모집 마감'
@@ -582,10 +585,9 @@
 	<select id="selectTeamPostList" parameterType="map"
 		resultType="teammatch">
 		select team_match_id, title, status, match_date,
-		start_time, end_time, place_name
+		start_time, end_time, place_name, region
 		from team_match
-		where team_id =
-		#{teamId}
+		where team_id = #{teamId}
 		and coalesce(deleted, 0) = 0
 		order by created_at desc,
 		team_match_id desc
@@ -633,5 +635,11 @@
 		and m.status = '모집 마감'
 		and coalesce(m.deleted, 0) = 0)
 	</select>
+	
+	<update id="updateToDeleted" parameterType="Long">
+		update team_match set
+			deleted = true, deleted_at = NOW(), status = '경기 취소'
+		where team_match_id = #{teamMatchId}
+	</update>
 
 </mapper>

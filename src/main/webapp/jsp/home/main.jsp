@@ -133,11 +133,11 @@
 </script>
 <section class="hero">
 	<div class="container">
-		<p class="eyebrow">혼자여도, 팀이어도, 매치온에서</p>
+		<p class="eyebrow">혼자여도, 팀이어도, WSports에서</p>
 		<h1>
 			경기를 찾고, 팀에 들어가고,<br>뛴 후엔 후기를 남겨보세요
 		</h1>
-		<p>경기 찾기, 팀, 후기까지 · 매치온 하나로 축구·농구·테니스·배드민턴을 즐겨보세요.</p>
+		<p>경기 찾기, 팀, 후기까지 · WSports 하나로 축구·농구·테니스·배드민턴을 즐겨보세요.</p>
 		<a class="btn btn-primary" href="${ctx}/match/list">경기 찾아보기</a>
 	</div>
 </section>

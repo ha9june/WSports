@@ -116,7 +116,7 @@ public class PersonalMatchJob {
                     ps.setAccountNumber(user.getAccountNumber());
                     ps.setBankName(user.getBankName());
                     
-                    int amount = (p.getParticipationFee() - p.getFee())*userCnt;
+                    int amount = p.getParticipationFee()*userCnt;
                     ps.setAmount(amount);
                     ps.setSettlementStatus("정산대기");
                     paymentService.putPersonalSettlement(ps);

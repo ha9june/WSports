@@ -1,6 +1,7 @@
 package controller.payment;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,8 @@ import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 import service.payment.PaymentService;
 import service.payment.PaymentServiceImpl;
+import service.team.TeamMatchService;
+import service.team.TeamMatchServiceImpl;
 import util.TossKey;
 
 /**
@@ -54,17 +57,24 @@ public class PaymentMatchDetailAllRefund extends HttpServlet {
 
 	    
 	    // 현재는 개인경기만 모든유저에게 횐불
-	    if(!("Personal").equals(matchType)) {
-	    	request.setAttribute("error", "개인 경기가 아닙니다.");
-			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
-			return;
-	    }
+//	    if(!("Personal").equals(matchType)) {
+//	    	request.setAttribute("error", "개인 경기가 아닙니다.");
+//			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+//			return;
+//	    }
 	    
 		PaymentService psService = new PaymentServiceImpl();
 		
 		try {
-			boolean allRefunded = psService.allRefundPersonalMatch(
-					matchId, matchTitle, TossKey.SECRET_KEY);
+			boolean allRefunded = false; 
+			
+			if("Personal".equals(matchType)) {
+				allRefunded = psService.allRefundPersonalMatch(
+						matchId, matchTitle, TossKey.SECRET_KEY);
+			}else if("Team".equals(matchType)) {
+				allRefunded = psService.allRefundTeamMatch(matchId, matchTitle, TossKey.SECRET_KEY);
+			}
+			
 			
 			if (!allRefunded) {
 				request.setAttribute("error", "모두 환불 실패. 관리자에게 문의하여 주세요");
@@ -73,17 +83,27 @@ public class PaymentMatchDetailAllRefund extends HttpServlet {
 			}
 			
 			PersonalMatchService pmService = new PersonalMatchServiceImpl();
-			if(isAdmin)
-				pmService.updateStatusDeleteOfAdmin(matchId);
-			else
-				pmService.updateStatusCancelOfHost(matchId);
+			TeamMatchService tmService = new TeamMatchServiceImpl();
+			if("Personal".equals(matchType)) {
+				if(isAdmin) {
+					pmService.updateStatusDeleteOfAdmin(matchId);
+				}else {
+					pmService.updateStatusCancelOfHost(matchId);
+				}
+				request.getSession().setAttribute("toast", matchTitle+" 글을 삭제했습니다.");
+	            response.sendRedirect(request.getContextPath() + "/match/list");
+	            
+			}else if("Team".equals(matchType)) {
+				tmService.modifyTeamMatchToDeleted(matchId);
+				request.getSession().setAttribute("toast", matchTitle+" 글을 삭제했습니다.");
+				response.sendRedirect(request.getContextPath() + "/team-match/list");
+			}
 			
-            response.sendRedirect(request.getContextPath() + "/match/detail/view?personalMatchId=" + matchId);
 
 	
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("error", "환불실패에 실패하였습니다. 관리자에게 문의하아ㅕ 주세요");
+			request.setAttribute("error", "환불실패에 실패하였습니다. 관리자에게 문의하여 주세요");
 			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 			return;
 			

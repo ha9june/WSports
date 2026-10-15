@@ -340,6 +340,7 @@
 		WHERE p.user_id = #{userId}
 		AND p.status IN
 		('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -367,6 +368,7 @@
 		WHERE p.user_id =
 		#{userId}
 		AND p.status IN ('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -403,7 +405,7 @@
 		AND f.match_type =
 		'Personal'
 		WHERE m.user_id = #{userId}
-		AND m.deleted = '0'
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -428,7 +430,7 @@
 		FROM personal_match m
 		WHERE m.user_id = #{userId}
 		AND
-		m.deleted = '0'
+		coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -639,6 +641,7 @@
 		m.personal_match_id = p.personal_match_id
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -652,7 +655,8 @@
 		FROM
 		personal_match m
 		WHERE m.user_id = #{userId}
-		AND m.deleted = '0'
+		AND coalesce(m.deleted, 0)
+		= 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -666,7 +670,7 @@
 		select count(*)
 		from personal_match
 		where status = '모집중'
-		and deleted = 0
+		AND coalesce(deleted, 0) = 0
 	</select>
 
 
@@ -680,9 +684,11 @@
 		from personal_match m
 		where
 		m.status = '모집중'
-		and m.deleted = 0
-		and m.deadline &lt;= now()
-		and (select
+		and coalesce(m.deleted, 0) = 0
+		and m.deadline &lt;=
+		now()
+		and (
+		select
 		count(*)
 		from personal_match_participant p
 		where p.personal_match_id =
@@ -738,12 +744,14 @@
 	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기) -->
 	<select id="selectFinishedSuccess" resultType="personalMatch">
 		SELECT
-		personal_match_id, user_id, title
-		FROM personal_match
+		personal_match_id, user_id, title, participation_fee, fee
+		FROM
+		personal_match
 		WHERE status = '모집
 		마감'
 		AND coalesce(deleted, 0) = 0
-		AND TIMESTAMP(match_date, end_time)
+		AND
+		TIMESTAMP(match_date, end_time)
 		&lt;= NOW();
 	</select>
 	<!--스케줄러 : 경기 종료로 업데이트 -->
@@ -771,7 +779,8 @@
 		personal_match_id = #{matchId}
 		and status = '모집중'
 		and
-		deleted = 0
+		and
+		coalesce(deleted, 0) = 0
 	</update>
 	<!--관리자 경기삭제 -->
 	<update id="updateStatusDeleteOfAdmin" parameterType="Long">
@@ -786,6 +795,8 @@
 		'모집중'
 		and
 		deleted = 0
+		and status = '모집중'
+		and coalesce(deleted, 0) = 0
 	</update>
 
 

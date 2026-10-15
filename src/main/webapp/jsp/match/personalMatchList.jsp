@@ -123,7 +123,7 @@
 						      `+esc(item.region)+`
 						      </p>
 						      <p class="price">
-						      	`+Number(item.participationFee + item.fee).toLocaleString('ko-KR')+`원
+						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
 						      </p>
 						    </div>
 						    <p class="count">
@@ -193,7 +193,7 @@
 			                	</span>
 				                <span class="it"><img src="${ctx}/img/icon-calendar-16.svg" alt="">`+FormatDate(item.matchDate, item.startTime)+`</span>
 				                <span class="it"><img src="${ctx}/img/icon-pin-16.svg" alt="">`+esc(item.region)+`</span>
-				                <span class="price">`+Number(item.participationFee + item.fee).toLocaleString('ko-KR')+`원</span>
+				                <span class="price">`+Number(item.participationFee).toLocaleString('ko-KR')+`원</span>
 				                `+favBtn(item)+`
 				              </div>
 				            </div>

@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -219,6 +220,30 @@ public class TeamPaymentDaoImpl implements TeamPaymentDao {
 	public String selectPaymentKey(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampayment.selectPaymentKey", param);
+		}
+	}
+	@Override
+	public List<Map<String, Object>> selectPaidPaymentsByMatch(Long matchId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teampayment.selectPaidPaymentsByMatch", matchId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	//결제 취소
+	@Override
+	public void updateRefund(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()){
+			try {
+				sqlSession.update("mapper.teampayment.updateTeamPaymentCanceled", param);
+				sqlSession.update("mapper.teampayment.updateTeamParticipantCanceled", param);
+				//commit 해야 db 들어감
+				sqlSession.commit();
+			} catch (Exception e) {
+				sqlSession.rollback();
+				throw e;
+			} 
 		}
 	}
 }

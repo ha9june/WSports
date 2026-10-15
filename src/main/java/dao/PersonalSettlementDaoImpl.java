@@ -110,7 +110,7 @@ public class PersonalSettlementDaoImpl implements PersonalSettlementDao {
 	public Long insertPersonalSettlement(PersonalSettlement ps) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			sqlSession.insert("mapper.personalmatch.insertPersonalSettlement", ps);
+			sqlSession.insert("mapper.personalsettlement.insertPersonalSettlement", ps);
 			sqlSession.commit();
 			return ps.getSettlementId();
 		} catch(Exception e) {
