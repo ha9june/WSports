@@ -90,12 +90,12 @@ public class PaymentMatchDetailAllRefund extends HttpServlet {
 				}else {
 					pmService.updateStatusCancelOfHost(matchId);
 				}
-				request.getSession().setAttribute("toast", "'"+matchTitle+"' 글을 삭제했습니다.");
+				request.getSession().setAttribute("toast", matchTitle+" 글을 삭제했습니다.");
 	            response.sendRedirect(request.getContextPath() + "/match/list");
 	            
 			}else if("Team".equals(matchType)) {
 				tmService.modifyTeamMatchToDeleted(matchId);
-				request.getSession().setAttribute("toast", "'"+matchTitle+"' 글을 삭제했습니다.");
+				request.getSession().setAttribute("toast", matchTitle+" 글을 삭제했습니다.");
 				response.sendRedirect(request.getContextPath() + "/team-match/list");
 			}
 			
@@ -103,7 +103,7 @@ public class PaymentMatchDetailAllRefund extends HttpServlet {
 	
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("error", "환불실패에 실패하였습니다. 관리자에게 문의하아ㅕ 주세요");
+			request.setAttribute("error", "환불실패에 실패하였습니다. 관리자에게 문의하여 주세요");
 			request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 			return;
 			

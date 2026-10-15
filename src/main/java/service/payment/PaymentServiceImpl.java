@@ -674,7 +674,7 @@ public class PaymentServiceImpl implements PaymentService {
 					alarm.setTitle("참가비 환불 완료");
 					alarm.setContent("'" + title + "' 경기가 관리자 또는 호스트에 의해 취소되어 결제하신 "
 							+ String.format("%,d", cancelAmount) + "원이 환불되었습니다.");
-					alarm.setLink("/match/detail/view?personalMatchId=" + matchId);
+					alarm.setLink("/info?matchType=PERSONAL&paymentKey="+paymentKey);
 					notificationService.sendNotification(alarm);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -719,7 +719,7 @@ public class PaymentServiceImpl implements PaymentService {
 					alarm.setTitle("참가비 환불 완료");
 					alarm.setContent("'" + title + "' 경기가 관리자 또는 호스트에 의해 취소되어 결제하신 "
 							+ String.format("%,d", cancelAmount) + "원이 환불되었습니다.");
-					alarm.setLink("/team-match/detail/view?teamMatchId=" + matchId);
+					alarm.setLink("/info?matchType=TEAM&paymentKey="+paymentKey);
 					notificationService.sendNotification(alarm);
 				} catch (Exception e) {
 					e.printStackTrace();
