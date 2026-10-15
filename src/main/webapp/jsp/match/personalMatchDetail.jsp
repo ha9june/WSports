@@ -246,20 +246,13 @@
             <div class="info-row"><dt>성별</dt><dd>${personalMatch.gender eq '혼성' ? '성별무관' : personalMatch.gender}</dd></div>
             <div class="info-row"><dt>연령</dt>
             	<dd>
-		            <c:if test="${personalMatch.age20s}">20대 </c:if>
-					<c:if test="${personalMatch.age30s}">30대 </c:if>
-					<c:if test="${personalMatch.age40s}">40대 </c:if>
-					<c:if test="${personalMatch.age50s}">50대 </c:if>
-					<c:if test="${personalMatch.age60Plus}">연령무관 </c:if>
+					${ages }
             	</dd>
             </div>
             
             <div class="info-row"><dt>실력</dt>
             	<dd>
-            	<c:if test="${personalMatch.skillIntro}">입문 </c:if>
-				<c:if test="${personalMatch.skillBeginner}">초급 </c:if>
-				<c:if test="${personalMatch.skillIntermediate}">중급 </c:if>
-				<c:if test="${personalMatch.skillAdvanced}">고급 </c:if>
+				${skills}
             	</dd>
             </div> 
           </dl>
