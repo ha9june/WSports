@@ -6,7 +6,7 @@
 	insert into report(user_id,type,title,content,post_type,post_id,created_at,status)
 	values(#{userId},#{type},#{title},#{content},#{postType},#{postId},now(),'처리대기')
 	</insert>
-
+	
 	<select id="selectReportList" parameterType="Map" resultType="Map">
 	select report_id,title,type,date_format(created_at,'%m/%d') as created_at,status 
 	from report 
@@ -85,5 +85,50 @@
 		select report_id,user_id,type,title,content,post_type,post_id,date_format(created_at,'%Y.%m.%d') as created_at,status,answer,date_format(answered_at,'%Y.%m.%d') as answered_at,admin_id,deleted
 		from report
 		where report_id=#{reportId}
+	</select>
+	
+	<select id="selectTarget" parameterType="Map" resultType="Map">
+		<choose>
+        <when test="targetType == 'user'">
+        select nickname as userNickname from user where user_id = #{targetId}
+        </when>
+        <when test="targetType == 'team'">
+        select team_name as teamName from team where team_id = #{targetId}
+        </when>
+        <when test="targetType == 'review'">
+        select title as reviewTitle from review where review_id = #{targetId}
+        </when>
+        <when test="targetType == 'personalMatch'">
+        select title as personalMatchTitle from personal_match where personal_match_id = #{targetId}
+        </when>
+        <when test="targetType == 'teamMatch'">
+        select title as teamMatchTitle from team_match where team_match_id = #{targetId}
+        </when>
+        </choose>
+    </select>
+
+	<!-- 신고 대상(회원/팀/게시글) 존재 여부 -->
+	<select id="countReportTarget" parameterType="map" resultType="int">
+		select count(*)
+		<choose>
+			<when test="postType == 'user'">
+				from user where user_id = #{postId}
+			</when>
+			<when test="postType == 'team'">
+				from team where team_id = #{postId}
+			</when>
+			<when test="postType == 'personal_match'">
+				from personal_match where personal_match_id = #{postId}
+			</when>
+			<when test="postType == 'team_match'">
+				from team_match where team_match_id = #{postId}
+			</when>
+			<when test="postType == 'review'">
+				from review where review_id = #{postId}
+			</when>
+			<otherwise>
+				from dual where 1 = 0
+			</otherwise>
+		</choose>
 	</select>
 </mapper>

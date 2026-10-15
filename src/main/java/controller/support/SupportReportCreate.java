@@ -1,6 +1,7 @@
 package controller.support;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,6 +36,15 @@ public class SupportReportCreate extends HttpServlet {
 		try {
 			User user = (User)request.getSession().getAttribute("user");
 			request.setAttribute("loginUser", user);
+			
+			String targetType = request.getParameter("targetType");
+			String targetId = request.getParameter("targetNo");
+			
+			if(targetType != null && targetId != null && !targetId.isEmpty()) {
+				ReportService service = new ReportServiceImpl();
+				request.setAttribute("reportTarget", service.reportTarget(targetType, Long.parseLong(targetId)));
+			}
+			
 			request.getRequestDispatcher("/jsp/support/reportWrite.jsp").forward(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -59,7 +69,7 @@ public class SupportReportCreate extends HttpServlet {
 		if (postType != null && !postType.isEmpty()) {
 			report.setPostType(postType);
 		}
-		if (postId != null && !postId.isEmpty()) {
+		if (postId != null && !postType.isEmpty()) {
 		    report.setPostId(Long.parseLong(postId));
 		}
 		

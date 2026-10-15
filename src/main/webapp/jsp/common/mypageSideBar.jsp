@@ -46,7 +46,7 @@ if (sideUser != null) {
 	<aside class="side" aria-label="마이페이지 메뉴">
 		<a class="me"
 			href="${ctx}/member/publicProfile/view?userId=${sessionScope.user.userId}">
-			<span class="avatar sm"> <c:choose>
+			<span class="avatar"> <c:choose>
 					<c:when test="${not empty sessionScope.user.profileImage}">
 						<img
 							src="${ctx}/profiles/<c:out value='${sessionScope.user.profileImage}' />"

@@ -27,9 +27,9 @@
 		)
 	</select>
 		
-	<!-- 화면에 실제로 보여줄 회원 목록을 한페이지 만큼 가져오는 놈 -->
+	<!-- 회원관리 메인 화면에 실제로 보여줄 회원 목록을 한페이지 만큼 가져오는 놈 -->
 	<select id="selectAdminMemberList" resultType="map">
-		select u.user_id, u.login_id, u.nickname, u.suspended, p.score
+		select u.user_id, u.name, u.login_id, u.nickname, u.suspended, p.score
 		from user u
 		left join user_penalty p
 		on p.user_id = u.user_id
@@ -56,7 +56,7 @@
 	
 	<!-- 관리자 회원 상세 정보 -->
 	<select id="selectAdminMemberDetailList" resultType="map">
-		select u.user_id, u.login_id, u.nickname, u.suspended, u.withdrawal_at, u.email, u.profile_image,
+		select u.user_id, u.login_id, u.name, u.nickname, u.suspended, u.withdrawal_at, u.email, u.profile_image,
 			   p.score, p.permanent_suspension, p.received_at, p.suspension_start_at, p.suspension_end_at, p.reason, p.penalty_id
 		from user u
 		left join user_penalty p

@@ -275,7 +275,11 @@
           <div class="detail-actions">
             <button type="button" class="fav-btn sq ${personalMatch.favorite ? 'is-on' : ''}" 
             data-fav2 data-auth data-match-id="${personalMatch.personalMatchId }" data-match-type="Personal" aria-label="관심 경기">${heart}</button>
+<<<<<<< HEAD
             <a class="btn btn-outline btn-sm" href="${ctx}/support/inquiry/create?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
+=======
+            <a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=personalMatch&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
           </div>
       </div>
 

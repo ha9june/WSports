@@ -114,4 +114,21 @@ public class ReportDaoImpl implements ReportDao {
 			throw e;
 		}
 	}
+
+	@Override
+	public Map<String, Object> selectTarget(Map<String, Object> param) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.report.selectTarget", param);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+
+	//관리자 신고관리 회원, 팀, 개인-팀 경기 모집글, 후기글 번호 유무 확인
+	@Override
+	public Integer countReportTarget(Map<String, Object> param) {
+		try (SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+	        return session.selectOne("mapper.report.countReportTarget", param);
+	    }
+	}
 }

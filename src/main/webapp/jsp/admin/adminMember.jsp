@@ -40,10 +40,12 @@
 	</form>
 	<div style="width: var(--settle-w); max-width: 100%">
 	<div class="tbl-head"
-		style="grid-template-columns: minmax(0,1fr) minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr) 100px; 
+		style="grid-template-columns: minmax(0,0.5fr) minmax(0,1fr) minmax(0,1fr) minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr) 100px; 
 			justify-items: center; padding: 0 12px; box-sizing: border-box; border: 1px solid transparent">
+		<span>회원번호</span>
 		<span style="justify-self: start; padding-left: 24px">로그인 아이디</span>
 		<span>닉네임</span>
+		<span>이름</span>
 		<span>회원 정지 상태</span>
 		<span>패널티 점수</span>
 		<span>회원 상세정보</span>
@@ -51,14 +53,14 @@
 
 	<c:forEach var="m" items="${memberlist}">
 		<div class="tbl-row"
-			style="grid-template-columns: minmax(0,1fr) minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr) 100px; justify-items: center; padding: 0 12px; box-sizing: border-box">
-				<span class="cell-ellipsis" title="${m.login_id}"
-					style="justify-self: start; padding-left: 24px">${m.login_id}</span>
-				<span>${m.nickname}</span> <span
-					class="${m.suspended ? 't-danger' : '' }">${m.suspended ? '정지' : '정상'}</span>
-				<span>${empty m.score ? 0 : m.score}</span> <a
-					class="btn btn-outline btn-xs t-brand"
-					href="${ctx}/admin/member/detail?userId=${m.user_id}">보기</a>
+			style="grid-template-columns: minmax(0,0.5fr) minmax(0,1fr) minmax(0,1fr) minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr) 100px; justify-items: center; padding: 0 12px; box-sizing: border-box">
+				<span>${m.user_id }</span>
+				<span class="cell-ellipsis" title="${m.login_id}" style="justify-self: start; padding-left: 24px">${m.login_id}</span>
+				<span>${m.nickname}</span> 
+				<span>${m.name}</span> 
+				<span class="${m.suspended ? 't-danger' : '' }">${m.suspended ? '정지' : '정상'}</span>
+				<span>${empty m.score ? 0 : m.score}</span> 
+				<a class="btn btn-outline btn-xs t-brand" href="${ctx}/admin/member/detail?userId=${m.user_id}">보기</a>
 			</div>
 		</c:forEach>
 		<!-- 목록이 없을때 -->

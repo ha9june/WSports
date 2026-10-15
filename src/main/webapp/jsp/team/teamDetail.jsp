@@ -302,13 +302,19 @@
 					<button type="button" class="btn btn-outline btn-danger-soft btn-block btn-sm"
 						data-modal-open="teamDeleteModal">팀 삭제</button>
 				</c:if>
-			</aside>
+			</aside>				
 		</div>
 
 		<nav class="tabs team-tabs">
 			<a class="tab is-active" href="#intro">소개글</a> <a
 				class="tab ${isMember ? '' : 'locked'}" href="#members">팀원</a> <a
 				class="tab ${isMember ? '' : 'locked'}" href="#posts">팀 작성글</a>
+			<!-- 관리자 신고상세에서 팀신고도 상세정보 확인을 위해 신고버튼 추가 -->
+			<c:if test="${state ne 'manager'}">
+			<a class="btn btn-outline btn-sm" style="margin-left: auto";
+								href="${ctx}/support/report/create?targetType=team&targetNo=${team.teamId}"
+								data-auth>신고</a>
+			</c:if>	
 		</nav>
 
 		<section class="team-section" id="intro">
