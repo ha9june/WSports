@@ -465,9 +465,9 @@ public class PaymentServiceImpl implements PaymentService {
 				while ((line = br.readLine()) != null)
 					sb.append(line);
 			}
-
 			if (status < 200 || status >= 300) {
 				System.out.println("토스 취소 실패 : " + sb);
+				
 				throw new IllegalStateException("토스 결제 취소에 실패했습니다.");
 			}
 			return new JSONObject(sb.toString());
@@ -729,6 +729,7 @@ public class PaymentServiceImpl implements PaymentService {
 				e.printStackTrace();
 				allSuccess = false; 
 			}
+			
 		}
 		return allSuccess;
 	}
