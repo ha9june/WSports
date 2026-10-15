@@ -50,8 +50,8 @@ public class PersonalMatch {
     private String region;              // 지역
     
     private String currentPeople;		//현재인원
-
     private String nickname;
+    private String profileImage;
 
     
     private boolean favorite;
@@ -379,6 +379,13 @@ public class PersonalMatch {
 		this.nickname = nickname;
 	}
 	
+	
+	public String getProfileImage() {
+		return profileImage;
+	}
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
 	public String getDayOfWeekKorean() {
 	    if (matchDate == null) {
 	        return "";

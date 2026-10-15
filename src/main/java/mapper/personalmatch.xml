@@ -422,6 +422,7 @@
 		SELECT
 	        m.*,
 	        u.nickname,
+	        u.profile_image,
 	        COUNT(p.participant_id) AS current_people,
 	        CASE
 	            WHEN f.match_id IS NOT NULL THEN 1

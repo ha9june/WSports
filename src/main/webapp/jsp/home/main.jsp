@@ -211,7 +211,7 @@
 		
 							<c:choose>
 								<c:when test="${not empty team.profileImage}"> 
-									<img src="${ctx}/uploads/<c:out value='${team.profileImage}' />" alt="">
+									<img src="${ctx}/uploads/<c:out value='${team.profileImage}'/>" alt="">
 								</c:when>
 								<c:otherwise>
 									<img src="${ctx}/img/team-${sportClass}.png" alt="">
