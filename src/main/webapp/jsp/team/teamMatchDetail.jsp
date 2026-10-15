@@ -258,7 +258,7 @@ $('#thumbs').on('click', '.subImg', function() {
 							data-auth aria-label="관심 경기" data-match-type="Team"
 							data-match-id="${t.teamMatchId}">${heart}</button>
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/jsp/support/reportWrite.jsp?targetType=team&targetNo=${t.teamMatchId}"
+							href="${ctx}/support/report/create?targetType=teamMatch&targetNo=${t.teamMatchId}"
 							data-auth style="height: 36px">신고</a>
 					</div>
 				</div>

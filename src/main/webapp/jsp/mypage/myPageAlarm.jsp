@@ -12,6 +12,14 @@
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
 <style>
+main.page {
+	padding-right: 80px;
+}
+
+main.page .rail {
+	width: 1000px;
+}
+
 .noti-list {
 	display: flex;
 	flex-direction: column;

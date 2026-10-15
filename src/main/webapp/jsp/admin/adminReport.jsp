@@ -36,7 +36,7 @@
 	</form>
 	
 	<div style="width: var(--settle-w); max-width:100%">
-	<div class="tbl-head" style="grid-template-columns: 70px minmax(0,1.5fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,3.8fr) 110px 100px;
+	<div class="tbl-head" style="grid-template-columns: 70px minmax(0,1.5fr) minmax(0,1.4fr) minmax(0,1.2fr) minmax(0,3.8fr) 110px 100px;
  		justify-items: center; padding: 0 12px; box-sizing: border-box; border: 1px solid transparent">
 		<span>신고번호</span>
 		<span>신고날짜</span>
@@ -48,7 +48,7 @@
 	</div>
 
 	<c:forEach var="r" items="${reportlist}">
-		<div class="tbl-row" style="grid-template-columns: 70px minmax(0,1.5fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,3.8fr) 110px 100px;
+		<div class="tbl-row" style="grid-template-columns: 70px minmax(0,1.5fr) minmax(0,1.4fr) minmax(0,1.2fr) minmax(0,3.8fr) 110px 100px;
 			justify-items: center; padding: 0 12px; box-sizing: border-box">
 				<span>${r.report_id}</span>
 				<b><fmt:formatDate value="${r.created_at}" pattern="yyyy.MM.dd" /></b>

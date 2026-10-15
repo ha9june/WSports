@@ -166,7 +166,7 @@
   <div class="container">
     <nav class="breadcrumb">
     </nav>
-
+      ${personalMatch.profileImage }
     <%-- ===== 상단 : 종목 / 제목 / 호스트 ===== --%>
     <section class="detail-top">
       <span class="sport-chip">${personalMatch.sport }</span>
@@ -179,15 +179,15 @@
       <div class="host-inline">
 	      	<span class="avatar">
 				<c:choose>
-					<c:when test="${not empty personalMatch.profileImage}"> 
-						<img src="${ctx}/uploads/<c:out value='${personalMatch.profileImage}' />" alt=""
-							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-					</c:when>
-					<c:otherwise>
-						<img src="${ctx}/img/default-profile.svg" alt=""
-							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-					</c:otherwise>
+				    <c:when test="${not empty personalMatch.profileImage}">
+				        <img src="${ctx}/profiles/${personalMatch.profileImage}" alt=""
+				             onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+				             style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+				    </c:when>
+				    <c:otherwise>				    
+				        <img src="${ctx}/img/default-profile.svg" alt=""
+				             style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+				    </c:otherwise>
 				</c:choose>
 			</span>
 			<div><a class="host-name-link" href="${ctx}/member/publicProfile/view?userId=${personalMatch.userId}"><strong style="color: #111827;">
@@ -275,7 +275,11 @@
           <div class="detail-actions">
             <button type="button" class="fav-btn sq ${personalMatch.favorite ? 'is-on' : ''}" 
             data-fav2 data-auth data-match-id="${personalMatch.personalMatchId }" data-match-type="Personal" aria-label="관심 경기">${heart}</button>
-            <a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
+<<<<<<< HEAD
+            <a class="btn btn-outline btn-sm" href="${ctx}/support/inquiry/create?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
+=======
+            <a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=personalMatch&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
           </div>
       </div>
 

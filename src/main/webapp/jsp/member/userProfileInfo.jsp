@@ -138,7 +138,7 @@
       </section>
 
       <c:if test="${role ne 'guest'}">
-        <div class="form-actions"><a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=member&targetNo=${publicProfile.user_id}">회원 신고</a></div>
+        <div class="form-actions"><a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=user&targetNo=${publicProfile.user_id}">회원 신고</a></div>
       </c:if>
     </div>
   </div>
