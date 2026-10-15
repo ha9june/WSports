@@ -37,6 +37,7 @@
 		WHERE p.team_match_id = m.team_match_id
 		AND p.user_id = #{userId}
 		AND p.status IN ('결제완료', '취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="startDate != null and startDate != ''">
 			AND p.applied_at &gt;= #{startDate}
 		</if>
@@ -66,6 +67,7 @@
 		p.user_id = #{userId}
 		AND p.status IN ('결제완료', '취소')
 		)
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
@@ -90,6 +92,7 @@
 		WHERE p.user_id = #{userId}
 		AND p.status IN ('결제완료',
 		'취소')
+		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
 			AND m.sport = #{sport}
 		</if>
