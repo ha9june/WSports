@@ -32,10 +32,13 @@ import dao.UserDao;
 import dao.UserDaoImpl;
 import dto.Notification;
 import dto.PersonalMatch;
+import dto.PersonalMatchParticipant;
 import dto.PersonalPayment;
 import dto.PersonalSettlement;
 import dto.TeamMatch;
 import dto.TeamPayment;
+import service.match.PersonalMatchParticipantService;
+import service.match.PersonalMatchParticipantServiceImpl;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 import service.notification.NotificationService;
@@ -529,6 +532,23 @@ public class PaymentServiceImpl implements PaymentService {
 			try {
 				String paymentKey = (String) target.get("payment_key");
 
+				
+				//진행중
+				if(paymentKey == null) {
+					PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+					pmp.setUserId((Long) target.get("user_id"));
+					pmp.setPersonalMatchId(matchId);
+					pmp.setCancelReason("부득이한 사정");
+					pmp.setStatus("취소");
+					
+					PersonalMatchParticipantService pmpService = new PersonalMatchParticipantServiceImpl();
+					pmpService.updateParticipantCancel(pmp);
+					//알람 다르게 처리
+					
+					continue;
+				}
+				
+				
 				//토스 결제 취소 (성공해야 다음 단계 진행)
 				JSONObject result = cancelPayment(paymentKey, reason, secretKey);
 				JSONArray cancels = result.getJSONArray("cancels");
