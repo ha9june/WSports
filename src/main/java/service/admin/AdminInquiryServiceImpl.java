@@ -71,7 +71,7 @@ public class AdminInquiryServiceImpl implements AdminInquiryService {
 		
 		//알림 내용 만들기
 		String content = ""+inquiryTitle+"문의에 답변이 등록되었습니다.";
-		String link = "/inquiry/detail?inquiryId="+inquiryId;
+		String link = "/support/inquiry/detail?inquiryId="+inquiryId;
 		//알림 객체 채우기
 		Notification alarm = new Notification();
 		alarm.setUserId(userId);
