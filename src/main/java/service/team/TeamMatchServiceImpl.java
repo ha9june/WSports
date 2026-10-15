@@ -115,4 +115,9 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 	public int modifyTeamMatchToCancel(Long teamMatchId) throws Exception {
 		return teamMatchDao.updateStatusToCancel(teamMatchId);
 	}
+
+	@Override
+	public int modifyTeamMatchToDeleted(Long teamMatchId) throws Exception {
+		return teamMatchDao.updateToDeleted(teamMatchId);
+	}
 }

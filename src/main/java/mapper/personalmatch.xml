@@ -726,7 +726,7 @@
 	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기) -->
 	<select id="selectFinishedSuccess" resultType="personalMatch">
 		SELECT
-		personal_match_id, user_id, title
+		personal_match_id, user_id, title, participation_fee, fee
 		FROM personal_match
 		WHERE status = '모집 마감'
 		AND coalesce(deleted, 0) = 0

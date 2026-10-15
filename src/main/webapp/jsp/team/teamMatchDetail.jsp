@@ -456,9 +456,11 @@ $('#thumbs').on('click', '.subImg', function() {
 		<div class="modal-card sm">
 			<h2 class="modal-title">팀 경기를 삭제할까요?</h2>
 			<p class="modal-desc">삭제한 경기는 복구할 수 없습니다.</p>
-			<form action="${ctx}/admin/team-match/delete" method="post"
+			<form action="${ctx}/payment/match/detail/allrefund" method="post"
 				class="modal-actions">
-				<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
+				<input type="hidden" name="matchType" value="Team">
+				<input type="hidden" name="matchId" value="${t.teamMatchId}">
+				<input type="hidden" name="matchTitle" value="${t.title}">
 				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
 				<button type="submit" class="btn btn-danger">삭제</button>
 			</form>

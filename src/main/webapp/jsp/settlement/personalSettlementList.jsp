@@ -44,7 +44,7 @@
           <div class="t-2">${s.participant_count}명 참가 · <fmt:formatNumber value="${s.participation_fee}"/>원</div>
           <c:set var="total" value="${(s.participant_count) * s.participation_fee}" />
           <c:set var="feeAmt" value="${total * 0.08}" />
-          <div class="amt"><b class="brand"><fmt:formatNumber value="${total - feeAmt}" maxFractionDigits="0"/>원</b><span><fmt:formatNumber value="${total}"/>원 − 수수료 <fmt:formatNumber value="${feeAmt}" maxFractionDigits="0"/>원</span></div>
+          <div class="amt"><b class="brand"><fmt:formatNumber value="${total}" maxFractionDigits="0"/>원</b><%-- <span><fmt:formatNumber value="${total}"/>원 − 수수료 <fmt:formatNumber value="${feeAmt}" maxFractionDigits="0"/>원</span> --%></div>
           <div class="st">
           <c:choose>
             <c:when test="${s.settlement_status eq '지급완료'}"><span class="pill pill-info">정산 완료</span><span>${s.settled_fmt} 지급 완료</span></c:when>
@@ -55,7 +55,7 @@
     </c:forEach>   
   </div>
   
-  <p class="ledger-note">경기 종료 후 확정 참가 인원 기준으로 정산돼요. 플랫폼 수수료 8%를 제외한 금액이 등록 계좌로 지급됩니다.</p>
+  <p class="ledger-note">경기 종료 후 확정 참가 인원 기준으로 정산돼요. <!-- 플랫폼 수수료 8%를 제외한 금액이 등록 계좌로 지급됩니다. --></p>
 	<c:if test="${not empty personalSettlementList }">
 	<nav class="pagination" style="display: flex; justify-content:center; padding:0px">
 	  <a href="${pageInfo.curPage > 1 ? ctx += '/settlement/personal/list?settlementStatus=' += settlementStatus += '&page=' += (pageInfo.curPage - 1) += '&keyword=' += param.keyword += '&period=' += param.period : '#'}">&lt;</a>

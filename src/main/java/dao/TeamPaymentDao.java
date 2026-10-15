@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.List;
 import java.util.Map;
 
 import dto.TeamMatch;
@@ -42,4 +43,7 @@ public interface TeamPaymentDao {
 	
 	//결제번호 가져오기
 	String selectPaymentKey(Map<String, Object> param) throws Exception;
+	
+	List<Map<String, Object>> selectPaidPaymentsByMatch(Long matchId) throws Exception;
+	void updateRefund(Map<String, Object> param) throws Exception;
 }

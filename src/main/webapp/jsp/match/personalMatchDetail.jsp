@@ -222,7 +222,7 @@
             </dd></div>
             <div class="info-row"><dt>주소</dt><dd>${personalMatch.address}</dd></div>
             <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee +personalMatch.fee }" />원</dd></div>
+            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee}" />원</dd></div>
             
             <div class="info-row"><dt>참가 인원</dt>
 	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
@@ -314,7 +314,16 @@
 	        			<div class="side-card">
 			              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>
 			              <p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" /> 원</b></div>
+			              		<div class="kv">
+										참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
+									</div>
+									<div class="kv">
+										수수료 (참가비의 8%) <b><fmt:formatNumber value="${personalMatch.fee}" />원</b>
+									</div>
+									<hr>
+									<div class="kv">
+										합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
+								</div>
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">			             
@@ -327,7 +336,16 @@
         			<c:when test="${isUser and !applied}">
 						<div class="side-card">
 			              <h2>결제 안내</h2>
-			              <div class="kv">참가비 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" />원</b></div>
+			              <div class="kv">
+								참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
+							</div>
+							<div class="kv">
+								수수료 (참가비의 8%) <b><fmt:formatNumber value="${personalMatch.fee}" />원</b>
+							</div>
+							<hr>
+							<div class="kv">
+								합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
+							</div>
 			              <hr>
 			              <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
 			              <div class="actions">
@@ -352,7 +370,16 @@
 	              <p class="sub">모집 기간이 종료되어 더 이상 참가 신청을 받을 수 없습니다.</p>
 		            <c:if test="${applied }">
 		            	<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" />원</b></div> 
+			              	<div class="kv">
+									참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
+								</div>
+								<div class="kv">
+									수수료 (참가비의 8%) <b><fmt:formatNumber value="${personalMatch.fee}" />원</b>
+								</div>
+								<hr>
+								<div class="kv">
+									합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
+							</div>
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">

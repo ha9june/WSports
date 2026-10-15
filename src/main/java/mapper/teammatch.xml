@@ -615,5 +615,11 @@
 		and m.status = '모집 마감'
 		and coalesce(m.deleted, 0) = 0)
 	</select>
+	
+	<update id="updateToDeleted" parameterType="Long">
+		update team_match set
+			deleted = true, deleted_at = NOW(), status = '경기 취소'
+		where team_match_id = #{teamMatchId}
+	</update>
 
 </mapper>
