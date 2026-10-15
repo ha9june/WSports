@@ -5,7 +5,7 @@ import java.util.Properties;
 
 /**
  * 토스페이먼츠 시크릿 키 공통 관리
- *  - resource/db.properties 의 toss.secret.key 값을 한 번만 읽어서 보관
+ *  - resource/api.properties 의 toss.secret.key 값을 한 번만 읽어서 보관
  *  - 사용 : TossKey.SECRET_KEY
  */
 public class TossKey {

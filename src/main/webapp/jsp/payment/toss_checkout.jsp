@@ -68,9 +68,9 @@
       	<p class="sub">${total}원 결제 예정</p>
       	<%-- 토스 결제위젯을 쓰는 경우 아래 영역에 렌더링 : <div id="payment-method"></div><div id="agreement"></div> --%>
       	<!-- 결제 수단 선택 UI가 렌더링될 영역 -->
-      	<div id="payment-method"></div>
-      	<!-- 이용약관 영역 -->
-      	<div id="agreement"></div>
+      	<!-- <div id="payment-method"></div>
+      	이용약관 영역
+      	<div id="agreement"></div> -->
       	
       	<div class="foot">
         	<label class="check"><input type="checkbox" id="refundAgree">환불 정책을 확인했습니다.</label>
@@ -99,41 +99,33 @@
 </div>
 
 <%-- 토스페이먼츠 SDK (실제 결제 연동 시 사용) --%>
-<script src="https://js.tosspayments.com/v1/payment-widget"></script>
-  <script>
-    const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // 개발자센터 클라이언트 키
-    const customerKey = "USER_" + new Date().getTime(); // 회원 식별 고유키 (비회원은 PaymentWidget.ANONYMOUS)
+<script src="https://js.tosspayments.com/v2/standard"></script>
+<script>
+  const clientKey = "test_ck_eqRGgYO1r5MDJJQnl56brQnN2Eya";   // 복사한 클라이언트 키 전체
+  const tossPayments = TossPayments(clientKey);
+  const payment = tossPayments.payment({ customerKey: "USER_${sessionScope.user.userId}" });
 
-    // 1. 위젯 초기화
-    const paymentWidget = PaymentWidget(clientKey, customerKey);
+  document.getElementById("tossPayBtn").addEventListener("click", function () {
+    const btn = this;
+    const orderId = "ORDER_" + new Date().getTime();
+    const query = "?matchId=${param.matchId}&matchType=${isTeam ? 'team' : 'personal'}&teamId=${empty teamId ? 0 : teamId}";
 
-    // 2. 결제 UI 렌더링 (금액 50,000원)
-    paymentWidget.renderPaymentMethods("#payment-method", { value: ${totalNum} });
-
-    // 3. 약관 렌더링
-    paymentWidget.renderAgreement("#agreement");
-
-    // 4. 결제하기 버튼 클릭 이벤트
-    document.getElementById("tossPayBtn").addEventListener("click", function () {
-    	const btn = this;
-    	// 주문번호 생성 (실제 운영 시에는 서버 DB에 주문 정보를 먼저 저장하고 생성된 번호를 바인딩 권장)
-    	const orderId = "ORDER_" + new Date().getTime();
-    	const query = "?matchId=${param.matchId}&matchType=${isTeam ? 'team' : 'personal'}&teamId=${empty teamId ? 0 : teamId}";
-    	
-      	paymentWidget.requestPayment({
-        	orderId: orderId,
-        	orderName: btn.dataset.orderName,
-        	successUrl: window.location.origin + btn.dataset.successUrl + query,
-        	failUrl: window.location.origin + btn.dataset.failUrl + query,
-        	customerName: "${fn:escapeXml(sessionScope.user.name)}",
-        	customerEmail: "${fn:escapeXml(sessionScope.user.email)}"
-      	}).catch(function (error) {
-        	if (error.code === 'USER_CANCEL') {
-         		alert('결제가 취소되었습니다.');
-        	} else {
-          		alert('오류 발생: ' + error.message);
-        	}
-      	});
+    payment.requestPayment({
+      method: "CARD",
+      amount: { currency: "KRW", value: Number(btn.dataset.amount) },
+      orderId: orderId,
+      orderName: btn.dataset.orderName,
+      successUrl: window.location.origin + btn.dataset.successUrl + query,
+      failUrl: window.location.origin + btn.dataset.failUrl + query,
+      customerName: "${fn:escapeXml(sessionScope.user.name)}",
+      customerEmail: "${fn:escapeXml(sessionScope.user.email)}"
+    }).catch(function (error) {
+      if (error.code === "USER_CANCEL") {
+        alert("결제가 취소되었습니다.");
+      } else {
+        alert("오류 발생: " + error.message);
+      }
     });
-  </script>
+  });
+</script>
 <%@ include file="/jsp/common/footer.jsp" %>

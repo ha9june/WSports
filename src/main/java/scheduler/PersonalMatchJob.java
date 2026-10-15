@@ -52,6 +52,7 @@ public class PersonalMatchJob {
 		for (PersonalMatch m : list) {
 			try {
 				// 참가자 전원 자동 환불 + 환불 알림
+				
 				boolean allRefunded = paymentService.autoRefundPersonalMatch(
 						m.getPersonalMatchId(), m.getTitle(), TossKey.SECRET_KEY);
 
