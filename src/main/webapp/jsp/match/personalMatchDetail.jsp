@@ -317,106 +317,8 @@
 
 			<aside class="detail-side">
 				<c:choose>
-
-<<<<<<< HEAD
 					<c:when test="${status eq '모집중'}">
 						<c:choose>
-							<%-- <c:when test="${isAdmin}">
-=======
-      </div>
-      
-    </section>
-
-    <div class="detail-grid">
-      <div class="detail-main">
-      
-      	<c:if test="${not empty personalMatch.image}">
-	      	<div class="gallery">
-				<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
-				<div class="thumbs" id="thumbs"></div>
-	        </div>
-      	</c:if>
-
-
-
-        <section class="info-card">
-          <h2>경기 정보</h2>
-          <dl class="info-list">
-            <div class="info-row"><dt>일시</dt><dd>          
-            ${personalMatch.matchDate}（${personalMatch.dayOfWeekKorean}）
-            ${personalMatch.startTime} ～ 
-            ${personalMatch.endTime}
-            </dd></div>
-            <div class="info-row"><dt>주소</dt><dd>${personalMatch.address}</dd></div>
-            <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee}" />원</dd></div>
-            
-            <div class="info-row"><dt>참가 인원</dt>
-	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
-	            	<c:choose>
-	            		<c:when test="${personalMatch.currentPeople >= personalMatch.minPeople}">
-	            			<small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small>
-	            		</c:when>
-	            		<c:otherwise>
-	            			<small style="color:red;">최소 진행 ${personalMatch.minPeople }명 · 미충족</small>
-	            		</c:otherwise>
-	            	</c:choose>
-	           	</dd>
-           	</div>
-            <div class="info-row"><dt>마감</dt><dd>
-            ${fn:replace(personalMatch.deadline, 'T', ' ')}
-            </dd></div>
-            <div class="info-row"><dt>성별</dt><dd>${personalMatch.gender eq '혼성' ? '성별무관' : personalMatch.gender}</dd></div>
-            <div class="info-row"><dt>연령</dt>
-            	<dd>
-					${ages }
-            	</dd>
-            </div>
-            
-            <div class="info-row"><dt>실력</dt>
-            	<dd>
-				${skills}
-            	</dd>
-            </div> 
-          </dl>
-          <div class="desc">
-            <h3>상세 설명</h3>
-            <p>${personalMatch.content}</p>
-          </div>
-        </section>
-
-        <section class="map-card">
-          <div class="head"><strong>경기 위치</strong><span>${personalMatch.address} ${personalMatch.placeName}</span></div>
-          <div id="map" style="width:100%;height:300px;">
-          </div>
-        </section>
-
-
-          <div class="detail-actions">
-            <button type="button" class="fav-btn sq ${personalMatch.favorite ? 'is-on' : ''}" 
-            data-fav2 data-auth data-match-id="${personalMatch.personalMatchId }" data-match-type="Personal" aria-label="관심 경기">${heart}</button>
-
-            <a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=personalMatch&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
-          </div>
-      </div>
-
-
-      <aside class="detail-side">
-        <c:choose>
-        	
-        	<c:when test="${status eq '모집중'}">
-        		<c:choose>
-        			<%-- <c:when test="${isAdmin}">
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
-        				<div class="side-card">
-							<p style="margin-top:8px"><span class="pill ${pillCls}">${status}</span></p>
-								<div class="actions">
-									<a class="btn btn-primary" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople})</a>
-									
-								</div>
-							<p class="note">삭제 시 참가자에게 알림이 전송돼요.</p>
-						</div>
-        			</c:when> --%>
 							<c:when test="${isHost}">
 								<div class="side-card">
 									<h2>내가 작성한 경기</h2>
@@ -437,83 +339,70 @@
 									<p class="note">수정 시 참가자에게 알림이 전송돼요.</p>
 								</div>
 							</c:when>
-							<c:when test="${isUser and applied}">
-								<div class="side-card">
-									<h2>
-										참가 <span class="pill pill-info">신청 완료</span>
-									</h2>
-									<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-									<div class="kv">
-										참가비 <b><fmt:formatNumber
-												value="${personalMatch.participationFee + personalMatch.fee }" />
-											원</b>
-									</div>
-									<hr>
-									<p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
-									<div class="actions row">
-										<a class="btn btn-primary btn-sm"
-											href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자
-											보기</a>
-										<button type="button" class="btn btn-danger btn-sm"
-											data-modal-open="refundModal">신청 취소</button>
-									</div>
-								</div>
+	
 
-							</c:when>
-							<c:when test="${isUser and !applied}">
+
+		        			<c:when test="${isUser and applied}">
+			        			<div class="side-card">
+					              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>
+					              <p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
+					              		<div class="kv">
+												참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
+											</div>
+											<div class="kv">
+												수수료 (참가비의 8%) <b><fmt:formatNumber value="${personalMatch.fee}" />원</b>
+											</div>
+											<hr>
+											<div class="kv">
+												합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
+										</div>
+					              <hr>
+					              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
+					              <div class="actions row">			             
+					                <a class="btn btn-primary btn-sm" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
+					                <button type="button" class="btn btn-danger btn-sm" data-modal-open="refundModal">신청 취소</button>
+					              </div>
+					            </div>
+								
+		        			</c:when>
+		        			<c:when test="${isUser and !applied}">
 								<div class="side-card">
-									<h2>결제 안내</h2>
+					              <h2>결제 안내</h2>
+					              <div class="kv">
+										참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
+									</div>
 									<div class="kv">
-										참가비 <b class="lg"><fmt:formatNumber
-												value="${personalMatch.participationFee + personalMatch.fee }" />원</b>
+										수수료 (참가비의 8%) <b><fmt:formatNumber value="${personalMatch.fee}" />원</b>
 									</div>
 									<hr>
-									<p class="note" style="margin-top: 0">결제하면 참가가 바로 확정됩니다.</p>
-									<div class="actions">
-										<a class="btn btn-primary"
-											href="${ctx}/payment/confirm?state=match&matchId=${personalMatch.personalMatchId}"
-											data-auth>결제하기</a>
+									<div class="kv">
+										합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
 									</div>
-								</div>
-							</c:when>
-							<c:otherwise>
+					              <hr>
+					              <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
+					              <div class="actions">
+					                <a class="btn btn-primary" href="${ctx}/payment/confirm?state=match&matchId=${personalMatch.personalMatchId}" data-auth>결제하기</a>
+					              </div>
+					            </div>
+		        			</c:when>
+		        			<c:otherwise>
 								<div class="side-card">
 									<h2>경기 신청</h2>
 									<p class="sub">로그인 후 신청할 수 있어요.</p>
 									<div class="actions">
 										<a class="btn btn-primary" href="${ctx}/auth/login" data-auth>로그인</a>
 									</div>
-								</div>
-							</c:otherwise>
-						</c:choose>
-					</c:when>
-					<c:when test="${status eq '모집 마감'}">
-						<div class="side-card">
-							<h2>모집이 마감되었습니다</h2>
-							<p class="sub">모집 기간이 종료되어 더 이상 참가 신청을 받을 수 없습니다.</p>
-							<c:if test="${applied }">
-								<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-								<div class="kv">
-									참가비 <b><fmt:formatNumber
-											value="${personalMatch.participationFee + personalMatch.fee }" />원</b>
-								</div>
-								<hr>
-								<p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
-								<div class="actions row">
-									<a class="btn btn-primary btn-sm"
-										href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자
-										보기</a>
-								</div>
-							</c:if>
-						</div>
-					</c:when>
-<<<<<<< HEAD
-=======
-        			<c:when test="${isUser and applied}">
-	        			<div class="side-card">
-			              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>
-			              <p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              		<div class="kv">
+		        				</div>
+		        			</c:otherwise>
+        			</c:choose>
+       			</c:when>
+	        	<c:when test="${status eq '모집 마감'}">
+	        		<div class="side-card">
+		              <h2>모집이 마감되었습니다</h2>
+		              <p class="sub">모집 기간이 종료되어 더 이상 참가 신청을 받을 수 없습니다.</p>
+			            <c:if test="${applied }">
+			            	<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
+				              	<div class="kv">
 										참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
 									</div>
 									<div class="kv">
@@ -523,103 +412,48 @@
 									<div class="kv">
 										합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
 								</div>
-			              <hr>
-			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
-			              <div class="actions row">			             
-			                <a class="btn btn-primary btn-sm" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
-			                <button type="button" class="btn btn-danger btn-sm" data-modal-open="refundModal">신청 취소</button>
-			              </div>
-			            </div>
-						
-        			</c:when>
-        			<c:when test="${isUser and !applied}">
-						<div class="side-card">
-			              <h2>결제 안내</h2>
-			              <div class="kv">
-								참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
-							</div>
-							<div class="kv">
-								수수료 (참가비의 8%) <b><fmt:formatNumber value="${personalMatch.fee}" />원</b>
-							</div>
-							<hr>
-							<div class="kv">
-								합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
-							</div>
-			              <hr>
-			              <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
-			              <div class="actions">
-			                <a class="btn btn-primary" href="${ctx}/payment/confirm?state=match&matchId=${personalMatch.personalMatchId}" data-auth>결제하기</a>
-			              </div>
-			            </div>
-        			</c:when>
-        			<c:otherwise>
-						<div class="side-card">
-							<h2>경기 신청</h2>
-							<p class="sub">로그인 후 신청할 수 있어요.</p>
-							<div class="actions">
-								<a class="btn btn-primary" href="${ctx}/auth/login" data-auth>로그인</a>
-							</div>
-        				</div>
-        			</c:otherwise>
-        		</c:choose>
-        	<c:when test="${status eq '모집 마감'}">
-        		<div class="side-card">
-	              <h2>모집이 마감되었습니다</h2>
-	              <p class="sub">모집 기간이 종료되어 더 이상 참가 신청을 받을 수 없습니다.</p>
-		            <c:if test="${applied }">
-		            	<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              	<div class="kv">
-									참가비 <b><fmt:formatNumber value="${personalMatch.participationFee}" />원</b>
-								</div>
-								<div class="kv">
-									수수료 (참가비의 8%) <b><fmt:formatNumber value="${personalMatch.fee}" />원</b>
-								</div>
-								<hr>
-								<div class="kv">
-									합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
-							</div>
-			              <hr>
-			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
-			              <div class="actions row">
-			                <a class="btn btn-primary btn-sm" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
-			              </div>
-		            </c:if>
-	            </div>
-        	</c:when>
-        	
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
+				              <hr>
+				              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
+				              <div class="actions row">
+				                <a class="btn btn-primary btn-sm" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
+				              </div>
+			            </c:if>
+		            </div>
+	        	</c:when>
+	        	
 
 
-					<c:when test="${status eq '경기 종료'}">
-						<div class="side-card done">
-							<h2>경기가 종료되었습니다</h2>
-							<p class="sub">함께 경기한 참가자의 매너를 평가하고 후기를 남겨보세요.</p>
-							<div class="actions">
-								<c:if test="${isHost}">
-									<a class="btn btn-primary"
-										href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
-									<a class="btn btn-primary"
-										href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석
-										체크 · 참가자 평가</a>
-								</c:if>
-								<c:if test="${isUser and applied and not isHost}">
-									<a class="btn btn-primary"
-										href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
-									<a class="btn btn-primary"
-										href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자
-										평가</a>
-								</c:if>
-							</div>
+				<c:when test="${status eq '경기 종료'}">
+					<div class="side-card done">
+						<h2>경기가 종료되었습니다</h2>
+						<p class="sub">함께 경기한 참가자의 매너를 평가하고 후기를 남겨보세요.</p>
+						<div class="actions">
+							<c:if test="${isHost}">
+								<a class="btn btn-primary"
+									href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
+								<a class="btn btn-primary"
+									href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석
+									체크 · 참가자 평가</a>
+							</c:if>
+							<c:if test="${isUser and applied and not isHost}">
+								<a class="btn btn-primary"
+									href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
+								<a class="btn btn-primary"
+									href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자
+									평가</a>
+							</c:if>
 						</div>
-					</c:when>
-					<c:when test="${status eq '경기 취소'}">
-						<div class="side-card">
-							<span class="pill pill-danger bd">경기 취소</span>
-							<p class="status-title">경기가 취소되었습니다.</p>
-							<p class="sub">호스트 또는 운영 사정으로 경기가 진행되지 않아요.</p>
-							<p class="note">결제한 참가비는 환불 규정에 따라 처리됩니다.</p>
-						</div>
-					</c:when>
+					</div>
+				</c:when>
+				<c:when test="${status eq '경기 취소'}">
+					<div class="side-card">
+						<span class="pill pill-danger bd">경기 취소</span>
+						<p class="status-title">경기가 취소되었습니다.</p>
+						<p class="sub">호스트 또는 운영 사정으로 경기가 진행되지 않아요.</p>
+						<p class="note">결제한 참가비는 환불 규정에 따라 처리됩니다.</p>
+					</div>
+				</c:when>
+				</c:choose>
 			</aside>
 		</div>
 	</div>
