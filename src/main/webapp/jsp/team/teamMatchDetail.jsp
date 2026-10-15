@@ -191,7 +191,7 @@ $('#thumbs').on('click', '.subImg', function() {
 						<dl class="info-list">
 							<div class="info-row">
 								<dt>일시</dt>
-								<dd>${t.matchDate}(${t.dayOfWeekKorean})${t.startTime} ~
+								<dd>${t.matchDate} (${t.dayOfWeekKorean}) ${t.startTime} ~
 									${t.endTime}</dd>
 							</div>
 							<div class="info-row">
@@ -426,15 +426,10 @@ $('#thumbs').on('click', '.subImg', function() {
 								<c:when test="${isHost or applied}">
 									<p class="sub">우리 팀과 상대 팀의 경기 매너를 팀 단위로 평가해주세요.</p>
 									<div class="actions">
-<<<<<<< HEAD
-										<a class="btn btn-primary" href="${ctx}/review/create?matchNo=TEAM:${t.teamMatchId}">후기작성</a>
-										<a class="btn btn-outline" href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">참가 팀 평가</a>
-=======
 										<a class="btn btn-primary"
 											href="${ctx}/review/create">후기 작성</a>
 										<a class="btn btn-outline"
 											href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">상대 팀 평가 및 출석 확인</a>
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 									</div>
 								</c:when>
 								<c:otherwise>
@@ -512,14 +507,7 @@ $('#thumbs').on('click', '.subImg', function() {
 			id="refundForm">
 			<input type="hidden" name="matchType" value="Team" />
 			<div class="modal-body">
-<<<<<<< HEAD
-				<p>
-					환불금액 : <b><fmt:formatNumber
-							value="${t.participationFee - t.fee}" pattern="#,###" />원</b>
-				</p>
-=======
 				<p>환불금액 : <b><fmt:formatNumber value="${t.participationFee + t.fee}"  pattern="#,###"/>원</b></p>
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 				<div class="field mt-16">
 					<label class="field-label">환불사유</label> <select class="select"
 						name="cancelReason" required>
