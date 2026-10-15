@@ -68,7 +68,7 @@
 
 <c:set var="status" value="${personalMatch.status}" />
 <c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
-<c:set var="isUser" value="${sessionScope.user.grade eq 'User'}" />
+<c:set var="isUser" value="${not empty sessionScope.user}" />
 <c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
 
 <c:set var="pageTitle" value="경기 상세" />
@@ -156,7 +156,6 @@
 		<c:set var="pillCls" value="pill-neutral" /><c:set var="pillText" value="${status}" />
 	</c:otherwise>
 </c:choose>
-
 <c:if test="${isAdmin}">
 	<div class="admin-post-bar">관리자(사이트) 보기 · 운영 정책에 맞지 않는 경기는 삭제할
 		수 있어요.</div>
@@ -166,7 +165,8 @@
   <div class="container">
     <nav class="breadcrumb">
     </nav>
-
+    
+    
     <%-- ===== 상단 : 종목 / 제목 / 호스트 ===== --%>
     <section class="detail-top">
       <span class="sport-chip">${personalMatch.sport }</span>
@@ -175,19 +175,23 @@
         	${personalMatch.title }
         </h1>
         <span class="pill pill-lg ${pillCls}">${status }</span>
+        <c:if test="${isAdmin && !personalMatch.deleted}">
+			<button type="button" class="btn btn-danger btn-sm"
+				data-modal-open="adminDeleteModal">팀 경기 삭제</button>
+		</c:if>
       </div>
       <div class="host-inline">
 	      	<span class="avatar">
 				<c:choose>
-					<c:when test="${not empty personalMatch.profileImage}"> 
-						<img src="${ctx}/uploads/<c:out value='${personalMatch.profileImage}' />" alt=""
-							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-					</c:when>
-					<c:otherwise>
-						<img src="${ctx}/img/default-profile.svg" alt=""
-							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-					</c:otherwise>
+				    <c:when test="${not empty personalMatch.profileImage}">
+				        <img src="${ctx}/profiles/${personalMatch.profileImage}" alt=""
+				             onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+				             style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+				    </c:when>
+				    <c:otherwise>				    
+				        <img src="${ctx}/img/default-profile.svg" alt=""
+				             style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+				    </c:otherwise>
 				</c:choose>
 			</span>
 			<div><a class="host-name-link" href="${ctx}/member/publicProfile/view?userId=${personalMatch.userId}"><strong style="color: #111827;">
@@ -242,20 +246,13 @@
             <div class="info-row"><dt>성별</dt><dd>${personalMatch.gender eq '혼성' ? '성별무관' : personalMatch.gender}</dd></div>
             <div class="info-row"><dt>연령</dt>
             	<dd>
-		            <c:if test="${personalMatch.age20s}">20대 </c:if>
-					<c:if test="${personalMatch.age30s}">30대 </c:if>
-					<c:if test="${personalMatch.age40s}">40대 </c:if>
-					<c:if test="${personalMatch.age50s}">50대 </c:if>
-					<c:if test="${personalMatch.age60Plus}">연령무관 </c:if>
+					${ages }
             	</dd>
             </div>
             
             <div class="info-row"><dt>실력</dt>
             	<dd>
-            	<c:if test="${personalMatch.skillIntro}">입문 </c:if>
-				<c:if test="${personalMatch.skillBeginner}">초급 </c:if>
-				<c:if test="${personalMatch.skillIntermediate}">중급 </c:if>
-				<c:if test="${personalMatch.skillAdvanced}">고급 </c:if>
+				${skills}
             	</dd>
             </div> 
           </dl>
@@ -275,7 +272,8 @@
           <div class="detail-actions">
             <button type="button" class="fav-btn sq ${personalMatch.favorite ? 'is-on' : ''}" 
             data-fav2 data-auth data-match-id="${personalMatch.personalMatchId }" data-match-type="Personal" aria-label="관심 경기">${heart}</button>
-            <a class="btn btn-outline btn-sm" href="${ctx}/jsp/support/reportWrite.jsp?targetType=personal&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
+
+            <a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=personalMatch&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
           </div>
       </div>
 
@@ -285,18 +283,16 @@
         	
         	<c:when test="${status eq '모집중'}">
         		<c:choose>
-        			<c:when test="${isAdmin}">
+        			<%-- <c:when test="${isAdmin}">
         				<div class="side-card">
-							<h2>내가 작성한 경기</h2>
 							<p style="margin-top:8px"><span class="pill ${pillCls}">${status}</span></p>
 								<div class="actions">
 									<a class="btn btn-primary" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 명단 (${personalMatch.currentPeople}/${personalMatch.maxPeople})</a>
-									<button type="button" class="btn btn-outline btn-danger-soft"
-										data-modal-open="adminDeleteModal">경기 삭제</button>
+									
 								</div>
 							<p class="note">삭제 시 참가자에게 알림이 전송돼요.</p>
 						</div>
-        			</c:when>
+        			</c:when> --%>
         			<c:when test="${isHost}">
 						<div class="side-card">
 							<h2>내가 작성한 경기</h2>

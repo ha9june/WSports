@@ -11,8 +11,9 @@
 <c:set var="targetNo" value="${param.targetNo}" />
 
 <c:set var="hasTarget" value="${not empty targetType and not empty targetNo}" />
-<c:set var="isMember" value="${hasTarget and targetType eq 'member'}" />
-<c:set var="isPost"   value="${hasTarget and targetType ne 'member'}" />
+<c:set var="isUser" value="${hasTarget and targetType eq 'user'}" />
+<c:set var="isTeam" value="${hasTarget and targetType eq 'team'}" />
+<c:set var="isPost" value="${hasTarget and (targetType eq 'personalMatch' or targetType eq 'teamMatch' or targetType eq 'review')}" />
 
 <c:choose>
   <c:when test="${isPost}">
@@ -20,8 +21,13 @@
     <c:set var="reportDesc"  value="신고 대상 게시글 정보는 자동으로 입력됩니다." />
     <c:set var="bodyHolder"  value="신고 대상 게시글에 관한 신고입니다." />
   </c:when>
-  <c:when test="${isMember}">
+  <c:when test="${isUser}">
     <c:set var="reportTitle" value="회원 신고 접수" />
+    <c:set var="reportDesc"  value="신고 대상 회원 정보는 자동으로 입력됩니다." />
+    <c:set var="bodyHolder"  value="신고 상황을 자세히 입력해주세요.&#10;확인이 필요한 상황과 내용을 구체적으로 적어주세요." />
+  </c:when>
+  <c:when test="${isTeam}">
+    <c:set var="reportTitle" value="팀 신고 접수" />
     <c:set var="reportDesc"  value="신고 대상 회원 정보는 자동으로 입력됩니다." />
     <c:set var="bodyHolder"  value="신고 상황을 자세히 입력해주세요.&#10;확인이 필요한 상황과 내용을 구체적으로 적어주세요." />
   </c:when>
@@ -48,6 +54,25 @@
     <input type="hidden" name="targetNo" value="${targetNo}">
   </c:if>
   <div class="form-card" style="margin-left:0;width:780px;max-width:100%">
+    <c:if test="${hasTarget}">
+      <div class="field">
+      <c:choose>
+        <c:when test="${targetType eq 'user'}"><label class="field-label" for="rTarget" style="color:red">신고 대상 닉네임</label></c:when>
+        <c:when test="${targetType eq 'team'}"><label class="field-label" for="rTarget" style="color:red">신고 대상 팀명</label></c:when>
+        <c:when test="${targetType eq 'personalMatch'}"><label class="field-label" for="rTarget" style="color:red">신고 대상 개인경기 게시글 제목</label></c:when>
+        <c:when test="${targetType eq 'teamMatch'}"><label class="field-label" for="rTarget" style="color:red">신고 대상 팀경기 게시글 제목</label></c:when>
+        <c:otherwise><label class="field-label" for="rTarget" style="color:red">신고 대상 후기 게시글 제목</label></c:otherwise>
+      </c:choose>
+      
+      <c:choose>
+        <c:when test="${targetType eq 'user'}"><input class="input" id="rTarget" name="target" placeholder="${reportTarget.userNickname}" readonly></c:when>
+        <c:when test="${targetType eq 'team'}"><input class="input" id="rTarget" name="target" placeholder="${reportTarget.teamName}" readonly></c:when>
+        <c:when test="${targetType eq 'personalMatch'}"><input class="input" id="rTarget" name="target" placeholder="${reportTarget.personalMatchTitle}" readonly></c:when>
+        <c:when test="${targetType eq 'teamMatch'}"><input class="input" id="rTarget" name="target" placeholder="${reportTarget.teamMatchTitle}" readonly></c:when>
+        <c:otherwise><input class="input" id="rTarget" name="target" placeholder="${reportTarget.reviewTitle}" readonly></c:otherwise>
+      </c:choose>
+      </div>
+    </c:if>
     <div class="field"><label class="field-label" for="rType">신고 유형</label>
       <c:choose>
         <c:when test="${isPost}"><input class="input" id="rType" name="reportType" value="부적절한 글 신고" readonly></c:when>

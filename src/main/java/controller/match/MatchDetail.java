@@ -1,7 +1,9 @@
 package controller.match;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +19,12 @@ import service.match.PersonalMatchParticipantService;
 import service.match.PersonalMatchParticipantServiceImpl;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
+import service.team.TeamMatchService;
+import service.team.TeamMatchServiceImpl;
+import service.team.TeamService;
+import service.team.TeamServiceImpl;
+import service.team.TeamUserService;
+import service.team.TeamUserServiceImpl;
 import util.CheckUtil;
 
 /**
@@ -45,6 +53,8 @@ public class MatchDetail extends HttpServlet {
 
 		PersonalMatchService pmService = new PersonalMatchServiceImpl();
 		PersonalMatchParticipantService pmpService = new PersonalMatchParticipantServiceImpl();
+	    TeamService teamService = new TeamServiceImpl();
+
 		try {
 			
 			PersonalMatch pm = new PersonalMatch();
@@ -54,6 +64,30 @@ public class MatchDetail extends HttpServlet {
 			
 
 			PersonalMatch pMatch = pmService.getPersonalMatchDetail(pm);
+			
+			
+			
+			String ages = teamService.changeAges(pMatch.getAge20s(), pMatch.getAge30s(), pMatch.getAge40s(), pMatch.getAge50s(), pMatch.getAge60Plus());
+			request.setAttribute("ages", ages);
+			
+			
+			boolean[] s = {
+			        Boolean.TRUE.equals(pMatch.getSkillIntro()), Boolean.TRUE.equals(pMatch.getSkillBeginner()),
+			        Boolean.TRUE.equals(pMatch.getSkillIntermediate()), Boolean.TRUE.equals(pMatch.getSkillAdvanced())
+			    };
+			String[] label = {"입문", "초급", "중급", "상급"};
+			List<String> parts = new ArrayList<>();
+			int i=0; 
+			while(i < s.length) {
+				if(s[i]) {
+					parts.add(label[i]);
+				}
+				i++;
+			}
+			String skills = String.join(" · ", parts);
+			request.setAttribute("skills", skills);
+
+			
 			
 			Boolean applied = false;
 			if(user!=null) {

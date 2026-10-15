@@ -765,12 +765,12 @@
 		update
 		personal_match
 		set status = '경기 취소',
-		deleted = 1,
-		updated_at = now()
+			deleted = 1,
+			updated_at = now(),
+			deleted_at = now()
 		where personal_match_id = #{matchId}
 		and status = '모집중'
-		and
-		deleted = 0
+		and deleted = 0
 	</update>
 
 

@@ -56,4 +56,12 @@ public class ReportServiceImpl implements ReportService {
 		param.put("reportId", reportId);
 		return reportDao.selectDetailReport(param);
 	}
+
+	@Override
+	public Map<String, Object> reportTarget(String targetType, Long targetId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("targetType", targetType);
+		param.put("targetId", targetId);
+		return reportDao.selectTarget(param);
+	}
 }
