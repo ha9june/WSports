@@ -86,5 +86,10 @@ public class AdminReportServiceImpl implements AdminReportService {
 	public Map<String, Object> getAdminReportDetail(Long reportId) throws Exception {
 		return reportDao.selectAdminReportDetail(reportId);
 	}
+	//post_id로 받아온 값이 실제로 있는가
+	@Override
+	public Integer countReportTarget(Map<String, Object> param) {
+		return reportDao.countReportTarget(param);
+	}
 
 }
