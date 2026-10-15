@@ -727,7 +727,7 @@ public class PaymentServiceImpl implements PaymentService {
 			} catch (Exception e) {
 				//한 명 실패해도 나머지 참가자는 계속 환불
 				e.printStackTrace();
-				allSuccess = false;
+				allSuccess = false; 
 			}
 		}
 		return allSuccess;
