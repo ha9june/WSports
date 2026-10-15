@@ -49,9 +49,9 @@ public class PersonalMatch {
     private String address;             // 주소
     private String region;              // 지역
     
-    private String currentPeople;		//현재인원
-
+    private Integer currentPeople;		//현재인원
     private String nickname;
+    private String profileImage;
 
     
     private boolean favorite;
@@ -366,10 +366,10 @@ public class PersonalMatch {
 	public void setRegion(String region) {
 		this.region = region;
 	}
-	public String getCurrentPeople() {
+	public Integer getCurrentPeople() {
 		return currentPeople;
 	}
-	public void setCurrentPeople(String currentPeople) {
+	public void setCurrentPeople(Integer currentPeople) {
 		this.currentPeople = currentPeople;
 	}
 	public String getNickname() {
@@ -379,6 +379,13 @@ public class PersonalMatch {
 		this.nickname = nickname;
 	}
 	
+	
+	public String getProfileImage() {
+		return profileImage;
+	}
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
 	public String getDayOfWeekKorean() {
 	    if (matchDate == null) {
 	        return "";

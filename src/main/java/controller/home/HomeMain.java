@@ -56,7 +56,6 @@ public class HomeMain extends HttpServlet {
 			MatchSearchInfo searchInfo = new MatchSearchInfo();
 			TeamSearchCondition condition = new TeamSearchCondition();
 			if(user!=null) {
-				
 				String[] preferredSports = new String[] {
 					user.getPreferredSport1(),
 				    user.getPreferredSport2(),
@@ -78,8 +77,9 @@ public class HomeMain extends HttpServlet {
 				
 			}else {
 				searchInfo.setSearchType("POPULAR");
-				condition.setSearchType("NEW");
 			}
+			
+			System.out.println(condition);
 
 			List<PersonalMatch> nowMatchList = matchService.getNowMatchList(searchInfo);
 			List<Team> nowTeamList = teamService.getNowTeamList(condition);

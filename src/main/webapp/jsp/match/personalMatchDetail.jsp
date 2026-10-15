@@ -46,7 +46,7 @@
 	}
 	.team-tabs {
 		position: sticky;
-		top: var(--header-h)
+		top: var(--header-h); 
 		z-index: 40;
 		background: #fff;
 	}
@@ -66,70 +66,66 @@
 
 </style>
 
+<c:set var="status" value="${personalMatch.status}" />
+<c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
+<c:set var="isUser" value="${sessionScope.user.grade eq 'User'}" />
+<c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
+
 <c:set var="pageTitle" value="경기 상세" />
 <c:set var="pageCss" value="match" />
 <c:set var="activeNav" value="${isHost ? '' : 'match'}" />
 <script src="${ctx}/js/common.format.js"></script>
 <%@ include file="/jsp/common/header.jsp" %>
 
-<c:set var="status" value="${personalMatch.status}" />
-<c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
-<c:set var="isUser" value="${sessionScope.user.grade eq 'User'}" />
-<c:set var="isHost" value="${sessionScope.user.userId eq personalMatch.userId}" />
-<c:set var="applied" value="${applied }" />
+<%-- [참고] 카카오 키: 가능하면 서버 설정값(${kakaoKey})으로 빼고, 카카오 콘솔에서 허용 도메인 등록 확인 --%>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
 
 <script>
 	$(function() {
 
-		const profileImage = '${personalMatch.image}';
-		const sport = '${personalMatch.sport}';
+		const profileImage = '<c:out value="${personalMatch.image}" />';
+		const sport = '<c:out value="${personalMatch.sport}" />';
+
+		const sportIcons = {
+			'축구/풋살': 'sport-icon-football.png',
+			'농구': 'sport-icon-basketball.png',
+			'테니스': 'sport-icon-tennis.png',
+			'배드민턴': 'sport-icon-badminton.png'
+		};
 
 		let imageSrc = '';
 
 		if (profileImage) {
 			imageSrc = '${ctx}/uploads/' + profileImage;
-		} else if (sport === '축구/풋살') {
-			imageSrc = '${ctx}/img/team-football.png';
-		} else if (sport === '농구') {
-			imageSrc = '${ctx}/img/team-basketball.png';
-		} else if (sport === '테니스') {
-			imageSrc = '${ctx}/img/team-tennis.png';
-		} else if (sport === '배드민턴') {
-			imageSrc = '${ctx}/img/team-badminton.png';
+			$('#mainPhoto').html('<img src="' + imageSrc + '" alt="경기 이미지">');
 		}
 
-		$('#mainPhoto').html('<img src="' + imageSrc + '" alt="팀 프로필 이미지">');
+		//$('#mainPhoto').html('<img src="' + imageSrc + '" alt="경기 이미지">');
 
-		 const images = [ '${personalMatch.image1}', '${personalMatch.image2}',
-				'${personalMatch.image3}', '${personalMatch.image4}',
-				'${personalMatch.image5}' ];
-
-
-		var hasImage = images.some(function(image) {
+		const images = [
+			'<c:out value="${personalMatch.image1}" />',
+			'<c:out value="${personalMatch.image2}" />',
+			'<c:out value="${personalMatch.image3}" />',
+			'<c:out value="${personalMatch.image4}" />',
+			'<c:out value="${personalMatch.image5}" />'
+		].filter(function(image) {
 			return image;
 		});
 
-		if (!hasImage) {
+		if (images.length === 0) {
 			$('#activePhoto').hide();
-
 			return;
 		}
 
 		let html = '';
-		let mainPhoto = '<img src="${ctx}/uploads/' + images[0]	 + '" alt="활동 사진">';
+		let mainPhoto = '<img src="${ctx}/uploads/' + images[0] + '" alt="활동 사진">';
 
 		images.forEach(function(image, index) {
-					if (image && index === 0) {
-						html += '<span>'
-								+ '<img class="subImg" src="${ctx}/uploads/' + image + '" alt="활동 사진" style="border: 2px solid #1677ff">'
-								+ '</span>';
-					} else if (image) {
-						html += '<span>'
-								+ '<img class="subImg" src="${ctx}/uploads/' + image + '" alt="활동 사진">'
-								+ '</span>';
-					}
-				});
+			const border = (index === 0) ? ' style="border: 2px solid #1677ff"' : '';
+			html += '<span>'
+					+ '<img class="subImg" src="${ctx}/uploads/' + image + '" alt="활동 사진"' + border + '>'
+					+ '</span>';
+		});
 
 		$('#mainPhoto').html(mainPhoto);
 		$('#thumbs').html(html);
@@ -162,17 +158,13 @@
 </c:choose>
 
 <c:if test="${isAdmin}">
-	<div class="admin-post-bar">관리자(사이트) 보기 · 운영 정책에 맞지 않는 팀 경기는 삭제할
+	<div class="admin-post-bar">관리자(사이트) 보기 · 운영 정책에 맞지 않는 경기는 삭제할
 		수 있어요.</div>
 </c:if>
 
 <main class="page">
   <div class="container">
     <nav class="breadcrumb">
-      <%-- <c:choose>
-        <c:when test="${isHost}"><a href="${ctx}/jsp/mypage/myPageCreatedPersonalMatch.jsp">내 경기</a><span class="sep">›</span><span>만든 경기</span><span class="sep">›</span><span>${status eq 'completedHost' or state eq 'cancelledHost' ? '경기 상세' : '경기 관리'}</span></c:when>
-        <c:otherwise><a href="${ctx}/jsp/match/personalMatchList.jsp">경기 찾기</a><span class="sep"></span><span>경기 상세</span></c:otherwise>
-      </c:choose> --%>
     </nav>
 
     <%-- ===== 상단 : 종목 / 제목 / 호스트 ===== --%>
@@ -183,15 +175,12 @@
         	${personalMatch.title }
         </h1>
         <span class="pill pill-lg ${pillCls}">${status }</span>
-        <c:if test="${role eq 'admin'}">
-          <button type="button" class="btn btn-danger btn-sm admin-del" data-modal-open="adminDeleteModal">경기 삭제</button>
-        </c:if>
       </div>
       <div class="host-inline">
 	      	<span class="avatar">
 				<c:choose>
-					<c:when test="${not empty t.hostProfileImage}"> 
-						<img src="${ctx}/profiles/<c:out value='${t.hostProfileImage}' />" alt=""
+					<c:when test="${not empty personalMatch.profileImage}"> 
+						<img src="${ctx}/uploads/<c:out value='${personalMatch.profileImage}' />" alt=""
 							onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
 							style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
 					</c:when>
@@ -208,14 +197,19 @@
 			</small></div>
 
       </div>
+      
     </section>
 
     <div class="detail-grid">
       <div class="detail-main">
-        <div class="gallery">
-			<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
-			<div class="thumbs" id="thumbs"></div>
-        </div>
+      
+      	<c:if test="${not empty personalMatch.image}">
+	      	<div class="gallery">
+				<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
+				<div class="thumbs" id="thumbs"></div>
+	        </div>
+      	</c:if>
+
 
 
         <section class="info-card">
@@ -228,7 +222,7 @@
             </dd></div>
             <div class="info-row"><dt>주소</dt><dd>${personalMatch.address}</dd></div>
             <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee }" />원</dd></div>
+            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee +personalMatch.fee }" />원</dd></div>
             
             <div class="info-row"><dt>참가 인원</dt>
 	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명
@@ -240,22 +234,19 @@
 	            			<small style="color:red;">최소 진행 ${personalMatch.minPeople }명 · 미충족</small>
 	            		</c:otherwise>
 	            	</c:choose>
-	            	<c:if test="${personalMatch.currentPeople >= personalMatch.minPeople}">
-	            		<small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small>
-            		</c:if>
 	           	</dd>
            	</div>
             <div class="info-row"><dt>마감</dt><dd>
             ${fn:replace(personalMatch.deadline, 'T', ' ')}
             </dd></div>
-            <div class="info-row"><dt>성별</dt><dd>${personalMatch.gender}</dd></div>
+            <div class="info-row"><dt>성별</dt><dd>${personalMatch.gender eq '혼성' ? '성별무관' : personalMatch.gender}</dd></div>
             <div class="info-row"><dt>연령</dt>
             	<dd>
 		            <c:if test="${personalMatch.age20s}">20대 </c:if>
 					<c:if test="${personalMatch.age30s}">30대 </c:if>
 					<c:if test="${personalMatch.age40s}">40대 </c:if>
 					<c:if test="${personalMatch.age50s}">50대 </c:if>
-					<c:if test="${personalMatch.age60Plus}">60대+ </c:if>
+					<c:if test="${personalMatch.age60Plus}">연령무관 </c:if>
             	</dd>
             </div>
             
@@ -266,6 +257,7 @@
 				<c:if test="${personalMatch.skillIntermediate}">중급 </c:if>
 				<c:if test="${personalMatch.skillAdvanced}">고급 </c:if>
             	</dd>
+            </div> 
           </dl>
           <div class="desc">
             <h3>상세 설명</h3>
@@ -274,7 +266,7 @@
         </section>
 
         <section class="map-card">
-          <div class="head"><strong>경기 위치</strong><span>서울 마포구 망원 풋살장</span></div>
+          <div class="head"><strong>경기 위치</strong><span>${personalMatch.address} ${personalMatch.placeName}</span></div>
           <div id="map" style="width:100%;height:300px;">
           </div>
         </section>
@@ -288,7 +280,6 @@
       </div>
 
 
-      <%-- ===== 우측 패널 : 상태별 액션 ===== --%>
       <aside class="detail-side">
         <c:choose>
         	
@@ -323,7 +314,7 @@
 	        			<div class="side-card">
 			              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>
 			              <p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee }" /> 원</b></div>
+			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" /> 원</b></div>
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">			             
@@ -336,7 +327,7 @@
         			<c:when test="${isUser and !applied}">
 						<div class="side-card">
 			              <h2>결제 안내</h2>
-			              <div class="kv">참가비 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee }" />원</b></div>
+			              <div class="kv">참가비 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" />원</b></div>
 			              <hr>
 			              <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
 			              <div class="actions">
@@ -361,7 +352,7 @@
 	              <p class="sub">모집 기간이 종료되어 더 이상 참가 신청을 받을 수 없습니다.</p>
 		            <c:if test="${applied }">
 		            	<p class="sub">결제가 완료되어 참가가 확정되었습니다.</p>
-			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee }" /></b></div>
+			              <div class="kv">참가비 <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee }" />원</b></div> 
 			              <hr>
 			              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 			              <div class="actions row">
@@ -391,7 +382,7 @@
 	            <div class="side-card">
 	              <span class="pill pill-danger bd">경기 취소</span>
 	              <p class="status-title">경기가 취소되었습니다.</p>
-	              <p class="sub">경기가 취소되었습니다.</p>
+	              <p class="sub">호스트 또는 운영 사정으로 경기가 진행되지 않아요.</p>
 	              <p class="note">결제한 참가비는 환불 규정에 따라 처리됩니다.</p>
 	            </div>
 	          </c:when>
@@ -439,7 +430,7 @@
 			<input type="hidden" name="matchType" value="Personal">
 			<input type="hidden" name="matchId" value="${personalMatch.personalMatchId}">			
 			<input type="hidden" name="matchTitle" value="${personalMatch.title}">			
-			<button type="button" class="btn btn-outline" data-modal-close>삭제</button>
+			<button type="button" class="btn btn-outline" data-modal-close>취소</button>
         	<button type="submit" class="btn btn-danger">삭제</button>
 		</form>
     </div>
@@ -449,16 +440,16 @@
 <div class="modal" id="refundModal" role="dialog" aria-modal="true">
 	<div class="modal-card md">
 		<h2 class="modal-title">환불할까요?</h2>
-		<p class="modal-desc">
+		<div class="modal-desc">
 			<p class="t-12 t-danger" style="margin-bottom:12px">
 			환불하면 경기참가가 취소됩니다. 처리후에는 되돌릴 수 없어요.<br>
 			모집 마감 전까지만 환불할 수 있어요.
 			</p>  
-		</p>
+		</div>
 		<form method="post" action="${ctx}/payment/match/detail/refund" id="refundForm">
 			<input type="hidden" name="matchType" value="Personal"/>
 			<div class="modal-body">
-				<p>환불금액 : <b><fmt:formatNumber value="${personalMatch.participationFee}"  pattern="#,###"/>원</b></p>
+				<p>환불금액 : <b><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}"  pattern="#,###"/>원</b></p>
 				<div class="field mt-16">
 					<label class="field-label">환불사유</label>
 					<select class="select" name="cancelReason" required>

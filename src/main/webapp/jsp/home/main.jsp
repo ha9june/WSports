@@ -208,7 +208,17 @@
 					<a class="team-mini"
 						href="${ctx}/team/detail/view?teamId=${team.teamId}">
 						<div class="top">
-							<img src="${ctx}/img/team-${sportClass}.png" alt="">
+		
+							<c:choose>
+								<c:when test="${not empty team.profileImage}"> 
+									<img src="${ctx}/uploads/<c:out value='${team.profileImage}'/>" alt="">
+								</c:when>
+								<c:otherwise>
+									<img src="${ctx}/img/team-${sportClass}.png" alt="">
+								</c:otherwise>
+							</c:choose>
+
+							
 							<div>
 								<strong>${team.teamName}</strong>
 								<p class="meta">${team.sport}</p>
@@ -223,8 +233,6 @@
 						</div>
 					</a>
 				</c:forEach>
-
-
 			</div>
 		</section>
 		<section class="landing-section">

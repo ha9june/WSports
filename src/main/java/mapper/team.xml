@@ -443,14 +443,7 @@
 	        </if>
 	    </if>
 	    GROUP BY t.team_id
-	    <choose>
-	        <when test="searchType == 'RECOMAND'">
-	            ORDER BY t.created_at DESC
-	        </when>
-	        <when test="searchType == 'NEW'">
-	            ORDER BY t.created_at DESC
-	        </when>
-	    </choose>
+	    ORDER BY t.created_at DESC
 	    LIMIT 4;
 	</select>
 	
