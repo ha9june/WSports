@@ -21,6 +21,16 @@ public class AlertUtil {
         PrintWriter out = res.getWriter();
         out.println("<script>" + script + "</script>");
     }
+    public static void jsonRedirect(HttpServletResponse res, boolean success, String msg, String redirectUrl) throws IOException {
+        res.setContentType("application/json");
+        PrintWriter out = res.getWriter();
+        out.print("{"
+            + "\"success\":" + success + ","
+            + "\"message\":\"" + json(msg) + "\","
+            + "\"redirectUrl\":\"" + json(redirectUrl) + "\""
+            + "}");
+        out.flush();
+    }
 
     private static String js(String s) {
         if (s == null) return "";
@@ -30,4 +40,16 @@ public class AlertUtil {
                 .replace("\n", "\\n")
                 .replace("<", "\\u003C");   // </script> 로 스크립트가 끊기는 것 방지
     }
+    private static String json(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\b", "\\b")
+                .replace("\f", "\\f")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
+    }
+    
+    
 }

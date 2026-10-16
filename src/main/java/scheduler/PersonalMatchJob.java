@@ -61,6 +61,7 @@ public class PersonalMatchJob {
 					System.err.println("[PersonalMatchJob] 일부 환불 실패, 다음 실행 때 재시도 personalMatchId=" + m.getPersonalMatchId());
 					continue;
 				}
+				//개인매치 모집중 - > 경기 취소로 업데이트
 				personalMatchDao.updateStatusToUnderMinCancel(m.getPersonalMatchId());
 			} catch (Exception e) {
 				System.err.println("[PersonalMatchJob] 경기 취소 처리 실패 personalMatchId=" + m.getPersonalMatchId());
@@ -74,6 +75,7 @@ public class PersonalMatchJob {
 		
 		for (PersonalMatch p : list) {
             try {
+            	//인원 충족 시 모집중 - > 모집 마감으로 업데이트
                 int updated = personalMatchDao.updateStatusToExpired(p.getPersonalMatchId());
                 if (updated > 0) {
                 	String title = "'" + p.getTitle() + "' 모집이 마감되었습니다.";
@@ -96,6 +98,7 @@ public class PersonalMatchJob {
     	List<PersonalMatch> list = personalMatchDao.selectFinishedSuccess();
     	for (PersonalMatch p : list) {
             try {
+            	//모집마강 -> 경기 종료로 업데이트
                 int updated = personalMatchDao.updateStatusToFinished(p.getPersonalMatchId());
                 if (updated > 0) {
                 	String title = "'" + p.getTitle() + "' 경기가 종료되었습니다.";
@@ -111,13 +114,13 @@ public class PersonalMatchJob {
     				
     				//개인경기 정산 내역 인서트
                     PersonalSettlement ps = new PersonalSettlement();
-                    ps.setUserId(p.getUserId());
-                    ps.setPersonalMatchId(p.getPersonalMatchId());
-                    	User user = userDao.selectUserAccountInfo(p.getUserId());
+                    ps.setUserId(p.getUserId());	//작성자 아이디
+                    ps.setPersonalMatchId(p.getPersonalMatchId());	
+                    	User user = userDao.selectUserAccountInfo(p.getUserId());	//작성자 계좌 정보
                     ps.setAccountNumber(user.getAccountNumber());
                     ps.setBankName(user.getBankName());
                     
-                    int amount = p.getParticipationFee()*userCnt;
+                    int amount = p.getParticipationFee()*(userCnt-1);
                     ps.setAmount(amount);
                     ps.setSettlementStatus("정산대기");
                     paymentService.putPersonalSettlement(ps);

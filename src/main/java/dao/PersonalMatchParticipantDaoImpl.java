@@ -12,20 +12,6 @@ import dto.User;
 
 public class PersonalMatchParticipantDaoImpl implements PersonalMatchParticipantDao {
 
-	@Override
-	public void insertCreatorPersonalMatchParticipant(PersonalMatchParticipant personalMatchParticipant) throws Exception {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			sqlSession.insert("mapper.personalmatchparticipant.insertCreatorPersonalMatchParticipant", personalMatchParticipant);
-			sqlSession.commit();
-		} catch(Exception e) {
-			e.printStackTrace();
-			sqlSession.rollback();
-			throw e;
-		} finally {
-			sqlSession.close();
-		}
-	}
 
 	@Override
 	public void insertOtherPersonalMatchParticipant(PersonalMatchParticipant personalMatchParticipant)

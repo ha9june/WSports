@@ -209,15 +209,15 @@
 			if (el) {
 				el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 				if (typeof el.focus === 'function') el.focus();
-			}
+			}Z
 		}
 		
 		$('#writeForm').on('submit', function (e) {
+			e.preventDefault();
 
-			if (submitting) {
-				e.preventDefault();
+			/* if (submitting) {
 				return;
-			}
+			} */
 
 			var checks = [
 				{ type: 'input', sel: '#title',                msg: '제목을 입력해주세요.' },
@@ -287,8 +287,12 @@
 				return;
 			}
 
-			submitting = true;
-			$(this).find('button[type="submit"]').prop('disabled', true);
+			/* submitting = true;
+			$(this).find('button[type="submit"]').prop('disabled', true); */
+			
+			
+			submitAjaxForm(e);
+			
 		});
 		
 		
