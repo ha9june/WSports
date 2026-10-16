@@ -538,13 +538,16 @@ public class PaymentServiceImpl implements PaymentService {
 				//진행중
 				if(paymentKey == null) {
 					PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+					String cancelReason = "부득이한 사정";
+					
 					pmp.setUserId((Long) target.get("user_id"));
 					pmp.setPersonalMatchId(matchId);
-					pmp.setCancelReason("부득이한 사정");
+					pmp.setCancelReason(cancelReason);
 					pmp.setStatus("취소");
 					
 					PersonalMatchParticipantService pmpService = new PersonalMatchParticipantServiceImpl();
 					pmpService.updateParticipantCancel(pmp);
+
 					//알람 다르게 처리
 					//호스트 알림
 					try {
