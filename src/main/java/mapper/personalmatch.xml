@@ -733,11 +733,11 @@
 		update
 		personal_match
 		set
-			status = '모집중',
+			status = '모집 마감',
 			updated_at = now()
 		where
 			personal_match_id = #{personalMatchId}
-			and status = '모집 마감'
+			and status = '모집중'
 			and
 			coalesce(deleted, 0) = 0
 	</update>
