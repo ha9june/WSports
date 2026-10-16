@@ -42,6 +42,8 @@ public class AdminReportDetail extends HttpServlet {
 			Map<String, Object> param = new HashMap<>();
 			param.put("postType", reportdetail.get("post_type"));
 			param.put("postId", reportdetail.get("post_id"));
+			System.out.println(reportdetail.get("post_type"));
+			System.out.println(reportdetail.get("post_id"));
 			boolean targetExists = service.countReportTarget(param) > 0;
 			
 			request.setAttribute("reportdetail", reportdetail);

@@ -77,4 +77,24 @@ public class TeamMatchParticipantDaoImpl implements TeamMatchParticipantDao {
 		}
 	}
 
+	@Override
+	public int updateTeamParticipantToCancel(String cancelReason, Long teamMatchId, Long usreId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		Map<String, Object> param = new HashMap<>();
+		param.put("cancelReason", cancelReason);
+		param.put("teamMatchId", teamMatchId);
+		param.put("userId", usreId);
+		try{
+			int cnt = sqlSession.update("mapper.teammatchparticipant.updateTeamParticipantToCancel", param);
+			sqlSession.commit();
+			return cnt;
+		}catch(Exception e) {
+			e.printStackTrace();
+			sqlSession.rollback();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+	}
+
 }
