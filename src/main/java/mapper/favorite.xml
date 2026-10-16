@@ -31,6 +31,7 @@
 		SELECT
 		t.matchType,
 		t.matchId,
+		t.address,
 		t.title,
 		t.sport,
 		t.status,
@@ -55,6 +56,7 @@
 		m.start_time AS startTime,
 		m.end_time AS endTime,
 		m.place_name AS placeName,
+		m.address AS address,
 		m.participation_fee AS participationFee,
 		m.max_people AS maxPeople,
 		m.min_people AS minPeople,
@@ -83,6 +85,7 @@
 		m.start_time AS startTime,
 		m.end_time AS endTime,
 		m.place_name AS placeName,
+		m.address AS address,
 		m.participation_fee AS participationFee,
 		m.match_people AS maxPeople,
 		0 AS minPeople,

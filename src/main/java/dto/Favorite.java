@@ -10,7 +10,17 @@ public class Favorite {
     private LocalDateTime createdAt;  // 찜 일시
     private String matchType;         // 매치 유형 (개인/팀)
     
-    private boolean favorite;
+    
+    private String address;  
+    
+    public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	private boolean favorite;
 
     public boolean isFavorite() {
     	return favorite;

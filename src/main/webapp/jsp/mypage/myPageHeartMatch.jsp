@@ -335,9 +335,9 @@
 						<strong>${m.title}</strong>
 						<p class="meta" style="margin-bottom: 6px;">
 							<span><img src="${ctx}/img/icon-calendar-14.svg" alt="">${m.matchDate}</span>
-							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(m.startTime, 0, 5)}
-								~ ${fn:substring(m.endTime, 0, 5)}</span> <span><img
-								src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
+							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(m.startTime, 0, 5)} ~ ${fn:substring(m.endTime, 0, 5)}</span> 
+							<c:set var="addr" value="${fn:split(m.address, ' ')}" />
+							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${addr[0]} ${addr[1]}</span> 
 						</p>
 					</div>
 
