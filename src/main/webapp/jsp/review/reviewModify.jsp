@@ -82,7 +82,7 @@
 			</div>
 
 			<div class="field mt-24">
-				<span class="field-label" style="color: var(- -ds-text)">사진 <span
+				<span class="field-label" style="color: var(--ds-text)">사진 <span
 					class="t-11 t-2">선택 · 최대 5장</span></span>
 				<div class="photo-upload">
 					<label class="photo-add"><span class="plus">+</span>사진 추가 <input

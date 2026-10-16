@@ -262,6 +262,9 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 .host-inline a:hover strong {
 	text-decoration: underline;
 }
+.cmt-name a:hover strong{
+	text-decoration: underline;
+}
 </style>
 <main class="page">
 	<div class="rail">
@@ -384,7 +387,10 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 
 							<div class="cmt-body">
 								<div class="cmt-name">
-									<b class="cmt-nick"><c:out value="${cm.nickname}" /></b>
+									<b class="cmt-nick"> <a href="${ctx}/member/publicProfile/view?userId=${cm.userId}">
+									<strong>${cm.nickname}</strong>
+									</a>
+									</b> 
 									<c:if test="${review.userId eq cm.userId}">
 										<span class="cmt-writer">작성자</span>
 									</c:if>
