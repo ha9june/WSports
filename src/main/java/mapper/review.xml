@@ -332,20 +332,14 @@
 	<select id="selectPersonalMatchForReview" parameterType="map"
 		resultType="map">
 		SELECT m.personal_match_id AS matchId,
-		m.title AS
-		matchTitle,
+		m.title AS matchTitle,
 		'PERSONAL' AS matchType
 		FROM personal_match m
-		WHERE
-		m.personal_match_id = #{matchId}
+		WHERE m.personal_match_id = #{matchId}
 		AND m.deleted = '0'
-		AND m.status = '경기
-		종료'
+		AND m.status = '경기 종료'
 		AND (m.user_id = #{userId}
-		OR EXISTS (SELECT 1 FROM
-		personal_match_participant p
-		WHERE p.personal_match_id =
-		m.personal_match_id
+		OR EXISTS (SELECT 1 FROM personal_match_participant p WHERE p.personal_match_id = m.personal_match_id
 		AND p.user_id = #{userId}
 		AND p.status = '결제완료'))
 	</select>
@@ -360,12 +354,7 @@
 		AND m.deleted = 0
 		AND m.status = '경기 종료'
 		AND (m.user_id = #{userId}
-		OR
-		EXISTS (SELECT 1 FROM team_match_participant p
-		WHERE p.team_match_id =
-		m.team_match_id
-		AND p.user_id = #{userId}
-		AND p.status = '결제완료'))
+		OR EXISTS (SELECT 1 FROM team_match_participant p WHERE p.team_match_id = m.team_match_id AND p.user_id = #{userId} AND p.status = '결제완료'))
 	</select>
 	<select id="selectReviewablePersonal" parameterType="long"
 		resultType="Review">
