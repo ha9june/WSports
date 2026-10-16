@@ -127,7 +127,7 @@
 				from review where review_id = #{postId}
 			</when>
 			<otherwise>
-				from dual where 1 = 0
+				from dual where 1 = 0 
 			</otherwise>
 		</choose>
 	</select>
