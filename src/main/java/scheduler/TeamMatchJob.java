@@ -50,8 +50,8 @@ public class TeamMatchJob {
         List<TeamMatch> expiredTeamMatchList = teamMatchDao.selectExpiredRecruiting();
         for (TeamMatch t : expiredTeamMatchList) {
             try {
-            	//모집 팀 결제 자동 환불 + 환불 알림
-            	paymentService.autoRefundHostTeamPayment(t.getTeamMatchId(), TossKey.SECRET_KEY);
+            	//모집 팀 결제 자동 환불 + 환불 알림 -> 환불 필요없음 ㅋ
+//            	paymentService.autoRefundHostTeamPayment(t.getTeamMatchId(), TossKey.SECRET_KEY);
                 int updated = teamMatchDao.updateStatusToCancel(t.getTeamMatchId());
                 if (updated > 0) {
                     notifyUser(t.getUserId(),
@@ -111,7 +111,7 @@ public class TeamMatchJob {
     		s.setTeamMatchId(t.getTeamMatchId());
     		s.setAccountNumber(host.getAccountNumber());         // 교체: 계좌 getter, 없으면 null
     		s.setBankName(host.getBankName());
-    		s.setAmount(t.getParticipationFee()*2);                // 임시: 금액 정책 확정 필요
+    		s.setAmount(t.getParticipationFee()-t.getFee());     //참가비 - 수수료 여기서 호스트 수수료 걷음
     		teamSettlementDao.insertTeamSettlement(s);
     	} catch (Exception e) {
     		System.err.println("[TeamMatchJob] 정산 생성 실패 teamMatchId=" + t.getTeamMatchId());

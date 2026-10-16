@@ -552,7 +552,7 @@
 	<!-- 모집 마감 상태이고 경기 종료 시각이 지난 경기 -->
 	<select id="selectFinishedMatches" resultType="teammatch">
 		select
-		team_match_id, team_id, user_id, title, participation_fee
+		team_match_id, team_id, user_id, title, participation_fee, fee
 		from team_match
 		where status =
 		'모집 마감'
