@@ -50,7 +50,7 @@ public class MatchParticipantStatusUpdate extends HttpServlet {
 		pmp.setUserId(user.getUserId());
 		pmp.setPersonalMatchId(personalMatchId);
 		if(updateType.equals("participant")) {
-			pmp.setAttendance(true);
+			pmp.setAttendance(false);
 			pmp.setStatus("결제완료");
 		}else if(updateType.equals("participantCancel")) {
 			pmp.setAttendance(false);
