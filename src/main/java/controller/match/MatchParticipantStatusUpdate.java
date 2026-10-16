@@ -35,6 +35,7 @@ public class MatchParticipantStatusUpdate extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    //사용 안하는듯
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = CheckUtil.getLoginUser(request);
 		if (user == null) {

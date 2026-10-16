@@ -7,7 +7,6 @@ import dto.PersonalMatchParticipant;
 import dto.User;
 
 public interface PersonalMatchParticipantDao {
-	void insertCreatorPersonalMatchParticipant(PersonalMatchParticipant personalMatchParticipant) throws Exception;
 	void insertOtherPersonalMatchParticipant (PersonalMatchParticipant personalMatchParticipant) throws Exception;
 	void updateStatusCancel (PersonalMatchParticipant personalMatchParticipant) throws Exception;
 	void updateAttendance(PersonalMatchParticipant personalMatchParticipant) throws Exception;
