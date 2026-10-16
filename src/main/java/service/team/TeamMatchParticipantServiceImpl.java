@@ -46,4 +46,9 @@ public class TeamMatchParticipantServiceImpl implements TeamMatchParticipantServ
 		return teamMatchParticipantDao.updateAttendance(attendance, teamMatchId, teamId);
 	}
 
+	@Override
+	public int modifyTeamMatchParticipantToCancel(String cancelReason, Long teamMatchId, Long userId) throws Exception {
+		return teamMatchParticipantDao.updateTeamParticipantToCancel(cancelReason, teamMatchId, userId);
+	}
+
 }
