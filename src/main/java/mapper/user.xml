@@ -187,4 +187,6 @@
 		from (<include refid="historyUnion"/>) h
 		<include refid="periodKeyword"/>
 	</select>
+	
+	
 </mapper>	

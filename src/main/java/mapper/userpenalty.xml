@@ -155,4 +155,38 @@
 	<select id="selectAdminUserIds" resultType="Long">
 		select user_id from user where grade = 'Admin'
 	</select>
+	<!-- 패널티받은 점수 목록 -->
+	<select id="selectMyPenaltyList" parameterType="map" resultType="map">
+    SELECT penalty_id AS penaltyId,
+           received_at AS receivedAt,
+           score,
+           reason,
+           match_type AS matchType,
+           match_id AS matchId,
+           suspension_start_at AS suspensionStart,
+           suspension_end_at AS suspensionEnd,
+           CASE WHEN permanent_suspension = 1 THEN 1 ELSE 0 END AS permanentSuspension,
+           CASE WHEN cancelled_admin_id IS NULL THEN 0 ELSE 1 END AS cancelled
+      FROM user_penalty
+     WHERE user_id = #{userId}
+     ORDER BY received_at DESC, penalty_id DESC
+</select>
+<select id="selectMyPenaltyScore" parameterType="map" resultType="int">
+    SELECT coalesce(penalty_score, 0) FROM users WHERE user_id = #{userId}
+</select>
+<!-- 점수 부과/차감 (change가 음수면 차감) -->
+<insert id="insertMyPageChangeUserPenalty" parameterType="map">
+    insert into user_penalty (user_id, received_at, score, reason, permanent_suspension)
+    values (#{userId}, now(), #{change}, #{reason}, 0)
+</insert>
+
+<!-- 취소되지 않은 점수 합계 -->
+<select id="selectMyPageActivePenaltySum" parameterType="long" resultType="int">
+    select coalesce(sum(score), 0)
+      from user_penalty
+     where user_id = #{userId}
+       and cancelled_admin_id is null
+</select>
+	
 </mapper>
+

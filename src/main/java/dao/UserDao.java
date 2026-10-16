@@ -15,6 +15,8 @@ public interface UserDao {
 	void updateMypage(User user) throws Exception;
 	void updateProfile(User user) throws Exception;
 	boolean withdraw(Long userId) throws Exception;
+	void insertChangeUserPenalty(Map<String, Object> param) throws Exception;
+	int selectActivePenaltySum(Long userId) throws Exception;
 	boolean passwordChange(Map<String, Object> param) throws Exception;
 	// 공개프로필
 	Map<String, Object> publicProfile(Map<String, Object> param) throws Exception;
