@@ -10,4 +10,5 @@ public interface TeamMatchParticipantService {
 	List<Long> getTeamMatchParticipantIdList(Long teamMatchId) throws Exception;
 	List<TeamMatchParticipant> getTeamMatchParticipantList(Long teamMatchId) throws Exception;
 	int modifyAttendance(Boolean attendance, Long teamMatchId, Long teamId) throws Exception;
+	int modifyTeamMatchParticipantToCancel(String cancelReason, Long teamMatchId, Long userId) throws Exception;
 }

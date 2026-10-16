@@ -10,4 +10,5 @@ public interface TeamMatchParticipantDao {
 	List<Long> selectTeamMatchParticipantTeamIdList(Long teamMatchId) throws Exception;
 	List<TeamMatchParticipant> selectTeamMatchParticipantList(Long teamMatchId) throws Exception;
 	int updateAttendance(Boolean attendance, Long teamMatchId, Long teamId) throws Exception;
+	int updateTeamParticipantToCancel(String cancelReason, Long teamMatchId, Long usreId) throws Exception;
 }

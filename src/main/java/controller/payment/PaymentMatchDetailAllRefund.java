@@ -72,6 +72,10 @@ public class PaymentMatchDetailAllRefund extends HttpServlet {
 				allRefunded = psService.allRefundPersonalMatch(
 						matchId, matchTitle, TossKey.SECRET_KEY);
 			}else if("Team".equals(matchType)) {
+				//참가팀만 환불받으면 됨.
+				
+				
+				//이건 전체 환불 코드
 				allRefunded = psService.allRefundTeamMatch(matchId, matchTitle, TossKey.SECRET_KEY);
 			}
 			

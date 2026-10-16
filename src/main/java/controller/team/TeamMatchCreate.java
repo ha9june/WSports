@@ -181,16 +181,17 @@ public class TeamMatchCreate extends HttpServlet {
 
             Long teamMatchId = teamMatchService.makeTeamMatch(teamMatch, realPath, files);
             //모집 팀 결제 페이지로 이동(결제 후 참가 등록)
-            response.sendRedirect(request.getContextPath()+"/payment/confirm?state=teamMatch&matchId=" + teamMatchId+"&teamId="+teamId);
+//            response.sendRedirect(request.getContextPath()+"/payment/confirm?state=teamMatch&matchId=" + teamMatchId+"&teamId="+teamId);
             
-//            TeamMatchParticipant teamMatchParticipant = new TeamMatchParticipant();
-//            teamMatchParticipant.setUserId(user.getUserId());
-//            teamMatchParticipant.setTeamMatchId(teamMatchId);
-//            teamMatchParticipant.setTeamId(teamId);
-//            teamMatchParticipant.setStatus("결제대기");
-//            
-//            teamMatchParticipantService.maekTeamMatchParticipant(teamMatchParticipant);
-//            response.sendRedirect(request.getContextPath() + "/team-match/detail/view?teamMatchId=" + teamMatchId);
+            //호스트 참가자 테이블에 넣기. 근데 결제는 안하고 페이먼트 아이디는 null 상태는 결제 완료 다른 곳에서 결제 상태를 조건으로 쓰는 곳이 많다고 생각함
+            TeamMatchParticipant teamMatchParticipant = new TeamMatchParticipant();
+            teamMatchParticipant.setUserId(user.getUserId());
+            teamMatchParticipant.setTeamMatchId(teamMatchId);
+            teamMatchParticipant.setTeamId(teamId);
+            teamMatchParticipant.setStatus("결제완료");
+            
+            teamMatchParticipantService.maekTeamMatchParticipant(teamMatchParticipant);
+            response.sendRedirect(request.getContextPath() + "/team-match/detail/view?teamMatchId=" + teamMatchId);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", "팀 경기 생성중 에러 발생");

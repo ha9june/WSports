@@ -65,11 +65,11 @@
 			      		<span class="related-text">회원번호 : ${reportdetail.post_id}</span>
 			      		<a href="${ctx}/admin/member/detail?userId=${reportdetail.post_id}" class="btn-view">보기</a>
 			    	</c:when>
-			    	<c:when test="${reportdetail.post_type eq 'personal_match'}">
+			    	<c:when test="${reportdetail.post_type eq 'personalMatch'}">
 			      		<span class="related-text">개인 경기 모집글 번호 : ${reportdetail.post_id}</span>
 			      		<a href="${ctx}/match/detail/view?personalMatchId=${reportdetail.post_id}" class="btn-view">보기</a>
 			    	</c:when>
-			    	<c:when test="${reportdetail.post_type eq 'team_match'}">
+			    	<c:when test="${reportdetail.post_type eq 'teamMatch'}">
 			      		<span class="related-text">팀 경기 모집글 번호 : ${reportdetail.post_id}</span>
 			      		<a href="${ctx}/team-match/detail/view?teamMatchId=${reportdetail.post_id}" class="btn-view">보기</a>
 			    	</c:when>
