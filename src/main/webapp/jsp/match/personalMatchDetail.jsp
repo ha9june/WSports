@@ -420,9 +420,6 @@
 				            </c:if>
 			            </div>
 			       	</c:when>
-        	
-
-
 					<c:when test="${status eq '경기 종료'}">
 						<div class="side-card done">
 							<h2>경기가 종료되었습니다</h2>

@@ -63,7 +63,7 @@ public class PenaltyJob {
 				userPenaltyDao.insertAutoSuspend(param);
 				
 				notifyUser(userId, "이용 정지 안내", 
-						"누적 벌점 "+ score + "점으로 "+days+"일간 이용이 정지되었습니다.","/mypage");
+						"누적 벌점 "+ score + "점으로 "+days+"일간 이용이 정지되었습니다.","/mypage/penalty");
 			}catch(Exception e) {
 				System.err.println("[PenaltyJob] 자동 정지 실패 userId=" + userId);
 				e.printStackTrace(); //한명 실패가 나머지를 막지 않게

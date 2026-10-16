@@ -14,4 +14,7 @@ public interface AdminReportService {
 	Map<String, Object> getAdminReportDetail(Long reportId) throws Exception;
 	//post_id로 받아온 값이 실제로 있는가
 	Integer countReportTarget(Map<String, Object> param);
+	//마이페이지 패널티
+	void changePenalty(Long userId, int change, String reason) throws Exception;
+    void resetPenalty(Long userId) throws Exception;
 }
