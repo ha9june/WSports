@@ -318,7 +318,6 @@
 			<aside class="detail-side">
 				<c:choose>
 
-<<<<<<< HEAD
 					<c:when test="${status eq '모집중'}">
 						<c:choose>
 							<%-- <c:when test="${isAdmin}">
@@ -507,8 +506,6 @@
 							</c:if>
 						</div>
 					</c:when>
-<<<<<<< HEAD
-=======
         			<c:when test="${isUser and applied}">
 	        			<div class="side-card">
 			              <h2>참가 <span class="pill pill-info">신청 완료</span></h2>
@@ -586,9 +583,6 @@
 		            </c:if>
 	            </div>
         	</c:when>
-        	
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
-
 
 					<c:when test="${status eq '경기 종료'}">
 						<div class="side-card done">
