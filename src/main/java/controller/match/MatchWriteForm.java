@@ -160,21 +160,22 @@ public class MatchWriteForm extends HttpServlet {
             //response.sendRedirect(request.getContextPath()+ "/payment/confirm?matchId="+personalMatchId);
             
             //개인 경기 참가지 인서트
-			/*
-			 * PersonalMatchParticipant pmp = new PersonalMatchParticipant();
-			 * pmp.setUserId(userId); pmp.setPersonalMatchId(personalMatchId);
-			 * pmp.setStatus("결제완료"); pmp.setAttendance(false);
-			 * PersonalMatchParticipantService pmpService = new
-			 * PersonalMatchParticipantServiceImpl();
-			 * pmpService.addPersonalMatchParticipant(pmp);
-			 * response.sendRedirect(request.getContextPath()+
-			 * "/match/detail/view?personalMatchId="+personalMatchId);
-			 */
+			
+			  PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+			  pmp.setUserId(userId); pmp.setPersonalMatchId(personalMatchId);
+			  pmp.setStatus("결제완료"); pmp.setAttendance(false);
+			  PersonalMatchParticipantService pmpService = new
+			  PersonalMatchParticipantServiceImpl();
+			  pmpService.addPersonalMatchParticipant(pmp);
+			  
+			  response.sendRedirect(request.getContextPath()+
+			  "/match/detail/view?personalMatchId="+personalMatchId);
+			 
           	            
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			AlertUtil.back(response,"실패하였습니다. 관리자에게 문의하여 주세요.");
+			AlertUtil.back(response,"글쓰기 실패하였습니다. 관리자에게 문의하여 주세요.");
 			return;
 		}
 	    
