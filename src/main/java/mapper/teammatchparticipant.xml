@@ -39,4 +39,14 @@
 		  and team_id = #{teamId}
 	</update>
 
+	<update id="updateTeamParticipantToCancel" parameterType="Map">
+		update team_match_participant
+		set status = '취소',
+			cancelled_at = now(),
+			cancel_reason = #{cancelReason}
+		where team_match_id = #{teamMatchId}
+			and user_id = #{userId}
+		    and status = '결제완료'
+	</update>
+
 </mapper>

@@ -26,6 +26,8 @@ import dao.PersonalSettlementDao;
 import dao.PersonalSettlementDaoImpl;
 import dao.TeamMatchDao;
 import dao.TeamMatchDaoImpl;
+import dao.TeamMatchParticipantDao;
+import dao.TeamMatchParticipantDaoImpl;
 import dao.TeamPaymentDao;
 import dao.TeamPaymentDaoImpl;
 import dao.UserDao;
@@ -711,9 +713,26 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public boolean allRefundTeamMatch(Long matchId, String title, String secretKey) throws Exception {
 		List<Map<String, Object>> targets = teamPaymentDao.selectPaidPaymentsByMatch(matchId);
-		String reason = "관리자 또는 호스트 취소";
+		String reason = "관리자 삭제";
 		boolean allSuccess = true;
+		
+		//호스트 참가 테이블 취소 처리
+		TeamMatchParticipantDao teamMatchParticipantDao = new TeamMatchParticipantDaoImpl();
+		TeamMatchDao teamMatchDao = new TeamMatchDaoImpl();
+		TeamMatch teamMatch = teamMatchDao.selectTeamMatchNotUser(matchId);
+		teamMatchParticipantDao.updateTeamParticipantToCancel(reason, matchId, teamMatch.getUserId());
+		try {
+			Notification alarm = new Notification();
+			alarm.setUserId(teamMatch.getUserId());
+			alarm.setTitle("경기 취소 안내");
+			alarm.setContent("'" + title + "' 경기가 관리자에 의해 삭제되었습니다.");
+			alarm.setLink("/team-match/detail/view?teamMatchId="+matchId);
+			notificationService.sendNotification(alarm);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+		//결제 한 사람 환불.
 		for (Map<String, Object> target : targets) {
 			try {
 				String paymentKey = (String) target.get("payment_key");
@@ -737,7 +756,7 @@ public class PaymentServiceImpl implements PaymentService {
 					Notification alarm = new Notification();
 					alarm.setUserId(((Number) target.get("user_id")).longValue());
 					alarm.setTitle("참가비 환불 완료");
-					alarm.setContent("'" + title + "' 경기가 관리자 또는 호스트에 의해 취소되어 결제하신 "
+					alarm.setContent("'" + title + "' 경기가 관리자에 의해 취소되어 결제하신 "
 							+ String.format("%,d", cancelAmount) + "원이 환불되었습니다.");
 					alarm.setLink("/info?matchType=TEAM&paymentKey="+paymentKey);
 					notificationService.sendNotification(alarm);

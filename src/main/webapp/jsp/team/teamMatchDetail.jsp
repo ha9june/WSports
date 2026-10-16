@@ -465,13 +465,12 @@ $('#thumbs').on('click', '.subImg', function() {
 <div class="modal" id="hostCancelModal" role="dialog" aria-modal="true">
 	<div class="modal-card">
 		<h2 class="modal-title">경기를 취소할까요?</h2>
-		<p class="modal-desc">상대 팀이 확정되기 전이라 결제하신 금액이 전액 환불돼요.</p>
+		<p class="modal-desc">취소하면 더 이상 상대 팀의 신청을 받을 수 없어요. 취소한 경기는 되돌릴 수 없어요.</p>
 		<form action="${ctx}/team-match/cancel" method="post"
 			class="modal-actions">
 			<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
 			<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
-			<button type="submit" class="btn btn-danger"
-				data-modal-open="refundModal">경기 취소</button>
+			<button type="submit" class="btn btn-danger">경기 취소</button>
 		</form>
 	</div>
 </div>
