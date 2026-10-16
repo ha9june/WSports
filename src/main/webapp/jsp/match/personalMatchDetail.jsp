@@ -429,8 +429,7 @@
 							<p class="sub">함께 경기한 참가자의 매너를 평가하고 후기를 남겨보세요.</p>
 							<div class="actions">
 								<c:if test="${isHost}">
-									<a class="btn btn-primary"
-										href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
+									<a class="btn btn-primary" href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
 									<a class="btn btn-primary"
 										href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석
 										체크 · 참가자 평가</a>

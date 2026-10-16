@@ -304,14 +304,6 @@ public class PersonalMatchServiceImpl implements PersonalMatchService {
 		return personalMatchDao.selectMyPageCreatedPersonalMatchDates(param);
 	}
 
-	@Override
-	public List<PersonalMatch> MyPageCreatedPersonalMatchList(PageInfo pageInfo, Long userId, String month,
-			String status, String sport) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
 	
 	@Override
 	public Long updateStatue(PersonalMatch personalMatch) throws Exception {
