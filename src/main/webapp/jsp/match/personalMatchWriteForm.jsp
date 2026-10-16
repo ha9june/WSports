@@ -190,8 +190,11 @@
 		function pad2(n) { return (n < 10 ? '0' : '') + n; }
 		var now = new Date();
 		var todayStr = now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate());
+		var todayStr2 = todayStr + 'T'+ pad2(now.getHours()) + ':'+ pad2(now.getMinutes());
+		
 		$('#matchDate').attr('min', todayStr);
-
+		$('#deadline').attr('min', todayStr2);
+		
 		var submitting = false;
 
 		// 뒤로가기로 돌아왔을 때 버튼이 잠겨 있지 않도록 복구

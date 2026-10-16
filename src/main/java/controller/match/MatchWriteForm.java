@@ -1,7 +1,6 @@
 package controller.match;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +17,10 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import dto.PersonalMatch;
+import dto.PersonalMatchParticipant;
 import dto.User;
+import service.match.PersonalMatchParticipantService;
+import service.match.PersonalMatchParticipantServiceImpl;
 import service.match.PersonalMatchService;
 import service.match.PersonalMatchServiceImpl;
 import util.AlertUtil;
@@ -153,8 +155,23 @@ public class MatchWriteForm extends HttpServlet {
 	    try {
 	    	PersonalMatchService service = new PersonalMatchServiceImpl();
             Long personalMatchId = service.createPersonalMatch(pm,parts,realPath);
-            //db에 값 넣음 ㅇㅇ
-            response.sendRedirect(request.getContextPath()+ "/payment/confirm?matchId="+personalMatchId);
+            
+          //db에 값 넣음 ㅇㅇ
+            //response.sendRedirect(request.getContextPath()+ "/payment/confirm?matchId="+personalMatchId);
+            
+            //개인 경기 참가지 인서트
+			/*
+			 * PersonalMatchParticipant pmp = new PersonalMatchParticipant();
+			 * pmp.setUserId(userId); pmp.setPersonalMatchId(personalMatchId);
+			 * pmp.setStatus("결제완료"); pmp.setAttendance(false);
+			 * PersonalMatchParticipantService pmpService = new
+			 * PersonalMatchParticipantServiceImpl();
+			 * pmpService.addPersonalMatchParticipant(pmp);
+			 * response.sendRedirect(request.getContextPath()+
+			 * "/match/detail/view?personalMatchId="+personalMatchId);
+			 */
+          	            
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			AlertUtil.back(response,"실패하였습니다. 관리자에게 문의하여 주세요.");
