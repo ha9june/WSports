@@ -58,8 +58,8 @@ public class TeamMatchResultView extends HttpServlet {
 			TeamMatch teamMatch = teamMatchService.getTeamMatchNotUser(teamMatchId);
 			
 			if (!"경기 종료".equals(teamMatch.getStatus())) {
-				request.setAttribute("error", "경기가 종료된 후에 이용할 수 있어요.");
-				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+				request.getSession().setAttribute("toast", "경기 종료 후에 이용할 수 있어요.");
+				response.sendRedirect(request.getContextPath() + "/team-match/detail/view?teamMatchId=" + teamMatchId);
 				return;
 			}
 			List<TeamMatchParticipant> ps = teamMatchParticipantService.getTeamMatchParticipantList(teamMatchId);

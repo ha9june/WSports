@@ -64,6 +64,12 @@ public class MatchDetail extends HttpServlet {
 			
 
 			PersonalMatch pMatch = pmService.getPersonalMatchDetail(pm);
+			if (pMatch == null) {
+			    request.setAttribute("errorTitle", "삭제된 경기예요");
+			    request.setAttribute("error", "관리자가 삭제했거나 운영 정책에 따라 삭제된 경기입니다.");
+			    request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+			    return;
+			}
 			
 			
 			

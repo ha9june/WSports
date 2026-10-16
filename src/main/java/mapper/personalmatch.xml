@@ -470,6 +470,7 @@
 		AND f.user_id = #{userId}
 		WHERE
 		m.personal_match_id = #{personalMatchId}
+			AND coalesce(m.deleted, 0) = 0
 		GROUP BY m.personal_match_id
 		ORDER BY m.created_at DESC
 	</select>

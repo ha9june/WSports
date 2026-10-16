@@ -32,7 +32,7 @@
     t.textContent = msg;
     t.classList.add('is-show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { t.classList.remove('is-show'); }, 2200);
+    toastTimer = setTimeout(function () { t.classList.remove('is-show'); }, 4000);
   }
   window.showToast = showToast;
 
