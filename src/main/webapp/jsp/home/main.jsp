@@ -112,7 +112,7 @@
 				dataType : "text",
 				data : {
 					matchId : $btn.data("id"),
-					matchType : "PERSONAL"
+					matchType : "Personal"
 				},
 				success : function(res) {
 					if (res === "insert")
