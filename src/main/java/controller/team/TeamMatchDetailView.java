@@ -51,6 +51,19 @@ public class TeamMatchDetailView extends HttpServlet {
 		try {
 			Long teamMatchId = Long.parseLong(request.getParameter("teamMatchId"));
 			TeamMatch teamMatch;
+			
+			if (user != null) {
+			    teamMatch = teamMatchService.getTeamMatchUser(teamMatchId, user.getUserId());
+			} else {
+			    teamMatch = teamMatchService.getTeamMatchNotUser(teamMatchId);
+			}
+
+			if (teamMatch == null) {
+			    request.setAttribute("error", "삭제되었거나 존재하지 않는 경기입니다.");
+			    request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
+			    return;
+			}
+			
 			if(user != null) {
 				teamMatch = teamMatchService.getTeamMatchUser(teamMatchId, user.getUserId());
 				if(teamMatch.getUserId().equals(user.getUserId())) {

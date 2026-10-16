@@ -117,10 +117,10 @@
 			<when test="postType == 'team'">
 				from team where team_id = #{postId}
 			</when>
-			<when test="postType == 'personal_match'">
+			<when test="postType == 'personalMatch'">
 				from personal_match where personal_match_id = #{postId}
 			</when>
-			<when test="postType == 'team_match'">
+			<when test="postType == 'teamMatch'">
 				from team_match where team_match_id = #{postId}
 			</when>
 			<when test="postType == 'review'">
