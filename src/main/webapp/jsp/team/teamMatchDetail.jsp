@@ -426,8 +426,7 @@ $('#thumbs').on('click', '.subImg', function() {
 								<c:when test="${isHost or applied}">
 									<p class="sub">우리 팀과 상대 팀의 경기 매너를 팀 단위로 평가해주세요.</p>
 									<div class="actions">
-										<a class="btn btn-primary"
-											href="${ctx}/review/create">후기 작성</a>
+										<a class="btn btn-primary" href="${ctx}/review/create?matchNo=TEAM:${t.teamMatchId}">후기 작성</a>
 										<a class="btn btn-outline"
 											href="${ctx}/team-match/result/view?teamMatchId=${t.teamMatchId}">상대 팀 평가 및 출석 확인</a>
 									</div>

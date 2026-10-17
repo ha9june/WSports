@@ -23,7 +23,6 @@ public interface PersonalMatchService {
 	List<PersonalMatch> MyPagePersonalMatchList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
 	//내가만든 경기 목록 페이징 처리
 
-	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String month,String status,String sport)throws Exception;
 		
 	List<PersonalMatch>MyPageCreatedPersonalMatchList(PageInfo pageInfo,Long userId,String status,String sport, String startDate, String endDate)throws Exception;
 	

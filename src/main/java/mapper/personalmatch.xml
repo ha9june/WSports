@@ -348,10 +348,10 @@
 			AND m.status = #{status}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			AND p.applied_at &gt;= #{startDate}
+			AND m.match_date &gt;= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND p.applied_at &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+			AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
 		ORDER BY appliedAt DESC, m.personal_match_id DESC
 		LIMIT #{size} OFFSET
@@ -413,10 +413,10 @@
 			AND m.status = #{status}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			AND m.created_at &gt;= #{startDate}
+			AND m.match_date &gt;= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND m.created_at &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+			AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
 		ORDER BY m.created_at DESC, m.personal_match_id DESC
 		LIMIT #{size}
@@ -431,11 +431,11 @@
 		WHERE m.user_id = #{userId}
 		AND
 		coalesce(m.deleted, 0) = 0
-		<if test="sport != null and sport != ''">
-			AND m.sport = #{sport}
+		<if test="startDate != null and startDate != ''">
+			AND m.match_date &gt;= #{startDate}
 		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
+		<if test="endDate != null and endDate != ''">
+			AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
 		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
@@ -692,9 +692,11 @@
 		select
 		count(*)
 		from personal_match_participant p
-		where p.personal_match_id =
+		where
+		p.personal_match_id =
 		m.personal_match_id
-		and p.status = '결제완료') &lt; m.min_people
+		and p.status = '결제완료') &lt;
+		m.min_people
 	</select>
 	<!-- 스케줄러 : 최소 인원 미달 경기 취소 -->
 	<update id="updateStatusToUnderMinCancel" parameterType="Long">

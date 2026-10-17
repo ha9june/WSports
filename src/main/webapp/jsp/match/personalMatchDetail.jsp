@@ -357,35 +357,40 @@
 		            </c:if>
 	            </div>
         	</c:when>
-        	
+					<c:when test="${status eq '경기 종료'}">
+						<div class="side-card done">
+							<h2>경기가 종료되었습니다</h2>
+							<p class="sub">함께 경기한 참가자의 매너를 평가하고 후기를 남겨보세요.</p>
+							<div class="actions">
+								<c:if test="${isHost}">
+									<a class="btn btn-primary" href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
+									<a class="btn btn-primary"
+										href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석
+										체크 · 참가자 평가</a>
+								</c:if>
+								<c:if test="${isUser and applied and not isHost}">
+									<a class="btn btn-primary"
+										href="${ctx}/review/create?matchNo=PERSONAL:${personalMatch.personalMatchId}">후기작성</a>
+									<a class="btn btn-primary"
+										href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자
+										평가</a>
+								</c:if>
+							</div>
+						</div>
+					</c:when>
+					<c:when test="${status eq '경기 취소'}">
+						<div class="side-card">
+							<span class="pill pill-danger bd">경기 취소</span>
+							<p class="status-title">경기가 취소되었습니다.</p>
+							<p class="sub">호스트 또는 운영 사정으로 경기가 진행되지 않아요.</p>
+							<p class="note">결제한 참가비는 환불 규정에 따라 처리됩니다.</p>
+						</div>
+					</c:when>
+				</c:choose>
+			</aside>
+		</div>
+	</div>
 
-        	<c:when test="${status eq '경기 종료'}">
-				<div class="side-card done">
-	              <h2>경기가 종료되었습니다</h2>
-	              <p class="sub">함께 경기한 참가자의 매너를 평가하고 후기를 남겨보세요.</p>
-	              <div class="actions">	              
-	              	<c:if test="${isHost}">	              	
-	              		<a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">출석 체크 · 참가자 평가</a>
-	              	</c:if>
-	              	<c:if test="${isUser and applied}">
-	              		<a class="btn btn-primary" href="${ctx}/review/create">후기 작성</a>
-         		        <a class="btn btn-primary" href="${ctx}/match/after/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 평가</a>
-	              	</c:if>
-	              </div>
-	            </div>
-        	</c:when>
-			<c:when test="${status eq '경기 취소'}">
-	            <div class="side-card">
-	              <span class="pill pill-danger bd">경기 취소</span>
-	              <p class="status-title">경기가 취소되었습니다.</p>
-	              <p class="sub">호스트 또는 운영 사정으로 경기가 진행되지 않아요.</p>
-	              <p class="note">결제한 참가비는 환불 규정에 따라 처리됩니다.</p>
-	            </div>
-	          </c:when>
-         </c:choose>    
-      </aside>
-    </div>
-  </div>
 </main>
 
 <%-- ===== 모달 ===== --%>

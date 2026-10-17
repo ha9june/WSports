@@ -11,7 +11,8 @@ public interface TeamMatchDao {
 	List<TeamMatch>selectMypageTeamMatchList(Map<String,Object>param)throws Exception;
 	Integer selectMypageTeamMatchCnt(Map<String,Object>param)throws Exception;
 	List<String>selectMyPageTeamMatchDates(Map<String,Object>param)throws Exception;
-
+	
+	
 	Long insertTeamMatch(TeamMatch teamMatch) throws Exception;
 	TeamMatch selectTeamMatchUser(Long teamMatchId, Long userId) throws Exception;
 	TeamMatch selectTeamMatchNotUser(Long teamMatchId) throws Exception;

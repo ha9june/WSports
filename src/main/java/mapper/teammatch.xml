@@ -10,6 +10,8 @@
 		and
 		coalesce(deleted, 0) = 0
 	</select>
+
+
 	<select id="selectMypageTeamMatchList" parameterType="map"
 		resultType="TeamMatch">
 		SELECT m.*,
@@ -37,44 +39,19 @@
 		) THEN 1 ELSE 0 END AS
 		favorite
 		FROM team_match m
-		WHERE EXISTS (
-		SELECT 1
+		WHERE (
+		EXISTS (SELECT 1
 		FROM
 		team_match_participant p
 		WHERE p.team_match_id = m.team_match_id
 		AND
 		p.user_id = #{userId}
-		AND p.status IN ('결제완료', '취소')
-		AND coalesce(m.deleted, 0) = 0
-		<if test="startDate != null and startDate != ''">
-			AND p.applied_at &gt;= #{startDate}
-		</if>
-		<if test="endDate != null and endDate != ''">
-			AND p.applied_at &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
-		</if>
-		)
-		<if test="sport != null and sport != ''">
-			AND m.sport = #{sport}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
-		ORDER BY appliedAt DESC, m.team_match_id DESC
-		LIMIT #{size} OFFSET
-		#{offset}
-	</select>
-	<select id="selectMypageTeamMatchCnt" parameterType="map"
-		resultType="int">
-		SELECT COUNT(*)
-		FROM team_match m
-		WHERE EXISTS (
-		SELECT 1
-		FROM
-		team_match_participant p
-		WHERE p.team_match_id = m.team_match_id
-		AND
-		p.user_id = #{userId}
-		AND p.status IN ('결제완료', '취소')
+		AND p.status IN ('결제완료', '취소'))
+		OR m.team_id IN (SELECT tu.team_id
+		FROM team_user tu
+		WHERE tu.user_id = #{userId}
+		AND tu.team_role = 'CAPTAIN'
+		AND coalesce(tu.withdrawn, 0) = 0)
 		)
 		AND coalesce(m.deleted, 0) = 0
 		<if test="sport != null and sport != ''">
@@ -87,27 +64,65 @@
 			AND m.match_date &gt;= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND m.match_date &lt;= #{endDate}
+			AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
+		  ORDER BY (appliedAt IS NULL), appliedAt DESC, m.created_at DESC, m.team_match_id DESC
+     	LIMIT #{size} OFFSET #{offset}
 	</select>
+	<select id="selectMypageTeamMatchCnt" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+      FROM team_match m
+     WHERE (
+             EXISTS (SELECT 1
+                       FROM team_match_participant p
+                      WHERE p.team_match_id = m.team_match_id
+                        AND p.user_id = #{userId}
+                        AND p.status IN ('결제완료', '취소'))
+             OR m.team_id IN (SELECT tu.team_id
+                                FROM team_user tu
+                               WHERE tu.user_id = #{userId}
+                                 AND tu.team_role = 'CAPTAIN'
+                                 AND coalesce(tu.withdrawn, 0) = 0)
+           )
+       AND coalesce(m.deleted, 0) = 0
+    <if test="sport != null and sport != ''">
+       AND m.sport = #{sport}
+    </if>
+    <if test="status != null and status != ''">
+       AND m.status = #{status}
+    </if>
+    <if test="startDate != null and startDate != ''">
+       AND m.match_date &gt;= #{startDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+       AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+    </if>
+	</select>
+	
 	<select id="selectMyPageTeamMatchDates" parameterType="map"
 		resultType="string">
-		SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
-		FROM
-		team_match_participant p
-		JOIN team_match m
-		ON m.team_match_id =
-		p.team_match_id
-		WHERE p.user_id = #{userId}
-		AND p.status IN ('결제완료',
-		'취소')
-		AND coalesce(m.deleted, 0) = 0
-		<if test="sport != null and sport != ''">
-			AND m.sport = #{sport}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
+		 SELECT DISTINCT DATE_FORMAT(m.match_date, '%Y-%m-%d')
+      FROM team_match m
+     WHERE (
+             EXISTS (SELECT 1
+                       FROM team_match_participant p
+                      WHERE p.team_match_id = m.team_match_id
+                        AND p.user_id = #{userId}
+                        AND p.status IN ('결제완료', '취소'))
+             OR m.team_id IN (SELECT tu.team_id
+                                FROM team_user tu
+                               WHERE tu.user_id = #{userId}
+                                 AND tu.team_role = 'CAPTAIN'
+                                 AND coalesce(tu.withdrawn, 0) = 0)
+           )
+       AND coalesce(m.deleted, 0) = 0
+    <if test="sport != null and sport != ''">
+       AND m.sport = #{sport}
+    </if>
+    <if test="status != null and status != ''">
+       AND m.status = #{status}
+    </if>
 	</select>
 
 	<insert id="insertTeamMatch" parameterType="teammatch"
@@ -557,7 +572,8 @@
 		where status =
 		'모집 마감'
 		and coalesce(deleted, 0) = 0
-		and timestamp(match_date, end_time)
+		and
+		timestamp(match_date, end_time)
 		&lt;= now()
 	</select>
 
@@ -587,7 +603,8 @@
 		select team_match_id, title, status, match_date,
 		start_time, end_time, place_name, region
 		from team_match
-		where team_id = #{teamId}
+		where team_id =
+		#{teamId}
 		and coalesce(deleted, 0) = 0
 		order by created_at desc,
 		team_match_id desc
@@ -635,11 +652,12 @@
 		and m.status = '모집 마감'
 		and coalesce(m.deleted, 0) = 0)
 	</select>
-	
+
 	<update id="updateToDeleted" parameterType="Long">
 		update team_match set
-			deleted = true, deleted_at = NOW(), status = '경기 취소'
-		where team_match_id = #{teamMatchId}
+		deleted = true, deleted_at = NOW(), status = '경기 취소'
+		where
+		team_match_id = #{teamMatchId}
 	</update>
 
 </mapper>

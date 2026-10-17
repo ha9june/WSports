@@ -15,6 +15,12 @@
 	value="default:기본|deleteModal:삭제 모달|deleted:삭제 완료" />
 <%@ include file="/jsp/common/header.jsp"%>
 <%@ include file="/jsp/common/mypageSideBar.jsp"%>
+<style>
+.created {
+
+}
+
+</style>
 <div class="work-inner" style="width: 860px">
 	<h1 class="section-title">내 후기</h1>
 	<p class="section-desc">내가 작성한 후기와 연결된 경기를 확인하고 수정하거나 삭제할 수 있어요.</p>
@@ -40,8 +46,7 @@
 				</p>
 				<strong><c:out value="${r.title}" /></strong>
 				<p style="color: #1a6bff;">
-					연결 경기 · <span style="color: #1a6bff;"><c:out
-							value="${r.matchTitle}" /></span>
+					연결 경기 · <span style="color: #1a6bff;"><c:out value="${r.matchTitle}" /></span>
 				</p>
 				<%-- 내용 <p> 삭제 --%>
 				<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp;
@@ -49,7 +54,7 @@
 			</div>
 
 			<div class="aside">
-				<time>${r.createdAt}</time>
+				<p style="align-self:margin:5px; position: relative; top:0px;">${r.createdAt} &nbsp;</p>
 				<a class="btn btn-primary btn-sm"
 					href="${ctx}/review/edit?reviewId=${r.reviewId}">수정</a>
 				<button type="button"

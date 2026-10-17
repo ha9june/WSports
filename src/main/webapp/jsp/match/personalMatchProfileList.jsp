@@ -108,6 +108,24 @@
 	color: #6b7280;
 	font-weight: 500;
 }
+.person-row .info strong {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.person-row .host-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 18px;
+	padding: 0 8px;
+	border-radius: 99px;
+	background: var(--ds-brand-subtle, #e8f1ff);
+	color: var(--ds-brand, #1a6bff);
+	font-size: 10px;
+	font-weight: 700;
+	line-height: 1;
+}
 </style>
 
 <main class="page">
@@ -169,7 +187,12 @@
 				<c:otherwise><c:set var="userSkill" value="${user.badmintonSkill}" /></c:otherwise>
 			</c:choose>
 			<div class="info">
-				<strong><c:out value="${user.nickname}" /></strong>
+				<strong>
+					<c:out value="${user.nickname}" />
+					<c:if test="${user.userId eq personalMatch.userId}">
+						<span class="host-badge">호스트</span>
+					</c:if>
+				</strong>
 				<p class="meta">
 					<c:out value="${user.preferredRegion1}" default="지역 미설정" /> ·
 					<c:out value="${userSkill}" default="실력 미설정" />
