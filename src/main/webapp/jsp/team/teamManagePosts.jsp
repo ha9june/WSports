@@ -34,6 +34,7 @@
 						href="${ctx}/team/manage/members?teamId=${teamId}">팀원 관리</a>
 					<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
 						href="${ctx}/team/manage/posts?teamId=${teamId}">팀 작성글 관리</a>
+					<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
 		</nav>
 		<h2 class="sub-title">작성한 팀 매칭 글</h2>
 		<p class="section-desc" style="margin-bottom: 24px">내 팀이 작성한 상대 팀

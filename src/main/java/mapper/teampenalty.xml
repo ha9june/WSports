@@ -2,190 +2,316 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.teampenalty">
-	<!-- 팀 정보 검색과 필터링에 맞는 팀 수 세기 / 페이지 번호도 몇개까지 보여줄것인가-->
-	<select id="selectAdminTeamCnt" parameterType="map" resultType="int">
+	<!-- 팀 정보 검색과 필터링에 맞는 팀 수 세기 / 페이지 번호도 몇개까지 보여줄것인가 -->
+	<select id="selectAdminTeamCnt" parameterType="map"
+		resultType="int">
 		select count(*)
 		from team t
 		left join team_penalty p
-		on t.team_id = p.team_id
+		on
+		t.team_id = p.team_id
 		and p.penalty_id = (
-			select max(p2.penalty_id)
-			from team_penalty p2
-			where p2.team_id = t.team_id
+		select max(p2.penalty_id)
+		from team_penalty p2
+		where p2.team_id = t.team_id
 		)
-		where (t.deleted = 0 or t.deleted is null)
-		and (
-			#{status} = 'ALL'
-			or (#{status} = 'PENALTY' and p.score != 0)
-			or (#{status} = 'LIMITED' and exists (
-				select 1 from team_penalty s
-				where s.team_id = t.team_id
-				and s.cancelled_admin_id is null
-				and (s.permanent_suspension = 1 or 
-				now() between s.suspension_start_at and s.suspension_end_at)
-			))
+		where (t.deleted = 0
+		or t.deleted is null)
+		and
+		(
+		#{status} = 'ALL'
+		or (#{status} = 'PENALTY'
+		and p.score != 0)
+		or (#{status} = 'LIMITED' and exists (
+		select 1 from
+		team_penalty s
+		where s.team_id = t.team_id
+		and s.cancelled_admin_id is
+		null
+		and (s.permanent_suspension = 1 or
+		now() between
+		s.suspension_start_at and s.suspension_end_at)
+		))
 		)
 		and (
-			#{keyword} = ''
-			or t.team_name like concat('%', #{keyword}, '%')
+		#{keyword} = ''
+		or t.team_name like concat('%', #{keyword}, '%')
 		)
 	</select>
-	
+
 	<!-- 한 페이지 팀 목록 / 팀 번호, 팀명 -->
-	<select id="selectAdminTeamList" parameterType="map" resultType="map">
+	<select id="selectAdminTeamList" parameterType="map"
+		resultType="map">
 		select t.team_id, t.team_name
 		from team t
-		where (t.deleted = 0 or t.deleted is null)
+		where (t.deleted =
+		0 or t.deleted is null)
 		and (
-			#{keyword} = ''
-			or t.team_name like concat('%', #{keyword}, '%')
+		#{keyword} = ''
+		or t.team_name like
+		concat('%', #{keyword}, '%')
 		)
 		and (
-			#{status} = 'ALL'
-			or (#{status} = 'PENALTY' and exists (
-				select 1 from team_penalty p
-				where p.team_id = t.team_id and p.score != 0
-				and p.penalty_id = (select max(p2.penalty_id) 
-				from team_penalty p2 
-				where p2.team_id = t.team_id)
-			))
-			or (#{status} = 'LIMITED' and exists (
-				select 1 from team_penalty s
-				where s.team_id = t.team_id and s.cancelled_admin_id is null
-				and (s.permanent_suspension = 1 or 
-				now() between s.suspension_start_at and s.suspension_end_at)
-			))
+		#{status} = 'ALL'
+		or (#{status} =
+		'PENALTY' and exists (
+		select 1 from team_penalty p
+		where p.team_id =
+		t.team_id and p.score != 0
+		and p.penalty_id = (select
+		max(p2.penalty_id)
+		from team_penalty p2
+		where p2.team_id = t.team_id)
+		))
+		or (#{status} = 'LIMITED' and exists (
+		select 1 from team_penalty s
+		where s.team_id = t.team_id and s.cancelled_admin_id is null
+		and
+		(s.permanent_suspension = 1 or
+		now() between s.suspension_start_at and
+		s.suspension_end_at)
+		))
 		)
 		order by t.team_id desc
 		limit #{row}, 10
 	</select>
-	
+
 	<!-- 팀 주장 닉네임 -->
 	<select id="selectTeamCaptain" resultType="map">
-		select u.nickname, tu.user_id, tu.team_id
+		select u.nickname,
+		tu.user_id, tu.team_id
 		from team_user tu
-		join user u on u.user_id = tu.user_id
+		join user u on u.user_id =
+		tu.user_id
 		where tu.team_id = #{teamId}
 		and tu.team_role = 'CAPTAIN'
-		and tu.withdrawn = 0
+		and
+		tu.withdrawn = 0
 		limit 1
 	</select>
 
 	<!-- 팀원 수 -->
 	<select id="selectTeamMemberCnt" resultType="int">
 		select count(*)
-		from team_user
+		from
+		team_user
 		where team_id = #{teamId}
 		and withdrawn = 0
 	</select>
-	
+
 	<!-- 현재 패널티 점수와 최근 사유 -->
 	<select id="selectTeamLatestPenalty" resultType="map">
-		select score, reason
+		select score,
+		reason
 		from team_penalty
 		where team_id = #{teamId}
-		order by penalty_id desc
+		order by penalty_id
+		desc
 		limit 1
 	</select>
 
-	<!--  지금 정지 중인 기록 수 / 1 이상이면 정지 -->
+	<!-- 지금 정지 중인 기록 수 / 1 이상이면 정지 -->
 	<select id="selectTeamSuspension" resultType="int">
 		select count(*)
 		from team_penalty
 		where team_id = #{teamId}
-		and cancelled_admin_id is null
-		and (permanent_suspension = 1 or now() between suspension_start_at and suspension_end_at)
+		and cancelled_admin_id is
+		null
+		and (permanent_suspension = 1 or now() between suspension_start_at
+		and suspension_end_at)
 	</select>
-	
+
 	<!-- 팀 기본정보 / 주장 닉네임, 팀원 수, 정지상태는 위에걸 사용 -->
 	<select id="selectTeamInfo" resultType="map">
-		select team_id, team_name, profile_image, region1, region2, region3
-		from team 
-		where team_id = #{teamId}
+		select team_id,
+		team_name, profile_image, region1, region2, region3
+		from team
+		where
+		team_id = #{teamId}
 	</select>
-	
+
 	<!-- 팀 페널티 이력 -->
 	<select id="selectTeamPenaltyList" resultType="map">
-		select penalty_id, score, reason, received_at, report_id, 
-			   suspension_start_at, suspension_end_at, permanent_suspension, cancelled_admin_id
-		from team_penalty 
+		select penalty_id,
+		score, reason, received_at, report_id,
+		suspension_start_at,
+		suspension_end_at, permanent_suspension, cancelled_admin_id
+		from
+		team_penalty
 		where team_id = #{teamId}
 		order by penalty_id desc
 	</select>
-	
+
 	<!-- 관리자 페널티 주는 기능 -->
 	<insert id="insertTeamPenalty" parameterType="map">
-		insert into team_penalty
-		(team_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
+		insert into
+		team_penalty
+		(team_id, received_at, score, reason, suspension_start_at,
+		suspension_end_at, permanent_suspension)
 		values
-		(#{teamId}, now(), #{score}, #{reason}, now(), date_add(now(), interval #{days} day), 0)
+		(#{teamId}, now(),
+		#{score}, #{reason}, now(), date_add(now(), interval #{days} day), 0)
 	</insert>
-	
+
 	<!-- 팀 패널티 점수 조정 기록 -->
 	<insert id="insertChangeTeamPenalty" parameterType="map">
-		insert into team_penalty
-		(team_id, received_at, score, reason, permanent_suspension)
+		insert into
+		team_penalty
+		(team_id, received_at, score, reason,
+		permanent_suspension)
 		values
 		(#{teamId}, now(), #{score}, #{reason}, 0)
 	</insert>
-	
+
 	<!-- 관리자 영구 정지 (종료일 없음) -->
 	<insert id="insertTeamPermanentPenalty" parameterType="map">
-		insert into team_penalty
-		(team_id, received_at, score, reason, suspension_start_at, suspension_end_at, permanent_suspension)
+		insert
+		into team_penalty
+		(team_id, received_at, score, reason,
+		suspension_start_at, suspension_end_at, permanent_suspension)
 		values
 		(#{teamId}, now(), #{score}, #{reason}, now(), null, 1)
 	</insert>
-	
-	<select id="selectsTeamPenaltyScore" parameterType="Long" resultType="int">
+
+	<select id="selectsTeamPenaltyScore" parameterType="Long"
+		resultType="int">
 		select coalesce(sum(score), 0)
 		from team_penalty
-		where team_id=#{teamId} 
+		where
+		team_id=#{teamId}
 	</select>
 	<!-- 스케줄러 : 벌점 30/60점 도달했는데 해당 단계 정지를 아직 안 받은 팀 -->
 	<select id="selectAutoTeamSuspendTargets" resultType="map">
-		select t.team_id, p.score
+		select
+		t.team_id, p.score
 		from team t
 		join team_penalty p
-		on p.team_id = t.team_id
+		on p.team_id =
+		t.team_id
 		and p.penalty_id = (
-			select max(p2.penalty_id)
-			from team_penalty p2
-			where p2.team_id = t.team_id
+		select max(p2.penalty_id)
+		from
+		team_penalty p2
+		where p2.team_id = t.team_id
 		)
-		where coalesce(t.deleted, 0) = 0
-		and p.score &gt;= 30
+		where coalesce(t.deleted,
+		0) = 0
+		and p.score
+		&gt;= 30
 		and p.score &lt; 100
 		and not exists (
-			select 1
-			from team_penalty s
-			where s.team_id = t.team_id
-			and s.suspension_start_at is not null
-			and s.score &gt;= (case when p.score &gt;= 60 then 60 else 30 end)
+		select 1
+		from team_penalty s
+		where s.team_id = t.team_id
+		and
+		s.suspension_start_at is not null
+		and s.score &gt;= (case when p.score
+		&gt;= 60 then 60 else 30 end)
 		)
 	</select>
 	<!-- 스케줄러 : 벌점 100점 이상 + 영구정지 안 됨 + 검토 알림 아직 안 보낸 팀 -->
 	<select id="selectTeamReviewTargets" resultType="map">
-		select t.team_id, t.team_name, p.score
+		select
+		t.team_id, t.team_name, p.score
 		from team t
 		join team_penalty p
-		on p.team_id = t.team_id
+		on
+		p.team_id = t.team_id
 		and p.penalty_id = (
-			select max(p2.penalty_id)
-			from team_penalty p2
-			where p2.team_id = t.team_id
+		select max(p2.penalty_id)
+		from team_penalty p2
+		where p2.team_id = t.team_id
 		)
-		where coalesce(t.deleted, 0) = 0
-		and p.score &gt;= 100
+		where
+		coalesce(t.deleted, 0) = 0
+		and p.score
+		&gt;= 100
 		and not exists (
-			select 1 from team_penalty s
-			where s.team_id = t.team_id
-			and s.permanent_suspension = 1
+		select 1
+		from team_penalty s
+		where s.team_id = t.team_id
+		and
+		s.permanent_suspension = 1
 		)
 		and not exists (
-			select 1 from notification n
-			where n.title = '팀 영구정지 검토 필요'
-			and n.link = concat('/admin/team/detail?teamId=', t.team_id)
+		select 1 from notification
+		n
+		where n.title = '팀 영구정지 검토 필요'
+		and n.link =
+		concat('/admin/team/detail?teamId=', t.team_id)
 		)
 	</select>
+	<!-- 내가 속한 팀이면 팀 이름, 아니면 null -->
+	<select id="selectMypageMyTeamNameIfMember" parameterType="map"
+		resultType="string">
+		SELECT t.team_name
+		FROM team t
+		JOIN team_user tu ON
+		tu.team_id = t.team_id
+		WHERE t.team_id = #{teamId}
+		AND tu.user_id =
+		#{userId}
+		AND coalesce(tu.withdrawn, 0) = 0
+		AND coalesce(t.deleted, 0) =
+		0
+		LIMIT 1
+	</select>
+	<!-- 패널티받은 점수 목록 -->
+	<select id="selectMypageTeamPenaltyList" parameterType="map"
+		resultType="map">
+		SELECT
+		penalty_id AS penaltyId,
+		received_at AS receivedAt,
+		score,
+		reason,
+		suspension_start_at AS suspensionStart,
+		suspension_end_at
+		AS suspensionEnd,
+		CASE
+		WHEN permanent_suspension = 1 THEN 1
+		ELSE 0
+		END AS
+		permanentSuspension,
+		CASE
+		WHEN cancelled_admin_id IS NULL THEN 0
+		ELSE 1
+		END AS cancelled
+		FROM team_penalty
+		WHERE team_id = #{teamId}
+		ORDER BY
+		received_at DESC, penalty_id DESC
+	</select>
+	<select id="selectMypageTeamPenaltyScore" parameterType="map"
+		resultType="int">
+		SELECT coalesce(penalty_score, 0) FROM users WHERE user_id
+		= #{userId}
+	</select>
+	<!-- 점수 부과/차감 (change가 음수면 차감) -->
+	<insert id="insertMyPageTeamChangeUserPenalty"
+		parameterType="map">
+		insert into team_penalty (user_id, received_at, score,
+		reason,
+		permanent_suspension)
+		values (#{userId}, now(), #{change},
+		#{reason}, 0)
+	</insert>
+
+	<!-- 취소되지 않은 점수 합계 -->
+	<select id="selectMyPageTeamActivePenaltySum"
+		parameterType="long" resultType="int">
+		select coalesce(sum(score), 0)
+		from
+		team_penalty
+		where user_id = #{userId}
+		and cancelled_admin_id is null
+	</select>
+	<select id="selectMyTeamViceCaptains" parameterType="long"
+		resultType="map">
+		select user_id
+		from team_user
+		where team_id = #{teamId}
+		and team_role = 'VICE_CAPTAIN'
+		and withdrawn = 0
+	</select>
+
 </mapper>

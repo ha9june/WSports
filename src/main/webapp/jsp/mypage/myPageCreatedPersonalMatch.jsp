@@ -47,9 +47,10 @@
 }
 
 .cal .flatpickr-day.has-match, .cal .flatpickr-day.inRange.has-match,
-.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
-.cal .flatpickr-day.selected.has-match {
-	background-image: radial-gradient(circle at 50% calc(100% - 7px), #1a6bff 2.5px, transparent 3px) !important;
+	.cal .flatpickr-day.startRange.has-match, .cal .flatpickr-day.endRange.has-match,
+	.cal .flatpickr-day.selected.has-match {
+	background-image: radial-gradient(circle at 50% calc(100% - 7px),
+		#1a6bff 2.5px, transparent 3px) !important;
 	background-repeat: no-repeat !important;
 }
 
@@ -142,7 +143,7 @@
 }
 
 .pill-info.bd {
-	border: 1px solid var(--ds-info-bd);
+	border: 1px solid var(- -ds-info-bd);
 }
 
 .match-left img {
@@ -261,7 +262,8 @@
 			<div class="act-head"></div>
 			<c:if test="${empty match}">
 				<p class="empty-msg"
-					style="text-align: center; color: #9ca3af; padding: 60px 0;">만든 경기가 없습니다.</p>
+					style="text-align: center; color: #9ca3af; padding: 60px 0;">만든
+					경기가 없습니다.</p>
 			</c:if>
 
 
@@ -313,18 +315,15 @@
 							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${m.startTime}
 								~ ${m.endTime}</span>
 							<!-- 경기 장소 -->
-							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
-							<!-- 경기 최소/최대 인원 -->
-							<c:set var="cur"
-								value="${empty m.currentPeople ? 0 : m.currentPeople}" />
-							<c:set var="pct"
-								value="${m.maxPeople > 0 ? cur * 100 / m.maxPeople : 0}" />
-							<c:set var="pct" value="${pct > 100 ? 100 : pct}" />
-
-							<span><img src="${ctx}/img/icon-user-12.svg" alt="">
-								${cur}/${m.maxPeople}명 &nbsp; 최소 ${m.minPeople}명 <span
-								class="cap"><i
-									style="width: <fmt:formatNumber value='${pct}' pattern='0'/>%"></i></span>
+							<c:set var="addr" value="${fn:split(m.address, ' ')}" />
+							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${addr[0]} ${addr[1]}</span> 
+							<!-- 경기 최소/최대 인원 --> 
+							<c:set var="cur" value="${empty m.currentPeople ? 0 : m.currentPeople}" /> 
+							<c:set var="pct" value="${m.maxPeople > 0 ? cur * 100 / m.maxPeople : 0}" /> 
+							<c:set var="pct" value="${pct > 100 ? 100 : pct}" /> <span>
+							<img src="${ctx}/img/icon-user-12.svg" alt=""> ${cur}/${m.maxPeople}명 &nbsp; 최소 ${m.minPeople}명 
+							<span class="cap">
+							<i style="width: <fmt:formatNumber value='${pct}' pattern='0'/>%"></i></span>
 							</span>
 						</p>
 					</div>

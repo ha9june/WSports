@@ -81,7 +81,6 @@ public class MypageReview extends HttpServlet {
 	            ReviewService service = new ReviewServiceImpl();
 	            int cnt = service.deleteMypageReview(user.getUserId(), Long.parseLong(idParam));
 	            out.print(cnt > 0 ? "ok" : "fail");
-	            System.out.println("delete userId=" + user.getUserId() + ", reviewId=" + idParam);
 	        } else {
 	            out.print("fail");
 	        }

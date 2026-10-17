@@ -102,10 +102,12 @@ if (sideUser != null) {
 					class="${sideMenu eq 'alarm' ? 'is-active' : ''}">알림 <span
 					id="sideAlarmBadge" class="side-badge" style="display: none;">0</span>
 				</a> <a href="${ctx}/support/report/list"
-					class="${sideMenu eq 'support' ? 'is-active' : ''}">신고・문의사항</a>
+					class="${sideMenu eq 'support' ? 'is-active' : ''}">신고・문의사항</a> <a
+					class="side-item ${sideMenu eq 'penalty' ? 'is-active' : ''}"
+					href="${ctx}/mypage/penalty">패널티 내역</a>
 			</nav>
 		</div>
-		<div class="group"> 
+		<div class="group">
 			<p class="group-title">정산・결제</p>
 			<nav class="menu">
 				<a href="${ctx}/settlement/personal/list"
@@ -121,5 +123,5 @@ if (sideUser != null) {
 			<a href="${ctx}/auth/logout/submit">로그아웃</a>
 		</div>
 	</aside>
-	
+
 	<main class="work">

@@ -305,7 +305,8 @@
 							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${m.startTime}
 								~ ${m.endTime}</span>
 							<!-- 경기 장소 -->
-							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
+							<c:set var="addr" value="${fn:split(m.address, ' ')}" />
+							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${addr[0]} ${addr[1]}</span> 
 							<%-- 진행률 계산: 현재인원 / 최대인원 (0~100으로 제한) --%>
 							<c:set var="cur"
 								value="${empty m.currentPeople ? 0 : m.currentPeople}" />

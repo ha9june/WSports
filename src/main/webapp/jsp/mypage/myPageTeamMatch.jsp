@@ -329,7 +329,8 @@
 							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(m.startTime, 0, 2)}:${fn:substring(m.startTime, 3, 5)}
 								~ ${fn:substring(m.endTime, 0, 2)}:${fn:substring(m.endTime, 3, 5)}</span>
 							<!-- 경기 장소 -->
-							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
+							<c:set var="addr" value="${fn:split(m.address, ' ')}" />
+							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${addr[0]} ${addr[1]}</span> 
 						</p>
 					</div>
 					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그

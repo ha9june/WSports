@@ -158,14 +158,12 @@ public class MatchWriteForm extends HttpServlet {
 	    try {
 	    	PersonalMatchService service = new PersonalMatchServiceImpl();
             Long personalMatchId = service.createPersonalMatch(pm,parts,realPath);
-            
-          //db에 값 넣음 ㅇㅇ
-            //response.sendRedirect(request.getContextPath()+ "/payment/confirm?matchId="+personalMatchId);
-            
-            	//개인 경기 참가지 인서트
+                        
+            	//생성한 사람 인서트
 			  PersonalMatchParticipant pmp = new PersonalMatchParticipant();
 			  pmp.setUserId(userId); pmp.setPersonalMatchId(personalMatchId);
 			  pmp.setStatus("결제완료"); pmp.setAttendance(false);
+			  pmp.setAttendance(true);
 			  PersonalMatchParticipantService pmpService = new
 			  PersonalMatchParticipantServiceImpl();
 			  pmpService.addPersonalMatchParticipant(pmp);
