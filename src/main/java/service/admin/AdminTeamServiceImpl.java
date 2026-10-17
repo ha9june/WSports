@@ -95,6 +95,26 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 	public Integer getTeamSuspention(Long teamId) throws Exception {
 		return teampenaltyDao.selectTeamSuspension(teamId);
 	}
+	
+	// 부주장에게 같은 알림 전송 (실패해도 패널티 처리에는 영향 없음)
+	private void notifyViceCaptains(Long teamId, String content) {
+		try {
+			List<Map<String, Object>> vices = teampenaltyDao.selectMyTeamViceCaptains(teamId);
+			if (vices == null) return;
+
+			for (Map<String, Object> v : vices) {
+				Notification alarm = new Notification();
+				alarm.setUserId(((Number) v.get("user_id")).longValue());
+				alarm.setTitle("팀 페널티 등록");
+				alarm.setContent(content);
+				alarm.setLink("/team/penalty?teamId=" + teamId);
+				notificationService.sendNotification(alarm);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	//팀 제제기간
 	@Override
 	public void AdminTeamPenalty(Long teamId, int days, String reason) throws Exception {
@@ -114,7 +134,7 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		//알림 내용 만들기
 		String title = "팀 정지";
 		String content = "팀이 "+days+"일 정지되었습니다.";
-		String link = "/team/detail?teamId="+teamId;
+		String link = "/team/penalty?teamId="+teamId;
 		//알림 객체 채우기
 		Notification alarm = new Notification();
 		alarm.setUserId(userId);
@@ -123,6 +143,7 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		alarm.setLink(link);
 		//알림 저장, 푸시 전송
 		notificationService.sendNotification(alarm);
+		notifyViceCaptains(teamId, content);
 		
 	}
 	//팀 영구정지
@@ -143,7 +164,7 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		//알림 내용 만들기
 		String title = "팀 영구정지 부과";
 		String content = "팀이 영구정지 되었습니다.";
-		String link = "/team/detail?teamId="+teamId;
+		String link = "/team/penalty?teamId="+teamId;
 		//알림 객체 채우기
 		Notification alarm = new Notification();
 		alarm.setUserId(userId);
@@ -152,6 +173,7 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		alarm.setLink(link);
 		//알림 저장, 푸시 전송
 		notificationService.sendNotification(alarm);
+		notifyViceCaptains(teamId, content);
 
 	}
 	// 팀 페널티 점수 조정
@@ -172,7 +194,7 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		//알림 내용 만들기
 		String title = "팀 패널티 점수 조정";
 		String content = "팀 페널티 점수가 "+change+"점 조정되었습니다.";
-		String link = "/team/detail?teamId="+teamId;
+		String link = "/team/penalty?teamId="+teamId;
 		//알림 객체 채우기
 		Notification alarm = new Notification();
 		alarm.setUserId(userId);
@@ -185,6 +207,7 @@ public class AdminTeamServiceImpl implements AdminTeamService {
 		} catch (Exception e) {
 			e.printStackTrace(); //알림 실패해도 벌점 처리는 성공
 		}
+		notifyViceCaptains(teamId, content);
 
 	}
 }

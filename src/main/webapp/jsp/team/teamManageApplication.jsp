@@ -36,6 +36,7 @@
 				href="${ctx}/team/manage/members?teamId=${team.teamId}">팀원 관리</a>
 			<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
 				href="${ctx}/team/manage/posts?teamId=${team.teamId}">팀 작성글 관리</a>
+			<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
 		</nav>
 		<h2 class="sub-title" style="margin-bottom: 16px">가입 신청
 			${applicationCnt }건</h2>

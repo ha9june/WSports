@@ -65,10 +65,8 @@
 }
 
 .intro {
-    white-space: pre-line;
+	white-space: pre-line;
 }
-
-
 
 .team-tabs {
 	position: sticky;
@@ -88,58 +86,91 @@
 .link-more:hover {
 	text-decoration: underline;
 }
-
-
-
-
 </style>
 <script>
 	$(function() {
 		// ===== 탭 : 부드러운 이동 + 하이라이트 (주소에 #을 붙이지 않음) =====
 		(function() {
-			var ids = ['intro', 'members', 'posts'], pinned = null;
+			var ids = [ 'intro', 'members', 'posts' ], pinned = null;
 
 			function headerH() {
-				return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 72;
+				return parseInt(getComputedStyle(document.documentElement)
+						.getPropertyValue('--header-h')) || 72;
 			}
-			function barBottom() {                              // 헤더 + 탭 바 높이
+			function barBottom() { // 헤더 + 탭 바 높이
 				var bar = document.querySelector('.team-tabs');
 				return headerH() + (bar ? bar.offsetHeight : 42);
 			}
 			function setActive(id) {
-				$('.team-tabs .tab').removeClass('is-active')
-					.filter('[href="#' + id + '"]').addClass('is-active');
+				$('.team-tabs .tab').removeClass('is-active').filter(
+						'[href="#' + id + '"]').addClass('is-active');
 			}
 			function update() {
-				if (pinned) return;                             // 탭을 눌러 이동한 직후에는 누른 탭 유지
-				var line = barBottom() + (window.innerHeight - barBottom()) * 0.5;   // 탭 바 아래 영역의 중간선
+				if (pinned)
+					return; // 탭을 눌러 이동한 직후에는 누른 탭 유지
+				var line = barBottom() + (window.innerHeight - barBottom())
+						* 0.5; // 탭 바 아래 영역의 중간선
 				var cur = ids[0];
 				ids.forEach(function(id) {
 					var s = document.getElementById(id);
-					if (s && s.getBoundingClientRect().top <= line) cur = id;
+					if (s && s.getBoundingClientRect().top <= line)
+						cur = id;
 				});
 				var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
-				if (atBottom) cur = ids[ids.length - 1];        // 맨 아래면 마지막 탭
+				if (atBottom)
+					cur = ids[ids.length - 1]; // 맨 아래면 마지막 탭
 				setActive(cur);
 			}
 
-			$('.team-tabs .tab').on('click', function(e) {
-				e.preventDefault();                             // #members 가 주소에 붙지 않음 → 뒤로가기가 목록으로
-				var id = $(this).attr('href').slice(1);
-				var el = document.getElementById(id);
-				if (!el) return;
-				pinned = id;
-				setActive(id);
-				window.scrollTo({
-					top: el.getBoundingClientRect().top + window.scrollY - barBottom() - 16,
-					behavior: 'smooth' 
-				});
+			$('.team-tabs .tab[href^="#"]').on(
+					'click',
+					function(e) {
+						e.preventDefault(); // #members 가 주소에 붙지 않음 → 뒤로가기가 목록으로
+						var id = $(this).attr('href').slice(1);
+						var el = document.getElementById(id);
+						if (!el)
+							return;
+						pinned = id;
+						setActive(id);
+						window.scrollTo({
+							top : el.getBoundingClientRect().top
+									+ window.scrollY - barBottom() - 16,
+							behavior : 'smooth'
+						});
+					});
+			$(window).on('wheel touchmove keydown', function() {
+				pinned = null;
 			});
-			$(window).on('wheel touchmove keydown', function() { pinned = null; });
 			$(window).on('scroll', update);
 			update();
+			var target = new URLSearchParams(location.search).get('tab')
+			|| location.hash.slice(1);
+
+	function goTab() {
+		if (ids.indexOf(target) < 0)
+			return;
+		var el = document.getElementById(target);
+		if (!el)
+			return;
+		pinned = target;
+		setActive(target);
+		window.scrollTo({
+			top : el.getBoundingClientRect().top + window.scrollY
+					- barBottom() - 16
+		});
+	}
+
+	$(window).on('load', function() {
+		goTab();
+		setTimeout(function() {
+			goTab();
+			var q = new URLSearchParams(location.search);
+			q.delete('tab');
+			history.replaceState(null, '', location.pathname
+					+ (q.toString() ? '?' + q.toString() : ''));
+		}, 300);
+	});
 		})();
-		
 
 		const profileImage = '${team.profileImage}';
 		const sport = '${team.sport}';
@@ -161,9 +192,10 @@
 		$('#profileImg').html('<img src="' + imageSrc + '" alt="팀 프로필 이미지">');
 
 		const images = [ '${team.activityImage1}', '${team.activityImage2}',
-			'${team.activityImage3}', '${team.activityImage4}', '${team.activityImage5}' ]
-			.filter(function (image) { return image && image !== 'null'; });
-
+				'${team.activityImage3}', '${team.activityImage4}',
+				'${team.activityImage5}' ].filter(function(image) {
+			return image && image !== 'null';
+		});
 
 		var hasImage = images.some(function(image) {
 			return image;
@@ -214,7 +246,7 @@
 			// 클릭한 사진 선택 표시
 			$(this).css('border', '2px solid #1677ff');
 		});
-		
+
 		var deleteForm = document.getElementById('teamDeleteForm');
 		if (deleteForm) {
 			deleteForm.addEventListener('submit', function(e) {
@@ -243,8 +275,10 @@
 					<span class="logo-ph" id="profileImg"> <%-- <img src="${ctx}/uploads/${team.profileImage }" alt="대표"> --%>
 					</span>
 					<div>
-						<h1><c:out value="${team.teamName}" /></h1>
-						<p>${team.sport } · 팀원 ${team.currentPeople }</p>
+						<h1>
+							<c:out value="${team.teamName}" />
+						</h1>
+						<p>${team.sport }·팀원${team.currentPeople }</p>
 						<p class="team-rating">
 							<c:choose>
 								<c:when test="${team.teamRating != null}">
@@ -277,7 +311,7 @@
 					<c:when test="${state eq 'manager'}">
 						<hr style="margin-bottom: 0">
 						<c:url var="manageUrl" value="/team/manage/applications">
-						     <c:param name="teamId" value="${team.teamId}" />
+							<c:param name="teamId" value="${team.teamId}" />
 						</c:url>
 						<a class="btn btn-primary btn-block" href="${manageUrl}">팀 관리</a>
 					</c:when>
@@ -288,38 +322,45 @@
 					<c:when test="${state eq 'applicater'}">
 						<hr>
 						<p class="note">가입 신청이 접수되었어요. 주장 승인을 기다리는 중이에요.</p>
-						<button type="button" class="btn btn-join btn-block" disabled>승인 대기 중</button>
+						<button type="button" class="btn btn-join btn-block" disabled>승인
+							대기 중</button>
 					</c:when>
 					<c:otherwise>
 						<hr>
-						   <c:url var="applyUrl" value="/team/application">
-						     <c:param name="teamId" value="${team.teamId}" />
-						   </c:url>
-						   <a class="btn btn-join btn-block" href="${applyUrl}" data-auth>가입 신청하기</a>
+						<c:url var="applyUrl" value="/team/application">
+							<c:param name="teamId" value="${team.teamId}" />
+						</c:url>
+						<a class="btn btn-join btn-block" href="${applyUrl}" data-auth>가입
+							신청하기</a>
 					</c:otherwise>
 				</c:choose>
 				<c:if test="${sessionScope.user.grade eq 'Admin' or isCaptain}">
-					<button type="button" class="btn btn-outline btn-danger-soft btn-block btn-sm"
+					<button type="button"
+						class="btn btn-outline btn-danger-soft btn-block btn-sm"
 						data-modal-open="teamDeleteModal">팀 삭제</button>
 				</c:if>
-			</aside>				
+			</aside>
 		</div>
 
 		<nav class="tabs team-tabs">
 			<a class="tab is-active" href="#intro">소개글</a> <a
 				class="tab ${isMember ? '' : 'locked'}" href="#members">팀원</a> <a
-				class="tab ${isMember ? '' : 'locked'}" href="#posts">팀 작성글</a>
+				class="tab ${isMember ? '' : 'locked'}" href="#posts">팀 작성글</a> <a
+				class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
 			<!-- 관리자 신고상세에서 팀신고도 상세정보 확인을 위해 신고버튼 추가 -->
 			<c:if test="${state ne 'manager'}">
-			<a class="btn btn-outline btn-sm" style="margin-left: auto";
+				<a class="btn btn-outline btn-sm" style="margin-left: auto"
+					;
 								href="${ctx}/support/report/create?targetType=team&targetNo=${team.teamId}"
-								data-auth>신고</a>
-			</c:if>	
+					data-auth>신고</a>
+			</c:if>
 		</nav>
 
 		<section class="team-section" id="intro">
 			<h2>팀 소개</h2>
-			  <p class="intro"><c:out value="${team.description}" /></p>
+			<p class="intro">
+				<c:out value="${team.description}" />
+			</p>
 		</section>
 
 		<c:choose>
@@ -349,30 +390,37 @@
 									<c:set var="userSkill" value="${user.badmintonSkill}" />
 								</c:otherwise>
 							</c:choose>
-						<a class="member-card" href="${ctx}/member/publicProfile/view?userId=${user.userId}">
-							<span class="avatar">
-								<c:choose>
-									<c:when test="${not empty user.profileImage}">
-										<img src="${ctx}${profilePath}/<c:out value='${user.profileImage}' />" alt=""
-											onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-											style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-									</c:when>
-									<c:otherwise>
-										<img src="${ctx}/img/default-profile.svg" alt=""
-											style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
-									</c:otherwise>
-								</c:choose>
+							<a class="member-card"
+								href="${ctx}/member/publicProfile/view?userId=${user.userId}">
+								<span class="avatar"> <c:choose>
+										<c:when test="${not empty user.profileImage}">
+											<img
+												src="${ctx}${profilePath}/<c:out value='${user.profileImage}' />"
+												alt=""
+												onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+										</c:when>
+										<c:otherwise>
+											<img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+										</c:otherwise>
+									</c:choose>
 							</span>
-							<div class="info">
-								<strong><c:out value="${user.nickname}" /></strong>
-								<c:if test="${user.teamRole eq 'CAPTAIN'}"><span class="pill pill-brand role">주장</span></c:if>
-								<c:if test="${user.teamRole eq 'VICE_CAPTAIN'}"><span class="pill pill-brand role">부주장</span></c:if>
-								<p class="meta">
-									<c:out value="${user.preferredRegion1}" default="지역 미설정" /> ·
-									<c:out value="${userSkill}" default="실력 미설정" />
-								</p>
-							</div>
-						</a>
+								<div class="info">
+									<strong><c:out value="${user.nickname}" /></strong>
+									<c:if test="${user.teamRole eq 'CAPTAIN'}">
+										<span class="pill pill-brand role">주장</span>
+									</c:if>
+									<c:if test="${user.teamRole eq 'VICE_CAPTAIN'}">
+										<span class="pill pill-brand role">부주장</span>
+									</c:if>
+									<p class="meta">
+										<c:out value="${user.preferredRegion1}" default="지역 미설정" />
+										·
+										<c:out value="${userSkill}" default="실력 미설정" />
+									</p>
+								</div>
+							</a>
 						</c:forEach>
 					</div>
 				</section>
@@ -382,28 +430,42 @@
 							<h2>팀 작성글</h2>
 							<p class="section-desc">팀이 작성한 상대 팀 모집 글이에요.</p>
 						</div>
-					<a class="link-more"
-						href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기 →</a>
+						<a class="link-more"
+							href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기 →</a>
 					</div>
 					<div class="post-grid">
 
 						<c:forEach var="match" items="${teamMatchList }">
-							<a class="post-card" href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
+							<a class="post-card"
+								href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
 								<p class="ttl" style="margin: 0">
-									<c:out value="${match.title }"></c:out> 
+									<c:out value="${match.title }"></c:out>
 									<c:choose>
-										<c:when test="${match.status eq '모집중'}"><c:set var="stCls" value="pill-success" /></c:when>
-										<c:when test="${match.status eq '모집 마감' or match.status eq '경기 종료'}"><c:set var="stCls" value="pill-info" /></c:when>
-										<c:when test="${match.status eq '경기 취소'}"><c:set var="stCls" value="pill-danger" /></c:when>
-										<c:otherwise><c:set var="stCls" value="pill-neutral" /></c:otherwise>
+										<c:when test="${match.status eq '모집중'}">
+											<c:set var="stCls" value="pill-success" />
+										</c:when>
+										<c:when
+											test="${match.status eq '모집 마감' or match.status eq '경기 종료'}">
+											<c:set var="stCls" value="pill-info" />
+										</c:when>
+										<c:when test="${match.status eq '경기 취소'}">
+											<c:set var="stCls" value="pill-danger" />
+										</c:when>
+										<c:otherwise>
+											<c:set var="stCls" value="pill-neutral" />
+										</c:otherwise>
 									</c:choose>
-									<span class="pill ${stCls}"><c:out value="${match.status}" /></span>
+									<span class="pill ${stCls}"><c:out
+											value="${match.status}" /></span>
 								</p>
-									<p><c:out value="${match.matchDate }"></c:out> 
-									(${match.dayOfWeekKorean}) 
-									<c:out value="${match.startTime }"></c:out> - 
-									<c:out value="${match.endTime }"></c:out> · 
-									<c:out value="${match.region }"></c:out> 
+								<p>
+									<c:out value="${match.matchDate }"></c:out>
+									(${match.dayOfWeekKorean})
+									<c:out value="${match.startTime }"></c:out>
+									-
+									<c:out value="${match.endTime }"></c:out>
+									·
+									<c:out value="${match.region }"></c:out>
 								</p>
 							</a>
 						</c:forEach>
@@ -472,15 +534,17 @@
 	<div class="modal" id="teamDeleteModal" role="dialog" aria-modal="true">
 		<div class="modal-card sm">
 			<h2 class="modal-title">팀을 삭제할까요?</h2>
-			<p class="modal-desc">팀이 삭제되고 모든 팀원이 탈퇴 처리돼요. 복구할 수 없고, 진행 중인 경기가 있으면 삭제할 수 없어요.</p>
+			<p class="modal-desc">팀이 삭제되고 모든 팀원이 탈퇴 처리돼요. 복구할 수 없고, 진행 중인 경기가
+				있으면 삭제할 수 없어요.</p>
 			<form action="${ctx}/team/delete" method="post" id="teamDeleteForm">
 				<input type="hidden" name="teamId" value="${team.teamId}">
 				<c:if test="${sessionScope.user.grade eq 'Admin'}">
 					<div class="field">
 						<label class="field-label strong" for="deleteReason">삭제 사유
-							<span class="hint">팀원 전체에게 전달돼요</span></label>
-						<textarea class="textarea" id="deleteReason" name="reason" rows="3"
-							maxlength="100" placeholder="예: 운영 정책에 맞지 않는 팀 소개"></textarea>
+							<span class="hint">팀원 전체에게 전달돼요</span>
+						</label>
+						<textarea class="textarea" id="deleteReason" name="reason"
+							rows="3" maxlength="100" placeholder="예: 운영 정책에 맞지 않는 팀 소개"></textarea>
 					</div>
 				</c:if>
 				<div class="modal-actions">
