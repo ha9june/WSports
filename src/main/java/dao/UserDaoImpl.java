@@ -206,4 +206,19 @@ public class UserDaoImpl implements UserDao {
 
 		}
 	}
+
+	@Override
+	public void insertChangeUserPenalty(Map<String, Object> param) throws Exception {
+		try (SqlSession s = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+            s.insert("mapper.userpenalty.insertChangeUserPenalty", param);
+            s.commit();
+        }
+    }
+
+	@Override
+	public int selectActivePenaltySum(Long userId) throws Exception {
+		try (SqlSession s = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+            return s.selectOne("mapper.userpenalty.selectActivePenaltySum", userId);
+        }
+    }
 }

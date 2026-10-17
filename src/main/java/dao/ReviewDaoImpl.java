@@ -34,8 +34,8 @@ public class ReviewDaoImpl implements ReviewDao {
 	public List<Review> selectReviewablePersonal(Long userId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-		return sqlSession.selectList("mapper.review.selectReviewablePersonal", userId);
-		}finally {
+			return sqlSession.selectList("mapper.review.selectReviewablePersonal", userId);
+		} finally {
 			sqlSession.close();
 		}
 	}
@@ -44,8 +44,8 @@ public class ReviewDaoImpl implements ReviewDao {
 	public List<Review> selectReviewableTeam(Long userId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-		return sqlSession.selectList("mapper.review.selectReviewableTeam", userId);
-		}finally {
+			return sqlSession.selectList("mapper.review.selectReviewableTeam", userId);
+		} finally {
 			sqlSession.close();
 		}
 	}
@@ -93,71 +93,72 @@ public class ReviewDaoImpl implements ReviewDao {
 	@Override
 	public Integer selectMypageReviewListCnt(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-	        return sqlSession.selectOne("mapper.review.selectMypageReviewListCnt", param);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw e;
-	    }
+			return sqlSession.selectOne("mapper.review.selectMypageReviewListCnt", param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
 	public int updateMypageReview(Map<String, Object> param) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-	    try {
-	        int cnt = sqlSession.update("mapper.review.updateMypageReview", param);
-	        sqlSession.commit();
-	        return cnt;
-	    } catch (Exception e) {
-	        sqlSession.rollback();
-	        e.printStackTrace();
-	        throw e;
-	    } finally {
-	        sqlSession.close();
-	    }
+		try {
+			int cnt = sqlSession.update("mapper.review.updateMypageReview", param);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
 	}
 
 	@Override
 	public Map<String, Object> selectMyReview(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-	        return sqlSession.selectOne("mapper.review.selectMyReview", param);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw e;
-	    }
+			return sqlSession.selectOne("mapper.review.selectMyReview", param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
+
 	public List<Review> selectNowReviewList() throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-	    try {
-	        return sqlSession.selectList("mapper.review.selectNowReviewList");
-	    } finally {
-	        sqlSession.close();
-	    }
+		try {
+			return sqlSession.selectList("mapper.review.selectNowReviewList");
+		} finally {
+			sqlSession.close();
+		}
 	}
 
 	@Override
 	public int deleteMypageReview(Map<String, Object> param) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-	    try {
-	        int cnt = sqlSession.update("mapper.review.deleteMypageReview", param);
-	        sqlSession.commit();
-	        return cnt;
-	    } catch (Exception e) {
-	        sqlSession.rollback();
-	        e.printStackTrace();
-	        throw e;
-	    } finally {
-	        sqlSession.close();
-	    }
+		try {
+			int cnt = sqlSession.update("mapper.review.deleteMypageReview", param);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
 	}
 
 	@Override
 	public Review selectReviewDetail(Long reviewId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-	        return sqlSession.selectOne("mapper.review.selectReviewDetail", reviewId);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw e;
-	    }
+			return sqlSession.selectOne("mapper.review.selectReviewDetail", reviewId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
@@ -178,13 +179,15 @@ public class ReviewDaoImpl implements ReviewDao {
 
 	@Override
 	public Map<String, Object> selectPersonalMatchForReview(Map<String, Object> param) throws Exception {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		return sqlSession.selectOne("mapper.review.selectPersonalMatchForReview", param);
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.review.selectPersonalMatchForReview", param);
+		}
 	}
 
 	@Override
 	public Map<String, Object> selectTeamMatchForReview(Map<String, Object> param) throws Exception {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		return sqlSession.selectOne("mapper.review.selectTeamMatchForReview", param);
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.review.selectTeamMatchForReview", param);
+		}
 	}
 }

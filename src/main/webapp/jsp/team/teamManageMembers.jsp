@@ -63,6 +63,7 @@
 				href="${ctx}/team/manage/members?teamId=${teamId}">팀원 관리</a> <a
 				class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
 				href="${ctx}/team/manage/posts?teamId=${teamId}">팀 작성글 관리</a>
+			<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
 		</nav>
 		<h2 class="sub-title">팀원 ${team.currentPeople }명</h2>
 		<p class="section-desc" style="margin-bottom: 24px">팀원의 역할을 확인하고

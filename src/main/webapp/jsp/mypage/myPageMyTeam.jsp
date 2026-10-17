@@ -236,7 +236,7 @@
 						style="grid-column: span 2; text-align: center; color: #9ca3af; padding: 40px 0;">신청
 						중인 팀이 없습니다.</p>
 				</c:if>
-				<c:forEach var="m" items="${match}" >
+				<c:forEach var="m" items="${match}">
 					<c:choose>
 						<c:when test="${m.sport eq '축구/풋살'}">
 							<c:set var="sportCls" value="sc-football" />
@@ -267,7 +267,7 @@
 					</c:if>
 
 					<div class="myteam-card"
-							data-href="${ctx}/team/detail/view?teamId=${m.teamId}"
+						data-href="${ctx}/team/detail/view?teamId=${m.teamId}"
 						style="display: flex; align-items: center; padding: 16px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); position: relative; height: 110px; box-sizing: border-box;">
 
 						<div class="sport-circle ${sportCls}">
@@ -379,7 +379,8 @@
 									<c:when test="${m.myRole eq 'CAPTAIN' or m.myRole eq 'LEADER'}">
 										<span class="role-pill pill-blue">주장</span>
 									</c:when>
-									<c:when test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">
+									<c:when
+										test="${m.myRole eq 'VICE_CAPTAIN' or m.myRole eq 'SUB_LEADER'}">
 										<span class="role-pill pill-blue">부주장</span>
 									</c:when>
 								</c:choose>
@@ -397,6 +398,8 @@
 												관리</a>
 											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
+											<a href="${ctx}/team/penalty?teamId=${m.teamId}">팀 패널티
+												내역</a>
 											<hr>
 											<a href="#" class="danger btn-delete-team"
 												data-team-id="${m.teamId}"
@@ -409,13 +412,18 @@
 												관리</a>
 											<a href="${ctx}/team/manage/posts?teamId=${m.teamId}">팀
 												작성글 관리</a>
+											<a class="tab ${isMember ? '' : 'locked'}"
+												href="${pageContext.request.contextPath}/team/penalty?teamId=${m.teamId}">
+												팀 패널티 내역 </a>
 											<hr>
 											<a href="#" class="danger btn-leave"
 												data-team-id="${m.teamId}">탈퇴하기</a>
 										</c:when>
 										<c:otherwise>
-											<a href="${ctx}/team/info/members?teamId=${m.teamId}">팀원 보기</a>
-											<a href="${ctx}/team/info/posts?teamId=${m.teamId}">팀 작성글 보기</a>
+											<a href="${ctx}/team/info/members?teamId=${m.teamId}">팀원
+												보기</a>
+											<a href="${ctx}/team/info/posts?teamId=${m.teamId}">팀 작성글
+												보기</a>
 											<hr>
 											<a href="#" class="danger btn-leave"
 												data-team-id="${m.teamId}">탈퇴하기</a>
@@ -460,10 +468,13 @@
 <div class="modal" id="teamDeleteModal" role="dialog" aria-modal="true">
 	<div class="modal-card">
 		<h2 class="modal-title">팀을 삭제할까요?</h2>
-		<p class="modal-desc"><b id="deleteTeamName"></b> 팀이 삭제되고 모든 팀원이 탈퇴 처리돼요. 복구할 수 없고, 진행 중인 경기가 있으면 삭제할 수 없어요.</p>
+		<p class="modal-desc">
+			<b id="deleteTeamName"></b> 팀이 삭제되고 모든 팀원이 탈퇴 처리돼요. 복구할 수 없고, 진행 중인
+			경기가 있으면 삭제할 수 없어요.
+		</p>
 		<form action="${ctx}/team/delete" method="post">
-			<input type="hidden" name="teamId" id="deleteTeamId">
-			<input type="hidden" name="from" value="mypage">
+			<input type="hidden" name="teamId" id="deleteTeamId"> <input
+				type="hidden" name="from" value="mypage">
 			<div class="modal-actions">
 				<button type="button" class="btn btn-outline" data-modal-close>닫기</button>
 				<button type="submit" class="btn btn-danger">삭제</button>
@@ -475,27 +486,37 @@
 <script>
 	$(function() {
 		var targetId = null;
-	
+
 		// 더보기: 6개씩 표시
 		var PAGE = 6;
-		$('.myteam-grid').each(function() {
-			var $grid = $(this);
-			var $cards = $grid.children('.myteam-card');
-			if ($cards.length <= PAGE) return;   // 6개 이하면 버튼 없음
+		$('.myteam-grid')
+				.each(
+						function() {
+							var $grid = $(this);
+							var $cards = $grid.children('.myteam-card');
+							if ($cards.length <= PAGE)
+								return; // 6개 이하면 버튼 없음
 
-			$cards.slice(PAGE).addClass('is-hidden');
+							$cards.slice(PAGE).addClass('is-hidden');
 
-			var $wrap = $('<div class="more-wrap"><button type="button" class="btn-more">↓ 더보기</button></div>');
-			$grid.after($wrap);
+							var $wrap = $('<div class="more-wrap"><button type="button" class="btn-more">↓ 더보기</button></div>');
+							$grid.after($wrap);
 
-			$wrap.find('.btn-more').on('click', function() {
-				$cards.filter('.is-hidden').slice(0, PAGE).removeClass('is-hidden');
-				if ($cards.filter('.is-hidden').length === 0) {
-					$wrap.remove();   // 다 보여줬으면 버튼 제거
-				}
-			});
-		});
-		
+							$wrap
+									.find('.btn-more')
+									.on(
+											'click',
+											function() {
+												$cards.filter('.is-hidden')
+														.slice(0, PAGE)
+														.removeClass(
+																'is-hidden');
+												if ($cards.filter('.is-hidden').length === 0) {
+													$wrap.remove(); // 다 보여줬으면 버튼 제거
+												}
+											});
+						});
+
 		// 드롭다운 토글
 		$('[data-dropdown-toggle]').on('click', function(e) {
 			e.stopPropagation();

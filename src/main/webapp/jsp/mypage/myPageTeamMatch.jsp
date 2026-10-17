@@ -150,23 +150,23 @@
 }
 
 .pill-green {
-	color: var(- -ds-success-fg);
-	background: var(- -ds-success-bg);
-	border: var(- -ds-success-bd);
+	color: var(--ds-success-fg);
+	background: var(--ds-success-bg);
+	border: var(--ds-success-bd);
 	font-weight: bold;
 }
 
 .pill-blue {
-	color: var(- -ds-info-fg);
-	background: var(- -ds-info-bg);
-	border: var(- -ds-info-bd);
+	color: var(--ds-info-fg);
+	background: var(--ds-info-bg);
+	border: var(--ds-info-bd);
 	font-weight: bold;
 }
 
 .pill-red {
-	color: var(- -ds-danger-fg);
-	background: var(- -ds-danger-bg);
-	border: var(- -ds-danger-bd);
+	color: var(--ds-danger-fg);
+	background: var(--ds-danger-bg);
+	border: var(--ds-danger-bd);
 	font-weight: bold;
 }
 
@@ -329,7 +329,8 @@
 							<span><img src="${ctx}/img/icon-clock-16.svg" alt="">${fn:substring(m.startTime, 0, 2)}:${fn:substring(m.startTime, 3, 5)}
 								~ ${fn:substring(m.endTime, 0, 2)}:${fn:substring(m.endTime, 3, 5)}</span>
 							<!-- 경기 장소 -->
-							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${m.placeName}</span>
+							<c:set var="addr" value="${fn:split(m.address, ' ')}" />
+							<span><img src="${ctx}/img/icon-pin-14.svg" alt="">${addr[0]} ${addr[1]}</span> 
 						</p>
 					</div>
 					<!-- 참가비 fmt:formatNumber: 숫자를 원하는형식으로 바꿔주는 JSTL fmt태그
@@ -349,9 +350,12 @@
 								<c:when test="${m.status eq '경기 취소'}">
 								</c:when>
 								<c:when test="${m.status eq '경기 종료'}">
-									<a class="btn btn-outline btn-xs"
-										href="${ctx}/review/create?matchNo=TEAM:${m.teamMatchId}"
-										onclick="event.stopPropagation()">후기 작성</a>
+									<%-- 참가한 경기만 후기 작성 --%>
+									<c:if test="${not empty m.appliedAt}">
+										<a class="btn btn-outline btn-xs"
+											href="${ctx}/review/create?matchNo=TEAM:${m.teamMatchId}"
+											onclick="event.stopPropagation()">후기 작성</a>
+									</c:if>
 									<a class="btn btn-primary btn-xs"
 										href="${ctx}/team-match/result/view?teamMatchId=${m.teamMatchId}"
 										onclick="event.stopPropagation()">출석 및 평가</a>

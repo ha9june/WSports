@@ -61,6 +61,16 @@ public class TeamMatch {
     private Double hostRating;        // 평가가 없으면 null이어야 해서 래퍼 타입
     private Integer hostRatingCount;
 
+    
+    private LocalDateTime appliedAt;   // 참가 신청일 (참가한 경기만 값 있음)
+
+    public LocalDateTime getAppliedAt() {
+        return appliedAt;
+    }
+
+    public void setAppliedAt(LocalDateTime appliedAt) {
+        this.appliedAt = appliedAt;
+    }
     private boolean favorite;
 
     public boolean isFavorite() { return favorite; }

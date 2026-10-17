@@ -7,6 +7,10 @@ import java.util.Map;
 import dao.InquiryDao;
 import dao.ReportDao;
 import dao.ReportDaoImpl;
+import dao.UserDao;
+import dao.UserDaoImpl;
+import dao.UserPenaltyDao;
+import dao.UserPenaltyDaoImpl;
 import dto.Notification;
 import dto.PageInfo;
 import service.notification.NotificationService;
@@ -15,7 +19,11 @@ import service.notification.NotificationServiceImpl;
 public class AdminReportServiceImpl implements AdminReportService {
 	private ReportDao reportDao;
 	private NotificationService notificationService;
+	private UserPenaltyDao userPenaltyDao;
+	private UserDao userDao;
 	public AdminReportServiceImpl() {
+		this.userDao = new UserDaoImpl();
+		this.userPenaltyDao = new UserPenaltyDaoImpl();
 		this.reportDao = new ReportDaoImpl();
 		this.notificationService = new NotificationServiceImpl();
 	}
@@ -91,5 +99,40 @@ public class AdminReportServiceImpl implements AdminReportService {
 	public Integer countReportTarget(Map<String, Object> param) {
 		return reportDao.countReportTarget(param);
 	}
+	@Override
+	public void changePenalty(Long userId, int change, String reason) throws Exception {
+		 Map<String, Object> param = new HashMap<>();
+	        param.put("userId", userId);
+	        param.put("change", change);
+	        param.put("reason", reason);
+	        userPenaltyDao.insertChangeUserPenalty(param);
 
+	        sendNotice(userId, "개인 패널티 점수 조정",
+	                "개인 패널티 점수가 " + (change > 0 ? "+" : "") + change + "점 조정되었습니다.");
+	    }
+	@Override
+	public void resetPenalty(Long userId) throws Exception {
+		int sum = userDao.selectActivePenaltySum(userId);
+        if (sum == 0) return;
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+        param.put("change", -sum);                 // 합계만큼 차감 → 0점
+        param.put("reason", "패널티 점수 초기화");
+        userPenaltyDao.insertChangeUserPenalty(param);
+
+        sendNotice(userId, "개인 패널티 점수 초기화", "개인 패널티 점수가 초기화되었습니다.");
+    }
+	  private void sendNotice(Long userId, String title, String content) {
+	        try {
+	            Notification alarm = new Notification();
+	            alarm.setUserId(userId);
+	            alarm.setTitle(title);
+	            alarm.setContent(content);
+	            alarm.setLink("/mypage/penalty");      // userId 파라미터는 붙이지 않음
+	            notificationService.sendNotification(alarm);
+	        } catch (Exception e) {
+	            e.printStackTrace();                   // 알림 실패가 점수 반영을 막지 않게
+	        }
+	    }
 }

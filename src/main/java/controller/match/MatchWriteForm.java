@@ -63,10 +63,14 @@ public class MatchWriteForm extends HttpServlet {
 	        response.sendRedirect(request.getContextPath() + "/auth/login");
 	        return;
 	    }
+	    
+	    
 	    Long userId = user.getUserId();
 		String uploadPath = (String) request.getServletContext().getAttribute("uploadPath");
 		String realPath = request.getServletContext().getRealPath(uploadPath);
 	    
+		
+		
 		PersonalMatch pm = new PersonalMatch();
 	    try {
 
@@ -140,7 +144,6 @@ public class MatchWriteForm extends HttpServlet {
             pm.setSkillIntermediate(levels.contains("중급"));
             pm.setSkillAdvanced(levels.contains("상급"));
             
-            pm.setDeleted(true);//deleted 1로 바꿔서 기본 1로 설정 - 결제 완료하면 0으로 바꾸기 -> 이건 payments 에서
             pm.setStatus("모집중");
             
             System.out.println(pm);
@@ -155,27 +158,41 @@ public class MatchWriteForm extends HttpServlet {
 	    try {
 	    	PersonalMatchService service = new PersonalMatchServiceImpl();
             Long personalMatchId = service.createPersonalMatch(pm,parts,realPath);
-            
-          //db에 값 넣음 ㅇㅇ
-            //response.sendRedirect(request.getContextPath()+ "/payment/confirm?matchId="+personalMatchId);
-            
-            //개인 경기 참가지 인서트
-			
+                        
+            	//생성한 사람 인서트
 			  PersonalMatchParticipant pmp = new PersonalMatchParticipant();
 			  pmp.setUserId(userId); pmp.setPersonalMatchId(personalMatchId);
 			  pmp.setStatus("결제완료"); pmp.setAttendance(false);
+			  pmp.setAttendance(true);
 			  PersonalMatchParticipantService pmpService = new
 			  PersonalMatchParticipantServiceImpl();
 			  pmpService.addPersonalMatchParticipant(pmp);
 			  
-			  response.sendRedirect(request.getContextPath()+
-			  "/match/detail/view?personalMatchId="+personalMatchId);
+				/*
+				 * response.sendRedirect(request.getContextPath()+
+				 * "/match/detail/view?personalMatchId="+personalMatchId);
+				 */
+			  
+			  String redirectUrl = request.getContextPath()
+					    + "/match/detail/view?personalMatchId=" + personalMatchId;
 			 
-          	            
+			  AlertUtil.jsonRedirect(
+					    response,
+					    true,
+					    "경기가 등록되었습니다.",
+					    redirectUrl
+					);        
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			AlertUtil.back(response,"글쓰기 실패하였습니다. 관리자에게 문의하여 주세요.");
+			//AlertUtil.back(response,"글쓰기 실패하였습니다. 관리자에게 문의하여 주세요.");
+			AlertUtil.jsonRedirect(
+				    response,
+				    false,
+				    "경기 등록에 실패하였습니다.",
+				    ""
+				);     
+			
 			return;
 		}
 	    

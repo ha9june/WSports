@@ -320,3 +320,57 @@ document.addEventListener('click', function (e) {
   if (!card || e.target.closest('a, button, input, select, textarea, label')) return;
   location.href = card.getAttribute('data-href');
 });
+
+/* 폼 AJAX 제출 공통 함수 */
+function submitAjaxForm(e) {
+    var redirectDelay = 500;
+    var errorMsg = '경기 등록 중 오류가 발생했습니다.';
+
+    e.preventDefault();
+
+    var $form = $(e.currentTarget);
+    var $submitBtn = $form.find('button[type="submit"]');
+
+    // 이미 제출 중이면 중단
+    if ($form.data('submitting')) return;
+
+    // 검증 실패 시 중단 (잠금 전에 확인)
+    //if (typeof formCheck === 'function' && !formCheck()) return;
+
+    $form.data('submitting', true);
+    $submitBtn.prop('disabled', true);
+
+    function unlock() {
+        $form.data('submitting', false);
+        $submitBtn.prop('disabled', false);
+    }
+
+    $.ajax({
+        url: $form.attr('action'),
+        type: 'POST',
+        data: new FormData($form[0]),
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function (res) {
+            if (res.success) {
+                showToast(res.message);
+                // 성공 시 잠금 유지한 채 이동
+                setTimeout(function () {
+                    location.href = res.redirectUrl;
+                }, redirectDelay);
+            } else {
+                showToast("서버와 통신에 실패하였습니다. 다시 시도하거나 관리자에게 문의하여 주세요");
+                unlock();
+            }
+        },
+        error: function (xhr) {
+            console.error(xhr.status, xhr.responseText);
+            showToast(errorMsg);
+            unlock();
+        }
+    });
+}
+
+
+

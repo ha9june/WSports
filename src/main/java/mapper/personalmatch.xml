@@ -348,10 +348,10 @@
 			AND m.status = #{status}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			AND p.applied_at &gt;= #{startDate}
+			AND m.match_date &gt;= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND p.applied_at &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+			AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
 		ORDER BY appliedAt DESC, m.personal_match_id DESC
 		LIMIT #{size} OFFSET
@@ -413,10 +413,10 @@
 			AND m.status = #{status}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			AND m.created_at &gt;= #{startDate}
+			AND m.match_date &gt;= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND m.created_at &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+			AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
 		ORDER BY m.created_at DESC, m.personal_match_id DESC
 		LIMIT #{size}
@@ -431,11 +431,11 @@
 		WHERE m.user_id = #{userId}
 		AND
 		coalesce(m.deleted, 0) = 0
-		<if test="sport != null and sport != ''">
-			AND m.sport = #{sport}
+		<if test="startDate != null and startDate != ''">
+			AND m.match_date &gt;= #{startDate}
 		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
+		<if test="endDate != null and endDate != ''">
+			AND m.match_date &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 		</if>
 		<if test="startDate != null and startDate != ''"> AND m.match_date &gt;= #{startDate} </if>
 		<if test="endDate != null and endDate != ''"> AND m.match_date &lt;= #{endDate} </if>
@@ -691,9 +691,11 @@
 		select
 		count(*)
 		from personal_match_participant p
-		where p.personal_match_id =
+		where
+		p.personal_match_id =
 		m.personal_match_id
-		and p.status = '결제완료') &lt; m.min_people
+		and p.status = '결제완료') &lt;
+		m.min_people
 	</select>
 	<!-- 스케줄러 : 최소 인원 미달 경기 취소 -->
 	<update id="updateStatusToUnderMinCancel" parameterType="Long">
@@ -714,17 +716,16 @@
 		m.personal_match_id, m.user_id, m.title
 		FROM personal_match m
 		WHERE
-		m.status = '모집중'
-		AND coalesce(m.deleted, 0) = 0
-		AND m.deadline &lt;=
-		NOW()
-		AND (
-		SELECT COUNT(*)
-		FROM personal_match_participant p
-		WHERE
-		p.personal_match_id = m.personal_match_id
-		AND p.status = '결제완료' ) &gt;=
-		m.min_people
+			m.status = '모집중'
+			AND coalesce(m.deleted, 0) = 0
+			AND m.deadline &lt;= NOW()
+			AND (
+				SELECT COUNT(*)
+				FROM personal_match_participant p
+				WHERE
+				p.personal_match_id = m.personal_match_id
+				AND p.status = '결제완료' 
+			) &gt;= m.min_people
 	</select>
 
 	<!--스케줄러 : 모집마감으로 업데이트 -->
@@ -732,13 +733,13 @@
 		update
 		personal_match
 		set
-		status = '모집중',
-		updated_at = now()
+			status = '모집 마감',
+			updated_at = now()
 		where
-		personal_match_id = #{personalMatchId}
-		and status = '모집 마감'
-		and
-		coalesce(deleted, 0) = 0
+			personal_match_id = #{personalMatchId}
+			and status = '모집중'
+			and
+			coalesce(deleted, 0) = 0
 	</update>
 
 	<!--스케줄러 : 모집 마강 이면서 경기 종료 시간이 된 경기 (정상 모집마감 경기) -->
@@ -747,12 +748,9 @@
 		personal_match_id, user_id, title, participation_fee, fee
 		FROM
 		personal_match
-		WHERE status = '모집
-		마감'
+		WHERE status = '모집 마감'
 		AND coalesce(deleted, 0) = 0
-		AND
-		TIMESTAMP(match_date, end_time)
-		&lt;= NOW();
+		AND TIMESTAMP(match_date, end_time) &lt;= NOW();
 	</select>
 	<!--스케줄러 : 경기 종료로 업데이트 -->
 	<update id="updateStatusToFinished" parameterType="Long">

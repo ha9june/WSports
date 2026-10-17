@@ -191,4 +191,25 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 			return sqlSession.selectList("mapper.teampenalty.selectTeamReviewTargets");
 		}
 	}
+
+	@Override
+	public List<Map<String, Object>> selectMypageTeamPenaltyList(Map<String, Object> param) throws Exception {
+		try (SqlSession s = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return s.selectList("mapper.teampenalty.selectMypageTeamPenaltyList", param);
+		}
+	}
+
+	@Override
+	public String selectMypageMyTeamNameIfMember(Map<String, Object> param) throws Exception {
+		try (SqlSession s = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return s.selectOne("mapper.teampenalty.selectMypageMyTeamNameIfMember", param);
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> selectMyTeamViceCaptains(Long teamId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectList("mapper.teampenalty.selectMyTeamViceCaptains", teamId);
+		}
+	}
 }

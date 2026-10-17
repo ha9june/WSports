@@ -12,8 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import dto.TeamMatch;
 import dto.User;
-import service.match.PersonalMatchService;
-import service.match.PersonalMatchServiceImpl;
 import service.match.TeamMatchService;
 import service.match.TeamMatchServiceImpl;
 import util.PageInfo;
