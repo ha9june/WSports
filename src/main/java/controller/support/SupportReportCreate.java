@@ -69,7 +69,7 @@ public class SupportReportCreate extends HttpServlet {
 		if (postType != null && !postType.isEmpty()) {
 			report.setPostType(postType);
 		}
-		if (postId != null && !postType.isEmpty()) {
+		if (postId != null && !postId.isEmpty()) {
 		    report.setPostId(Long.parseLong(postId));
 		}
 		

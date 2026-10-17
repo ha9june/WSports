@@ -12,7 +12,7 @@
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
-<div class="work-inner full" style="max-width:1000px">
+<div class="work-inner mp-body">
   <h1 class="section-title">개인 경기 정산</h1>
   <p class="section-desc">내가 만든 개인 경기의 참가비 정산 내역과 지급 상태를 확인하세요.</p>
   <div class="sum-bar">정산 예정<b class="brand"><fmt:formatNumber value="${summary.wait_amount}"/>원</b><span class="sep"></span>${summary.cur_month}월 지급 완료<b><fmt:formatNumber value="${summary.month_done_amount}"/>원</b><span class="sep"></span>누적 지급<b><fmt:formatNumber value="${summary.total_done_amount}"/>원</b>
@@ -47,8 +47,8 @@
           <div class="amt"><b class="brand"><fmt:formatNumber value="${total}" maxFractionDigits="0"/>원</b><%-- <span><fmt:formatNumber value="${total}"/>원 − 수수료 <fmt:formatNumber value="${feeAmt}" maxFractionDigits="0"/>원</span> --%></div>
           <div class="st">
           <c:choose>
-            <c:when test="${s.settlement_status eq '지급완료'}"><span class="pill pill-info">정산 완료</span><span>${s.settled_fmt} 지급 완료</span></c:when>
-            <c:otherwise><span class="pill pill-warning">정산 대기</span><span>${s.settled_fmt} 지급 예정</span></c:otherwise>
+            <c:when test="${s.settlement_status eq '지급완료'}"><span class="pill pill-info bd">정산 완료</span><span>${s.settled_fmt} 지급 완료</span></c:when>
+            <c:otherwise><span class="pill pill-warning bd">정산 대기</span><span>${s.settled_fmt} 지급 예정</span></c:otherwise>
       	  </c:choose>
         </div>
       </div>

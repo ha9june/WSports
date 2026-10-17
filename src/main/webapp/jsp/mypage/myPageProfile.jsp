@@ -10,7 +10,7 @@
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
 <%@ include file="/jsp/common/mypageSideBar.jsp" %>
-<div class="work-inner full pf-page">
+<div class="work-inner full pf-page mp-body">
 
   <div class="pf-head">
     <h1 class="section-title">내 프로필</h1>

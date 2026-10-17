@@ -66,7 +66,7 @@ $(function () {
 	});
 });
 </script>
-<form class="work-inner full info-page" action="${ctx}/member/mypage/view" method="post">
+<form class="work-inner full info-page mp-body" action="${ctx}/member/mypage/view" method="post">
   <h1 class="section-title">회원정보</h1>
   <p class="section-desc">회원정보와 정산 계좌를 확인할 수 있습니다.</p>
   <div class="form-grid">

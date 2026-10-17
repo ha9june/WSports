@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 </script>
-<form class="work-inner full pf-page" id="edit-wrap" action="${ctx}/member/profile/edit" method="post" enctype="multipart/form-data">
+<form class="work-inner full pf-page mp-body" id="edit-wrap" action="${ctx}/member/profile/edit" method="post" enctype="multipart/form-data">
 
   <div class="pf-head">
     <h1 class="section-title">내 프로필 수정</h1>

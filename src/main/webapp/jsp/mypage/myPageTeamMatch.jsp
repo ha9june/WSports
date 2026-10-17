@@ -191,7 +191,7 @@
 }
 
 .act-card {
-	margin-bottom: 16px;
+	margin-bottom: 10px;
 }
 
 .act-card .left {
@@ -231,23 +231,23 @@
 	justify-content: center;
 	height: 35px; /* 셀렉트 높이에 맞추세요 */
 	padding: 0 20px;
-	border: 1px solid #111; /* 얇은 검은 테두리 */
+	border: 1px solid #d1d5db; /* 얇은 검은 테두리 */
 	border-radius: 10px; /* 셀렉트와 같은 둥글기 */
 	background: #fff;
 	color: #111;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
 	text-decoration: none;
 	white-space: nowrap;
 	cursor: pointer;
+	transition: background .2s;	
 }
 
 .act-filters .btn-reset:hover {
-	background: #111;
-	color: #fff;
+	background: #f3f4f6;
 }
 </style>
-<div class="work-inner full" style="max-width: 1000px">
+<div class="work-inner full mp-body">
 	<h1 class="section-title">팀 경기</h1>
 	<p class="section-desc">내 팀의 경기를 종목, 상태와 월별 달력으로 확인하세요.</p>
 	<form class="act-filters" method="get" id="periodForm">

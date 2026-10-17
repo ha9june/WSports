@@ -21,7 +21,7 @@
 }
 
 </style>
-<div class="work-inner" style="width: 860px">
+<div class="work-inner mp-body">
 	<h1 class="section-title">내 후기</h1>
 	<p class="section-desc">내가 작성한 후기와 연결된 경기를 확인하고 수정하거나 삭제할 수 있어요.</p>
 
@@ -40,21 +40,40 @@
 			style="cursor: pointer;"
 			onclick="if(event.target.tagName !== 'BUTTON' && event.target.tagName !== 'A') location.href=this.dataset.href;">
 
-			<div>
-				<p class="cat">
-					<c:out value="${r.sport}" />
-				</p>
+			<div class="mr-art">
+				<c:choose>
+					<c:when test="${r.sport eq '축구/풋살'}">
+						<img src="${ctx}/img/art-football.png" alt="축구/풋살">
+					</c:when>
+					<c:when test="${r.sport eq '농구'}">
+						<img src="${ctx}/img/art-basketball.png" alt="농구">
+					</c:when>
+					<c:when test="${r.sport eq '테니스'}">
+						<img src="${ctx}/img/art-tennis.png" alt="테니스">
+					</c:when>
+					<c:when test="${r.sport eq '배드민턴'}">
+						<img src="${ctx}/img/art-badminton.png" alt="배드민턴">
+					</c:when>
+					<c:otherwise>
+						<img src="${ctx}/img/match-default.png" alt="">
+					</c:otherwise>
+				</c:choose>
+			</div>
+
+			<div class="mr-main">
 				<strong><c:out value="${r.title}" /></strong>
-				<p style="color: #1a6bff;">
-					연결 경기 · <span style="color: #1a6bff;"><c:out value="${r.matchTitle}" /></span>
+				<p class="mr-link">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
+					<span>연결 경기 · <c:out value="${r.matchTitle}" /></span>
 				</p>
-				<%-- 내용 <p> 삭제 --%>
-				<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount} &nbsp;
-					댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
+				<p class="mr-meta">
+					<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>${empty r.likeCount ? 0 : r.likeCount}</span>
+					<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l2-5.2A8.4 8.4 0 0 1 3 11.5 8.5 8.5 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5z"/></svg>댓글 ${empty r.commentCount ? 0 : r.commentCount}</span>
+				</p>
 			</div>
 
 			<div class="aside">
-				<p style="align-self:margin:5px; position: relative; top:0px;">${r.createdAt} &nbsp;</p>
+				<time>${r.createdAt}</time>
 				<a class="btn btn-primary btn-sm"
 					href="${ctx}/review/edit?reviewId=${r.reviewId}">수정</a>
 				<button type="button"

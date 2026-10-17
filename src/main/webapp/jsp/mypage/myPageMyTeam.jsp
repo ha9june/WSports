@@ -213,7 +213,7 @@
 }
 </style>
 
-<div class="work-inner" style="width: 100%; max-width: 1000px;">
+<div class="work-inner mp-body">
 	<h1 class="section-title">내 팀</h1>
 	<p class="section-desc">${state eq 'applications' ? '가입 신청 현황을 확인하고 대기 중인 신청을 취소할 수 있어요.' : '가입한 팀을 확인하고 팀별 역할에 따라 관리하세요.'}</p>
 
@@ -230,7 +230,7 @@
 		<%-- ① 가입 신청 탭 --%>
 		<c:when test="${state eq 'applications'}">
 			<div class="myteam-grid"
-				style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
+				style="display: grid; grid-template-columns: repeat(2, 1fr); row-gap: 10px; column-gap: 16px; width: 100%;">
 				<c:if test="${empty match}">
 					<p
 						style="grid-column: span 2; text-align: center; color: #9ca3af; padding: 40px 0;">신청
@@ -317,7 +317,7 @@
 		<%-- ② 가입한 팀 탭 --%>
 		<c:otherwise>
 			<div class="myteam-grid"
-				style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
+				style="display: grid; grid-template-columns: repeat(2, 1fr); row-gap: 10px; column-gap: 16px; width: 100%;">
 				<c:if test="${empty match}">
 					<p
 						style="grid-column: span 2; text-align: center; color: #9ca3af; padding: 40px 0;">가입한
