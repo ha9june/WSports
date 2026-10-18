@@ -323,7 +323,7 @@ document.addEventListener('click', function (e) {
 
 /* 폼 AJAX 제출 공통 함수 */
 function submitAjaxForm(e) {
-    var redirectDelay = 500;
+    var redirectDelay = 0;
     var errorMsg = '경기 등록 중 오류가 발생했습니다.';
 
     e.preventDefault();

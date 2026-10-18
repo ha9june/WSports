@@ -15,9 +15,9 @@
 		FROM personal_match
 		m
 		LEFT JOIN
-		personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
+			personal_match_participant p
+			ON m.personal_match_id = p.personal_match_id
+			AND p.status = '결제완료'
 		LEFT JOIN favorite f
 		ON f.match_id =
 		m.personal_match_id
@@ -75,8 +75,8 @@
 		FROM personal_match
 		m
 		LEFT JOIN personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
+			ON m.personal_match_id = p.personal_match_id
+			AND p.status = '결제완료'
 		LEFT JOIN favorite f
 		ON f.match_id =
 		m.personal_match_id
@@ -109,11 +109,9 @@
 		END AS favorite
 		FROM personal_match
 		m
-		LEFT JOIN
-		personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
-		AND p.status = '결제완료'
+		LEFT JOIN personal_match_participant p
+			ON m.personal_match_id = p.personal_match_id
+			AND p.status = '결제완료'
 		LEFT JOIN favorite f
 		ON
 		f.match_id = m.personal_match_id
@@ -224,10 +222,9 @@
 		END AS favorite
 		FROM personal_match
 		m
-		LEFT JOIN
-		personal_match_participant p
-		ON m.personal_match_id =
-		p.personal_match_id
+		LEFT JOIN personal_match_participant p
+			ON m.personal_match_id = p.personal_match_id
+			AND p.status = '결제완료'
 		LEFT JOIN favorite f
 		ON f.match_id =
 		m.personal_match_id
