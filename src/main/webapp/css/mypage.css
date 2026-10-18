@@ -481,3 +481,105 @@ body .act-card .left img { width: 64px; height: 64px; object-fit: contain; trans
 .pen-table td { padding-top: 14px; padding-bottom: 14px; }
 .pen-date b { font-size: 13px; font-weight: 500; }
 .pen-date span { margin-top: 2px; }
+
+/* =========================================================
+   사용자 공개 프로필 · 공지사항 : 경기 상세 기준으로 여백·글자 크기 통일
+   (userProfileInfo / noticeList / noticeDetail)
+   - 마이페이지 화면(.work-inner)에는 영향이 없도록
+     공개 프로필은 .container > .pf-page, 공지사항은 .rail 안으로만 범위를 좁혔습니다.
+   ========================================================= */ 
+/* ---------- 공지사항 목록 ---------- */
+.rail > .page-head { margin-bottom: 28px; }
+.rail > .page-head .page-title,
+.rail > .page-head .page-title.lg { font-size: 26px; }
+.rail > .page-head .page-desc { font-size: 13px; }
+
+body .rail .notice-seg { gap: 10px; }
+body .rail .seg.pill.neutral.notice-seg .seg-item { height: 30px; min-width: 76px; padding: 0 14px; justify-content: center; border-radius: 15px; border: 1px solid var(--ds-border); background: #fff; font-size: 12px; font-weight: 500; color: var(--ds-text); }
+body .rail .seg.pill.neutral.notice-seg .seg-item.is-active { background: var(--ds-brand-subtle); border-color: var(--ds-brand); color: var(--ds-brand); font-weight: 500; }
+body .rail .seg.pill.neutral.notice-seg .seg-item:not(.is-active):hover { background: #f1f5f9; border-color: var(--ds-border); color: var(--ds-text); }
+
+.rail .notice-find .input { font-size: 14px; }
+.rail .notice-find .btn { font-size: 14px; }
+.rail > .sub-title { font-size: 17px; }
+.rail .row-list { gap: 10px; }
+.rail .row-card { padding: 18px 24px; border-radius: var(--r-12); }
+.rail .row-card .title { font-size: 15px; }
+.rail .row-card .meta { margin-top: 6px; font-size: 12px; }
+.rail .row-card .pill { height: 28px; font-size: 12px; }
+ 
+/* ---------- 공지사항 상세 ---------- */
+.rail > .breadcrumb { margin-bottom: 16px; }
+.ntd-pill { margin-top: 8px; font-size: 12px; }
+.ntd-title { margin-top: 12px; font-size: 26px; line-height: 1.35; font-weight: 700; }
+.ntd-author { margin-top: 16px; }
+.ntd-author-info b { font-size: 14px; }
+.ntd-author-info small { font-size: 12px; }
+.ntd-card { margin-top: 24px; padding: 24px 28px; border-radius: var(--r-12); }
+.ntd-content { font-size: 15px; line-height: 1.7; }
+.ntd-actions { margin-top: 20px; }
+.ntd-list-btn { margin-top: 28px; }
+.ntd-list-btn .btn { height: 44px; font-size: 14px; }
+
+/* 공지 상세 '목록으로': 신고 상세처럼 오른쪽 끝 + 흰 테두리 버튼 + ‹ 화살표 */
+body .ntd-list-btn { justify-content: flex-end; margin-top: 24px; }
+body .ntd-list-btn .btn { display: inline-flex; align-items: center; gap: 8px; min-width: 0; height: 40px; padding: 0 22px; border: 1px solid var(--ds-border); background: #fff; color: var(--ds-text); font-size: 14px; font-weight: 500; }
+body .ntd-list-btn .btn:hover { background: #f8fafc; border-color: #c8ced3; }
+body .ntd-list-btn .btn::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 0 1.5px 1.5px; transform: translateX(2px) rotate(45deg); }
+
+/* 공지사항 검색창 + 검색 버튼: 분류 탭(30px)과 어울리게 36px로 축소 */
+body .rail .notice-seg { height: 36px; }
+body .rail .notice-find .input { width: 240px; height: 36px; padding: 0 14px; font-size: 13px; }
+body .rail .notice-find .btn { height: 36px; padding: 0 18px; font-size: 13px; font-weight: 500; }
+
+/* 공지 상세: 수정/삭제 버튼 크기 키우기 (btn-sm 32px → 40px) */
+body .ntd-actions .btn { height: 40px; min-width: 80px; padding: 0 20px; font-size: 14px; font-weight: 500; }
+body .ntd-actions .btn-group { gap: 10px; }
+
+/* ---------- 사용자 공개 프로필 (참가자 프로필 · 경기 후 관리 화면 기준) ---------- */
+/* 본문 폭 744px 가운데 (match.css 의 .narrow-rail 과 동일) */
+.container.narrow-rail > * { width: 744px; max-width: 100%; margin-left: auto; margin-right: auto; }
+
+/* 머리: 브레드크럼 16px 간격 / 제목 26px / 설명 13px */
+.container.narrow-rail > .breadcrumb { margin-bottom: 16px; }
+.narrow-rail > .pf-page { gap: 20px; }
+.narrow-rail > .pf-page .pf-head { margin-bottom: 8px; }
+.narrow-rail > .pf-page .pf-head .section-title { font-size: 26px; line-height: 1.3; font-weight: 700; }
+.narrow-rail > .pf-page .pf-head .section-desc { margin-top: 8px; font-size: 13px; }
+
+/* 카드: postgame-card 와 같은 패딩·모서리 / 카드 제목 17px */
+.narrow-rail > .pf-page .pf-card { padding: 22px 28px 28px; border-radius: var(--r-12); }
+.narrow-rail > .pf-page .pf-card > .sub-title { font-size: 17px; }
+
+/* 프로필(사진 + 한 줄 소개) */
+.narrow-rail > .pf-page .pf-intro { gap: 16px; margin-top: 16px; }
+.narrow-rail > .pf-page .avatar.lg { width: 64px; height: 64px; }
+.narrow-rail > .pf-page .pf-intro-label { font-size: 13px; }
+.narrow-rail > .pf-page .pf-bio { font-size: 14px; }
+.narrow-rail > .pf-page .pf-bio.is-empty { font-size: 13px; }
+
+/* 활동 정보: 라벨 13px / 값 14px (eval-row 기준) */
+.narrow-rail > .pf-page .pf-rows { margin-bottom: -28px; }
+.narrow-rail > .pf-page .pf-row { grid-template-columns: 96px 1fr; min-height: 52px; padding: 14px 0; }
+.narrow-rail > .pf-page .pf-row dt { font-size: 13px; }
+.narrow-rail > .pf-page .pf-row dd { font-size: 14px; gap: 6px 8px; }
+.narrow-rail > .pf-page .pf-empty-text { font-size: 12px; }
+.narrow-rail > .pf-page .pf-row dd .pill { height: 28px; padding: 0 12px; font-size: 12px; }
+.narrow-rail > .pf-page .team-inline { font-size: 14px; gap: 8px; margin-right: 8px; }
+.narrow-rail > .pf-page .team-inline img { width: 22px; height: 22px; }
+.narrow-rail > .pf-page .stars { font-size: 16px; }
+
+/* 종목별 프로필: 744px 안에 4칸 */
+.narrow-rail > .pf-page .pf-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.narrow-rail > .pf-page .pf-tile { padding: 14px 16px; }
+.narrow-rail > .pf-page .pf-tile small { font-size: 12px; }
+.narrow-rail > .pf-page .pf-tile b { font-size: 15px; }
+.narrow-rail > .pf-page .pf-tile.is-empty b { font-size: 13px; }
+
+/* 회원 신고 버튼: 경기 후 관리 '정보 수정' 버튼과 같은 크기 */
+.narrow-rail > .pf-page .form-actions { margin-top: 4px; padding-bottom: 0; }
+.narrow-rail > .pf-page .form-actions .btn { min-width: 120px; height: 44px; padding: 0 20px; font-size: 14px; }
+
+@media (max-width: 800px) {
+  .narrow-rail > .pf-page .pf-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

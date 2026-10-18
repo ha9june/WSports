@@ -19,7 +19,7 @@
 <%@ include file="/jsp/common/header.jsp" %>
 
 <main class="page">
-  <div class="container">
+  <div class="container narrow-rail">
     <nav class="breadcrumb"><span>${isHost ? '내 경기' : '참가 경기'}</span><span class="sep">›</span><span>경기 후 관리</span></nav>
     <div class="page-head">
       <h1 class="page-title">경기 후 관리</h1>

@@ -14,7 +14,7 @@
 </style>
 
 <main class="page">
-  <div class="container">
+  <div class="container narrow-rail">
     <nav class="breadcrumb"><span>사용자 프로필</span></nav>
 
     <div class="pf-page">

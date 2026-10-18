@@ -119,11 +119,8 @@
 						      	`+esc(item.title)+`
 						      </p>
 						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
-				                `+FormatDate(item.matchDate, item.startTime)+`
+						      <span class="txt">`+FormatDate(item.matchDate, item.startTime)+`
 						      `+esc(item.region)+`
-						      </p>
-						      <p class="price">
-						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
 						      </p>
 						    </div>
 						    <p class="count">
@@ -131,6 +128,9 @@
 						    <small>/ 정원 
 						    `+item.maxPeople+`
 						    명</small></p>
+						    <p class="price">
+					      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
+					        </p>
 						    <div class="bar"><i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i></div>
 						  </a>
 			            `;
