@@ -13,7 +13,7 @@
 <c:set var="curEnd" value="${fn:substring(personalMatch.endTime, 0, 5)}" />
 
 <main class="page">
-<form id="editForm" class="form-rail" action="${ctx}/match/edit/form" method="post" enctype="multipart/form-data">
+<form id="editForm" class="form-rail match-form" action="${ctx}/match/edit/form" method="post" enctype="multipart/form-data">
   <input type="hidden" name="personalMatchId" value="${personalMatch.personalMatchId}">
 
   <nav class="breadcrumb"><a href="${ctx}/mypage/matches/created">내 경기</a><span class="sep">›</span><span>만든 경기</span><span class="sep">›</span><span>경기 수정</span></nav>

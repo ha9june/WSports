@@ -234,7 +234,7 @@
 	            			<small>최소 진행 ${personalMatch.minPeople }명 · 충족 ✓</small>
 	            		</c:when>
 	            		<c:otherwise>
-	            			<small style="color:red;">최소 진행 ${personalMatch.minPeople }명 · 미충족</small>
+	            			<small style="color:var(--ds-danger-fg);">최소 진행 ${personalMatch.minPeople }명 · 미충족</small>
 	            		</c:otherwise>
 	            	</c:choose>
 	           	</dd>

@@ -6,19 +6,18 @@
 /* ---------- 상세 상단 ---------- */
 
 /*인기경기,인기경기,마감임박,신규모집 마우스 변경  */
-.feature-tabs .btnGroup1 {
+.feature-tabs .btnGroup1,
+.search-mode .btnGroup2 {
   cursor: pointer;
   user-select: none;
 }
-.feature-tabs .btnGroup1:hover {
-  /* 사이트 색에 맞게 */
+
+/* 선택 안 된 탭만 hover 시 회색 */
+.feature-tabs .btnGroup1:not(.is-active):hover,
+.search-mode .btnGroup2:not(.is-active):hover {
   background: #f1f5f9;
 }
-.feature-tabs .btnGroup1.is-active:hover {
-  /* active 탭은 hover해도 기존 색 유지 */
-  background: inherit;
-  color: inherit;
-}
+
 /*검색창  */
 .search-shell .picked {
     display: flex;
@@ -164,8 +163,8 @@
 .info-card .info-row { grid-template-columns: 96px 1fr; font-size: 13px; }
 .info-card .info-row dd small { display: block; margin-top: 4px; font-size: 10px; color: var(--ds-brand); font-weight: 500; }
 .info-card .desc { border-top: 1px solid var(--ds-border); margin-top: 28px; padding-top: 22px; }
-.info-card .desc h3 { font-size: 13px; font-weight: 400; color: var(--ds-text-2); margin-bottom: 10px; }
-.info-card .desc p { font-size: 13px; color: var(--ds-text); line-height: 1.7; }
+.info-card .desc h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.info-card .desc p { font-size: 12px; color: var(--ds-text-2); line-height: 1.7; }
 .detail-actions { display: flex; gap: 12px; }
 
 /* ---------- 우측 패널 ---------- */
@@ -225,3 +224,162 @@
 .pill.pill-lg.bd.pill-info    { border: 1px solid var(--ds-info-bd); }
 .pill.pill-lg.bd.pill-danger  { border: 1px solid var(--ds-danger-bd); }
 .pill.pill-lg.bd.pill-neutral { border: 1px solid var(--ds-border); }
+
+/* =========================================================
+   경기 상세 : 경기 찾기(리스트) 기준으로 여백·글자 크기 통일
+   ========================================================= */
+/* 상단 */
+.breadcrumb:empty { display: none; }
+.detail-top h1 { font-size: 26px; }
+.detail-top .title-row { margin-top: 14px; }
+.host-inline { margin-top: 16px; }
+.host-inline a strong { font-size: 14px; }
+.host-inline small { font-size: 12px; }
+
+/* 2단 레이아웃 */
+.detail-grid { margin-top: 28px; }
+.detail-main { gap: 20px; }
+
+/* 경기 정보 카드 */
+.info-card { padding: 24px 28px; }
+.info-card h2 { font-size: 17px; margin-bottom: 22px; }
+.info-card .info-list { gap: 18px; }
+.info-card .info-row { grid-template-columns: 100px 1fr; font-size: 14px; }
+.info-card .info-row dt { font-size: 13px; }
+.info-card .info-row dd small { font-size: 12px; margin-top: 6px; }
+.info-card .desc { margin-top: 24px; padding-top: 20px; }
+.info-card .desc h3 { font-size: 14px; }
+.info-card .desc p { font-size: 14px; line-height: 1.7; white-space: pre-line; }
+
+/* 경기 위치 카드 */
+.map-card .head strong { font-size: 17px; }
+.map-card .head span { font-size: 13px; }
+
+/* 오른쪽 카드 */
+.side-card { padding: 22px 22px 24px; }
+.side-card h2 { font-size: 17px; }
+.side-card .sub { font-size: 13px; }
+.side-card .kv { font-size: 13px; margin-top: 14px; }
+.side-card .kv b { font-size: 15px; }
+.side-card .kv b.lg { font-size: 17px; }
+.side-card .note { font-size: 12px; }
+.side-card .status-title { font-size: 17px; }
+.side-card .actions { margin-top: 20px; }
+
+/* =========================================================
+   경기 만들기 / 경기 수정 : 경기 상세 기준으로 여백·글자 크기 통일
+   ========================================================= */
+/* 상단 */
+.match-form .page-title { font-size: 26px; }
+.match-form .page-desc { font-size: 13px; margin-top: 8px; }
+.match-form .page-head { margin-bottom: 28px; }
+
+/* 섹션 */
+.match-form .form-section { margin-top: 40px; }
+.match-form .form-section:first-child { margin-top: 0; }
+.match-form .form-section > .sub-title { font-size: 17px; margin-bottom: 18px; }
+.match-form .form-section > .section-desc { font-size: 13px; margin: -10px 0 18px; }
+.match-form .form-section > .field + .field,
+.match-form .form-section > .field + .form-row,
+.match-form .form-section > .form-row + .field,
+.match-form .form-section > .form-row + .form-row { margin-top: 20px; }
+
+/* 항목명 / 힌트 / 도움말 */
+.match-form .form-section .field-label.strong { font-size: 13px; font-weight: 500; color: var(--ds-text); }
+.match-form .hint-gray { font-size: 12px; }
+.match-form .field-help { font-size: 12px; }
+
+/* 입력칸 / 칩 */
+.match-form .input,
+.match-form .select,
+.match-form .textarea { font-size: 14px; }
+.match-form .time-range > span { font-size: 14px; color: var(--ds-text-2); }
+.match-form .chip { height: 34px; padding: 0 16px; font-size: 13px; }
+.match-form .textarea { line-height: 1.7; }
+
+/* 사진 */
+.match-form .photo-add { font-size: 13px; }
+.match-form .photo-preview { font-size: 12px; }
+
+/* 하단 버튼 (수정: 취소 + 수정하기 / 등록: 등록하기) */
+.match-form .form-actions { margin-top: 40px; gap: 8px; }
+.match-form .form-actions .btn { min-width: 120px; height: 44px; font-size: 14px; }
+
+/* =========================================================
+   경기 후 관리 · 참가자 프로필 : 경기 상세 기준으로 여백·글자 크기 통일
+   (personalMatchAfterProfileList / ...Edit / personalMatchProfileList)
+   - 페이지 제목 26px / 카드 제목 17px / 본문 14px / 보조 글자 최소 12px
+   - JSP 안의 <style> 보다 우선하도록 선택자 앞에 body 를 붙였습니다.
+   ========================================================= */
+/* 페이지 머리 */
+body .container > .breadcrumb { margin-bottom: 16px; }
+body .container > .page-head { margin-bottom: 28px; }
+body .container > .page-head .page-title { font-size: 26px; }
+ 
+/* 안내 띠 */
+body .info-banner { padding: 16px 20px; font-size: 13px; margin-bottom: 20px; }
+body .info-banner small { font-size: 12px; margin-top: 4px; }
+ 
+/* 카드 */
+body .postgame-card { padding: 22px 28px 28px; border-radius: var(--r-12); background: #fff; }
+body .postgame-card .t-11 { font-size: 12px; }
+body .postgame-card .form-actions .btn { min-width: 120px; height: 44px; font-size: 14px; }
+ 
+/* 경기 요약 박스 (경기 후 관리 · 참가자 프로필 공통) */
+body .match-summary { padding: 20px 24px; border-radius: var(--r-12); }
+body .match-summary .tags { gap: 8px; font-size: 12px; }
+body .match-summary .tags .sport-chip { height: 28px; padding: 0 14px; font-size: 12px; }
+body .match-summary .tags .pill { height: 28px; font-size: 12px; }
+body .match-summary strong,
+body .match-summary > div:first-of-type strong { display: block; margin: 10px 0 0; font-size: 17px; line-height: 1.4; }
+body .match-summary .meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 8px; font-size: 13px; color: var(--ds-text-2); }
+body .match-summary .meta span { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+body .match-summary .meta span img { width: 14px; height: 14px; flex: none; }
+body .match-summary .target { font-size: 12px; }
+body .match-summary .target b { font-size: 22px; margin-top: 4px; }
+body .match-summary .target small { display: block; margin-top: 2px; font-size: 12px; }
+ 
+/* 출석 · 평가 */
+body .eval-head { margin: 24px 0 8px; padding-top: 22px; }
+body .eval-head h3 { font-size: 17px; }
+body .eval-head p { margin-top: 6px; font-size: 13px; }
+body .eval-row { grid-template-columns: 200px 200px 1fr; gap: 16px; padding: 14px 4px; }
+body .eval-row .who { gap: 12px; font-size: 14px; }
+body .eval-row .who .avatar.sm { width: 36px; height: 36px; }
+body .eval-row .who small { margin-top: 2px; font-size: 12px; }
+body .att-toggle .chip { width: 72px; height: 32px; font-size: 12px; }
+body .star-input button { font-size: 24px; }
+body .star-input .score { font-size: 14px; min-width: 24px; }
+body .eval-row .rating { font-size: 14px; }
+body .postgame-card .eval-row .att-view .pill,
+body .postgame-card .att-toggle .chip { display: inline-flex; align-items: center; justify-content: center; width: 72px; height: 32px; padding: 0; box-sizing: border-box; font-size: 12px; font-weight: 500; }
+body .postgame-card .att-toggle { gap: 8px; }
+ 
+/* 참가자 프로필 목록 */
+body .match-summary { margin-bottom: 20px; }
+body .match-summary .match-detail-link { top: 20px; right: 24px; font-size: 13px; font-weight: 500; }
+body .match-summary .target { margin-top: 24px; }
+body .people-grid { gap: 12px 16px; }
+body .person-row { gap: 12px; padding: 14px 18px; border-radius: var(--r-12); }
+body .person-row .avatar,
+body .person-row .avatar.sm { width: 40px; height: 40px; }
+body .person-row .info strong { font-size: 14px; margin-bottom: 2px; }
+body .person-row .info .meta { font-size: 12px; }
+
+/* =========================================================
+   경기 후 관리 · 참가자 프로필 : 본문 폭을 경기 만들기와 같게 (744px 가운데)
+   ========================================================= */
+.container.narrow-rail > * {
+  width: 744px;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* 참가자 목록: 744px 안에 3칸 (칸이 좁으니 여백·사진을 줄이고 넘치는 글자는 … 처리) */
+body .narrow-rail .people-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 12px; }
+body .narrow-rail .person-row { gap: 10px; padding: 12px 14px; min-width: 0; }
+body .narrow-rail .person-row .avatar,
+body .narrow-rail .person-row .avatar.sm { width: 34px; height: 34px; flex: none; }
+body .narrow-rail .person-row .info { flex: 1; min-width: 0; }
+body .narrow-rail .person-row .info strong,
+body .narrow-rail .person-row .info .meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
