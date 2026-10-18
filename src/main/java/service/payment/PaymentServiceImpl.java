@@ -547,18 +547,24 @@ public class PaymentServiceImpl implements PaymentService {
 					
 					PersonalMatchParticipantService pmpService = new PersonalMatchParticipantServiceImpl();
 					pmpService.updateParticipantCancel(pmp);
-					
+
+					//알람 다르게 처리
+					//호스트 알림
 					try {
 						Notification alarm = new Notification();
-						alarm.setUserId(((Number) target.get("user_id")).longValue());
-						alarm.setTitle("참가비 환불 완료");
-						alarm.setContent("'" + title + "' 경기가 최소 인원을 채우지 못해 취소되어 경기가 취소 되었습니다.");
+						PersonalMatchService pmService = new PersonalMatchServiceImpl();
+						
+						PersonalMatch pm = new PersonalMatch();
+						pm.setPersonalMatchId(matchId);
+						PersonalMatch personalMatch = pmService.getPersonalMatchDetail(pm);
+						alarm.setUserId(personalMatch.getUserId());
+						alarm.setTitle("모집 인원 미달 취소");
+						alarm.setContent("'" + title + "' 경기가 최소 인원을 채우지 못해 취소되었습니다.");
 						alarm.setLink("/match/detail/view?personalMatchId=" + matchId);
 						notificationService.sendNotification(alarm);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-
 					continue;
 				}
 				

@@ -5,25 +5,27 @@
 
 /* ---------- 지금 볼 만한 경기 ---------- */
 .feature-tabs { display: flex; gap: 10px; margin: 20px 0 18px; }
-.feature-tabs a { height: 30px; min-width: 88px; padding: 0 16px; border-radius: 15px; border: 1px solid var(--ds-border); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
-.feature-tabs a.is-active { background: var(--ds-brand-subtle); border-color: var(--ds-brand-subtle); color: var(--ds-brand); font-weight: 500; }
+.feature-tabs a { height: 30px; min-width: 88px; padding: 0 16px; border-radius: 15px; border: 1px solid var(--ds-border); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--ds-text); }
+.feature-tabs a.is-active,
+.search-mode a.is-active { background: var(--ds-brand-subtle); border-color: var(--ds-brand); color: var(--ds-brand); font-weight: 500; }
 
 .feature-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-.match-card { position: relative; display: block; height: 296px; padding: 0 15px; border: 1px solid var(--ds-border); border-radius: var(--r-16); background: #fff; overflow: hidden; transition: border-color .15s, box-shadow .15s; }
+.match-card { position: relative; display: block; height: 270px; padding: 0 15px; border: 1px solid var(--ds-border); border-radius: var(--r-16); background: #fff; overflow: hidden; transition: border-color .15s, box-shadow .15s; }
 .match-card:hover { border-color: #c8ced3; box-shadow: 0 6px 18px rgba(17,28,54,.06); }
 .match-card .art { position: absolute; left: -10px; top: -12px; width: 150px; height: 150px; object-fit: contain; }
 .match-card .sport-tag { position: absolute; left: 127px; top: 23px; }
 .match-card .fav-btn { position: absolute; right: 14px; top: 20px; }
-.match-card .signal { position: absolute; left: 127px; top: 92px; display: inline-flex; align-items: center; gap: 4px; height: 17px; padding: 0 7px; border-radius: 999px; border: 1px solid var(--ds-accent); background: var(--ds-accent-subtle); color: var(--ds-accent-strong); font-size: 10px; }
-.match-card .signal img { width: 11px; height: 11px; }
+.match-card .signal { position: absolute; left: 127px; top: 92px; display: inline-flex; align-items: center; gap: 4px; height: 17px; padding: 0 7px; border-radius: 999px; border: 1px solid var(--ds-accent); background: var(--ds-accent-subtle); color: var(--ds-accent-strong); font-size: 11px; }
+.match-card .signal img { width: 12px; height: 12px; }
 .match-card .body { position: absolute; left: 15px; right: 15px; top: 138px; }
-.match-card .title { font-size: 15px; font-weight: 700; line-height: 1.35; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.match-card .when { display: flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 11px; font-weight: 700; color: #6b6f75; }
-.match-card .when img { width: 12px; height: 12px; }
-.match-card .price { margin-top: 14px; font-size: 12px; }
-.match-card .count { position: absolute; left: 15px; top: 230px; font-size: 16px; font-weight: 700; }
+.match-card .title { font-size: 16px; font-weight: 700; line-height: 1.35; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.match-card .when { display: flex; align-items: center; gap: 5px; margin-top: 14px; font-size: 12px; font-weight: 700; color: #6b6f75; min-width: 0; }
+.match-card .when img { width: 14px; height: 14px; flex: none; }
+.match-card .when .txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.match-card .price { position: absolute; right: 15px; top: 204px; margin: 0; font-size: 17px; font-weight: 700; color: var(--ds-text); line-height: 1.5; }
+.match-card .count { position: absolute; left: 15px; top: 206px; font-size: 17px; font-weight: 700; }
 .match-card .count small { font-size: 12px; font-weight: 500; color: var(--ds-text-2); margin-left: 4px; }
-.match-card .bar { position: absolute; left: 15px; right: 15px; top: 262px; height: 6px; border-radius: 3px; background: #e9ecef; }
+.match-card .bar { position: absolute; left: 15px; right: 15px; top: 240px; height: 6px; border-radius: 3px; background: #e9ecef; }
 .match-card .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; }
 .match-card .bar i::after { content: ''; position: absolute; right: -1px; top: -3px; width: 2px; height: 12px; background: var(--ds-ink); }
 .match-card.football .bar i { background: var(--sport-football-bar); }
@@ -32,12 +34,11 @@
 .match-card.badminton .bar i { background: var(--sport-badminton-bar); }
 
 /* ---------- 검색 영역 ---------- */
-.search-intro { margin-top: 52px; }
+.search-intro { margin-top: 40px; }
 .search-intro h2 { font-size: 28px; font-weight: 700; }
 .search-intro p { margin-top: 8px; font-size: 13px; color: var(--ds-text-2); }
 .search-mode { display: flex; gap: 16px; margin: 18px 0 16px; }
 .search-mode a { height: 32px; padding: 0 16px; border-radius: 16px; border: 1px solid var(--ds-border); font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; }
-.search-mode a.is-active { background: var(--ds-brand-subtle); border-color: var(--ds-brand-subtle); color: var(--ds-brand); }
 
 .search-shell { position: relative; border: 1px solid var(--ds-border-subtle); border-radius: var(--r-12); background: #fff; padding: 16px 20px 18px; }
 .search-shell .filter-row { display: flex; align-items: center; justify-content: space-between; }
@@ -47,7 +48,7 @@
 
 /* .filter-more .count { position: absolute; left: 112px; top: 6px; width: 24px; height: 20px; border-radius: 8px; background: var(--ds-brand-subtle); color: var(--ds-brand); font-size: 11px; display: flex; align-items: center; justify-content: center; } */
 .filter-more .count {}
-.filter-more .count-dot{ margin-left:5px; padding:5px; border-radius: 8px; background: var(--ds-brand-subtle); color: var(--ds-brand); font-size: 11px;align-items: center; justify-content: center;}
+.filter-more .count-dot{ margin-left:5px; padding:5px; border-radius: 8px; background: var(--ds-brand-subtle); color: var(--ds-brand); font-size: 11px;align-items: center; justify-content: center; }
 .filter-panel { position: absolute; top: 40px; left: 0; z-index: 30; width: 420px; padding: 16px; display: none; flex-direction: column; gap: 8px; background: #fff; border: 1px solid var(--ds-border); border-radius: var(--r-8); box-shadow: var(--shadow-pop); }
 .filter-more.is-open .filter-panel { display: flex; }
 .btn-reset { height: 24px; padding: 0 13px; border-radius: 12px; background: #f6f8f7; color: var(--ds-text-3); font-size: 11px; font-weight: 500; }
@@ -71,20 +72,20 @@
 .search-dropdown .all { color: var(--ds-brand); font-weight: 500; font-size: 12px; }
 
 /* ---------- 경기 리스트 행 ---------- */
-.list-head { margin: 52px 0 24px; }
+.list-head { margin: 40px 0 16px; }
 .match-rows { display: flex; flex-direction: column; gap: 8px; }
 .match-row { display: flex; align-items: center; gap: 24px; min-height: 126px; padding: 12px 28px; border: 1px solid #e0e5e3; border-radius: var(--r-16); background: #fff; transition: border-color .15s; }
 .match-row:hover { border-color: #c8ced3; }
-.match-row .left { width: 96px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.match-row .left .pill { width: 80px; height: 23px; }
-.match-row .left img { width: 75px; height: 56px; object-fit: contain; }
+.match-row .left { width: 110px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 8px; }
+.match-row .left .pill { width: 80px; height: 23px; font-size: 11px; }
+.match-row .left img { width: 72px; height: 60px; object-fit: contain; transform: scale(1.4); }
 .match-row .main { flex: 1; min-width: 0; }
 .match-row .title { font-size: 21px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .match-row .meta { display: flex; align-items: center; gap: 24px; margin-top: 10px; font-size: 14px; color: var(--ds-text-2); }
 .match-row .meta .it { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .match-row .meta .it img { width: 16px; height: 16px; }
 .match-row .meta .people { width: 188px; color: #161a18; }
-.match-row .meta .price { margin-left: auto; width: 90px; text-align: right; font-size: 16px; color: var(--ds-text); }
+.match-row .meta .price { margin-left: auto; width: 90px; text-align: right; font-size: 17px; font-weight: 700; color: var(--ds-text); }
 
 /* 컴팩트 행 (팀 경기 목록 · 마이페이지) */
 .match-row.compact { min-height: 0; padding: 14px 20px 14px 16px; gap: 20px; }

@@ -174,14 +174,14 @@
 						<div class="body">
 							<p class="title">${match.title}</p>
 							<p class="when">
-								<img src="${ctx}/img/icon-calendar-14.svg" alt="">${match.startTime}
-								· ${match.region}
+								<img src="${ctx}/img/icon-calendar-14.svg" alt="">
+								<span class="txt">${match.startTime} · ${match.region}</span>
 							</p>
-							<p class="price"><fmt:formatNumber value="${match.participationFee}" pattern="#,###" />원</p>
 						</div>
 						<p class="count">${match.currentPeople}명<small>/ 정원
 								${match.maxPeople}명</small>
 						</p>
+						<p class="price"><fmt:formatNumber value="${match.participationFee}" pattern="#,###" />원</p>
 						<div class="bar">
 							<i style="width:${match.currentPeople * 100 / match.maxPeople}%"></i>
 						</div>

@@ -19,7 +19,7 @@
 <c:url var="uPersonal" value="/payment/history/list"><c:param name="type" value="PERSONAL"/><c:param name="period" value="${period}"/><c:param name="keyword" value="${keyword}"/></c:url>
 <c:url var="uTeam" value="/payment/history/list"><c:param name="type" value="TEAM"/><c:param name="period" value="${period}"/><c:param name="keyword" value="${keyword}"/></c:url>
 
-<div class="work-inner full" style="max-width:1000px">
+<div class="work-inner mp-body">
 	<h1 class="section-title">결제 내역</h1>
 	<p class="section-desc">경기 참가비 결제와 환불 내역을 확인하고 영수증을 받을 수 있어요.</p>
 	<form class="list-toolbar" method="get" action="${ctx}/payment/history/list">
@@ -88,7 +88,7 @@
 
 	<%-- 페이지네이션 (status/type/period/keyword 유지) --%>
 	<c:if test="${pageInfo.totalCnt > 0}">
-    <nav class="pagination">
+    <nav class="pagination" style="display: flex; justify-content:center; padding:0px">
 
         <%-- 왼쪽 화살표: 이전 페이지 --%>
         <c:url var="uPrev" value="/payment/history/list">

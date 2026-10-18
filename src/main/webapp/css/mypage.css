@@ -27,6 +27,7 @@
 .act-filters .select { width: 155px; height: 36px; font-size: 12px; }
 .act-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .act-head b { font-size: 15px; }
+.act-head:empty { display: none; }
 .date-label { font-size: 12px; font-weight: 700; margin: 14px 0 8px; }
 .date-label span { font-weight: 400; color: var(--ds-text-2); }
 .act-card { display: flex; gap: 20px; align-items: center; padding: 14px 16px 14px 18px; border: 1px solid var(--ds-border); border-radius: var(--r-12); background: #fff; }
@@ -35,7 +36,7 @@
 .act-card .left img { width: 42px; height: 32px; object-fit: contain; }
 .act-card .main { flex: 1; min-width: 0; }
 .act-card .main strong { font-size: 16px; display: block; }
-.act-card .main .meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11px; color: var(--ds-text-2); margin-top: 8px; }
+.act-card .main .meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ds-text-2); margin-top: 8px; }
 .act-card .aside { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
 .act-card .aside .top { display: flex; align-items: center; gap: 10px; font-size: 13px; }
 .act-card .aside .btns { display: flex; gap: 6px; }
@@ -81,13 +82,21 @@
 .noti-item p { font-size: 10px; color: var(--ds-text-2); margin-top: 4px; }
 .noti-item time { position: absolute; right: 60px; top: 14px; font-size: 10px; color: var(--ds-text-2); }
 
-/* 내 후기 */
-.my-review { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 12px; border: 1px solid var(--ds-border); border-radius: var(--r-8); margin-bottom: 10px; }
-.my-review .cat { font-size: 9px; color: var(--ds-text-2); }
-.my-review strong { display: block; font-size: 14px; }
-.my-review p { font-size: 10px; color: var(--ds-text-2); }
-.my-review .aside { display: flex; align-items: center; gap: 12px; }
-.my-review time { font-size: 10px; color: var(--ds-text-2); margin-right: 40px; align-self: flex-start; }
+/* 내 후기 (참가 경기 카드 act-card 와 같은 틀: 아이콘 + 제목 / 연결 경기 / 좋아요·댓글) */
+.my-review { --act-art-scale: 1.25; display: flex; align-items: center; gap: 20px; padding: 14px 16px 14px 18px; border: 1px solid var(--ds-border); border-radius: var(--r-12); background: #fff; margin-bottom: 10px; }
+.my-review[data-href] { cursor: pointer; }
+.my-review[data-href]:hover { border-color: #c8ced3; }
+.my-review .mr-art { width: 64px; height: 64px; flex: none; display: flex; align-items: center; justify-content: center; }
+.my-review .mr-art img { width: 64px; height: 64px; object-fit: contain; transform: scale(var(--act-art-scale)); }
+.my-review .mr-main { flex: 1; min-width: 0; }
+.my-review strong { display: block; font-size: 16px; line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.my-review .mr-main p { display: flex; align-items: center; gap: 4px; margin: 4px 0 0; font-size: 12px; line-height: 1.5; color: var(--ds-text-2); }
+.my-review .mr-main p.mr-link { color: #1a6bff; }
+.my-review .mr-main p.mr-meta { gap: 14px; }
+.my-review .mr-main p span { display: inline-flex; align-items: center; gap: 4px; }
+.my-review .mr-main svg { width: 14px; height: 14px; flex: none; }
+.my-review .aside { display: flex; align-items: center; gap: 8px; flex: none; }
+.my-review .aside .btn { height: 36px; padding: 0 18px; font-size: 13px; }
 
 /* 정산 / 결제 내역 */
 .sum-bar { display: flex; align-items: center; gap: 18px; padding: 16px 20px; border-radius: var(--r-12); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); font-size: 11px; color: var(--ds-text-2); }
@@ -152,41 +161,42 @@
 /* ---------- 보기: 프로필(사진 + 한 줄 소개) ---------- */
 .pf-intro { display: flex; align-items: flex-start; gap: 20px; margin-top: 16px; }
 .pf-intro-body { flex: 1; min-width: 0; }
-.pf-intro-label { font-size: 11px; color: var(--ds-text-2); margin-bottom: 6px; }
-.pf-bio { display: flex; align-items: center; min-height: 49px; padding: 12px 16px; box-sizing: border-box; border-radius: var(--r-8); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); font-size: 12px; line-height: 1.7; }
-.pf-bio.is-empty { background: #fff; border-style: dashed; border-color: var(--ds-border); color: var(--ds-text-3); font-size: 11px; }
+.pf-intro-label { font-size: 12px; color: var(--ds-text-2); margin-bottom: 6px; }
+.pf-bio { display: flex; align-items: center; min-height: 49px; padding: 12px 16px; box-sizing: border-box; border-radius: var(--r-8); background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); font-size: 13px; line-height: 1.7; }
+.pf-bio.is-empty { background: #fff; border-style: dashed; border-color: var(--ds-border); color: var(--ds-text-3); font-size: 12px; }
 
 /* ---------- 보기: 활동 정보 (행의 위·아래 여백을 같게, 마지막 행은 카드 하단 여백 상쇄) ---------- */
 .pf-rows { display: flex; flex-direction: column; margin-bottom: -22px; }
 .pf-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; align-items: center; min-height: 52px; padding: 14px 0; border-bottom: 1px solid var(--ds-border-subtle); }
 .pf-row:last-child { border-bottom: 0; }
-.pf-row dt { font-size: 11px; color: var(--ds-text-2); }
-.pf-row dd { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; font-weight: 500; }
-.pf-empty-text { font-size: 11px; font-weight: 400; color: var(--ds-text-3); }
+.pf-row dt { font-size: 12px; color: var(--ds-text-2); }
+.pf-row dd { display: flex; flex-wrap: wrap; gap: 6px; font-size: 13px; font-weight: 500; }
+.pf-empty-text { font-size: 12px; font-weight: 400; color: var(--ds-text-3); }
+.pf-row dd .pill { height: 32px; padding: 0 14px; font-size: 12px; }
 
 /* ---------- 보기: 종목별 프로필 (입력됨 = 파란 카드 / 미입력 = 점선 카드) ---------- */
 .pf-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
 .pf-tile { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: var(--r-12); border: 1px solid var(--ds-brand); background: var(--ds-brand-subtle); }
-.pf-tile small { font-size: 11px; color: var(--ds-text-2); }
+.pf-tile small { font-size: 12px; color: var(--ds-text-2); }
 .pf-tile b { font-size: 15px; font-weight: 700; color: var(--ds-brand); }
 .pf-tile.is-empty { border: 1px dashed var(--ds-border); background: var(--ds-bg-subtle); }
-.pf-tile.is-empty b { font-size: 12px; font-weight: 400; color: var(--ds-text-3); }
+.pf-tile.is-empty b { font-size: 13px; font-weight: 400; color: var(--ds-text-3); }
 
 /* ---------- 수정: 사진 + 한 줄 소개 ---------- */
 .pf-edit-top { display: flex; align-items: flex-start; gap: 32px; margin-top: 16px; }
 .pf-edit-top .profile-photo { margin-top: 0; flex: none; gap: 20px; }
 .pf-intro-edit { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-.pf-count { text-align: right; font-size: 11px; color: var(--ds-text-3); }
+.pf-count { text-align: right; font-size: 12px; color: var(--ds-text-3); }
 .pf-intro-edit .pf-count { margin-top: -2px; }
 
 /* ---------- 수정: 활동 정보 / 종목별 프로필 ---------- */
 .pf-card .field + .field { margin-top: 20px; }
 .pf-card .pf-field-box { margin-top: 16px; }
 .pf-card .pf-region { width: 420px; max-width: 100%; }
-.pf-level-hint { margin-top: 12px; padding: 18px; border: 1px dashed var(--ds-border); border-radius: var(--r-8); background: var(--ds-bg-subtle); text-align: center; font-size: 11px; color: var(--ds-text-3); }
+.pf-level-hint { margin-top: 12px; padding: 18px; border: 1px dashed var(--ds-border); border-radius: var(--r-8); background: var(--ds-bg-subtle); text-align: center; font-size: 12px; color: var(--ds-text-3); }
 .pf-levels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
 .pf-levels .level-block { padding: 12px 16px 14px; border: 1px solid var(--ds-border); border-radius: var(--r-8); background: var(--ds-bg-subtle); }
-.pf-levels .level-block > p { margin-top: 0; }
+.pf-levels .level-block > p { margin-top: 0; font-size: 12px; }
 .pf-levels .level-block .chip-group { margin-top: 8px; }
 
 
@@ -263,6 +273,313 @@
 }
 
 .empty-box { display: flex; flex-direction: column; align-items: center; padding: 24px 0 40px; text-align: center; }
-.empty-box img { width: 360px; max-width: 100%; height: auto; }
+.empty-box img { width: 360px; max-width: 100%; height: auto; mix-blend-mode: multiply; }
 .empty-box p { margin-top: 8px; font-size: 16px; font-weight: 700; color: var(--ds-text); }
 
+/* =========================================================
+   마이페이지 본문 공통 (알림 페이지 myPageAlarm.jsp 기준)
+   - 본문 폭 1000px, 가운데 정렬 + 오른쪽 80px 보정(= 왼쪽으로 40px), 위쪽 여백 36px
+   - 제목 28px / 설명 13px
+   - 적용 대상: class="mp-body" 가 붙은 본문 래퍼
+   ========================================================= */
+body .work-inner.mp-body {
+  width: min(1000px, calc(100% - 128px));
+  max-width: none;
+  margin: 36px 0 0 max(24px, calc((100% - 1000px) / 2 - 40px));
+}
+.mp-body > .section-title, .mp-body > .pf-head > .section-title { font-size: 28px; font-weight: 700; line-height: 1.3; }
+.mp-body .section-desc { font-size: 13px; }
+.mp-body > .section-title + .section-desc { margin-top: 8px; margin-bottom: 32px; }
+.mp-body > .pf-head .section-desc { margin-top: 8px; }
+.pf-page.mp-body > .pf-head { margin-bottom: 16px; }
+
+/* =========================================================
+   경기 카드(act-card) 왼쪽: 상태 알약 + 종목 이미지
+   - 이미지는 내 팀(.sport-circle)과 같은 64px 크기로 보이게 맞춤
+     (art-*.png 는 그림 둘레에 투명 여백이 있어 64px 박스에 넣으면 작아 보이므로 확대)
+   - 알약 + 이미지 묶음을 카드 높이의 세로 중앙에 배치
+   - 이미지가 작게/크게 보이면 --act-art-scale 값만 조정 (1.0 = 확대 없음)
+   ========================================================= */
+.act-card { --act-art-scale: 1.25; }
+body .act-card .left { align-self: center; justify-content: center; gap: 8px; }
+body .act-card .left .pill { position: relative; z-index: 1; }
+body .act-card .left img { width: 64px; height: 64px; object-fit: contain; transform: scale(var(--act-art-scale)); }
+
+/* 신고·문의사항: 탭(왼쪽) + 상태 드롭다운(오른쪽) 한 줄 */
+.support-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--ds-border-subtle, #eceff1); }
+.support-bar.no-line { padding-bottom: 0; border-bottom: 0; }
+.support-bar .seg { margin: 0; flex-wrap: nowrap; }
+.support-bar .select { width: 120px; height: 32px; padding: 0 30px 0 14px; border-radius: var(--r-8); font-size: 12px; font-weight: 500; flex: none; background-position: right 12px center; }
+.support-bar .select:focus { border-color: var(--ds-brand); outline: none; }
+.support-bar + .row-list .row-card .status { width: 100px; }
+.support-bar + .row-list .row-card .status .pill { height: 32px; padding: 0 16px; font-size: 12px; font-weight: 500; }
+
+/* =========================================================
+   정산 · 결제 내역 : 문의 목록(inquiryList.jsp, .mp-body) 기준으로 여백·글자 크기 통일
+   - 본문 폭/위치/제목 28px/설명 13px 은 위 .mp-body 공통 규칙을 그대로 사용
+   - 목록 행: 문의 카드(.row-card)와 같은 18px 24px 패딩, 제목 14px / 보조 12px
+   - 툴바 컨트롤: 문의 상태 드롭다운과 같은 32px 높이 / 12px
+   ========================================================= */
+.mp-body .sum-bar { padding: 18px 24px; font-size: 12px; }
+.mp-body .sum-bar b { font-size: 16px; }
+
+.mp-body .list-toolbar { margin: 24px 0; }
+.mp-body .list-toolbar .seg-item { height: 32px; font-size: 12px; }
+.mp-body .list-toolbar .input-wrap .input { height: 32px; font-size: 12px; }
+.mp-body .list-toolbar .select { height: 32px; font-size: 12px; font-weight: 500; padding: 0 30px 0 14px; background-position: right 12px center; }
+
+.mp-body .ledger-row { grid-template-columns: 110px 1fr 180px 190px 100px; padding: 18px 24px; font-size: 12px; }
+.mp-body .ledger-row .date b { font-size: 14px; }
+.mp-body .ledger-row .date span { font-size: 12px; }
+.mp-body .ledger-row .ttl { font-size: 14px; }
+.mp-body .ledger-row .ttl + p { font-size: 12px; margin-top: 4px; }
+.mp-body .ledger-row .amt b { font-size: 16px; }
+.mp-body .ledger-row .amt span { font-size: 12px; }
+.mp-body .ledger-row .st .pill { display: inline-flex; align-items: center; justify-content: center; height: 32px; margin-top: 0; padding: 0 16px; font-size: 12px; font-weight: 500; line-height: 1; }
+/* .ledger-row .st span(회색 글자) 규칙이 알약 글자색을 덮지 않도록 상태별 색 복원 */
+.mp-body .ledger-row .st .pill-success { color: var(--ds-success-fg); }
+.mp-body .ledger-row .st .pill-info { color: var(--ds-info-fg); }
+.mp-body .ledger-row .st .pill-warning { color: var(--ds-warning-fg); }
+.mp-body .ledger-row .st .pill-danger { color: var(--ds-danger-fg); }
+.mp-body .ledger-row .st span:not(.pill) { font-size: 12px; margin-top: 6px; }
+.mp-body .tag-sm { height: 20px; font-size: 11px; }
+.mp-body .ledger-note { font-size: 12px; margin-top: 16px; }
+
+/* =========================================================
+   신고·문의 작성 / 상세 (inquiryWrite.jsp, inquiryDetail.jsp)
+   - 두 화면 모두 .mp-body + .form-card 를 써서 목록과 같은 폭·제목·카드로 통일
+   - 상태 알약은 목록(.support-bar + .row-list)과 같은 크기·색
+   ========================================================= */
+.inq-card { display: flex; flex-direction: column; gap: 24px; }
+.inq-card .field + .field { margin-top: 0; }
+.inq-card .notice-box { margin-top: 0; }
+.inq-page .form-actions { margin-top: 24px; }
+.inq-page .form-actions .btn { min-width: 96px; }
+
+/* 상세: 유형 + 제목 + 상태 */
+.inq-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.inq-head-text { min-width: 0; }
+.inq-meta { font-size: 12px; color: var(--ds-text-2); }
+.inq-title { margin-top: 4px; font-size: 18px; font-weight: 700; line-height: 1.4; color: var(--ds-text); word-break: break-all; }
+.inq-status { flex: none; width: 100px; height: 32px; padding: 0 16px; font-size: 12px; font-weight: 500; }
+
+/* 상세: 접수일 / 답변완료일 띠 */
+.inq-info { display: grid; grid-template-columns: 1fr 1fr; margin: 0; background: var(--ds-bg-subtle); border: 1px solid var(--ds-border-subtle); border-radius: var(--r-8); }
+.inq-info .cell { padding: 12px 16px; }
+.inq-info .cell + .cell { border-left: 1px solid var(--ds-border-subtle); }
+.inq-info dt { font-size: 12px; color: var(--ds-text-2); }
+.inq-info dd { margin-top: 2px; font-size: 14px; font-weight: 700; color: var(--ds-text); }
+
+/* 상세: 내용 / 답변 박스 (작성 화면 입력칸과 같은 모서리·여백) */
+.inq-box { min-height: 88px; padding: 12px 14px; border: 1px solid var(--ds-border-subtle); border-radius: var(--r-8); background: var(--ds-bg-subtle); font-size: 13px; line-height: 1.7; color: var(--ds-text); white-space: pre-line; word-break: break-all; }
+/* 답변 완료일 때만 라벨 강조 (.field-label 기본 회색보다 우선 적용되도록 두 클래스로 지정) */
+.field-label.inq-answer-label { font-size: 13px; font-weight: 700; color: var(--ds-brand); }
+.inq-box.answer { background: #f5f8ff; border-color: #dfe8fd; }
+.inq-box.empty { display: flex; align-items: center; justify-content: center; text-align: center; background: #fff; border: 1px dashed var(--ds-border); color: var(--ds-text-2); font-size: 12px; white-space: normal; }
+
+/* 신고 상세: 진행 단계 (접수 → 처리 중 → 처리 완료) */
+.rpt-steps { display: flex; align-items: center; gap: 10px; }
+.rpt-step { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ds-text-2); white-space: nowrap; }
+.rpt-dot { width: 24px; height: 24px; flex: none; border-radius: 50%; border: 2px solid var(--ds-border); background: #fff; display: flex; align-items: center; justify-content: center; }
+.rpt-step.done .rpt-dot { background: var(--ds-brand); border-color: var(--ds-brand); }
+.rpt-step.done .rpt-dot::after { content: ""; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+.rpt-step.now { color: var(--ds-text); font-weight: 700; }
+.rpt-step.now .rpt-dot { border-color: var(--ds-brand); }
+.rpt-step.now .rpt-dot::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ds-brand); }
+.rpt-bar { flex: 1; min-width: 16px; height: 2px; background: var(--ds-border-subtle); }
+.rpt-bar.done { background: var(--ds-brand); }
+
+/* 신고 상세: 신고 대상 (종류 태그 + 이름/게시글 제목) */
+.inq-box.rpt-target { display: flex; align-items: center; gap: 10px; min-height: 0; min-width: 0; white-space: nowrap; }
+.rpt-target-tag { flex: none; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: var(--ds-danger-bg); color: var(--ds-danger-fg); font-size: 11px; font-weight: 500; }
+.rpt-target-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 14px; font-weight: 700; color: var(--ds-text); }
+.rpt-target-name.is-gone { font-size: 13px; font-weight: 400; color: var(--ds-text-3); }
+
+@media (max-width: 640px) {
+  .inq-head { flex-wrap: wrap; }
+  .rpt-steps { gap: 6px; }
+  .rpt-step { font-size: 12px; }
+  .inq-info { grid-template-columns: 1fr; }
+  .inq-info .cell + .cell { border-left: 0; border-top: 1px solid var(--ds-border-subtle); }
+}
+
+/* =========================================================
+   결제 상세 (paymentDetail.jsp) : 결제 내역 목록(.ledger) 기준으로 여백·글자 크기 통일
+   - 카드 패딩 = 목록 행(18px 24px), 제목 16px / 보조 12px, 금액 16px
+   - 상태 알약 = 목록과 같은 32px · 12px · 500 + 테두리(bd)
+   ========================================================= */
+.pay-detail .receipt { padding: 22px 24px 18px; border-radius: var(--r-12); background: #fff; }
+.pd-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 6px; border-bottom: 1px solid var(--ds-border); }
+.pd-head-text { min-width: 0; }
+.pd-head .ttl { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: var(--ds-text); }
+.pd-head .meta { margin-top: 4px; font-size: 12px; color: var(--ds-text-2); }
+.pd-status { flex: none; width: 100px; height: 32px; padding: 0 16px; font-size: 12px; font-weight: 500; }
+.pay-detail .receipt .ln { align-items: center; gap: 16px; padding: 12px 0; font-size: 13px; }
+.pay-detail .receipt .ln span:first-child { flex: none; font-size: 12px; color: var(--ds-text-2); }
+.pay-detail .receipt .ln span:last-child { text-align: right; }
+.pay-detail .receipt .ln.total { margin-top: 6px; padding-top: 16px; border-top: 1px solid var(--ds-border); }
+.pay-detail .receipt .ln.total span:first-child { font-size: 13px; font-weight: 700; color: var(--ds-text); }
+.pay-detail .receipt .ln.total b { font-size: 16px; }
+.pay-detail .form-actions { margin-top: 24px; }
+.pay-detail .form-actions .btn { min-width: 96px; }
+/* 결제 상세: 영수증은 좁게 (제목·설명 시작선은 목록과 동일하게 유지) */
+.pay-detail .receipt,
+.pay-detail .form-actions { max-width: 720px; }
+/* 신고·문의 작성/상세: 카드와 버튼도 결제 상세와 같은 폭으로 (제목·설명 시작선은 목록과 동일) */
+.inq-page .inq-card,
+.inq-page .form-actions { max-width: 720px; }
+
+/* =========================================================
+   패널티 내역 (myPagePenalty.jsp) : 정산·결제 목록(.sum-bar / .ledger) 기준으로 통일
+   - 카드: 테두리 --ds-border, 모서리 12px, 패딩 18px 24px
+   - 표: 행 패딩 18px 24px, 본문 13px / 보조 12px, 상태 알약 32px·12px·500
+   ========================================================= */
+.pen-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+.pen-box { padding: 18px 24px 20px; background: #fff; border: 1px solid var(--ds-border); border-radius: var(--r-12); }
+.pen-box .label { font-size: 12px; color: var(--ds-text-2); }
+.pen-box .value { margin-top: 8px; font-size: 24px; font-weight: 700; line-height: 1.2; color: var(--ds-text); }
+.pen-box .value small { margin-left: 2px; font-size: 14px; font-weight: 500; color: var(--ds-text-2); }
+.pen-box .value.danger { color: var(--ds-danger-fg); }
+.pen-box .value.ok { color: var(--ds-success-fg); }
+.pen-box .sub { margin-top: 10px; font-size: 12px; color: var(--ds-text-2); }
+.pen-bar { height: 6px; margin-top: 14px; background: var(--ds-border-subtle); border-radius: 999px; overflow: hidden; }
+.pen-bar span { display: block; height: 100%; border-radius: 999px; background: var(--ds-brand); }
+.pen-bar.warn span { background: var(--ds-warning-bd); }
+.pen-bar.danger span { background: var(--ds-danger-fg); }
+
+.pen-list-title { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 16px; font-weight: 700; color: var(--ds-text); }
+.pen-list-title em { padding: 2px 10px; border-radius: 999px; font-style: normal; font-size: 12px; font-weight: 500; background: var(--ds-brand-subtle); color: var(--ds-brand); }
+
+.pen-table-wrap { background: #fff; border: 1px solid var(--ds-border); border-radius: var(--r-12); overflow-x: auto; }
+.pen-table { width: 100%; min-width: 640px; border-collapse: collapse; }
+.pen-table th, .pen-table td { padding: 18px 24px; font-size: 13px; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--ds-border); }
+.pen-table th { padding-top: 12px; padding-bottom: 12px; background: var(--ds-bg-subtle); color: var(--ds-text-2); font-size: 12px; font-weight: 500; white-space: nowrap; }
+.pen-table .center { text-align: center; }
+.pen-table tbody tr:last-child td { border-bottom: 0; }
+.pen-table tbody tr:hover td { background: #fcfcfd; }
+.pen-date { white-space: nowrap; }
+.pen-date b { display: block; font-size: 14px; color: var(--ds-text); }
+.pen-date span { display: block; font-size: 12px; color: var(--ds-text-2); }
+.pen-reason { max-width: 300px; color: var(--ds-text); word-break: break-all; }
+.pen-period { white-space: nowrap; font-size: 12px; color: var(--ds-text-2); }
+
+.score-chip { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 28px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--ds-bg-muted); color: var(--ds-text-2); }
+.score-chip.plus { background: var(--ds-danger-bg); color: var(--ds-danger-fg); }   /* 증가: 빨강 */
+.score-chip.minus { background: var(--ds-info-bg); color: var(--ds-info-fg); }      /* 감소: 파랑 */
+.pen-status { width: 80px; height: 32px; padding: 0 16px; font-size: 12px; font-weight: 500; }
+
+.pen-table tr.is-cancelled td,
+.pen-table tr.is-cancelled .pen-date b,
+.pen-table tr.is-cancelled .pen-reason { color: var(--ds-text-3); }
+.pen-table tr.is-cancelled .score-chip { background: var(--ds-bg-muted); color: var(--ds-text-3); text-decoration: line-through; }
+
+.pen-empty { padding: 56px 0; text-align: center; font-size: 13px; color: var(--ds-text-2); background: #fff; border: 1px solid var(--ds-border); border-radius: var(--r-12); }
+
+@media (max-width: 640px) { .pen-summary { grid-template-columns: 1fr; } }
+/* 패널티 표 비율 조정: 머리줄 낮게, 행 여백 줄이고 날짜는 본문과 같은 크기 */
+.pen-table th { padding-top: 10px; padding-bottom: 10px; line-height: 1.4; }
+.pen-table td { padding-top: 14px; padding-bottom: 14px; }
+.pen-date b { font-size: 13px; font-weight: 500; }
+.pen-date span { margin-top: 2px; }
+
+/* =========================================================
+   사용자 공개 프로필 · 공지사항 : 경기 상세 기준으로 여백·글자 크기 통일
+   (userProfileInfo / noticeList / noticeDetail)
+   - 마이페이지 화면(.work-inner)에는 영향이 없도록
+     공개 프로필은 .container > .pf-page, 공지사항은 .rail 안으로만 범위를 좁혔습니다.
+   ========================================================= */ 
+/* ---------- 공지사항 목록 ---------- */
+.rail > .page-head { margin-bottom: 28px; }
+.rail > .page-head .page-title,
+.rail > .page-head .page-title.lg { font-size: 26px; }
+.rail > .page-head .page-desc { font-size: 13px; }
+
+body .rail .notice-seg { gap: 10px; }
+body .rail .seg.pill.neutral.notice-seg .seg-item { height: 30px; min-width: 76px; padding: 0 14px; justify-content: center; border-radius: 15px; border: 1px solid var(--ds-border); background: #fff; font-size: 12px; font-weight: 500; color: var(--ds-text); }
+body .rail .seg.pill.neutral.notice-seg .seg-item.is-active { background: var(--ds-brand-subtle); border-color: var(--ds-brand); color: var(--ds-brand); font-weight: 500; }
+body .rail .seg.pill.neutral.notice-seg .seg-item:not(.is-active):hover { background: #f1f5f9; border-color: var(--ds-border); color: var(--ds-text); }
+
+.rail .notice-find .input { font-size: 14px; }
+.rail .notice-find .btn { font-size: 14px; }
+.rail > .sub-title { font-size: 17px; }
+.rail .row-list { gap: 10px; }
+.rail .row-card { padding: 18px 24px; border-radius: var(--r-12); }
+.rail .row-card .title { font-size: 15px; }
+.rail .row-card .meta { margin-top: 6px; font-size: 12px; }
+.rail .row-card .pill { height: 28px; font-size: 12px; }
+ 
+/* ---------- 공지사항 상세 ---------- */
+.rail > .breadcrumb { margin-bottom: 16px; }
+.ntd-pill { margin-top: 8px; font-size: 12px; }
+.ntd-title { margin-top: 12px; font-size: 26px; line-height: 1.35; font-weight: 700; }
+.ntd-author { margin-top: 16px; }
+.ntd-author-info b { font-size: 14px; }
+.ntd-author-info small { font-size: 12px; }
+.ntd-card { margin-top: 24px; padding: 24px 28px; border-radius: var(--r-12); }
+.ntd-content { font-size: 15px; line-height: 1.7; }
+.ntd-actions { margin-top: 20px; }
+.ntd-list-btn { margin-top: 28px; }
+.ntd-list-btn .btn { height: 44px; font-size: 14px; }
+
+/* 공지 상세 '목록으로': 신고 상세처럼 오른쪽 끝 + 흰 테두리 버튼 + ‹ 화살표 */
+body .ntd-list-btn { justify-content: flex-end; margin-top: 24px; }
+body .ntd-list-btn .btn { display: inline-flex; align-items: center; gap: 8px; min-width: 0; height: 40px; padding: 0 22px; border: 1px solid var(--ds-border); background: #fff; color: var(--ds-text); font-size: 14px; font-weight: 500; }
+body .ntd-list-btn .btn:hover { background: #f8fafc; border-color: #c8ced3; }
+body .ntd-list-btn .btn::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 0 1.5px 1.5px; transform: translateX(2px) rotate(45deg); }
+
+/* 공지사항 검색창 + 검색 버튼: 분류 탭(30px)과 어울리게 36px로 축소 */
+body .rail .notice-seg { height: 36px; }
+body .rail .notice-find .input { width: 240px; height: 36px; padding: 0 14px; font-size: 13px; }
+body .rail .notice-find .btn { height: 36px; padding: 0 18px; font-size: 13px; font-weight: 500; }
+
+/* 공지 상세: 수정/삭제 버튼 크기 키우기 (btn-sm 32px → 40px) */
+body .ntd-actions .btn { height: 40px; min-width: 80px; padding: 0 20px; font-size: 14px; font-weight: 500; }
+body .ntd-actions .btn-group { gap: 10px; }
+
+/* ---------- 사용자 공개 프로필 (참가자 프로필 · 경기 후 관리 화면 기준) ---------- */
+/* 본문 폭 744px 가운데 (match.css 의 .narrow-rail 과 동일) */
+.container.narrow-rail > * { width: 744px; max-width: 100%; margin-left: auto; margin-right: auto; }
+
+/* 머리: 브레드크럼 16px 간격 / 제목 26px / 설명 13px */
+.container.narrow-rail > .breadcrumb { margin-bottom: 16px; }
+.narrow-rail > .pf-page { gap: 20px; }
+.narrow-rail > .pf-page .pf-head { margin-bottom: 8px; }
+.narrow-rail > .pf-page .pf-head .section-title { font-size: 26px; line-height: 1.3; font-weight: 700; }
+.narrow-rail > .pf-page .pf-head .section-desc { margin-top: 8px; font-size: 13px; }
+
+/* 카드: postgame-card 와 같은 패딩·모서리 / 카드 제목 17px */
+.narrow-rail > .pf-page .pf-card { padding: 22px 28px 28px; border-radius: var(--r-12); }
+.narrow-rail > .pf-page .pf-card > .sub-title { font-size: 17px; }
+
+/* 프로필(사진 + 한 줄 소개) */
+.narrow-rail > .pf-page .pf-intro { gap: 16px; margin-top: 16px; }
+.narrow-rail > .pf-page .avatar.lg { width: 64px; height: 64px; }
+.narrow-rail > .pf-page .pf-intro-label { font-size: 13px; }
+.narrow-rail > .pf-page .pf-bio { font-size: 14px; }
+.narrow-rail > .pf-page .pf-bio.is-empty { font-size: 13px; }
+
+/* 활동 정보: 라벨 13px / 값 14px (eval-row 기준) */
+.narrow-rail > .pf-page .pf-rows { margin-bottom: -28px; }
+.narrow-rail > .pf-page .pf-row { grid-template-columns: 96px 1fr; min-height: 52px; padding: 14px 0; }
+.narrow-rail > .pf-page .pf-row dt { font-size: 13px; }
+.narrow-rail > .pf-page .pf-row dd { font-size: 14px; gap: 6px 8px; }
+.narrow-rail > .pf-page .pf-empty-text { font-size: 12px; }
+.narrow-rail > .pf-page .pf-row dd .pill { height: 28px; padding: 0 12px; font-size: 12px; }
+.narrow-rail > .pf-page .team-inline { font-size: 14px; gap: 8px; margin-right: 8px; }
+.narrow-rail > .pf-page .team-inline img { width: 22px; height: 22px; }
+.narrow-rail > .pf-page .stars { font-size: 16px; }
+
+/* 종목별 프로필: 744px 안에 4칸 */
+.narrow-rail > .pf-page .pf-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.narrow-rail > .pf-page .pf-tile { padding: 14px 16px; }
+.narrow-rail > .pf-page .pf-tile small { font-size: 12px; }
+.narrow-rail > .pf-page .pf-tile b { font-size: 15px; }
+.narrow-rail > .pf-page .pf-tile.is-empty b { font-size: 13px; }
+
+/* 회원 신고 버튼: 경기 후 관리 '정보 수정' 버튼과 같은 크기 */
+.narrow-rail > .pf-page .form-actions { margin-top: 4px; padding-bottom: 0; }
+.narrow-rail > .pf-page .form-actions .btn { min-width: 120px; height: 44px; padding: 0 20px; font-size: 14px; }
+
+@media (max-width: 800px) {
+  .narrow-rail > .pf-page .pf-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

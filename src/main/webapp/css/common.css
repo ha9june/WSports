@@ -254,7 +254,7 @@ table { border-collapse: collapse; width: 100%; }
 }
 a.row-card:hover { border-color: #c8ced3; background: #fcfcfd; }
 .row-card .title { font-size: 14px; font-weight: 700; }
-.row-card .meta { margin-top: 4px; font-size: 11px; color: var(--ds-text-2); }
+.row-card .meta { margin-top: 4px; font-size: 12px; color: var(--ds-text-2); }
 .row-card .status { width: 96px; flex: none; }
 .row-card .status .pill { width: 100%; }
 

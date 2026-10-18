@@ -61,7 +61,7 @@ $(function () {
 	});
 });
 </script>
-<form class="work-inner full info-page" action="${ctx}/member/mypage/edit" method="post">
+<form class="work-inner full info-page mp-body" action="${ctx}/member/mypage/edit" method="post">
   <h1 class="section-title">회원정보</h1>
   <p class="section-desc">회원정보와 정산 계좌를 수정한 뒤 저장해주세요.</p>
   <div class="form-grid">

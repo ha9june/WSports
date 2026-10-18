@@ -59,7 +59,10 @@
 		  AND (p.status IS NULL OR p.status != '취소')
 		GROUP BY
 		    u.user_id,
-		    u.nickname;
+		    u.nickname,
+		    p.attendance,
+		    p.applied_at
+		ORDER BY p.applied_at
 	</select>
 	<select id="selectOtherPersonalMatchParticipantList" parameterType="map" resultType="user">
 		SELECT
