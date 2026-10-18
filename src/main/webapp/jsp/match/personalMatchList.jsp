@@ -214,14 +214,15 @@
 			});
 		}
 		
+		NowList("${sessionScope.user == null ? 'POPULAR' : 'RECOMAND'}");
+		NormalList(page);
+		
 
 		//초기 리스트
 		locationReady.then(function (loc) {
 			
 			userLat = loc ? loc.lat : null;
 			userLng = loc ? loc.lng : null;
-			NowList("${sessionScope.user == null ? 'POPULAR' : 'RECOMAND'}");
-			NormalList(page);
 
 		});
 		
