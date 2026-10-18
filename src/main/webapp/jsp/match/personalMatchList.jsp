@@ -128,9 +128,8 @@
 <script>
 	const locationReady = getUserLocation().catch(() => null);
 	let userLat = null, userLng = null;
-
-	
 	let page =1;
+	let firstMapClick = true;
 
 	const PAGE_SIZE = 4;
 
@@ -336,9 +335,13 @@
 			$(this).addClass("is-active");
 			$(".normalGroup").addClass("is-hidden");
 		  	$(".mapGroup").removeClass("is-hidden");
-		  	map.relayout();
-		  	map.setCenter(mapCenter); 
-			searchMapMatch();
+		  	if(firstMapClick){
+		  		map.relayout();
+			  	map.setCenter(mapCenter); 
+				searchMapMatch();
+				firstMapClick=false;
+		  	}
+		  	
 			
 		});
 		$("#moreBtn").on("click", function(e) {
