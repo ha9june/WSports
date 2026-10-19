@@ -71,7 +71,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		//알림 내용 만들기
 		String title = "개인 정지";
 		String content = "관리자 권한으로 회원은 "+days+"일 정지되었습니다.";
-		String link = "/user/detail?userId="+userId;
+		String link = "/mypage/penalty";
 		//알림 객체 채우기
 		Notification alarm = new Notification();
 		alarm.setUserId(userId);
@@ -99,7 +99,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		//알림 내용 만들기
 		String title = "개인 영구정지";
 		String content = "회원께서는 영구정지 되었습니다.";
-		String link = "/user/detail?userId="+userId;
+		String link = "/mypage/penalty";
 		//알림 객체 채우기
 		Notification alarm = new Notification();
 		alarm.setUserId(userId);
@@ -128,7 +128,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		//알림 내용 만들기
 		String title = "개인 패널티 점수 조정";
 		String content = "개인 페널티 점수가 "+change+"점 조정되었습니다.";
-		String link = "/mypage/penalty?userId="+userId;
+		String link = "/mypage/penalty";
 		//알림 객체 채우기
 		Notification alarm = new Notification();
 		alarm.setUserId(userId);

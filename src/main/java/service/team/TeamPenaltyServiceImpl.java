@@ -105,4 +105,11 @@ public class TeamPenaltyServiceImpl implements TeamPenaltyService {
 			return "minus";
 		return "";
 	}
+
+	// 지금 정지 중인 팀인지
+	@Override
+	public boolean isTeamSuspended(Long teamId) throws Exception {
+		Integer cnt = teamPenaltyDao.selectTeamSuspension(teamId);
+		return cnt != null && cnt > 0;
+	}
 }

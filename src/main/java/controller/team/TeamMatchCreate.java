@@ -31,6 +31,9 @@ import service.team.TeamService;
 import service.team.TeamServiceImpl;
 import service.team.TeamUserService;
 import service.team.TeamUserServiceImpl;
+import service.team.TeamPenaltyService;
+import service.team.TeamPenaltyServiceImpl;
+import util.AlertUtil;
 
 /**
  * Servlet implementation class TeamMatchCreate
@@ -107,6 +110,15 @@ public class TeamMatchCreate extends HttpServlet {
 				request.getRequestDispatcher("/jsp/common/error.jsp").forward(request, response);
 				return;
 			}
+			
+			// 정지된 팀은 팀 경기를 등록할 수 없음
+			TeamPenaltyService teamPenaltyService = new TeamPenaltyServiceImpl();
+			if (teamPenaltyService.isTeamSuspended(teamId)) {
+				AlertUtil.notice(request, response, "정지 중인 팀은 팀 경기를 등록할 수 없어요.",
+						"/team/penalty?teamId=" + teamId, "팀 패널티 내역 보기");
+				return;
+			}
+			
 			teamMatch.setTeamId(teamId);
 			
 			Team team = teamService.getTeam(teamId);

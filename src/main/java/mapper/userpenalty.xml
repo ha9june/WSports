@@ -215,6 +215,17 @@
 		where user_id = #{userId}
 		and cancelled_admin_id is null
 	</select>
+	
+	<!-- 지금 정지 중인지 (cnt > 0 이면 정지) -->
+	<select id="selectUserSuspension" parameterType="Long" resultType="map">
+		select count(*) as cnt,
+		       max(permanent_suspension) as permanent,
+		       max(suspension_end_at) as endAt
+		from user_penalty
+		where user_id = #{userId}
+		  and cancelled_admin_id is null
+		  and (permanent_suspension = 1 or now() between suspension_start_at and suspension_end_at)
+	</select>
 
 </mapper>
 
