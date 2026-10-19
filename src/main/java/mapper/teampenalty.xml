@@ -313,5 +313,11 @@
 		and team_role = 'VICE_CAPTAIN'
 		and withdrawn = 0
 	</select>
-
+	<select id="selectMyTeamRole" parameterType="map" resultType="string">
+    select team_role
+    from team_user
+    where team_id = #{teamId}
+      and user_id = #{userId}
+      and withdrawn = 0
+</select>
 </mapper>

@@ -25,8 +25,8 @@
 		</nav>
 		<div class="page-head" style="margin-bottom: 24px">
 			<h1 class="page-title">팀 관리</h1>
-			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리를 한 화면에서 전환합니다.</p>
-		</div> 
+			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리,팀 패널티 내역을 한 화면에서 전환합니다.</p>
+		</div>
 		<nav class="tabs">
 					<a class="tab ${manageTab eq 'application' ? 'is-active' : ''}"
 						href="${ctx}/team/manage/applications?teamId=${teamId}">가입 신청</a>

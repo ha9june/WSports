@@ -14,6 +14,58 @@
 <c:set var="demoStates" value="recent:최근 후기|grouped:경기별 모아보기" />
 <%@ include file="/jsp/common/header.jsp"%>
 <style>
+.review-group .group-title {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	margin: 0 0 10px !important;
+	padding: 0 !important;
+	text-align: left;
+}
+.review-group .group-title strong {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	width: 100%;
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.35;
+	white-space: normal;
+	overflow: hidden;
+	word-break: keep-all;
+}
+.review-group .group-title span {
+	margin: 0;
+	padding: 2px 10px;
+	border-radius: 999px;
+	background: #eef4ff;
+	color: #1a6bff;
+	font-size: 12px;
+	font-weight: 700;
+}
+/* 경기별 후기: 경기 블록 3열 */
+.group-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px 24px;   /* 40px → 16px */
+	align-items: start;
+	margin-top: 24px;
+}
+@media (max-width: 900px) { .group-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .group-grid { grid-template-columns: 1fr; } }
+
+.review-group { min-width: 0; }
+.group-reviews { display: flex; flex-direction: column; gap: 16px; }
+.review-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 32px 24px;
+	align-items: start;
+}
+@media (max-width: 900px) { .review-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .review-grid { grid-template-columns: 1fr; } }
+
 .review-card .thumb {
 	display: flex;
 	align-items: center;
@@ -116,6 +168,25 @@
 	background: #e5e7eb;
 	color: #374151;
 }
+.more-wrap { display: flex; justify-content: center; margin-top: 32px; }
+.btn-more {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 180px;
+	height: 48px;
+	padding: 0 28px;
+	justify-content: center;
+	border: 1px solid #1a6bff;
+	border-radius: 999px;
+	background: #eef4ff;
+	color: #1a6bff;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background .2s;
+}
+.btn-more:hover { background: #dbe8ff; }
 </style>
 <main class="page">
 	<div class="rail">
@@ -163,49 +234,49 @@
 					<a class="btn btn-outline btn-xs btn-pill"
 						href="${ctx}/review/list?state=recent">전체 후기 보기</a>
 				</div>
-				<c:forEach var="g" items="${groupList}" varStatus="st">
-					<c:set var="first" value="${g.value[0]}" />
-					<div class="group-title"
-						<c:if test="${not st.first}"> style="margin-top:32px"</c:if>>
-						<strong><c:out value="${first.matchTitle}" /></strong> <span><c:out
-								value="${first.matchInfo}" /> · 후기 ${g.value.size()}</span>
-					</div>
-
-					<div class="review-grid">
-						<c:forEach var="r" items="${g.value}">
-							<a class="review-card"
-								href="${ctx}/review/detail?reviewId=${r.reviewId}">
-								<div class="thumb">
-								<c:choose>
-									<c:when test="${not empty r.image}">
-										<img src="${ctx}/uploads/${r.image}"
-											style="width: 100%; height: 100%; object-fit: cover;" alt="">
-									</c:when>
-									<c:otherwise>
-										<img src="${ctx}/img/w-sports-5e-logo.svg" alt="">
-									</c:otherwise>
-								</c:choose>
-							</div>
-								<div class="body">
-									<strong><c:out value="${r.title}" /></strong>
-									<p class="by">
-										작성자 ·
-										<c:out value="${r.nickname}" />
-									</p>
-									<p class="link">
-										참여 경기 ·
-										<c:out value="${r.matchTitle}" />
-									</p>
-									<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
-										&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
-								</div>
-							</a>
-						</c:forEach>
-					</div>
+				<div class="group-grid">
+	<c:forEach var="g" items="${groupList}">
+		<c:set var="first" value="${g.value[0]}" />
+		<div class="review-group">
+			<div class="group-title">
+				<strong title="${fn:escapeXml(first.matchTitle)}"><c:out value="${first.matchTitle}" /></strong>
+				<span>후기 ${g.value.size()}</span>
+			</div>
+			<div class="group-reviews">
+				<c:forEach var="r" items="${g.value}">
+					<a class="review-card" href="${ctx}/review/detail?reviewId=${r.reviewId}">
+						<div class="thumb">
+							<c:choose>
+								<c:when test="${not empty r.image}">
+									<img src="${ctx}/uploads/${r.image}"
+										style="width: 100%; height: 100%; object-fit: cover;" alt="">
+								</c:when>
+								<c:otherwise>
+									<img src="${ctx}/img/w-sports-5e-logo.svg" alt="">
+								</c:otherwise>
+							</c:choose>
+						</div>
+						<div class="body">
+							<strong><c:out value="${r.title}" /></strong>
+							<p class="by">작성자 · <c:out value="${r.nickname}" /></p>
+							<p class="link">참여 경기 · <c:out value="${r.matchTitle}" /></p>
+							<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
+								&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
+						</div>
+					</a>
 				</c:forEach>
-				<c:if test="${empty groupList}">
-					<p>등록된 후기가 없어요.</p>
-				</c:if>
+			</div>
+		</div>
+	</c:forEach>
+</div>
+<c:if test="${empty groupList}">
+	<p>등록된 후기가 없어요.</p>
+</c:if>
+<div class="more-wrap">
+	<button type="button" class="btn-more" id="groupMore">
+		<span class="arrow">↓</span> 더보기
+	</button>
+</div>
 			</c:when>
 			<c:otherwise>
 				<div class="section-head">
@@ -276,6 +347,22 @@
 	</div>
 </main>
 <script>
+$(function () {
+	var step = 9, shown = step;
+	var $groups = $('.group-grid > .review-group');
+	var $more = $('#groupMore');
+
+	function render() {
+		$groups.hide().slice(0, shown).show();
+		if (shown >= $groups.length) $more.closest('.more-wrap').hide();
+	}
+
+	$more.on('click', function () {
+		shown += step;
+		render();
+	});
+	render();
+});
 	document.querySelectorAll('.review-toolbar .chip').forEach(function(chip) {
 		chip.addEventListener('click', function() {
 			document.getElementById('statusInput').value = chip.dataset.value;

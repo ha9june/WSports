@@ -300,46 +300,52 @@
 		r.user_id AS userId,
 		u.nickname AS nickname,
 		r.match_type AS matchType,
-		r.match_id AS
-		matchId,
+		r.match_id AS matchId,
 		COALESCE(pm.title, tm.title) AS matchTitle,
-		COALESCE(pm.sport,
-		tm.sport) AS sport,
+		COALESCE(pm.sport, tm.sport) AS sport,
 		r.title AS title,
 		r.content AS content,
 		SUBSTRING_INDEX(r.image, ',', 1) AS image,
 		r.created_at AS createdAt
 		FROM review r
 		JOIN `user` u ON u.user_id = r.user_id
-		LEFT JOIN
-		personal_match pm
-		ON r.match_type = 'PERSONAL' AND pm.personal_match_id
-		= r.match_id
+		JOIN (SELECT match_type, match_id, MAX(created_at) AS latestAt
+		FROM review
+		WHERE deleted = 0
+		GROUP BY match_type, match_id) lt
+		ON lt.match_type = r.match_type AND lt.match_id = r.match_id
+		LEFT JOIN personal_match pm
+		ON r.match_type = 'PERSONAL' AND pm.personal_match_id = r.match_id
 		LEFT JOIN team_match tm
-		ON r.match_type = 'TEAM' AND
-		tm.team_match_id = r.match_id
+		ON r.match_type = 'TEAM' AND tm.team_match_id = r.match_id
 		WHERE r.deleted = 0
-		ORDER BY r.match_type,
-		r.match_id, r.created_at DESC
+		ORDER BY lt.latestAt DESC, r.match_type, r.match_id, r.created_at DESC
 	</select>
 	<update id="deleteReviewByAdmin" parameterType="long">
 		UPDATE review
-		SET deleted = 1, updated_at = NOW()
+		SET
+		deleted = 1, updated_at = NOW()
 		WHERE review_id = #{reviewId}
-		AND deleted = 0
+		AND
+		deleted = 0
 	</update>
 	<!-- 개인 매치 -->
 	<select id="selectPersonalMatchForReview" parameterType="map"
 		resultType="map">
 		SELECT m.personal_match_id AS matchId,
-		m.title AS matchTitle,
+		m.title AS
+		matchTitle,
 		'PERSONAL' AS matchType
 		FROM personal_match m
-		WHERE m.personal_match_id = #{matchId}
+		WHERE
+		m.personal_match_id = #{matchId}
 		AND m.deleted = '0'
-		AND m.status = '경기 종료'
+		AND m.status = '경기
+		종료'
 		AND (m.user_id = #{userId}
-		OR EXISTS (SELECT 1 FROM personal_match_participant p WHERE p.personal_match_id = m.personal_match_id
+		OR EXISTS (SELECT 1 FROM
+		personal_match_participant p WHERE p.personal_match_id =
+		m.personal_match_id
 		AND p.user_id = #{userId}
 		AND p.status = '결제완료'))
 	</select>
@@ -354,7 +360,9 @@
 		AND m.deleted = 0
 		AND m.status = '경기 종료'
 		AND (m.user_id = #{userId}
-		OR EXISTS (SELECT 1 FROM team_match_participant p WHERE p.team_match_id = m.team_match_id AND p.user_id = #{userId} AND p.status = '결제완료'))
+		OR
+		EXISTS (SELECT 1 FROM team_match_participant p WHERE p.team_match_id =
+		m.team_match_id AND p.user_id = #{userId} AND p.status = '결제완료'))
 	</select>
 	<select id="selectReviewablePersonal" parameterType="long"
 		resultType="Review">

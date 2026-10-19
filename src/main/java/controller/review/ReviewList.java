@@ -51,6 +51,7 @@ public class ReviewList extends HttpServlet {
                 List<Review> reviewList = service.getReviewList(userId);
                 Map<Long, List<Review>> groupList = new LinkedHashMap<>();
                 for (Review r : reviewList) {
+                	String key = r.getMatchType() + "-" + r.getMatchId();
                     groupList.computeIfAbsent(r.getMatchId(), k -> new ArrayList<>()).add(r);
                 }
                 request.setAttribute("groupList", groupList);

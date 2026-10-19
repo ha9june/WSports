@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,29 +9,29 @@ import org.apache.ibatis.session.SqlSession;
 import config.MybatisSqlSessionFactory;
 
 public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
-	//팀 정보 검색과 필터링에 맞는 팀수 세기 / 페이지 번호 보여주기
+	// 팀 정보 검색과 필터링에 맞는 팀수 세기 / 페이지 번호 보여주기
 	@Override
 	public Integer selectAdminTeamCnt(Map<String, Object> param) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampenalty.selectAdminTeamCnt", param);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
-	//한 페이지 팀 목록 / 팀 번호, 팀명
+
+	// 한 페이지 팀 목록 / 팀 번호, 팀명
 	@Override
 	public List<Map<String, Object>> selectAdminTeamList(Map<String, Object> param) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.teampenalty.selectAdminTeamList", param);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
-	//팀 주장 닉네임
+
+	// 팀 주장 닉네임
 	@Override
 	public Map<String, Object> selectTeamCaptain(Long teamId) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -38,59 +39,62 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 		}
 	}
 
-	//팀원 수
+	// 팀원 수
 	@Override
 	public Integer selectTeamMemberCnt(Long teamId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampenalty.selectTeamMemberCnt", teamId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
-	//현재 패널티 점수와 최근 사유
+
+	// 현재 패널티 점수와 최근 사유
 	@Override
 	public Map<String, Object> selectTeamLatestPenalty(Long teamId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty", teamId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
-	//지금 정지중인 기록 수 / 1 이상이면 정지
+
+	// 지금 정지중인 기록 수 / 1 이상이면 정지
 	@Override
 	public Integer selectTeamSuspension(Long teamId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampenalty.selectTeamSuspension", teamId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	//팀 기본 정보
+
+	// 팀 기본 정보
 	@Override
 	public Map<String, Object> selectTeamInfo(Long teamId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampenalty.selectTeamInfo", teamId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	//팀 페널티 리스트
+
+	// 팀 페널티 리스트
 	@Override
 	public List<Map<String, Object>> selectTeamPenaltyList(Long teamId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.teampenalty.selectTeamPenaltyList", teamId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	//관리자 정지기간 조치
+
+	// 관리자 정지기간 조치
 	@Override
 	public void insertTeamPenalty(Map<String, Object> param) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
@@ -102,23 +106,26 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 
 			sqlSession.insert("mapper.teampenalty.insertTeamPenalty", param);
 			sqlSession.commit();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			sqlSession.rollback();
 			throw e;
-		}finally {
+		} finally {
 			sqlSession.close();
 		}
-		
+
 	}
-	//관리자 영구정지
+
+	// 관리자 영구정지
 	@Override
 	public void insertTeamPermanentPenalty(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			try {
 				// 현재 점수 그대로 이어받기 (기록이나 점수가 없으면 0)
-				
-				Map<String, Object> latest = sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty", param.get("teamId"));
-				int score = (latest == null || latest.get("score") == null) ? 0 : ((Number) latest.get("score")).intValue();
+
+				Map<String, Object> latest = sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty",
+						param.get("teamId"));
+				int score = (latest == null || latest.get("score") == null) ? 0
+						: ((Number) latest.get("score")).intValue();
 				param.put("score", score);
 
 				// 영구정지 기록 추가
@@ -130,15 +137,17 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 				throw e;
 			}
 		}
-		
+
 	}
-	//관리자 페널티 조정
+
+	// 관리자 페널티 조정
 	@Override
 	public void insertTeamChangePenalty(Map<String, Object> param) throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			try {
 				// 현재 점수 (기록 없으면 0) - 기존 쿼리 재사용
-				Map<String, Object> latest = sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty", param.get("teamId"));
+				Map<String, Object> latest = sqlSession.selectOne("mapper.teampenalty.selectTeamLatestPenalty",
+						param.get("teamId"));
 				int current = latest == null ? 0 : ((Number) latest.get("score")).intValue();
 
 				// 조정 후 점수 (0 아래로는 안 내려가게)
@@ -156,21 +165,23 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 
 	@Override
 	public int selectsTeamPenaltyScore(Long teamId) throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectOne("mapper.teampenalty.selectsTeamPenaltyScore", teamId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	//스케줄러 : 자동 정지 대상 회원
+
+	// 스케줄러 : 자동 정지 대상 회원
 	@Override
 	public List<Map<String, Object>> selectAutoTeamSuspendTargets() throws Exception {
-		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.teampenalty.selectAutoTeamSuspendTargets");
-		} 
+		}
 	}
-	//스케줄러 : 자동 정지 부여 (기존 쿼리 2개를 한 트랜잭션으로)
+
+	// 스케줄러 : 자동 정지 부여 (기존 쿼리 2개를 한 트랜잭션으로)
 	@Override
 	public void insertAutoTeamSuspend(Map<String, Object> param) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
@@ -182,9 +193,10 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 			throw e;
 		} finally {
 			sqlSession.close();
-		}		
+		}
 	}
-	//스케줄러 : 영구정지 검토 알림 대상 팀 (100점 이상)
+
+	// 스케줄러 : 영구정지 검토 알림 대상 팀 (100점 이상)
 	@Override
 	public List<Map<String, Object>> selectTeamReviewTargets() throws Exception {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
@@ -211,5 +223,18 @@ public class TeamPenaltyDaoImpl implements TeamPenaltyDao {
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 			return sqlSession.selectList("mapper.teampenalty.selectMyTeamViceCaptains", teamId);
 		}
+	}
+
+	@Override
+	public String selectMyTeamRole(long userId, long teamId) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("userId", userId);
+	        param.put("teamId", teamId);
+	        return session.selectOne("mapper.teampenalty.selectMyTeamRole", param);
+	    } finally {
+	        session.close();
+	    }
 	}
 }

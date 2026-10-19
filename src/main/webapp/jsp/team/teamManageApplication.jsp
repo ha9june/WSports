@@ -27,17 +27,14 @@
 		</nav>
 		<div class="page-head" style="margin-bottom: 24px">
 			<h1 class="page-title">팀 관리</h1>
-			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리를 한 화면에서 전환합니다.</p>
+			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리,팀 패널티 내역을 한 화면에서 전환합니다.</p>
 		</div>
-		<nav class="tabs">
-			<a class="tab ${manageTab eq 'application' ? 'is-active' : ''}"
-				href="${ctx}/team/manage/applications?teamId=${team.teamId}">가입 신청</a>
-			<a class="tab ${manageTab eq 'members' ? 'is-active' : ''}"
-				href="${ctx}/team/manage/members?teamId=${team.teamId}">팀원 관리</a>
-			<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}"
-				href="${ctx}/team/manage/posts?teamId=${team.teamId}">팀 작성글 관리</a>
-			<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
-		</nav>
+		 <nav class="tabs">
+			<a class="tab ${manageTab eq 'application' ? 'is-active' : ''}" href="${ctx}team/manage/applications?teamId=${team.teamId}">가입 신청</a>
+			<a class="tab ${manageTab eq 'members' ? 'is-active' : ''}" href="${ctx}/team/manage/members?teamId=${team.teamId}">팀원 관리</a>
+			<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}" href="${ctx}/team/manage/posts?teamId=${team.teamId}">팀 작성글 관리</a>
+			<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${param.teamId}">팀 패널티 내역</a>
+		</nav> 
 		<h2 class="sub-title" style="margin-bottom: 16px">가입 신청
 			${applicationCnt }건</h2>
 		<div class="manage-grid">

@@ -2,17 +2,8 @@
 <%@ include file="/jsp/common/init.jsp"%>
 <%--
   팀 상세 (teamDetail.jsp) - 담당: 하준수
-  피그마: Club / Detail / Desktop (비가입자), Club / Detail / Member View, Club / Detail / Manager View
-  ─ 하나의 JSP 로 처리 ─
-   state : public(비가입자 - 팀원/작성글 잠금, 가입 신청) | member(팀원) | manager(주장·부주장 - 팀 관리 버튼)
-   role  : guest 면 state 와 상관없이 public 화면 + 가입 신청 시 로그인 안내
-   admin : 관리자는 팀 삭제 버튼 노출
-  실구현 : 로그인 사용자와 팀의 관계(TEAM_MEMBER.role)로 서블릿에서 state 계산
+  state : public(비가입자) | member(팀원) | manager(주장·부주장) | applicater(승인 대기)
 --%>
-<%-- <c:set var="state" value="${empty param.state ? 'public' : param.state}" />
-<c:if test="${role eq 'guest'}">
-	<c:set var="state" value="public" />
-</c:if> --%>
 <c:set var="isMember" value="${state eq 'member' or state eq 'manager'}" />
 <c:set var="pageTitle" value="${team.teamName}" />
 <c:set var="pageCss" value="match,team" />
@@ -87,7 +78,9 @@
 	text-decoration: underline;
 }
 
-
+.page-head { margin: 16px 0 24px; }
+.page-head h1 { margin: 0 0 8px; font-size: 32px; font-weight: 800; color: #111827; }
+.page-head p { margin: 0; font-size: 14px; color: #6b7280; }
 </style>
 <script>
 	$(function() {
@@ -267,6 +260,7 @@
 		<nav class="breadcrumb">
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><span>${team.teamName }</span>
 		</nav>
+
 		<div class="detail-grid" style="margin-top: 0">
 			<div class="gallery" id="activePhoto">
 				<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
@@ -274,8 +268,7 @@
 			</div>
 			<aside class="team-side">
 				<div class="top">
-					<span class="logo-ph" id="profileImg"> <%-- <img src="${ctx}/uploads/${team.profileImage }" alt="대표"> --%>
-					</span>
+					<span class="logo-ph" id="profileImg"></span>
 					<div>
 						<h1>
 							<c:out value="${team.teamName}" />
@@ -345,15 +338,13 @@
 		</div>
 
 		<nav class="tabs team-tabs">
-			<a class="tab is-active" href="#intro">소개글</a> <a
-				class="tab ${isMember ? '' : 'locked'}" href="#members">팀원</a> <a
-				class="tab ${isMember ? '' : 'locked'}" href="#posts">팀 작성글</a> <a
-				class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
+			<a class="tab is-active" href="#intro">소개글</a>
+			<a class="tab ${isMember ? '' : 'locked'}" href="#members">팀원</a>
+			<a class="tab ${isMember ? '' : 'locked'}" href="#posts">팀 작성글</a>
 			<!-- 관리자 신고상세에서 팀신고도 상세정보 확인을 위해 신고버튼 추가 -->
 			<c:if test="${state ne 'manager'}">
 				<a class="btn btn-outline btn-sm" style="margin-left: auto"
-					;
-								href="${ctx}/support/report/create?targetType=team&targetNo=${team.teamId}"
+					href="${ctx}/support/report/create?targetType=team&targetNo=${team.teamId}"
 					data-auth>신고</a>
 			</c:if>
 		</nav>
@@ -407,7 +398,7 @@
 												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
 										</c:otherwise>
 									</c:choose>
-							</span>
+								</span>
 								<div class="info">
 									<strong><c:out value="${user.nickname}" /></strong>
 									<c:if test="${user.teamRole eq 'CAPTAIN'}">
@@ -436,7 +427,6 @@
 							href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기 →</a>
 					</div>
 					<div class="post-grid">
-
 						<c:forEach var="match" items="${teamMatchList }">
 							<a class="post-card"
 								href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
@@ -481,24 +471,27 @@
 					<div class="locked-wrap">
 						<div class="member-grid blur" aria-hidden="true" id="teamUserList">
 							<div class="member-card">
-								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
-												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<span class="avatar"><img
+									src="${ctx}/img/default-profile.svg" alt=""
+									style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 초급</p>
 								</div>
 							</div>
 							<div class="member-card">
-								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
-												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<span class="avatar"><img
+									src="${ctx}/img/default-profile.svg" alt=""
+									style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 중급</p>
 								</div>
 							</div>
 							<div class="member-card">
-								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
-												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<span class="avatar"><img
+									src="${ctx}/img/default-profile.svg" alt=""
+									style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 초급</p>
@@ -527,7 +520,7 @@
 						</div>
 						<div class="lock-msg">
 							<strong>🔒 가입 후 확인할 수 있어요</strong>
-							<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
+							<p>이 팀에 가입하면 팀 작성글을 확인할 수 있습니다.</p>
 						</div>
 					</div>
 				</section>
