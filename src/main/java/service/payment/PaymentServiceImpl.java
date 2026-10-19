@@ -213,7 +213,6 @@ public class PaymentServiceImpl implements PaymentService {
 		if (json.has("card") && !json.isNull("card")) {
 			JSONObject card = json.getJSONObject("card");
 			team.setCardCompany(CardCompany.nameOf(card.optString("issuerCode", null)));
-			team.setCardCompany(card.optString("issuerCode", null));
 			team.setCardNumber(card.optString("number", null));
 			team.setInstallmentMonths(card.optInt("installmentPlanMonths", 0));
 		}

@@ -228,7 +228,7 @@
 		LEFT JOIN favorite f
 		ON f.match_id =
 		m.personal_match_id
-		AND f.match_type = 'PERSONAL'
+		AND f.match_type = 'Personal'
 		AND f.user_id =
 		#{userId}
 		WHERE m.latitude BETWEEN #{minLat} AND #{maxLat}

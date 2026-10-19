@@ -86,9 +86,14 @@
 .link-more:hover {
 	text-decoration: underline;
 }
+<<<<<<< HEAD
 .page-head { margin: 16px 0 24px; }
 .page-head h1 { margin: 0 0 8px; font-size: 32px; font-weight: 800; color: #111827; }
 .page-head p { margin: 0; font-size: 14px; color: #6b7280; }
+=======
+
+
+>>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 </style>
 <script>
 	$(function() {
@@ -473,7 +478,6 @@
 						</div>
 					</section>
 				</c:when>
-				<c:otherwise>
 					<section class="team-section" id="members" style="margin-top: 56px">
 						<h2>팀원</h2>
 						<p class="section-desc">가입한 팀원만 확인할 수 있는 정보입니다.</p>
@@ -500,6 +504,59 @@
 										<strong>팀원</strong>
 										<p class="meta">서울 · 초급</p>
 									</div>
+						<a class="link-more"
+							href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기 →</a>
+					</div>
+					<div class="post-grid">
+
+						<c:forEach var="match" items="${teamMatchList }">
+							<a class="post-card"
+								href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
+								<p class="ttl" style="margin: 0">
+									<c:out value="${match.title }"></c:out>
+									<c:choose>
+										<c:when test="${match.status eq '모집중'}">
+											<c:set var="stCls" value="pill-success" />
+										</c:when>
+										<c:when
+											test="${match.status eq '모집 마감' or match.status eq '경기 종료'}">
+											<c:set var="stCls" value="pill-info" />
+										</c:when>
+										<c:when test="${match.status eq '경기 취소'}">
+											<c:set var="stCls" value="pill-danger" />
+										</c:when>
+										<c:otherwise>
+											<c:set var="stCls" value="pill-neutral" />
+										</c:otherwise>
+									</c:choose>
+									<span class="pill ${stCls}"><c:out
+											value="${match.status}" /></span>
+								</p>
+								<p>
+									<c:out value="${match.matchDate }"></c:out>
+									(${match.dayOfWeekKorean})
+									<c:out value="${match.startTime }"></c:out>
+									-
+									<c:out value="${match.endTime }"></c:out>
+									·
+									<c:out value="${match.region }"></c:out>
+								</p>
+							</a>
+						</c:forEach>
+					</div>
+				</section>
+			<c:otherwise>
+				<section class="team-section" id="members" style="margin-top: 56px">
+					<h2>팀원</h2>
+					<p class="section-desc">가입한 팀원만 확인할 수 있는 정보입니다.</p>
+					<div class="locked-wrap">
+						<div class="member-grid blur" aria-hidden="true" id="teamUserList">
+							<div class="member-card">
+								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<div class="info">
+									<strong>팀원</strong>
+									<p class="meta">서울 · 초급</p>
 								</div>
 							</div>
 							<div class="lock-msg">
@@ -520,11 +577,24 @@
 								<div class="post-card">
 									<p class="ttl" style="margin: 0">팀 작성글</p>
 									<p>일정 · 장소</p>
+							<div class="member-card">
+								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<div class="info">
+									<strong>팀원</strong>
+									<p class="meta">서울 · 중급</p>
 								</div>
 							</div>
 							<div class="lock-msg">
 								<strong>🔒 가입 후 확인할 수 있어요</strong>
 								<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
+							<div class="member-card">
+								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<div class="info">
+									<strong>팀원</strong>
+									<p class="meta">서울 · 초급</p>
+								</div>
 							</div>
 						</div>
 					</section>

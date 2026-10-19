@@ -225,7 +225,7 @@
             </dd></div>
             <div class="info-row"><dt>주소</dt><dd>${personalMatch.address}</dd></div>
             <div class="info-row"><dt>장소</dt><dd>${personalMatch.placeName}</dd></div>
-            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee +personalMatch.fee }" />원</dd></div>
+            <div class="info-row"><dt>참가비</dt><dd><fmt:formatNumber value="${personalMatch.participationFee}" />원</dd></div>
             
             <div class="info-row"><dt>참가 인원</dt>
 	            <dd>${personalMatch.currentPeople}명 / ${personalMatch.maxPeople}명

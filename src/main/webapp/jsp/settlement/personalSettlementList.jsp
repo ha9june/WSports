@@ -77,7 +77,7 @@
     <div class="modal-body">
       <div class="field"><label class="field-label">은행</label>
       <select class="select" name="bank" required>
-        <c:forEach var="b" items="카카오뱅크,토스뱅크,국민은행">
+        <c:forEach var="b" items="카카오뱅크,토스뱅크,국민은행,신한은행">
           <option value="${b}" ${bankName eq b ? 'selected' : ''}>${b}</option>
         </c:forEach>
       </select></div>
