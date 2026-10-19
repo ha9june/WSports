@@ -1,70 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
 
-<style>
-	.main-photo {
-		width: 100%;
-		height: 348px;
-		overflow: hidden;
-		border-radius: 20px;
-		background: #1f2328;
-	}
-	.main-photo img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		display: block;
-	}
-	.thumbs {
-		display: flex;
-		gap: 12px;
-		margin-top: 12px;
-	}
-	.thumbs span {
-		width: 120px;
-		height: 90px;
-		overflow: hidden;
-		border-radius: 8px;
-		background: #1f2328;
-		flex-shrink: 0;
-	}
-	.thumbs span img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-	.detail-grid.no-photo .team-tabs {
-		margin-top: 0;
-	}
-	.detail-grid.no-photo .team-side {
-		width: 100%;
-	}
-
-	.intro {
-	    white-space: pre-line;
-	}
-	.team-tabs {
-		position: sticky;
-		top: var(--header-h); 
-		z-index: 40;
-		background: #fff;
-	}
-	
-	.host-name-link:hover {
-	text-decoration: underline;
-}
-
-.side-card .btn-danger-soft {
-	background: #fff !important;
-	color: #dc2626 !important;
-	border: 1px solid #fca5a5 !important;
-}
-.side-card .btn-danger-soft:hover {
-	background: #fef2f2 !important;
-}
-
-</style>
 
 <c:set var="status" value="${personalMatch.status}" />
 <c:set var="isAdmin" value="${sessionScope.user.grade eq 'Admin'}" />
@@ -73,7 +9,7 @@
 
 <c:set var="pageTitle" value="경기 상세" />
 <c:set var="pageCss" value="match" />
-<c:set var="activeNav" value="${isHost ? '' : 'match'}" />
+<c:set var="activeNav" value="match" />
 <script src="${ctx}/js/common.format.js"></script>
 <%@ include file="/jsp/common/header.jsp" %>
 
@@ -113,7 +49,7 @@
 		});
 
 		if (images.length === 0) {
-			$('#activePhoto').hide();
+			$('#matchGallery').hide();
 			return;
 		}
 
@@ -185,16 +121,14 @@
 				<c:choose>
 				    <c:when test="${not empty personalMatch.profileImage}">
 				        <img src="${ctx}/profiles/${personalMatch.profileImage}" alt=""
-				             onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-				             style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+				             onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
 				    </c:when>
 				    <c:otherwise>				    
-				        <img src="${ctx}/img/default-profile.svg" alt=""
-				             style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+				        <img src="${ctx}/img/default-profile.svg" alt="">
 				    </c:otherwise>
 				</c:choose>
 			</span>
-			<div><a class="host-name-link" href="${ctx}/member/publicProfile/view?userId=${personalMatch.userId}"><strong style="color: #111827;">
+			<div><a class="host-name-link" href="${ctx}/member/publicProfile/view?userId=${personalMatch.userId}"><strong>
 			${personalMatch.nickname }
 			</strong></a><small>
 			호스트
@@ -207,8 +141,8 @@
       <div class="detail-main">
       
       	<c:if test="${not empty personalMatch.image}">
-	      	<div class="gallery">
-				<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
+	      	<div class="gallery" id="matchGallery">
+				<div class="main-photo" id="mainPhoto"></div>
 				<div class="thumbs" id="thumbs"></div>
 	        </div>
       	</c:if>
@@ -263,7 +197,7 @@
 
         <section class="map-card">
           <div class="head"><strong>경기 위치</strong><span>${personalMatch.address} ${personalMatch.placeName}</span></div>
-          <div id="map" style="width:100%;height:300px;">
+          <div id="map">
           </div>
         </section>
 
@@ -272,7 +206,7 @@
             <button type="button" class="fav-btn sq ${personalMatch.favorite ? 'is-on' : ''}" 
             data-fav2 data-auth data-match-id="${personalMatch.personalMatchId }" data-match-type="Personal" aria-label="관심 경기">${heart}</button>
 
-            <a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=personalMatch&targetNo=${personalMatch.personalMatchId}" data-auth style="height:36px">신고</a>
+            <a class="btn btn-outline btn-sm" href="${ctx}/support/report/create?targetType=personalMatch&targetNo=${personalMatch.personalMatchId}" data-auth>신고</a>
           </div>
       </div>
 

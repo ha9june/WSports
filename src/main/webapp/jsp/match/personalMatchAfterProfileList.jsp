@@ -11,11 +11,6 @@
 <c:set var="pageTitle" value="경기 후 관리" />
 <c:set var="pageCss" value="match,team" />
 <c:set var="activeNav" value="match" />
-<style>
-.eval-row .who a:hover {
-	text-decoration: underline;
-}
-</style>
 <%@ include file="/jsp/common/header.jsp" %>
 
 <main class="page">
@@ -62,10 +57,10 @@
           <span class="avatar sm">
             <c:choose>
               <c:when test="${not empty me.profileImage}">
-                <img alt="" src="${ctx}${profilePath}/${me.profileImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                <img alt="" src="${ctx}${profilePath}/${me.profileImage}">
               </c:when>
               <c:otherwise>
-                <img alt="" src="${ctx}/img/default-profile.svg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                <img alt="" src="${ctx}/img/default-profile.svg">
               </c:otherwise>
             </c:choose>
           </span>
@@ -91,10 +86,10 @@
             <span class="avatar sm">
               <c:choose>
                 <c:when test="${not empty u.profileImage}">
-                  <img alt="" src="${ctx}${profilePath}/${u.profileImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                  <img alt="" src="${ctx}${profilePath}/${u.profileImage}">
                 </c:when>
                 <c:otherwise>
-                  <img alt="" src="${ctx}/img/default-profile.svg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                  <img alt="" src="${ctx}/img/default-profile.svg">
                 </c:otherwise>
               </c:choose>
             </span>
@@ -114,7 +109,7 @@
         </div>
       </c:forEach>
 
-      <div class="form-actions" style="margin-right:20px">
+      <div class="form-actions">
         <a class="btn btn-primary" href="${ctx}/match/after/profile/list/edit?personalMatchId=${personalMatch.personalMatchId}">정보 수정</a>
       </div>
     </div>
