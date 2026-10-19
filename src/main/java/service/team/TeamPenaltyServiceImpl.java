@@ -106,6 +106,11 @@ public class TeamPenaltyServiceImpl implements TeamPenaltyService {
 		return "";
 	}
 
+	@Override
+	public String getMyTeamRole(long userId, long teamId) throws Exception {
+		 return teamPenaltyDao.selectMyTeamRole(userId, teamId);
+	}
+	
 	// 지금 정지 중인 팀인지
 	@Override
 	public boolean isTeamSuspended(Long teamId) throws Exception {

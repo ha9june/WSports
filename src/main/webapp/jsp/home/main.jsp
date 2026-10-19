@@ -170,12 +170,12 @@
 							class="fav-btn bare ${match.favorite ? 'is-on' : ''}" data-fav
 							data-auth data-id="${match.personalMatchId}" aria-label="관심 경기">${heart}</button>
 						<span class="signal"><img src="${ctx}/img/icon-pin-14.svg"
-							alt="">${sessionScope.user == null  ? '인기 경기' : '지역 · 실력 일치'}</span>
+							alt="">${sessionScope.user == null  ? '인기 경기' : '추천 경기'}</span>
 						<div class="body">
 							<p class="title">${match.title}</p>
 							<p class="when">
 								<img src="${ctx}/img/icon-calendar-14.svg" alt="">
-								<span class="txt">${match.startTime} · ${match.region}</span>
+								<span class="txt">${match.matchDate} (${match.dayOfWeekKorean}) ${match.startTime} ${match.region}</span>
 							</p>
 						</div>
 						<p class="count">${match.currentPeople}명<small>/ 정원

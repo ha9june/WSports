@@ -33,8 +33,8 @@ public interface TeamPenaltyDao {
 	//스케줄러 : 자동 정지 부여 (기록 + 정지 상태, 한 트랜잭션)
 	void insertAutoTeamSuspend(Map<String, Object> param) throws Exception;
 	//스케줄러 : 영구정지 검토 알림 대상 팀 (100점 이상)
+	String selectMyTeamRole(long userId, long teamId) throws Exception;
 	List<Map<String, Object>> selectTeamReviewTargets() throws Exception;
-	
 	List<Map<String, Object>> selectMyTeamViceCaptains(Long teamId) throws Exception;
 	List<Map<String,Object>> selectMypageTeamPenaltyList(Map<String,Object>param)throws Exception;
 	String selectMypageMyTeamNameIfMember(Map<String,Object>param)throws Exception;
