@@ -45,7 +45,7 @@
     		<b><fmt:formatNumber value="${monthlyProfit}" pattern="#,###" />원</b>
     	</div>
   	</div>
-  	<section class="admin-panel">
+  	<%-- <section class="admin-panel">
     	<div class="head">
     		<div>
     			<h2>월별 매출과 수익</h2>
@@ -78,10 +78,14 @@
 			@media (prefers-reduced-motion: reduce) {
 				.lc-line, .lc-dot { animation:none; stroke-dashoffset:0; opacity:1; }
 			}
+			
+			.line-chart.no-anim .lc-line,
+			.line-chart.no-anim .lc-dot { animation:none; stroke-dashoffset:0; opacity:1; }
+			
 		</style>
-		<div class="line-chart" role="img"
+		<div class="line-chart ${empty pageContext.request.queryString ? '' : 'no-anim'}" role="img"
 			aria-label="${chartList[0].month }월부터 ${chartList[5].month }월까지 월별 매출과 수익 선 그래프">
-			<%-- 수정: viewBox 높이 120 → 130 (라벨 아래 여백 확보) --%>
+			수정: viewBox 높이 120 → 130 (라벨 아래 여백 확보)
 			<svg viewBox="0 0 560 130" xmlns="http://www.w3.org/2000/svg">
 				<line class="lc-grid" x1="20" x2="540" y1="10" y2="10"/>
 				<line class="lc-grid" x1="20" x2="540" y1="32.5" y2="32.5"/>
@@ -89,13 +93,13 @@
 				<line class="lc-grid" x1="20" x2="540" y1="77.5" y2="77.5"/>
 				<line class="lc-grid" x1="20" x2="540" y1="100" y2="100"/>
 		
-				<%-- 매출 선 --%>
+				매출 선
 				<path class="lc-line lc-sales" pathLength="1" d="<c:forEach var="m" items="${chartList}" varStatus="st"><c:set var="lcX" value="${40 + st.index * 96}"/><c:set var="lcY" value="${100 - m.revenueHeight * 0.9}"/><c:choose><c:when test="${st.first}">M${lcX},${lcY} </c:when><c:otherwise>C${lcX - 48},${lcPY} ${lcX - 48},${lcY} ${lcX},${lcY} </c:otherwise></c:choose><c:set var="lcPY" value="${lcY}"/></c:forEach>"/>
 		
-				<%-- 수익 선 --%>
+				수익 선
 				<path class="lc-line lc-profit" pathLength="1" d="<c:forEach var="m" items="${chartList}" varStatus="st"><c:set var="lcX" value="${40 + st.index * 96}"/><c:set var="lcY" value="${100 - m.profitHeight * 0.9}"/><c:choose><c:when test="${st.first}">M${lcX},${lcY} </c:when><c:otherwise>C${lcX - 48},${lcPY} ${lcX - 48},${lcY} ${lcX},${lcY} </c:otherwise></c:choose><c:set var="lcPY" value="${lcY}"/></c:forEach>"/>
 		
-				<%-- 점 및 월 표시 --%>
+				점 및 월 표시
 				<c:forEach var="m" items="${chartList}" varStatus="st">
 					<circle class="lc-dot lc-dot-sales" r="2" cx="${40 + st.index * 96}" cy="${100 - m.revenueHeight * 0.9}"
 						style="animation-delay:${st.index * 0.16}s">
@@ -105,16 +109,35 @@
 						style="animation-delay:${st.index * 0.16}s">
 						<title>수익 <fmt:formatNumber value="${m.profit}" pattern="#,###"/>원</title>
 					</circle>
-					<%-- 수정: 월 라벨 y 114 → 124 (그래프와 간격 확대) --%>
+					수정: 월 라벨 y 114 → 124 (그래프와 간격 확대)
 					<text class="lc-label" x="${40 + st.index * 96}" y="124" text-anchor="middle">${m.month}</text>
 				</c:forEach>
 			</svg>
 		</div>
       	<div style="height:20px"></div>
 
-  	</section>
+  	</section> --%>
   	
-  	<%-- <section class="admin-panel">
+  	
+  	
+  	
+  	
+  	
+  	<section class="admin-panel">
+	  	<style>
+		  	.bar-chart .bars i {
+				transform-origin: bottom;
+				transform: scaleY(0);
+				animation: barGrow .5s ease-out forwards;
+			}
+			.bar-chart .bars i.profit { animation-delay: .08s; }
+			@keyframes barGrow { to { transform: scaleY(1); } }
+			
+			@media (prefers-reduced-motion: reduce) {
+				.bar-chart .bars i { animation: none; transform: scaleY(1); }
+			}
+			.bar-chart.no-anim .bars i { animation: none; transform: scaleY(1); }
+	  	</style>
     	<div class="head">
     		<div>
     			<h2>월별 매출과 수익</h2>
@@ -130,7 +153,7 @@
       		</div>
       	</div>
 
-    	<div class="bar-chart" role="img" 
+    	<div class="bar-chart ${empty pageContext.request.queryString ? '' : 'no-anim'}" role="img" 
     	aria-label="${chartList[0].month }월부터 ${chartList[5].month }월까지 월별 매출과 수익 막대 그래프">
       		<c:forEach var="m" items="${chartList}">
         		<div class="grp">
@@ -145,7 +168,7 @@
       		</c:forEach>
     	</div>
     	<div style="height:20px"></div>
-  	</section> --%>
+  	</section>
   	
   	
   	<form class="admin-panel" method="get" id="periodForm">
