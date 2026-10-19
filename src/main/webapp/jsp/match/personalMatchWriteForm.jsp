@@ -211,7 +211,7 @@
 			}
 		}
 		
-		$('#writeForm').on('submit', function (e) {
+		$('#writeForm').on('submit', function (e) { 
 			e.preventDefault();
 
 			/* if (submitting) {
