@@ -44,7 +44,7 @@ public class AuthLogoutSubmit extends HttpServlet {
 			request.getSession().removeAttribute("user");
 			response.sendRedirect(request.getContextPath() + "/home/main");
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 
 		}
 
