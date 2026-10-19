@@ -145,7 +145,7 @@
 	}
 
 	const SEARCH_TYPE_TEXT = {
-		RECOMAND: '지역 · 실력 일치',
+		RECOMAND: '추천 경기',
 		POPULAR: '인기 경기',
 		NEW: '최신 경기',
 		END: '마감임박 경기'
@@ -207,7 +207,7 @@
 						      </p>
 						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
 				                `+FormatDate(item.matchDate, item.startTime)+`
-						      `+esc(item.region)+`
+						     	`+esc(item.region)+`
 						      </p>
 						      <p class="price">
 						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
