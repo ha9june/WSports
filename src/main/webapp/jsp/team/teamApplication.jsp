@@ -6,22 +6,22 @@
   내 프로필 정보는 회원 프로필에서 자동으로 불러오고, 가입 멘트만 입력합니다.
 --%>
 <c:set var="pageTitle" value="가입 신청" />
-<c:set var="pageCss" value="team" />
+<c:set var="pageCss" value="match,team" />
 <c:set var="activeNav" value="team" />
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
-	<form class="rail" id="applyForm" action="${ctx}/team/application" method="post">
+	<form class="form-rail match-form" id="applyForm" action="${ctx}/team/application" method="post">
 		<input type="hidden" name="teamId" value="${team.teamId}">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><a
 				href="${ctx}/team/detail/view?teamId=${team.teamId}"><c:out value="${team.teamName}" /></a><span class="sep">›</span><span>가입
 				신청</span>
 		</nav>
-		<div class="page-head" style="padding-left: 24px">
+		<div class="page-head">
 			<h1 class="page-title">가입 신청</h1>
 			<p class="page-desc">주장이 프로필과 가입 멘트를 확인한 뒤 승인합니다.</p>
 		</div>
-		<div style="width: 744px; max-width: 100%; margin-left: 24px">
+		<div class="team-form-inner">
 			<section class="apply-card">
 				<h2>내 프로필</h2>
 				<c:choose>
@@ -64,16 +64,15 @@
 				</dl>
 				<div class="field">
 					<label class="field-label strong" for="joinMsg">가입 멘트</label>
-					<textarea class="textarea" id="joinMsg" name="message"
+					<textarea class="textarea soft" id="joinMsg" name="message"
 						maxlength="200" placeholder="간단한 자기소개나 가입하고 싶은 이유를 적어주세요."
 						required></textarea>
 				</div>
 			</section>
 			<div class="form-actions">
-				<a class="btn btn-outline btn-sm"
-					href="${ctx}/team/detail/view?teamId=${team.teamId}" style="width: 84px">취소</a>
-				<button type="submit" class="btn btn-primary btn-sm" id="applyBtn"
-					style="width: 90px">가입 신청</button>
+				<a class="btn btn-outline"
+					href="${ctx}/team/detail/view?teamId=${team.teamId}">취소</a>
+				<button type="submit" class="btn btn-primary" id="applyBtn">가입 신청</button>
 			</div>
 		</div>
 	</form>

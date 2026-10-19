@@ -256,8 +256,8 @@
 					              <hr>
 					              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 					              <div class="actions row">			             
-					                <a class="btn btn-primary btn-sm" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
-					                <button type="button" class="btn btn-danger btn-sm" data-modal-open="refundModal">신청 취소</button>
+					                <a class="btn btn-primary" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
+					                <button type="button" class="btn btn-danger" data-modal-open="refundModal">신청 취소</button>
 					              </div>
 					            </div>
 		        			</c:when>
@@ -276,7 +276,7 @@
 										합계 <b class="lg"><fmt:formatNumber value="${personalMatch.participationFee + personalMatch.fee}" />원</b>
 									</div>
 					              <hr>
-					              <p class="note" style="margin-top:0">결제하면 참가가 바로 확정됩니다.</p>
+					              <p class="note">결제하면 참가가 바로 확정됩니다.</p>
 					              <div class="actions">
 					                <a class="btn btn-primary" href="${ctx}/payment/confirm?state=match&matchId=${personalMatch.personalMatchId}" data-auth>결제하기</a>
 					              </div>
@@ -312,7 +312,7 @@
 					              <hr>
 					              <p class="note">경기 전까지 신청 상태와 참가자 정보를 확인할 수 있어요.</p>
 					              <div class="actions row">
-					                <a class="btn btn-primary btn-sm" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
+					                <a class="btn btn-primary" href="${ctx}/match/profile/list?personalMatchId=${personalMatch.personalMatchId}">참가자 보기</a>
 					              </div>
 				            </c:if>
 			            </div>

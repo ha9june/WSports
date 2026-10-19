@@ -205,7 +205,7 @@
 	});
 </script>
 <main class="page">
-	<form class="form-rail"
+	<form class="form-rail match-form"
 		action="${ctx}/team-match/create"
 		method="post" enctype="multipart/form-data">
 		<nav class="breadcrumb">
@@ -295,8 +295,8 @@
 				<div class="form-row c-2">
 					<div class="field">
 						<label class="field-label strong" for="address">장소</label>
-						<div class="field-row" style="display:flex; gap:8px;">
-							<input class="input" id="address" name="address" style="flex:1; min-width:0;"
+						<div class="field-row">
+							<input class="input" id="address" name="address"
 								placeholder="주소를 검색하세요" readonly>
 							<button type="button" id="postSearch" class="btn btn-primary btn-lg">검색</button>
 						</div>
@@ -388,7 +388,7 @@
 				<h2 class="sub-title">상세 내용</h2>
 				<div class="field">
 					<label class="field-label strong" for="tmDesc">상세 설명</label>
-					<textarea class="textarea soft" id="tmDesc" name="content" rows="5"
+					<textarea class="textarea soft" id="tmDesc" name="content" rows="6"
 						placeholder="경기 방식, 준비물, 팀 유니폼 색상 등을 적어주세요."></textarea>
 				</div>
 

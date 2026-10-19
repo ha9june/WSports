@@ -9,73 +9,8 @@
 <c:set var="pageCss" value="match,team" />
 <c:set var="activeNav" value="teamMatch" />
 <%@ include file="/jsp/common/header.jsp"%>
-<style>
-.match-summary {
-	position: relative;
-	background: #f8f9fb !important;
-	border: 0;
-	border-radius: 12px;
-	padding: 20px 24px;
-	margin-bottom: 24px;
-}
-.match-summary .meta span {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	font-size: 13px;
-}
-.match-summary .meta span img {
-	width: 18px;
-	height: 18px;
-	flex-shrink: 0;
-}
-.match-summary > div:first-of-type strong {
-	font-size: 21px;
-	line-height: 1.4;
-	margin: 6px 0 10px;
-}
-.match-summary .target {
-	font-size: 11px;
-}
-.match-summary .target b {
-	font-size: 18px;
-}
-.vs-card {
-	border-radius: 12px;
-}
-.vs-card .body > img {
-	width: 72px;
-	height: 72px;
-	border-radius: 50%;
-	object-fit: cover;
-}
-
-.match-summary .meta {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	gap: 8px 20px;
-	margin: 0;
-}
-
-.match-detail-link {
-	position: absolute;
-	top: 18px;
-	right: 22px;
-	color: #1a6bff;
-	font-size: 12px;
-	font-weight: 600;
-	text-decoration: none;
-}
-.match-detail-link:hover {
-	text-decoration: underline;
-}
-.match-summary .target {
-	margin-top: 22px;
-}
-</style>
 <main class="page">
-	<div class="container">
+	<div class="container narrow-rail">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team-match/list">상대팀 찾기</a><span class="sep">›</span><span>참가
 				팀 확인</span>
@@ -139,7 +74,12 @@
 						</c:choose>
 					<dl>
 						<dt>활동 지역</dt>
-						<dd>${hostTeam.regions}</dd>
+						<dd class="region-list">
+								<%-- "서울시 종로구 · 경기도 고양시" → 지역마다 한 줄씩 --%>
+								<c:forEach var="r" items="${fn:split(hostTeam.regions, '·,')}">
+									<span><c:out value="${fn:trim(r)}" /></span>
+								</c:forEach>
+							</dd>
 						<dt>인원</dt>
 						<dd>${hostTeam.currentPeople}명</dd>
 						<dt>종목</dt>
@@ -187,7 +127,12 @@
 						</c:choose>
 					<dl>
 						<dt>활동 지역</dt>
-						<dd>${guestTeam.regions}</dd>
+						<dd class="region-list">
+								<%-- "서울시 종로구 · 경기도 고양시" → 지역마다 한 줄씩 --%>
+								<c:forEach var="r" items="${fn:split(guestTeam.regions, '·,')}">
+									<span><c:out value="${fn:trim(r)}" /></span>
+								</c:forEach>
+							</dd>
 						<dt>인원</dt>
 						<dd>${guestTeam.currentPeople}명</dd>
 						<dt>종목</dt>

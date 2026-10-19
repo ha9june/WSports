@@ -13,113 +13,6 @@
 <c:set var="activeNav" value="match" />
 <c:set var="showFooter" value="true" />
 <%@ include file="/jsp/common/header.jsp" %>
-<style>
-	.is-hidden { display: none !important; }
-	
-	.map-title-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-	.map-title-row strong {
-		flex: 1;
-		min-width: 0;
-	}
-	.map-title-row .fav-btn {
-		position: static !important;
-		flex-shrink: 0;
-		margin: 0;
-	}
-	
-	.map-result {
-		display: grid !important;
-		grid-template-columns: 2.5fr 1fr; /* 지도 : 리스트 = 1 : 1 */
-		gap: 16px;
-	}
-	.map-result .map-canvas {
-		width: 100% !important;
-		height: 420px !important; /* 지도 높이 */
-	}
-	.map-result .map-list {
-		max-height: 420px !important; /* 지도 높이와 맞춤 */
-	}
-	
-	
-	
-	
-	
-	.map-card {
-		display: flex; gap: 10px; align-items: flex-start;
-		padding: 12px 14px; margin-bottom: 10px;
-		background: #fff; border: 1px solid #e5e5e5; border-radius: 12px;
-		cursor: pointer; transition: border-color .15s;
-	}
-	.map-card:hover, .map-card.is-selected { border-color: #0b5fff; }
-	
-	.map-card-ic {
-		width: 36px; height: 36px; flex: none; border-radius: 10px;
-		background: #f1f1f1; display: flex; align-items: center; justify-content: center;
-	}
-	.map-card-ic img { width: 36px; height: 36px; }
-	.map-card.basketball .map-card-ic { background: #fdf0dc; }
-	.map-card.football   .map-card-ic { background: #e6f1fb; }
-	.map-card.tennis     .map-card-ic { background: #eaf3de; }
-	.map-card.badminton  .map-card-ic { background: #eeedfe; }
-	
-	.map-card-body { flex: 1; min-width: 0; }
-	.map-card-top { display: flex; align-items: center; justify-content: space-between; }
-	.map-card-status { font-size: 12px; color: #1a7f4b; }
-	.map-card-status.is-closed { color: #888; }
-	.map-card-top .fav-btn { position: static !important; margin: 0; flex-shrink: 0; }
-	
-	.map-card-title {
-		margin: 4px 0; font-size: 14px; font-weight: 600; line-height: 1.4;
-		overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-	}
-	.map-card-meta  { margin: 0; font-size: 12px; color: #666; }
-	.map-card-price { margin: 6px 0 0; font-size: 14px; font-weight: 600; }
-	
-	
-	
-	/* 지도 옆 리스트 + 그룹 말풍선 스크롤바 */
-	.map-result .map-list,
-	.map-group-pop {
-		scrollbar-width: thin;                              /* 파이어폭스 */
-		scrollbar-color: #c8ccd2 transparent;
-	}
-	.map-result .map-list::-webkit-scrollbar,
-	.map-group-pop::-webkit-scrollbar {
-		width: 6px;
-	}
-	.map-result .map-list::-webkit-scrollbar-track,
-	.map-group-pop::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	.map-result .map-list::-webkit-scrollbar-thumb,
-	.map-group-pop::-webkit-scrollbar-thumb {
-		background: #d5d8dd;
-		border-radius: 999px;
-	}
-	.map-result .map-list::-webkit-scrollbar-thumb:hover,
-	.map-group-pop::-webkit-scrollbar-thumb:hover {
-		background: #aeb3bb;
-	}
-	
-	.map-result .map-list {
-		padding-right: 8px;
-		scrollbar-gutter: stable;   /* 스크롤바 유무에 따라 폭이 흔들리지 않게 */
-	}
-	.map-result .map-list h3 {
-		position: sticky; top: 0; z-index: 1;
-		margin: 0; padding: 4px 0 8px; background: #fff;   /* 배경색은 페이지 배경에 맞추세요 */
-	}
-	
-	
-	
-	
-	
-</style>
 <script src="${ctx}/js/common.format.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -206,11 +99,8 @@
 						      	`+esc(item.title)+`
 						      </p>
 						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
-				                `+FormatDate(item.matchDate, item.startTime)+`
-						     	`+esc(item.region)+`
-						      </p>
-						      <p class="price">
-						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
+				                <span class="txt">`+FormatDate(item.matchDate, item.startTime)+`
+						     	`+esc(item.region)+`</span>
 						      </p>
 						    </div>
 						    <p class="count">
@@ -218,6 +108,9 @@
 						    <small>/ 정원 
 						    `+item.maxPeople+`
 						    명</small></p>
+						    <p class="price">
+						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
+						    </p>
 						    <div class="bar"><i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i></div>
 						  </a>
 			            `;
@@ -562,10 +455,10 @@
 	        </section>
 	        
 	        
-	        <div class="map-result">
+	        <div class="map-result card-list">
    	          <div class="map-canvas" id="map">
    	          </div>
-	          <div id="mapMatchListDiv" class="map-list" style="max-height:420px;overflow-y: auto;">
+	          <div id="mapMatchListDiv" class="map-list">
 	           </div>
 	        </div>
 		</div>

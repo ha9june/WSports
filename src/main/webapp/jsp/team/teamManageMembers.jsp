@@ -52,7 +52,7 @@
 				href="${ctx}/team/detail/view?teamId=${teamId}">${team.teamName }</a><span
 				class="sep">›</span><span>관리</span>
 		</nav>
-		<div class="page-head" style="margin-bottom: 24px">
+		<div class="page-head">
 			<h1 class="page-title">팀 관리</h1>
 			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리,팀 패널티 내역을 한 화면에서 전환합니다.</p>
 		</div>
@@ -66,7 +66,7 @@
 			<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
 		</nav>
 		<h2 class="sub-title">팀원 ${team.currentPeople }명</h2>
-		<p class="section-desc" style="margin-bottom: 24px">팀원의 역할을 확인하고
+		<p class="section-desc">팀원의 역할을 확인하고
 			관리할 수 있어요.</p>
 		<%-- TODO: <c:forEach var="m" items="${memberList}"> 주장 본인은 메뉴 없음 --%>
 		<div class="member-grid">
@@ -115,7 +115,7 @@
 							</c:choose>
 						</p>
 						<c:if test="${not empty m.joinedAt}">
-							<p class="meta" style="margin-top:2px;">
+							<p class="meta">
 								${fn:substring(m.joinedAt, 0, 10)} 가입
 							</p>
 						</c:if>

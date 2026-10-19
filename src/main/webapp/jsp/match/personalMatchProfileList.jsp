@@ -9,124 +9,6 @@
 <c:set var="pageCss" value="match" />
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp" %>
-<style>
-/* 경기 정보 박스: 참가자 박스와 같은 톤 */
-.match-summary {
-	position: relative;
-	background: #f8f9fb !important;
-	border: 0;
-	border-radius: 12px;
-	padding: 20px 24px;
-	margin-bottom: 24px;
-}
-.match-summary .meta span {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-}
-.match-summary .meta span img {
-	flex-shrink: 0;
-}
-.match-summary .target {
-	margin-top: 28px;
-}
-.match-summary .target small {
-	color: #1a6bff;
-	font-weight: 600;
-}
-
-/* 경기 상세 보기: 박스 오른쪽 위 (참가자 인원 위) */
-.match-detail-link {
-	position: absolute;
-	top: 20px;
-	right: 24px;
-	color: #1a6bff;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-}
-.match-detail-link:hover {
-	text-decoration: underline;
-}
-
-/* 왼쪽: 제목, 경기 정보 키우기 */
-.match-summary > div:first-of-type strong {
-	font-size: 21px;
-	line-height: 1.4;
-	margin: 6px 0 10px;
-}
-.match-summary .meta {
-	font-size: 15px;
-	gap: 28px;
-}
-.match-summary .meta span {
-	font-size: 13px;
-	gap: 8px;
-}
-.match-summary .meta span img {
-	width: 18px;
-	height: 18px;
-}
-
-/* 오른쪽: 경기 상세 보기, 참가자 인원 줄이기 */
-.match-detail-link {
-	font-size: 12px;
-	top: 18px;
-	right: 22px;
-}
-.match-summary .target {
-	margin-top: 22px;
-	font-size: 11px;
-}
-.match-summary .target b {
-	font-size: 18px;
-}
-.match-summary .target small {
-	font-size: 11px;
-}
-
-.person-row {
-	align-items: center;
-	gap: 12px;
-	padding: 12px 16px;
-}
-.person-row .avatar {
-	width: 36px;
-	height: 36px;
-	flex-shrink: 0;
-}
-.person-row .info strong {
-	display: block;
-	font-size: 14px;
-	font-weight: 700;
-	color: #111827;
-	margin-bottom: 2px;
-}
-.person-row .info .meta {
-	margin: 0;
-	font-size: 11px;
-	color: #6b7280;
-	font-weight: 500;
-}
-.person-row .info strong {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-.person-row .host-badge {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	height: 18px;
-	padding: 0 8px;
-	border-radius: 99px;
-	background: var(--ds-brand-subtle, #e8f1ff);
-	color: var(--ds-brand, #1a6bff);
-	font-size: 10px;
-	font-weight: 700;
-	line-height: 1;
-}
-</style>
 
 <main class="page">
   <div class="container narrow-rail">
@@ -171,12 +53,10 @@
             <c:choose>
               <c:when test="${not empty user.profileImage}">
                 <img src="${ctx}/profiles/<c:out value='${user.profileImage}' />" alt=""
-                     onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-                     style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+                     onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
               </c:when>
               <c:otherwise>
-                <img src="${ctx}/img/default-profile.svg" alt=""
-                     style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+                <img src="${ctx}/img/default-profile.svg" alt="">
               </c:otherwise>
             </c:choose>
           </span>

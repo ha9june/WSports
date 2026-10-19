@@ -31,7 +31,7 @@
 </c:choose>
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
-	<div class="container">
+	<div class="container narrow-rail">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team-match/list">팀 경기</a><span class="sep">›</span><span>경기 후 관리</span>
 		</nav>
@@ -80,7 +80,7 @@
 			<div class="eval-row">
 				<div class="who">
 					<span class="avatar sm">
-						<img alt="" src="${hostImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+						<img alt="" src="${hostImg}">
 					</span>
 					<div>
 						<c:out value="${hostTeam.teamName}" /><small>모집 팀${hostIsOur ? ' · 우리 팀' : ''}</small>
@@ -118,7 +118,7 @@
 			<div class="eval-row">
 				<div class="who">
 					<span class="avatar sm">
-						<img alt="" src="${guestImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+						<img alt="" src="${guestImg}">
 					</span>
 					<div>
 						<c:out value="${guestTeam.teamName}" /><small>참가 팀${hostIsOur ? '' : ' · 우리 팀'}</small>
@@ -152,7 +152,7 @@
 				</c:choose>
 			</div>
 
-			<div class="form-actions" style="margin-right: 20px">
+			<div class="form-actions">
 				<button type="submit" class="btn btn-primary">정보 저장</button>
 			</div>
 		</form>

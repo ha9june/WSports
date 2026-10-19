@@ -63,7 +63,7 @@
 		
 	</script>
 
-	<form class="form-rail" action="${ctx}/team/create" method="post"
+	<form class="form-rail match-form" action="${ctx}/team/create" method="post"
 		enctype="multipart/form-data">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><span>팀
@@ -73,96 +73,53 @@
 			<h1 class="page-title">팀 만들기</h1>
 			<p class="page-desc">기본 정보와 소개글을 입력해 팀을 만들어보세요.</p>
 		</div>
-		<div class="team-form-inner">
+		<div class="team-form-inner team-form-flat">
 			<div class="field">
-				<label class="field-label" for="teamName">팀명
-					<span class="hint" id="teamNameCount">0/15</span>
+				<label class="field-label strong" for="teamName">팀명
+					<span class="hint-gray" id="teamNameCount">0/15</span>
 				</label>
 				<input class="input" id="teamName" name="teamName" value=""
-					maxlength="15" autocomplete="off"
-					placeholder="팀 이름을 입력하세요 (2~15자)">
+					maxlength="15" autocomplete="off" placeholder="팀 이름을 입력하세요 (2~15자)">
 			</div>
 
-			<div class="field mt-24">
-				<span class="field-label strong"> 대표 사진 <span
-					class="t-11 t-2" style="font-weight: 400"> JPG, PNG · 1장 </span>
-				</span>
-
+			<div class="field">
+				<span class="field-label strong">대표 사진 <span class="hint-gray">JPG, PNG · 1장</span></span>
 				<div class="photo-box">
-
-					<label class="ph" style="cursor: pointer;"> <span
-						id="profilePreviewText">사진 추가</span> <img id="profileImgPreview"
-						alt=""
-						style="display: none; width: 100%; height: 100%; object-fit: cover;">
-
-						<input type="file" name="profileImage" accept="image/*" hidden
-						onchange="readURL(this)">
-						<button type="button" class="ph-remove" style="display: none;"
-							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
+					<label class="ph">
+						<span id="profilePreviewText">사진 추가</span>
+						<img id="profileImgPreview" alt="">
+						<input type="file" name="profileImage" accept="image/*" hidden onchange="readURL(this)">
+						<button type="button" class="ph-remove" aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
 					</label>
-
 					<div>
 						<p>팀을 대표하는 사진을 등록해주세요. 목록과 상세 화면에 표시됩니다.</p>
 						<p>사진 영역을 다시 클릭하면 다른 사진으로 변경할 수 있어요.</p>
 					</div>
-
 				</div>
 			</div>
-			<div class="field mt-24">
-				<span class="field-label strong"> 활동 사진 <span
-					class="t-11 t-2" style="font-weight: 400"> JPG, PNG · 최대 5장
-				</span>
-				</span>
 
+			<div class="field">
+				<span class="field-label strong">활동 사진 <span class="hint-gray">JPG, PNG · 최대 5장</span></span>
 				<div class="photo-box activity-photo-box">
-
-					<label class="ph" style="cursor: pointer;"> <span
-						id="activityText1">사진 추가</span> <img id="activityPreview1" alt=""
-						style="display: none; width: 100%; height: 100%; object-fit: cover;">
-						<input type="file" name="activityImg1" accept="image/*" hidden
-						onchange="previewActivity(this, 'activityPreview1', 'activityText1')">
-						<button type="button" class="ph-remove" style="display: none;"
-							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
-					</label> <label class="ph" style="cursor: pointer;"> <span
-						id="activityText2">사진 추가</span> <img id="activityPreview2" alt=""
-						style="display: none; width: 100%; height: 100%; object-fit: cover;">
-						<input type="file" name="activityImg2" accept="image/*" hidden
-						onchange="previewActivity(this, 'activityPreview2', 'activityText2')">
-						<button type="button" class="ph-remove" style="display: none;"
-							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
-					</label> <label class="ph" style="cursor: pointer;"> <span
-						id="activityText3">사진 추가</span> <img id="activityPreview3" alt=""
-						style="display: none; width: 100%; height: 100%; object-fit: cover;">
-						<input type="file" name="activityImg3" accept="image/*" hidden
-						onchange="previewActivity(this, 'activityPreview3', 'activityText3')">
-						<button type="button" class="ph-remove" style="display: none;"
-							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
-					</label> <label class="ph" style="cursor: pointer;"> <span
-						id="activityText4">사진 추가</span> <img id="activityPreview4" alt=""
-						style="display: none; width: 100%; height: 100%; object-fit: cover;">
-						<input type="file" name="activityImg4" accept="image/*" hidden
-						onchange="previewActivity(this, 'activityPreview4', 'activityText4')">
-						<button type="button" class="ph-remove" style="display: none;"
-							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
-					</label> <label class="ph" style="cursor: pointer;"> <span
-						id="activityText5">사진 추가</span> <img id="activityPreview5" alt=""
-						style="display: none; width: 100%; height: 100%; object-fit: cover;">
-						<input type="file" name="activityImg5" accept="image/*" hidden
-						onchange="previewActivity(this, 'activityPreview5', 'activityText5')">
-						<button type="button" class="ph-remove" style="display: none;"
-							aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
-					</label>
+					<c:forEach var="i" begin="1" end="5">
+						<label class="ph">
+							<span id="activityText${i}">사진 추가</span>
+							<img id="activityPreview${i}" alt="">
+							<input type="file" name="activityImg${i}" accept="image/*" hidden
+								onchange="previewActivity(this, 'activityPreview${i}', 'activityText${i}')">
+							<button type="button" class="ph-remove" aria-label="사진 삭제" onclick="removePhoto(event, this)">✕</button>
+						</label>
+					</c:forEach>
 					<div class="photo-guide">
 						<p>팀 활동 모습을 보여주는 사진을 여러 장 등록할 수 있어요.</p>
 						<p>사진 영역을 다시 클릭하면 다른 사진으로 변경할 수 있어요.</p>
 					</div>
-
 				</div>
 			</div>
 
-			<div class="field mt-24">
-				<label class="field-label" for="sport">종목</label> <select
-					class="select" id="sport" name="sportCode">
+			<div class="field">
+				<label class="field-label strong" for="sport">종목</label>
+				<select class="select" id="sport" name="sportCode">
 					<option value="" selected disabled>종목 선택</option>
 					<option value="축구/풋살">축구/풋살</option>
 					<option value="농구">농구</option>
@@ -171,68 +128,42 @@
 				</select>
 			</div>
 
-			<div class="field mt-24">
-				<span class="field-label strong"> 활동 요일 <span class="hint"> 복수 선택 가능 </span>
-				</span>
-
+			<div class="field">
+				<span class="field-label strong">활동 요일 <span class="hint-gray">복수 선택 가능</span></span>
 				<div class="chip-group" data-select="multi" data-hidden="days">
-
 					<c:forTokens items="월,화,수,목,금,토,일" delims="," var="d">
-						<button type="button" data-value="${d}" class="chip">
-							${d}</button>
+						<button type="button" class="chip" data-value="${d}">${d}</button>
 					</c:forTokens>
 				</div>
-
 				<input type="hidden" name="days" id="days">
 			</div>
-			<div class="field mt-24">
-				<span class="field-label strong"> 활동 시간대 <span class="hint"> 복수 선택 가능 </span>
-				</span>
 
+			<div class="field">
+				<span class="field-label strong">활동 시간대 <span class="hint-gray">복수 선택 가능</span></span>
 				<div class="chip-group" data-select="multi" data-hidden="times">
-
-					<button type="button" class="chip" data-value="아침 06~09시">아침
-						06~09시</button>
- 
-					<button type="button" class="chip" data-value="오전 09~12시">오전
-						09~12시</button>
-
-					<button type="button" class="chip" data-value="오후 12~18시">오후
-						12~18시</button>
-
-					<button type="button" class="chip" data-value="저녁 18~22시">저녁
-						18~22시</button>
-
-					<button type="button" class="chip" data-value="야간 22~06시">야간
-						22~06시</button>
+					<button type="button" class="chip" data-value="아침 06~09시">아침 06~09시</button>
+					<button type="button" class="chip" data-value="오전 09~12시">오전 09~12시</button>
+					<button type="button" class="chip" data-value="오후 12~18시">오후 12~18시</button>
+					<button type="button" class="chip" data-value="저녁 18~22시">저녁 18~22시</button>
+					<button type="button" class="chip" data-value="야간 22~06시">야간 22~06시</button>
 				</div>
-
 				<input type="hidden" name="times" id="times">
 			</div>
-			<div class="field mt-24">
-				<span class="field-label strong"> 연령대 <span class="hint"> 복수 선택 가능 </span>
-				</span>
 
+			<div class="field">
+				<span class="field-label strong">연령대 <span class="hint-gray">복수 선택 가능</span></span>
 				<div class="chip-group" data-select="multi" data-hidden="ages">
-
 					<button type="button" class="chip" data-value="20대">20대</button>
-
 					<button type="button" class="chip" data-value="30대">30대</button>
-
 					<button type="button" class="chip" data-value="40대">40대</button>
-
-					<button type="button" class="chip" data-value="50대 이상">50대
-						이상</button>
-
-					<button type="button" class="chip" data-value="연령 무관">연령
-						무관</button>
+					<button type="button" class="chip" data-value="50대 이상">50대 이상</button>
+					<button type="button" class="chip" data-value="연령 무관">연령 무관</button>
 				</div>
-
 				<input type="hidden" name="ages" id="ages">
 			</div>
 
-			<div class="field mt-24">
-				<span class="field-label strong">활동 지역 <span class="hint">복수 선택 가능 · 최대 3개</span></span>
+			<div class="field">
+				<span class="field-label strong">활동 지역 <span class="hint-gray">복수 선택 가능 · 최대 3개</span></span>
 				<div class="region-box">
 					<div class="row2">
 						<div class="field">
@@ -250,51 +181,37 @@
 							</select>
 						</div>
 					</div>
-					<p class="field-help mt-8">서울은 구 단위, 경기도는 시 단위로 선택합니다. 예: 마포구 /
-						성남시</p>
-					<p id="maxRegion" class="field-help mt-8"
-						style="color: red; display: none;">최대 3개까지 선택 가능합니다.</p>
+					<p class="field-help mt-8">서울은 구 단위, 경기도는 시 단위로 선택합니다. 예: 마포구 / 성남시</p>
+					<p id="maxRegion" class="field-help mt-8 region-max" style="display: none;">최대 3개까지 선택 가능합니다.</p>
 					<div class="picked"></div>
 					<div id="regionInputs"></div>
 				</div>
 			</div>
 
-			<div class="field mt-24">
+			<div class="field">
 				<span class="field-label strong">성별</span>
-
 				<div class="chip-group" data-select="single" data-hidden="gender">
-
 					<button type="button" class="chip" data-value="남자">남자</button>
-
 					<button type="button" class="chip" data-value="여자">여자</button>
-
-					<button type="button" class="chip" data-value="성별 무관">성별
-						무관</button>
+					<button type="button" class="chip" data-value="성별 무관">성별 무관</button>
 				</div>
-
 				<input type="hidden" name="gender" id="gender">
 			</div>
-			<div class="field mt-24">
-				<span class="field-label strong"> 팀 레벨 <span class="t-11 t-2"
-					style="font-weight: 400"> 대표적인 팀 실력을 선택해주세요. </span>
-				</span>
 
+			<div class="field">
+				<span class="field-label strong">팀 레벨 <span class="hint-gray">대표적인 팀 실력을 선택해주세요</span></span>
 				<div class="chip-group" data-select="single" data-hidden="skill">
-
 					<button type="button" class="chip" data-value="입문">입문</button>
-
 					<button type="button" class="chip" data-value="초급">초급</button>
-
 					<button type="button" class="chip" data-value="중급">중급</button>
-
 					<button type="button" class="chip" data-value="상급">상급</button>
 				</div>
-
 				<input type="hidden" name="skill" id="skill">
 			</div>
-			<div class="field mt-24">
+
+			<div class="field">
 				<label class="field-label strong" for="intro">팀 소개</label>
-				<textarea class="textarea" id="intro" name="intro" rows="6"
+				<textarea class="textarea soft" id="intro" name="intro" rows="6"
 					placeholder="모임 성격, 활동 방식, 가입 조건 등을 적어주세요."></textarea>
 			</div>
 

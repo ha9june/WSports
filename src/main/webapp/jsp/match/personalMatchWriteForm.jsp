@@ -81,8 +81,8 @@
 		<div class="form-row c-2">
 		  <div class="field">
 		    <label class="field-label strong" for="address">장소</label>
-		    <div class="field-row" style="display:flex; gap:8px;">
-		      <input class="input" id="address" name="address" style="flex:1; min-width:0;"
+		    <div class="field-row">
+		      <input class="input" id="address" name="address"
 		        placeholder="주소를 검색하세요" value="" readonly required>
 		      <button type="button" id="postSearch" class="btn btn-primary btn-lg">검색</button>
 		    </div>

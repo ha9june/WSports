@@ -13,183 +13,8 @@
 <c:set var="showFooter" value="true" />
 <c:set var="demoStates" value="recent:최근 후기|grouped:경기별 모아보기" />
 <%@ include file="/jsp/common/header.jsp"%>
-<style>
-.review-group .group-title {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 6px;
-	margin: 0 0 10px !important;
-	padding: 0 !important;
-	text-align: left;
-}
-.review-group .group-title strong {
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	width: 100%;
-	margin: 0;
-	font-size: 16px;
-	line-height: 1.35;
-	white-space: normal;
-	overflow: hidden;
-	word-break: keep-all;
-}
-.review-group .group-title span {
-	margin: 0;
-	padding: 2px 10px;
-	border-radius: 999px;
-	background: #eef4ff;
-	color: #1a6bff;
-	font-size: 12px;
-	font-weight: 700;
-}
-/* 경기별 후기: 경기 블록 3열 */
-.group-grid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 16px 24px;   /* 40px → 16px */
-	align-items: start;
-	margin-top: 24px;
-}
-@media (max-width: 900px) { .group-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .group-grid { grid-template-columns: 1fr; } }
-
-.review-group { min-width: 0; }
-.group-reviews { display: flex; flex-direction: column; gap: 16px; }
-.review-grid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 32px 24px;
-	align-items: start;
-}
-@media (max-width: 900px) { .review-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .review-grid { grid-template-columns: 1fr; } }
-
-.review-card .thumb {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: #fff;
-	border-bottom: 1px solid #eef0f3; /* 본문과 구분선 */
-}
-
-.review-card .thumb img {
-	height: 56px; /* 로고가 꽉 차 보이지 않게 */
-	object-fit: contain;
-}
-
-.review-toolbar .chip.is-selected {
-	background: #eef4ff;
-	border: 1px solid #1a6bff;
-	color: #1a6bff;
-	font-weight: 700;
-}
-
-.review-toolbar .chip:hover {
-	border-color: #1a6bff;
-	color: #1a6bff;
-}
-
-.review-toolbar .search-btn {
-	height: 44px;
-	padding: 0 22px;
-	border: 1px solid #1a6bff;
-	border-radius: 10px;
-	background: #1a6bff;
-	color: #fff;
-	font-size: 14px;
-	font-weight: 600;
-	white-space: nowrap;
-	cursor: pointer;
-}
-
-.review-toolbar .search-btn:hover {
-	background: #1558d6;
-	border-color: #1558d6;
-	color: #fff;
-}
-
-.review-toolbar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	/* 칩은 왼쪽, 검색은 오른쪽 끝 */
-	gap: 16px;
-	flex-wrap: wrap;
-	justify-content: space-between;
-}
-
-.review-toolbar .search-box {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-
-.review-toolbar .search-box .input {
-	width: 300px;
-	height: 44px;
-	box-sizing: border-box;
-}
-
-.review-toolbar .search-btn {
-	height: 44px; /* 입력창 높이와 동일 */
-	padding: 0 22px;
-	white-space: nowrap;
-}
-
-.review-toolbar .chip-group {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	margin: 0;
-}
-
-.review-toolbar .btn-filter-reset {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	height: 36px;
-	margin-left: 4px;
-	padding: 0 18px;
-	border: 0;
-	border-radius: 999px; /* 알약 모양 */
-	background: #f3f4f6; /* 연회색 배경 */
-	color: #6b7280; /* 회색 글자 */
-	font-size: 13px;
-	font-weight: 500;
-	text-decoration: none; /* 밑줄 제거 */
-	white-space: nowrap;
-	cursor: pointer;
-	transition: background .2s, color .2s;
-}
-
-.review-toolbar .btn-filter-reset:hover {
-	background: #e5e7eb;
-	color: #374151;
-}
-.more-wrap { display: flex; justify-content: center; margin-top: 32px; }
-.btn-more {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	min-width: 180px;
-	height: 48px;
-	padding: 0 28px;
-	justify-content: center;
-	border: 1px solid #1a6bff;
-	border-radius: 999px;
-	background: #eef4ff;
-	color: #1a6bff;
-	font-size: 15px;
-	font-weight: 700;
-	cursor: pointer;
-	transition: background .2s;
-}
-.btn-more:hover { background: #dbe8ff; }
-</style>
 <main class="page">
-	<div class="rail">
+	<div class="container review-list">
 		<div class="page-head">
 			<h1 class="page-title">후기</h1>
 			<p class="page-desc">경기 후기를 찾아보고 경험을 공유해보세요.</p>
@@ -212,18 +37,13 @@
 					class="chip ${st eq '테니스' ? 'is-selected' : ''}" data-value="테니스">테니스</button>
 				<button type="button"
 					class="chip ${st eq '배드민턴' ? 'is-selected' : ''}" data-value="배드민턴">배드민턴</button>
-				<c:if
-					test="${(not empty param.status and param.status ne 'ALL') or not empty param.keyword}">
-					<a class="btn-filter-reset" href="${ctx}/review/list?state=recent">필터
-						초기화</a>
-				</c:if>
 			</div>
 
 			<div class="search-box">
 				<input class="input" name="keyword"
 					value="<c:out value='${param.keyword}'/>"
 					placeholder="제목 또는 경기명 검색">
-				<button type="submit" class="search-btn">검색</button>
+				<button type="submit" class="btn btn-primary btn-lg">검색</button>
 			</div>
 		</form>
 
@@ -235,48 +55,47 @@
 						href="${ctx}/review/list?state=recent">전체 후기 보기</a>
 				</div>
 				<div class="group-grid">
-	<c:forEach var="g" items="${groupList}">
-		<c:set var="first" value="${g.value[0]}" />
-		<div class="review-group">
-			<div class="group-title">
-				<strong title="${fn:escapeXml(first.matchTitle)}"><c:out value="${first.matchTitle}" /></strong>
-				<span>후기 ${g.value.size()}</span>
-			</div>
-			<div class="group-reviews">
-				<c:forEach var="r" items="${g.value}">
-					<a class="review-card" href="${ctx}/review/detail?reviewId=${r.reviewId}">
-						<div class="thumb">
-							<c:choose>
-								<c:when test="${not empty r.image}">
-									<img src="${ctx}/uploads/${r.image}"
-										style="width: 100%; height: 100%; object-fit: cover;" alt="">
-								</c:when>
-								<c:otherwise>
-									<img src="${ctx}/img/w-sports-5e-logo.svg" alt="">
-								</c:otherwise>
-							</c:choose>
+					<c:forEach var="g" items="${groupList}">
+						<c:set var="first" value="${g.value[0]}" />
+						<div class="review-group">
+							<div class="group-title">
+								<strong title="${fn:escapeXml(first.matchTitle)}"><c:out value="${first.matchTitle}" /></strong>
+								<span>후기 ${g.value.size()}</span>
+							</div>
+							<div class="group-reviews">
+								<c:forEach var="r" items="${g.value}">
+									<a class="review-card" href="${ctx}/review/detail?reviewId=${r.reviewId}">
+										<div class="thumb">
+											<c:choose>
+												<c:when test="${not empty r.image}">
+													<img class="photo" src="${ctx}/uploads/${r.image}" alt="">
+												</c:when>
+												<c:otherwise>
+													<img src="${ctx}/img/w-sports-5e-logo.svg" alt="">
+												</c:otherwise>
+											</c:choose>
+										</div>
+										<div class="body">
+											<strong><c:out value="${r.title}" /></strong>
+											<p class="by">작성자 · <c:out value="${r.nickname}" /></p>
+											<p class="link">참여 경기 · <c:out value="${r.matchTitle}" /></p>
+											<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
+												&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
+										</div>
+									</a>
+								</c:forEach>
+							</div>
 						</div>
-						<div class="body">
-							<strong><c:out value="${r.title}" /></strong>
-							<p class="by">작성자 · <c:out value="${r.nickname}" /></p>
-							<p class="link">참여 경기 · <c:out value="${r.matchTitle}" /></p>
-							<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
-								&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
-						</div>
-					</a>
-				</c:forEach>
-			</div>
-		</div>
-	</c:forEach>
-</div>
-<c:if test="${empty groupList}">
-	<p>등록된 후기가 없어요.</p>
-</c:if>
-<div class="more-wrap">
-	<button type="button" class="btn-more" id="groupMore">
-		<span class="arrow">↓</span> 더보기
-	</button>
-</div>
+					</c:forEach>
+				</div>
+				<c:if test="${empty groupList}">
+					<p class="empty">등록된 후기가 없어요.</p>
+				</c:if>
+				<div class="more-wrap">
+					<button type="button" class="btn-more" id="groupMore">
+						<span class="arrow">↓</span> 더보기
+					</button>
+				</div>
 			</c:when>
 			<c:otherwise>
 				<div class="section-head">
@@ -291,8 +110,7 @@
 							<div class="thumb">
 								<c:choose>
 									<c:when test="${not empty r.image}">
-										<img src="${ctx}/uploads/${r.image}"
-											style="width: 100%; height: 100%; object-fit: cover;" alt="">
+										<img class="photo" src="${ctx}/uploads/${r.image}" alt="">
 									</c:when>
 									<c:otherwise>
 										<img src="${ctx}/img/w-sports-5e-logo.svg" alt="">
@@ -316,12 +134,11 @@
 					</c:forEach>
 				</div>
 				<c:if test="${empty reviewList}">
-					<p>등록된 후기가 없어요.</p>
+					<p class="empty">등록된 후기가 없어요.</p>
 				</c:if>
 				<!-- 페이징 -->
 				<c:if test="${pageInfo.allPage > 1}">
-					<nav class="pagination"
-						style="display: flex; justify-content: center; padding: 0">
+					<nav class="pagination">
 						<c:url var="base" value="/review/list">
 							<c:param name="state" value="recent" />
 							<c:param name="status"

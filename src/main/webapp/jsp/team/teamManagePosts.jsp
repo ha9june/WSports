@@ -23,7 +23,7 @@
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><a
 				href="${ctx}/team/detail/view?teamId=${teamId}">${team.teamName }</a><span class="sep">›</span><span>관리</span>
 		</nav>
-		<div class="page-head" style="margin-bottom: 24px">
+		<div class="page-head">
 			<h1 class="page-title">팀 관리</h1>
 			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리,팀 패널티 내역을 한 화면에서 전환합니다.</p>
 		</div>
@@ -37,13 +37,13 @@
 					<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${team.teamId}">팀 패널티 내역</a>
 		</nav>
 		<h2 class="sub-title">작성한 팀 매칭 글</h2>
-		<p class="section-desc" style="margin-bottom: 24px">내 팀이 작성한 상대 팀
+		<p class="section-desc">내 팀이 작성한 상대 팀
 			경기를 수정하거나 관리할 수 있어요.</p>
 		<div class="post-grid">
 			<c:forEach var="tm" items="${teamMatchList}">
 				<div class="post-card"
 					data-href="${ctx}/team-match/detail/view?teamMatchId=${tm.teamMatchId}">
-					<p class="ttl" style="margin: 0">
+					<p class="ttl">
 						${tm.title} 
 						<c:choose>
 							<c:when test="${tm.status eq '모집중' }">

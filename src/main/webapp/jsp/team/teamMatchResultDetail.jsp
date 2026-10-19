@@ -14,11 +14,6 @@
 <c:set var="activeNav" value="teamMatch" />
 <c:set var="demoRoles" value="member" />
 <c:set var="hostIsOur" value="${ourTeam eq 'host'}" />
-<style>
-.eval-row .who a:hover {
-	text-decoration: underline;
-}
-</style>
 <c:choose>
 	<c:when test="${not empty hostTeam.profileImage}"><c:set var="hostImg" value="${ctx}/uploads/${hostTeam.profileImage}" /></c:when>
 	<c:otherwise><c:set var="hostImg" value="${ctx}/img/default-profile.svg" /></c:otherwise>
@@ -29,7 +24,7 @@
 </c:choose>
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
-	<div class="container">
+	<div class="container narrow-rail">
 		<nav class="breadcrumb">
 			<a href="${ctx}/mypage/matches/team">팀 경기</a><span class="sep">›</span><span>경기 후 관리</span>
 		</nav>
@@ -75,7 +70,7 @@
 			<div class="eval-row">
 				<div class="who">
 					<span class="avatar sm">
-						<img alt="" src="${hostImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+						<img alt="" src="${hostImg}">
 					</span>
 					<div>
 						<a href="${ctx}/team/detail/view?teamId=${hostTeam.teamId}"><c:out value="${hostTeam.teamName}" /></a><small>모집 팀${hostIsOur ? ' · 우리 팀' : ''}</small>
@@ -101,7 +96,7 @@
 			<div class="eval-row">
 				<div class="who">
 					<span class="avatar sm">
-						<img alt="" src="${guestImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+						<img alt="" src="${guestImg}">
 					</span>
 					<div>
 						<a href="${ctx}/team/detail/view?teamId=${guestTeam.teamId}"><c:out value="${guestTeam.teamName}" /></a><small>참가 팀${hostIsOur ? '' : ' · 우리 팀'}</small>
@@ -123,7 +118,7 @@
 				</c:choose>
 			</div>
 
-			<div class="form-actions" style="margin-right: 20px">
+			<div class="form-actions">
 				<a class="btn btn-primary"
 					href="${ctx}/team-match/result/edit?teamMatchId=${teamMatch.teamMatchId}">
 					${empty score ? '평가하기' : (hostIsOur ? '정보 수정' : '평가 수정')}

@@ -267,7 +267,7 @@ a.tbl-row:hover { border-color: #c8ced3; }
 
 /* ---------- tabs ---------- */
 .tabs { display: flex; gap: 32px; border-bottom: 1px solid var(--ds-border); margin-bottom: 28px; }
-.tabs .tab { position: relative; padding: 6px 0 14px; font-size: 14px; font-weight: 500; color: var(--ds-text-2); }
+.tabs .tab { position: relative; padding: 6px 0 14px; font-size: 16px; font-weight: 500; color: var(--ds-text-2); }
 .tabs .tab.is-active { color: var(--ds-brand); }
 .tabs .tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--ds-brand); border-radius: 1px; }
 .tabs.dark .tab.is-active { color: var(--ds-text); font-weight: 700; }
@@ -393,3 +393,7 @@ a.tbl-row:hover { border-color: #c8ced3; }
 .demo-bar .grp a.on { background: var(--ds-brand); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ---------- 공통 유틸 ---------- */
+.is-hidden { display: none !important; }
+.field-row > .input { min-width: 0; }
