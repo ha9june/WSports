@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/jsp/common/init.jsp" %>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dongle&display=swap');
+</style>
 <%--
 공지사항 목록 (noticeList.jsp) - 담당: 박우리
 피그마: Notice / List / Desktop
@@ -50,7 +53,7 @@ TODO: <c:forEach var="n" items="${noticeList}">
 <c:if test="${empty noticeList}">
 <div class="empty-box">
 <img src="${ctx}/img/emptylist-image.png" alt="빈리스트 대체 이미지">
-<p>" 조회된 결과가 없어요 ! "</p>
+<p style="font-size:40px; font-family:'Dongle'; font-weight:500">" 조회된 결과가 없어요 ! "</p>
 </div>
 </c:if>
 </div>

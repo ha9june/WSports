@@ -20,7 +20,7 @@
 
 
 <main class="page">
-<form id="writeForm" class="form-rail" novalidate action="${ctx}/match/write/form" method="post" enctype="multipart/form-data">
+<form id="writeForm" class="form-rail match-form" novalidate action="${ctx}/match/write/form" method="post" enctype="multipart/form-data">
   <nav class="breadcrumb"><a href="${ctx}/match/list">경기 찾기</a><span class="sep">›</span><span>경기 만들기</span></nav>
   <div class="page-head"><h1 class="page-title">경기 만들기</h1></div>
 
@@ -165,7 +165,6 @@
           <label class="photo-add"><span class="plus">+</span>사진 추가
             <input type="file" name="photos" accept="image/png,image/jpeg" multiple data-max="5">
           </label>
-          <div class="photo-preview">미리보기</div><div class="photo-preview">미리보기</div>
         </div>
         <p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
       </div>
