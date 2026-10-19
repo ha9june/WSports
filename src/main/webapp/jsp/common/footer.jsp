@@ -36,6 +36,34 @@
 		</form>
 	</div>
 </div>
+<%-- 정지 회원·정지 팀이 제한된 기능을 눌렀을 때 --%>
+<div class="modal" id="suspendModal" role="dialog" data-no-autofocus
+	aria-modal="true" aria-labelledby="suspendTitle">
+	<div class="modal-card sm" style="text-align: center">
+		<h2 class="modal-title" id="suspendTitle">이용이 제한되어 있어요</h2>
+		<p class="modal-desc" id="suspendDesc"><c:out value="${sessionScope.suspendNotice}" /></p>
+		<div class="modal-actions" style="justify-content: center">
+			<button type="button" class="btn btn-outline" data-modal-close>확인</button>
+			<%-- 개인 정지는 개인 패널티, 팀 정지는 팀 패널티 내역으로 (AlertUtil.notice 에서 지정) --%>
+			<a class="btn btn-primary"
+				href="${ctx}${empty sessionScope.suspendLink ? '/mypage/penalty' : sessionScope.suspendLink}">
+				<c:out value="${empty sessionScope.suspendLinkLabel ? '패널티 내역 보기' : sessionScope.suspendLinkLabel}" /></a>
+		</div>
+	</div>
+</div>
+<script>
+	// AJAX 응답 등에서 직접 띄울 때
+	function showSuspendNotice(msg) {
+		if (msg) document.getElementById('suspendDesc').textContent = msg;
+		openModal('suspendModal');
+	}
+</script>
+<c:if test="${not empty sessionScope.suspendNotice}">
+	<script>$(function() { openModal('suspendModal'); });</script>
+	<c:remove var="suspendNotice" scope="session" />
+	<c:remove var="suspendLink" scope="session" />
+	<c:remove var="suspendLinkLabel" scope="session" />
+</c:if>
 </c:if>
 <c:if test="${not empty sessionScope.user
 	and (empty sessionScope.user.bankName

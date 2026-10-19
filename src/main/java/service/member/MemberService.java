@@ -13,6 +13,9 @@ public interface MemberService {
 	boolean withdraw (Long userId) throws Exception;
 	boolean passwordChange (Long userId, String oldPassword, String newPassword) throws Exception;
 	
+	// 정지 중이면 안내 문구, 아니면 null
+	String getSuspensionMessage(Long userId) throws Exception;	
+	
 	// 공개프로필
 	Map<String, Object> publicProfile(Long userId) throws Exception;
 	// 공개프로필 팀

@@ -14,6 +14,7 @@
     var m = document.getElementById(id);
     if (!m) return;
     m.classList.add('is-open');
+    if (m.hasAttribute('data-no-autofocus')) return;
     var focusEl = m.querySelector('textarea, input, button');
     if (focusEl) setTimeout(function () { focusEl.focus(); }, 30);
   }
