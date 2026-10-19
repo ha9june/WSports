@@ -146,6 +146,13 @@
 .review-list .review-group .group-title span { padding: 2px 10px; border-radius: var(--r-full); background: var(--ds-brand-subtle); color: var(--ds-brand); font-size: 12px; font-weight: 700; }
 .review-list .more-wrap { margin-top: 32px; }
 
+/* 병합 반영 (master 쪽 reviewList.jsp 안 <style> 에서 이동, DS 토큰으로 정리)
+   - 최근 후기 카드 줄 간격 32px
+   - 경기별 '더보기' 버튼: 연파랑 채움 48px 알약 (공통 .btn-more 보다 크게) */
+.review-list .review-grid { gap: 32px 24px; align-items: start; }
+.review-list .btn-more { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; min-width: 180px; height: 48px; padding: 0 28px; background: var(--ds-brand-subtle); font-size: 15px; font-weight: 700; transition: background .2s; }
+.review-list .btn-more:hover { background: #dbe8ff; }
+
 
 @media (max-width: 900px) {
   .review-list .group-grid, .review-grid { grid-template-columns: repeat(2, 1fr); }

@@ -59,12 +59,14 @@
 						<c:set var="first" value="${g.value[0]}" />
 						<div class="review-group">
 							<div class="group-title">
-								<strong title="${fn:escapeXml(first.matchTitle)}"><c:out value="${first.matchTitle}" /></strong>
-								<span>후기 ${g.value.size()}</span>
+								<strong title="${fn:escapeXml(first.matchTitle)}"><c:out
+										value="${first.matchTitle}" /></strong>
+								<span>${first.matchType eq 'TEAM' ? '팀' : '개인'} · 후기 ${g.value.size()}</span>
 							</div>
 							<div class="group-reviews">
 								<c:forEach var="r" items="${g.value}">
-									<a class="review-card" href="${ctx}/review/detail?reviewId=${r.reviewId}">
+									<a class="review-card"
+										href="${ctx}/review/detail?reviewId=${r.reviewId}">
 										<div class="thumb">
 											<c:choose>
 												<c:when test="${not empty r.image}">
@@ -77,8 +79,14 @@
 										</div>
 										<div class="body">
 											<strong><c:out value="${r.title}" /></strong>
-											<p class="by">작성자 · <c:out value="${r.nickname}" /></p>
-											<p class="link">참여 경기 · <c:out value="${r.matchTitle}" /></p>
+											<p class="by">
+												작성자 ·
+												<c:out value="${r.nickname}" />
+											</p>
+											<p class="link">
+												참여 경기 ·
+												<c:out value="${r.matchTitle}" />
+											</p>
 											<p class="cnt">♡ ${empty r.likeCount ? 0 : r.likeCount}
 												&nbsp; 댓글 ${empty r.commentCount ? 0 : r.commentCount}</p>
 										</div>
@@ -164,22 +172,23 @@
 	</div>
 </main>
 <script>
-$(function () {
-	var step = 9, shown = step;
-	var $groups = $('.group-grid > .review-group');
-	var $more = $('#groupMore');
+	$(function() {
+		var step = 9, shown = step;
+		var $groups = $('.group-grid > .review-group');
+		var $more = $('#groupMore');
 
-	function render() {
-		$groups.hide().slice(0, shown).show();
-		if (shown >= $groups.length) $more.closest('.more-wrap').hide();
-	}
+		function render() {
+			$groups.hide().slice(0, shown).show();
+			if (shown >= $groups.length)
+				$more.closest('.more-wrap').hide();
+		}
 
-	$more.on('click', function () {
-		shown += step;
+		$more.on('click', function() {
+			shown += step;
+			render();
+		});
 		render();
 	});
-	render();
-});
 	document.querySelectorAll('.review-toolbar .chip').forEach(function(chip) {
 		chip.addEventListener('click', function() {
 			document.getElementById('statusInput').value = chip.dataset.value;
