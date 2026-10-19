@@ -208,10 +208,10 @@
 			if (el) {
 				el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 				if (typeof el.focus === 'function') el.focus();
-			}Z
+			}
 		}
 		
-		$('#writeForm').on('submit', function (e) {
+		$('#writeForm').on('submit', function (e) { 
 			e.preventDefault();
 
 			/* if (submitting) {

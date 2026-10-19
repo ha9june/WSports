@@ -86,6 +86,8 @@
 .link-more:hover {
 	text-decoration: underline;
 }
+
+
 </style>
 <script>
 	$(function() {
@@ -479,21 +481,24 @@
 					<div class="locked-wrap">
 						<div class="member-grid blur" aria-hidden="true" id="teamUserList">
 							<div class="member-card">
-								<span class="avatar default"></span>
+								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 초급</p>
 								</div>
 							</div>
 							<div class="member-card">
-								<span class="avatar default"></span>
+								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 중급</p>
 								</div>
 							</div>
 							<div class="member-card">
-								<span class="avatar default"></span>
+								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 초급</p>

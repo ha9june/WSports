@@ -13,6 +13,15 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
 <script type="text/javascript">
 	$(function() {
+		// 지난 날짜/시간 선택 막기 (개인 경기 폼과 동일)
+		function pad2(n) { return (n < 10 ? '0' : '') + n; }
+		var nowD = new Date();
+		var todayStr = nowD.getFullYear() + '-' + pad2(nowD.getMonth() + 1) + '-' + pad2(nowD.getDate());
+		var nowStr = todayStr + 'T' + pad2(nowD.getHours()) + ':' + pad2(nowD.getMinutes());
+
+		$('#tmDate').attr('min', todayStr);
+		$('#tmDeadline').attr('min', nowStr);
+		
 		function syncSport() { //팀 종목에 맞춰서 종목 고르기
 			var sport = $('#team').find('option:selected').data('sport') || '';
 			$('.sport-readonly .chip').removeClass('is-selected').filter(
@@ -133,6 +142,8 @@
 			else if (!$('#tmSize').val()) msg = '경기 인원을 선택해 주세요.';
 			else if (!$.trim($('#tmFee').val())) msg = '참가비를 입력해 주세요.';
 			else if (!$('#tmDeadline').val()) msg = '모집 마감 시간을 선택해 주세요.';
+			else if ($('#tmDate').val() + 'T' + start < nowStr) msg = '이미 지난 시간에는 경기를 만들 수 없어요.';
+			else if ($('#tmDeadline').val() < nowStr) msg = '모집 마감은 현재 시각 이후여야 해요.';
 			else if ($('#tmDeadline').val() >= $('#tmDate').val() + 'T' + start) msg = '모집 마감은 경기 시작 전이어야 해요.';
 			else if (!$('#ages').val()) msg = '연령대를 선택해 주세요.';
 			else if (!$('#gender').val()) msg = '성별을 선택해 주세요.';
