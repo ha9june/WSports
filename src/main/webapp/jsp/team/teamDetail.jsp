@@ -2,17 +2,8 @@
 <%@ include file="/jsp/common/init.jsp"%>
 <%--
   팀 상세 (teamDetail.jsp) - 담당: 하준수
-  피그마: Club / Detail / Desktop (비가입자), Club / Detail / Member View, Club / Detail / Manager View
-  ─ 하나의 JSP 로 처리 ─
-   state : public(비가입자 - 팀원/작성글 잠금, 가입 신청) | member(팀원) | manager(주장·부주장 - 팀 관리 버튼)
-   role  : guest 면 state 와 상관없이 public 화면 + 가입 신청 시 로그인 안내
-   admin : 관리자는 팀 삭제 버튼 노출
-  실구현 : 로그인 사용자와 팀의 관계(TEAM_MEMBER.role)로 서블릿에서 state 계산
+  state : public(비가입자) | member(팀원) | manager(주장·부주장) | applicater(승인 대기)
 --%>
-<%-- <c:set var="state" value="${empty param.state ? 'public' : param.state}" />
-<c:if test="${role eq 'guest'}">
-	<c:set var="state" value="public" />
-</c:if> --%>
 <c:set var="isMember" value="${state eq 'member' or state eq 'manager'}" />
 <c:set var="pageTitle" value="${team.teamName}" />
 <c:set var="pageCss" value="match,team" />
@@ -70,7 +61,7 @@
 
 .team-tabs {
 	position: sticky;
-	top: var(- -header-h);
+	top: var(--header-h);
 	z-index: 40;
 	background: #fff;
 }
@@ -86,14 +77,10 @@
 .link-more:hover {
 	text-decoration: underline;
 }
-<<<<<<< HEAD
+
 .page-head { margin: 16px 0 24px; }
 .page-head h1 { margin: 0 0 8px; font-size: 32px; font-weight: 800; color: #111827; }
 .page-head p { margin: 0; font-size: 14px; color: #6b7280; }
-=======
-
-
->>>>>>> branch 'master' of https://github.com/ha9june/WSports.git
 </style>
 <script>
 	$(function() {
@@ -275,240 +262,171 @@
 		</nav>
 
 		<div class="detail-grid" style="margin-top: 0">
-				<div class="gallery" id="activePhoto">
-					<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
-					<div class="thumbs" id="thumbs"></div>
-				</div>
-				<aside class="team-side">
-					<div class="top">
-						<span class="logo-ph" id="profileImg"> <%-- <img src="${ctx}/uploads/${team.profileImage }" alt="대표"> --%>
-						</span>
-						<div>
-							<h1>
-								<c:out value="${team.teamName}" />
-							</h1>
-							<p>${team.sport }·팀원${team.currentPeople }</p>
-							<p class="team-rating">
-								<c:choose>
-									<c:when test="${team.teamRating != null}">
-										<span class="rating">${team.teamRating}</span>
-										<span class="t-11 t-2">(${team.teamRatingCount})</span>
-									</c:when>
-									<c:otherwise>
-										<span class="t-11 t-2">평가 없음</span>
-									</c:otherwise>
-								</c:choose>
-							</p>
-						</div>
-					</div>
-					<h2>모집 조건</h2>
-					<dl class="cond">
-						<dt>성별</dt>
-						<dd>${team.gender }</dd>
-						<dt>연령대</dt>
-						<dd>${team.ages }</dd>
-						<dt>실력</dt>
-						<dd>${team.skill }</dd>
-						<dt>활동 요일</dt>
-						<dd>${team.days }</dd>
-						<dt>활동 시간대</dt>
-						<dd>${team.times }</dd>
-						<dt>활동 지역</dt>
-						<dd>${team.regions }</dd>
-					</dl>
-					<c:choose>
-						<c:when test="${state eq 'manager'}">
-							<hr style="margin-bottom: 0">
-							<c:url var="manageUrl" value="/team/manage/applications">
-								<c:param name="teamId" value="${team.teamId}" />
-							</c:url>
-							<a class="btn btn-primary btn-block" href="${manageUrl}">팀 관리</a>
-						</c:when>
-						<c:when test="${state eq 'member'}">
-							<hr>
-							<p class="note">가입된 팀입니다. 팀원과 작성글을 확인할 수 있어요.</p>
-						</c:when>
-						<c:when test="${state eq 'applicater'}">
-							<hr>
-							<p class="note">가입 신청이 접수되었어요. 주장 승인을 기다리는 중이에요.</p>
-							<button type="button" class="btn btn-join btn-block" disabled>승인
-								대기 중</button>
-						</c:when>
-						<c:otherwise>
-							<hr>
-							<c:url var="applyUrl" value="/team/application">
-								<c:param name="teamId" value="${team.teamId}" />
-							</c:url>
-							<a class="btn btn-join btn-block" href="${applyUrl}" data-auth>가입
-								신청하기</a>
-						</c:otherwise>
-					</c:choose>
-					<c:if test="${sessionScope.user.grade eq 'Admin' or isCaptain}">
-						<button type="button"
-							class="btn btn-outline btn-danger-soft btn-block btn-sm"
-							data-modal-open="teamDeleteModal">팀 삭제</button>
-					</c:if>
-				</aside>
+			<div class="gallery" id="activePhoto">
+				<div class="main-photo" style="height: 348px" id="mainPhoto"></div>
+				<div class="thumbs" id="thumbs"></div>
 			</div>
-
-			<nav class="tabs team-tabs">
-				<a class="tab is-active" href="#intro">소개글</a> 
-				<a class="tab ${isMember ? '' : 'locked'}" href="#members">팀원</a> 
-				<a class="tab ${isMember ? '' : 'locked'}" href="#posts">팀 작성글</a> 
-				<!-- 관리자 신고상세에서 팀신고도 상세정보 확인을 위해 신고버튼 추가 -->
-				<c:if test="${state ne 'manager'}">
-					<a class="btn btn-outline btn-sm" style="margin-left: auto"; href="${ctx}/support/report/create?targetType=team&targetNo=${team.teamId}"
-						data-auth>신고</a>
+			<aside class="team-side">
+				<div class="top">
+					<span class="logo-ph" id="profileImg"></span>
+					<div>
+						<h1>
+							<c:out value="${team.teamName}" />
+						</h1>
+						<p>${team.sport }·팀원${team.currentPeople }</p>
+						<p class="team-rating">
+							<c:choose>
+								<c:when test="${team.teamRating != null}">
+									<span class="rating">${team.teamRating}</span>
+									<span class="t-11 t-2">(${team.teamRatingCount})</span>
+								</c:when>
+								<c:otherwise>
+									<span class="t-11 t-2">평가 없음</span>
+								</c:otherwise>
+							</c:choose>
+						</p>
+					</div>
+				</div>
+				<h2>모집 조건</h2>
+				<dl class="cond">
+					<dt>성별</dt>
+					<dd>${team.gender }</dd>
+					<dt>연령대</dt>
+					<dd>${team.ages }</dd>
+					<dt>실력</dt>
+					<dd>${team.skill }</dd>
+					<dt>활동 요일</dt>
+					<dd>${team.days }</dd>
+					<dt>활동 시간대</dt>
+					<dd>${team.times }</dd>
+					<dt>활동 지역</dt>
+					<dd>${team.regions }</dd>
+				</dl>
+				<c:choose>
+					<c:when test="${state eq 'manager'}">
+						<hr style="margin-bottom: 0">
+						<c:url var="manageUrl" value="/team/manage/applications">
+							<c:param name="teamId" value="${team.teamId}" />
+						</c:url>
+						<a class="btn btn-primary btn-block" href="${manageUrl}">팀 관리</a>
+					</c:when>
+					<c:when test="${state eq 'member'}">
+						<hr>
+						<p class="note">가입된 팀입니다. 팀원과 작성글을 확인할 수 있어요.</p>
+					</c:when>
+					<c:when test="${state eq 'applicater'}">
+						<hr>
+						<p class="note">가입 신청이 접수되었어요. 주장 승인을 기다리는 중이에요.</p>
+						<button type="button" class="btn btn-join btn-block" disabled>승인
+							대기 중</button>
+					</c:when>
+					<c:otherwise>
+						<hr>
+						<c:url var="applyUrl" value="/team/application">
+							<c:param name="teamId" value="${team.teamId}" />
+						</c:url>
+						<a class="btn btn-join btn-block" href="${applyUrl}" data-auth>가입
+							신청하기</a>
+					</c:otherwise>
+				</c:choose>
+				<c:if test="${sessionScope.user.grade eq 'Admin' or isCaptain}">
+					<button type="button"
+						class="btn btn-outline btn-danger-soft btn-block btn-sm"
+						data-modal-open="teamDeleteModal">팀 삭제</button>
 				</c:if>
-			</nav>
+			</aside>
+		</div>
 
-			<section class="team-section" id="intro">
-				<h2>팀 소개</h2>
-				<p class="intro">
-					<c:out value="${team.description}" />
-				</p>
-			</section>
+		<nav class="tabs team-tabs">
+			<a class="tab is-active" href="#intro">소개글</a>
+			<a class="tab ${isMember ? '' : 'locked'}" href="#members">팀원</a>
+			<a class="tab ${isMember ? '' : 'locked'}" href="#posts">팀 작성글</a>
+			<!-- 관리자 신고상세에서 팀신고도 상세정보 확인을 위해 신고버튼 추가 -->
+			<c:if test="${state ne 'manager'}">
+				<a class="btn btn-outline btn-sm" style="margin-left: auto"
+					href="${ctx}/support/report/create?targetType=team&targetNo=${team.teamId}"
+					data-auth>신고</a>
+			</c:if>
+		</nav>
 
-			<c:choose>
-				<c:when test="${isMember}">
-					<section class="team-section" id="members" style="margin-top: 56px">
-						<div class="section-head">
-							<div>
-								<h2>팀원 ${team.currentPeople }명</h2>
-								<p class="section-desc">함께 활동 중인 팀원의 역할과 프로필을 확인할 수 있어요.</p>
-							</div>
-							<a class="link-more"
-								href="${ctx}/team/info/members?teamId=${team.teamId}">전체보기 →</a>
+		<section class="team-section" id="intro">
+			<h2>팀 소개</h2>
+			<p class="intro">
+				<c:out value="${team.description}" />
+			</p>
+		</section>
+
+		<c:choose>
+			<c:when test="${isMember}">
+				<section class="team-section" id="members" style="margin-top: 56px">
+					<div class="section-head">
+						<div>
+							<h2>팀원 ${team.currentPeople }명</h2>
+							<p class="section-desc">함께 활동 중인 팀원의 역할과 프로필을 확인할 수 있어요.</p>
 						</div>
-						<div class="member-grid">
-							<c:forEach var="user" items="${teamUserList}" end="5">
-								<c:choose>
-									<c:when test="${team.sport eq '축구/풋살'}">
-										<c:set var="userSkill" value="${user.soccerSkill}" />
-									</c:when>
-									<c:when test="${team.sport eq '농구'}">
-										<c:set var="userSkill" value="${user.basketballSkill}" />
-									</c:when>
-									<c:when test="${team.sport eq '테니스'}">
-										<c:set var="userSkill" value="${user.tennisSkill}" />
-									</c:when>
-									<c:otherwise>
-										<c:set var="userSkill" value="${user.badmintonSkill}" />
-									</c:otherwise>
-								</c:choose>
-								<a class="member-card"
-									href="${ctx}/member/publicProfile/view?userId=${user.userId}">
-									<span class="avatar"> <c:choose>
-											<c:when test="${not empty user.profileImage}">
-												<img
-													src="${ctx}${profilePath}/<c:out value='${user.profileImage}' />"
-													alt=""
-													onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-													style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
-											</c:when>
-											<c:otherwise>
-												<img src="${ctx}/img/default-profile.svg" alt=""
-													style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
-											</c:otherwise>
-										</c:choose>
+						<a class="link-more"
+							href="${ctx}/team/info/members?teamId=${team.teamId}">전체보기 →</a>
+					</div>
+					<div class="member-grid">
+						<c:forEach var="user" items="${teamUserList}" end="5">
+							<c:choose>
+								<c:when test="${team.sport eq '축구/풋살'}">
+									<c:set var="userSkill" value="${user.soccerSkill}" />
+								</c:when>
+								<c:when test="${team.sport eq '농구'}">
+									<c:set var="userSkill" value="${user.basketballSkill}" />
+								</c:when>
+								<c:when test="${team.sport eq '테니스'}">
+									<c:set var="userSkill" value="${user.tennisSkill}" />
+								</c:when>
+								<c:otherwise>
+									<c:set var="userSkill" value="${user.badmintonSkill}" />
+								</c:otherwise>
+							</c:choose>
+							<a class="member-card"
+								href="${ctx}/member/publicProfile/view?userId=${user.userId}">
+								<span class="avatar"> <c:choose>
+										<c:when test="${not empty user.profileImage}">
+											<img
+												src="${ctx}${profilePath}/<c:out value='${user.profileImage}' />"
+												alt=""
+												onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+										</c:when>
+										<c:otherwise>
+											<img src="${ctx}/img/default-profile.svg" alt=""
+												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+										</c:otherwise>
+									</c:choose>
 								</span>
-									<div class="info">
-										<strong><c:out value="${user.nickname}" /></strong>
-										<c:if test="${user.teamRole eq 'CAPTAIN'}">
-											<span class="pill pill-brand role">주장</span>
-										</c:if>
-										<c:if test="${user.teamRole eq 'VICE_CAPTAIN'}">
-											<span class="pill pill-brand role">부주장</span>
-										</c:if>
-										<p class="meta">
-											<c:out value="${user.preferredRegion1}" default="지역 미설정" />
-											·
-											<c:out value="${userSkill}" default="실력 미설정" />
-										</p>
-									</div>
-								</a>
-							</c:forEach>
-						</div>
-					</section>
-					<section class="team-section" id="posts" style="margin-top: 48px">
-						<div class="section-head">
-							<div>
-								<h2>팀 작성글</h2>
-								<p class="section-desc">팀이 작성한 상대 팀 모집 글이에요.</p>
-							</div>
-							<a class="link-more"
-								href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기 →</a>
-						</div>
-						<div class="post-grid">
-
-							<c:forEach var="match" items="${teamMatchList }">
-								<a class="post-card"
-									href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
-									<p class="ttl" style="margin: 0">
-										<c:out value="${match.title }"></c:out>
-										<c:choose>
-											<c:when test="${match.status eq '모집중'}">
-												<c:set var="stCls" value="pill-success" />
-											</c:when>
-											<c:when
-												test="${match.status eq '모집 마감' or match.status eq '경기 종료'}">
-												<c:set var="stCls" value="pill-info" />
-											</c:when>
-											<c:when test="${match.status eq '경기 취소'}">
-												<c:set var="stCls" value="pill-danger" />
-											</c:when>
-											<c:otherwise>
-												<c:set var="stCls" value="pill-neutral" />
-											</c:otherwise>
-										</c:choose>
-										<span class="pill ${stCls}"><c:out
-												value="${match.status}" /></span>
-									</p>
-									<p>
-										<c:out value="${match.matchDate }"></c:out>
-										(${match.dayOfWeekKorean})
-										<c:out value="${match.startTime }"></c:out>
-										-
-										<c:out value="${match.endTime }"></c:out>
+								<div class="info">
+									<strong><c:out value="${user.nickname}" /></strong>
+									<c:if test="${user.teamRole eq 'CAPTAIN'}">
+										<span class="pill pill-brand role">주장</span>
+									</c:if>
+									<c:if test="${user.teamRole eq 'VICE_CAPTAIN'}">
+										<span class="pill pill-brand role">부주장</span>
+									</c:if>
+									<p class="meta">
+										<c:out value="${user.preferredRegion1}" default="지역 미설정" />
 										·
-										<c:out value="${match.region }"></c:out>
+										<c:out value="${userSkill}" default="실력 미설정" />
 									</p>
-								</a>
-							</c:forEach>
+								</div>
+							</a>
+						</c:forEach>
+					</div>
+				</section>
+				<section class="team-section" id="posts" style="margin-top: 48px">
+					<div class="section-head">
+						<div>
+							<h2>팀 작성글</h2>
+							<p class="section-desc">팀이 작성한 상대 팀 모집 글이에요.</p>
 						</div>
-					</section>
-				</c:when>
-					<section class="team-section" id="members" style="margin-top: 56px">
-						<h2>팀원</h2>
-						<p class="section-desc">가입한 팀원만 확인할 수 있는 정보입니다.</p>
-						<div class="locked-wrap">
-							<div class="member-grid blur" aria-hidden="true"
-								id="teamUserList">
-								<div class="member-card">
-									<span class="avatar default"></span>
-									<div class="info">
-										<strong>팀원</strong>
-										<p class="meta">서울 · 초급</p>
-									</div>
-								</div>
-								<div class="member-card">
-									<span class="avatar default"></span>
-									<div class="info">
-										<strong>팀원</strong>
-										<p class="meta">서울 · 중급</p>
-									</div>
-								</div>
-								<div class="member-card">
-									<span class="avatar default"></span>
-									<div class="info">
-										<strong>팀원</strong>
-										<p class="meta">서울 · 초급</p>
-									</div>
 						<a class="link-more"
 							href="${ctx}/team/info/posts?teamId=${team.teamId}">전체보기 →</a>
 					</div>
 					<div class="post-grid">
-
 						<c:forEach var="match" items="${teamMatchList }">
 							<a class="post-card"
 								href="${ctx}/team-match/detail/view?teamMatchId=${match.teamMatchId}">
@@ -545,6 +463,7 @@
 						</c:forEach>
 					</div>
 				</section>
+			</c:when>
 			<c:otherwise>
 				<section class="team-section" id="members" style="margin-top: 56px">
 					<h2>팀원</h2>
@@ -552,55 +471,62 @@
 					<div class="locked-wrap">
 						<div class="member-grid blur" aria-hidden="true" id="teamUserList">
 							<div class="member-card">
-								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
-												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<span class="avatar"><img
+									src="${ctx}/img/default-profile.svg" alt=""
+									style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 초급</p>
 								</div>
 							</div>
-							<div class="lock-msg">
-								<strong>🔒 가입 후 확인할 수 있어요</strong>
-								<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
-							</div>
-						</div>
-					</section>
-					<section class="team-section" id="posts" style="margin-top: 40px">
-						<h2>팀 작성글</h2>
-						<p class="section-desc">팀원에게만 공개되는 작성글입니다.</p>
-						<div class="locked-wrap">
-							<div class="post-grid blur" aria-hidden="true">
-								<div class="post-card">
-									<p class="ttl" style="margin: 0">팀 작성글</p>
-									<p>일정 · 장소</p>
-								</div>
-								<div class="post-card">
-									<p class="ttl" style="margin: 0">팀 작성글</p>
-									<p>일정 · 장소</p>
 							<div class="member-card">
-								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
-												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<span class="avatar"><img
+									src="${ctx}/img/default-profile.svg" alt=""
+									style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 중급</p>
 								</div>
 							</div>
-							<div class="lock-msg">
-								<strong>🔒 가입 후 확인할 수 있어요</strong>
-								<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
 							<div class="member-card">
-								<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""
-												style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
+								<span class="avatar"><img
+									src="${ctx}/img/default-profile.svg" alt=""
+									style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;"></span>
 								<div class="info">
 									<strong>팀원</strong>
 									<p class="meta">서울 · 초급</p>
 								</div>
 							</div>
 						</div>
-					</section>
-				</c:otherwise>
-			</c:choose>
-		</div>
+						<div class="lock-msg">
+							<strong>🔒 가입 후 확인할 수 있어요</strong>
+							<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
+						</div>
+					</div>
+				</section>
+				<section class="team-section" id="posts" style="margin-top: 40px">
+					<h2>팀 작성글</h2>
+					<p class="section-desc">팀원에게만 공개되는 작성글입니다.</p>
+					<div class="locked-wrap">
+						<div class="post-grid blur" aria-hidden="true">
+							<div class="post-card">
+								<p class="ttl" style="margin: 0">팀 작성글</p>
+								<p>일정 · 장소</p>
+							</div>
+							<div class="post-card">
+								<p class="ttl" style="margin: 0">팀 작성글</p>
+								<p>일정 · 장소</p>
+							</div>
+						</div>
+						<div class="lock-msg">
+							<strong>🔒 가입 후 확인할 수 있어요</strong>
+							<p>이 팀에 가입하면 팀 작성글을 확인할 수 있습니다.</p>
+						</div>
+					</div>
+				</section>
+			</c:otherwise>
+		</c:choose>
+	</div>
 </main>
 <c:if test="${sessionScope.user.grade eq 'Admin' or isCaptain}">
 	<div class="modal" id="teamDeleteModal" role="dialog" aria-modal="true">
