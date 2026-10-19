@@ -175,8 +175,13 @@ $(function(){
 	        } else {
 	            location.href = '${ctx}/auth/login';
 	        }
-	    }).fail(function () {
-	        showToast('잠시 후 다시 시도해 주세요.');
+	    }).fail(function (xhr) {
+	        // 정지 회원이면 필터가 403과 안내 문구를 보냄
+	        if (xhr.status === 403 && xhr.responseText) {
+	            showSuspendNotice(xhr.responseText);
+	        } else {
+	            showToast('잠시 후 다시 시도해 주세요.');
+	        }
 	    });
 	});
 

@@ -133,7 +133,7 @@
     	INSERT INTO personal_match_participant (
         	user_id, personal_match_id, attendance, status, payment_id, applied_at
     	) VALUES (
-        	#{userId}, #{matchId}, 0, '결제완료', #{paymentId}, NOW()
+        	#{userId}, #{matchId}, 1, '결제완료', #{paymentId}, NOW()
     	)
 	</insert>
 	

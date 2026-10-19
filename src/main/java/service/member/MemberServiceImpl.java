@@ -10,13 +10,17 @@ import javax.servlet.http.Part;
 
 import dao.UserDao;
 import dao.UserDaoImpl;
+import dao.UserPenaltyDao;
+import dao.UserPenaltyDaoImpl;
 import dto.User;
 
 public class MemberServiceImpl implements MemberService {
 	private UserDao userDao;
+	private UserPenaltyDao userPenaltyDao;
 	
 	public MemberServiceImpl() {
 		userDao = new UserDaoImpl();
+		userPenaltyDao = new UserPenaltyDaoImpl();
 	}
 
 	@Override
@@ -81,5 +85,21 @@ public class MemberServiceImpl implements MemberService {
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		return userDao.publicProfileTeams(param);
+	}
+	
+	
+
+	@Override
+	public String getSuspensionMessage(Long userId) throws Exception {
+		Map<String, Object> s = userPenaltyDao.selectUserSuspension(userId);
+		if (s == null || ((Number) s.get("cnt")).intValue() == 0) {
+			return null;
+		}
+		Object perm = s.get("permanent");
+		if (perm != null && ((Number) perm).intValue() == 1) {
+			return "영구 정지된 계정이라 경기 모집·참가, 팀 활동, 후기 작성을 할 수 없어요.";
+		}
+		return String.valueOf(s.get("endAt")).substring(0, 16)
+				+ "까지 경기 모집·참가, 팀 활동, 후기 작성을 할 수 없어요.";
 	}
 }

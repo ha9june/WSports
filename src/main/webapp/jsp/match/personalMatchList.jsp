@@ -31,6 +31,94 @@
 		flex-shrink: 0;
 		margin: 0;
 	}
+	
+	.map-result {
+		display: grid !important;
+		grid-template-columns: 2.5fr 1fr; /* 지도 : 리스트 = 1 : 1 */
+		gap: 16px;
+	}
+	.map-result .map-canvas {
+		width: 100% !important;
+		height: 420px !important; /* 지도 높이 */
+	}
+	.map-result .map-list {
+		max-height: 420px !important; /* 지도 높이와 맞춤 */
+	}
+	
+	
+	
+	
+	
+	.map-card {
+		display: flex; gap: 10px; align-items: flex-start;
+		padding: 12px 14px; margin-bottom: 10px;
+		background: #fff; border: 1px solid #e5e5e5; border-radius: 12px;
+		cursor: pointer; transition: border-color .15s;
+	}
+	.map-card:hover, .map-card.is-selected { border-color: #0b5fff; }
+	
+	.map-card-ic {
+		width: 36px; height: 36px; flex: none; border-radius: 10px;
+		background: #f1f1f1; display: flex; align-items: center; justify-content: center;
+	}
+	.map-card-ic img { width: 36px; height: 36px; }
+	.map-card.basketball .map-card-ic { background: #fdf0dc; }
+	.map-card.football   .map-card-ic { background: #e6f1fb; }
+	.map-card.tennis     .map-card-ic { background: #eaf3de; }
+	.map-card.badminton  .map-card-ic { background: #eeedfe; }
+	
+	.map-card-body { flex: 1; min-width: 0; }
+	.map-card-top { display: flex; align-items: center; justify-content: space-between; }
+	.map-card-status { font-size: 12px; color: #1a7f4b; }
+	.map-card-status.is-closed { color: #888; }
+	.map-card-top .fav-btn { position: static !important; margin: 0; flex-shrink: 0; }
+	
+	.map-card-title {
+		margin: 4px 0; font-size: 14px; font-weight: 600; line-height: 1.4;
+		overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	}
+	.map-card-meta  { margin: 0; font-size: 12px; color: #666; }
+	.map-card-price { margin: 6px 0 0; font-size: 14px; font-weight: 600; }
+	
+	
+	
+	/* 지도 옆 리스트 + 그룹 말풍선 스크롤바 */
+	.map-result .map-list,
+	.map-group-pop {
+		scrollbar-width: thin;                              /* 파이어폭스 */
+		scrollbar-color: #c8ccd2 transparent;
+	}
+	.map-result .map-list::-webkit-scrollbar,
+	.map-group-pop::-webkit-scrollbar {
+		width: 6px;
+	}
+	.map-result .map-list::-webkit-scrollbar-track,
+	.map-group-pop::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	.map-result .map-list::-webkit-scrollbar-thumb,
+	.map-group-pop::-webkit-scrollbar-thumb {
+		background: #d5d8dd;
+		border-radius: 999px;
+	}
+	.map-result .map-list::-webkit-scrollbar-thumb:hover,
+	.map-group-pop::-webkit-scrollbar-thumb:hover {
+		background: #aeb3bb;
+	}
+	
+	.map-result .map-list {
+		padding-right: 8px;
+		scrollbar-gutter: stable;   /* 스크롤바 유무에 따라 폭이 흔들리지 않게 */
+	}
+	.map-result .map-list h3 {
+		position: sticky; top: 0; z-index: 1;
+		margin: 0; padding: 4px 0 8px; background: #fff;   /* 배경색은 페이지 배경에 맞추세요 */
+	}
+	
+	
+	
+	
+	
 </style>
 <script src="${ctx}/js/common.format.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b050be3c87edea9bbf7f3ec1e5fba8d&libraries=services"></script>
@@ -40,9 +128,8 @@
 <script>
 	const locationReady = getUserLocation().catch(() => null);
 	let userLat = null, userLng = null;
-
-	
 	let page =1;
+	let firstMapClick = true;
 
 	const PAGE_SIZE = 4;
 
@@ -119,8 +206,11 @@
 						      	`+esc(item.title)+`
 						      </p>
 						      <p class="when"><img src="${ctx}/img/icon-calendar-14.svg" alt="">
-						      <span class="txt">`+FormatDate(item.matchDate, item.startTime)+`
+				                `+FormatDate(item.matchDate, item.startTime)+`
 						      `+esc(item.region)+`
+						      </p>
+						      <p class="price">
+						      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
 						      </p>
 						    </div>
 						    <p class="count">
@@ -128,9 +218,6 @@
 						    <small>/ 정원 
 						    `+item.maxPeople+`
 						    명</small></p>
-						    <p class="price">
-					      	`+Number(item.participationFee).toLocaleString('ko-KR')+`원
-					        </p>
 						    <div class="bar"><i style="width:`+(item.currentPeople*100/item.maxPeople)+`%"></i></div>
 						  </a>
 			            `;
@@ -214,14 +301,16 @@
 			});
 		}
 		
+		NowList("${sessionScope.user == null ? 'POPULAR' : 'RECOMAND'}");
+		NormalList(page);
+		
 
 		//초기 리스트
 		locationReady.then(function (loc) {
 			
 			userLat = loc ? loc.lat : null;
 			userLng = loc ? loc.lng : null;
-			NowList("${sessionScope.user == null ? 'POPULAR' : 'RECOMAND'}");
-			NormalList(page);
+			
 
 		});
 		
@@ -246,9 +335,13 @@
 			$(this).addClass("is-active");
 			$(".normalGroup").addClass("is-hidden");
 		  	$(".mapGroup").removeClass("is-hidden");
-		  	map.relayout();
-		  	map.setCenter(mapCenter); 
-			searchMapMatch();
+		  	if(firstMapClick){
+		  		map.relayout();
+			  	map.setCenter(mapCenter); 
+				searchMapMatch();
+				firstMapClick=false;
+		  	}
+		  	
 			
 		});
 		$("#moreBtn").on("click", function(e) {
@@ -495,6 +588,7 @@
 
 	let markers = [];
 	let overlays = []; 
+	let markerMap = {};   
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	mapOption = {
 	    center: new kakao.maps.LatLng(DEFAULT_MAP_LAT, DEFAULT_MAP_LNG), // 지도의 중심좌표
@@ -555,42 +649,53 @@
 		 	item.longitude
 	    );
 
-		var imageSrc = "${ctx}/img/art-"+sportsType+".png"; // 마커이미지의 주소입니다  
-	    var imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+		var imageSrc = "${ctx}/img/art-3."+sportsType+".png"; // 마커이미지의 주소입니다  
+	    //var imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+	    var imageSize = new kakao.maps.Size(50, 50); // 마커이미지의 크기입니다
 	    var imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 		var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
 	    const marker = new kakao.maps.Marker({
 	        map: map,
 	        position: position
-	       //image: markerImage
+	       	,image: markerImage
 	    });
-
+	    
+	    var type = getSportType(item.sport);
+		var closed = item.status === '모집중' ? '' : ' is-closed';
 
 	    const content = `
-	        <div class="map-list">
-	            <a href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`"
-	               class="`+sportsType+` is-active"
-	               data-pin="`+item.personalMatchId+`">
-	                <small>`+esc(item.sport)+`</small>
-	                <strong>`+esc(item.title)+`</strong>
-	                <span>`+FormatDate(item.matchDate, item.startTime)+`</span>
-
-	            </a>
-	        </div>
+	    	<div class="map-card is-selected `+type+`" data-pin="`+item.personalMatchId+`"
+		     data-href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
+			<div class="map-card-ic">
+				<img src="${ctx}/img/sport-icon-`+type+`.png" alt="`+esc(item.sport)+`">
+			</div>
+			<div class="map-card-body">
+				<div class="map-card-top">
+					<span class="map-card-status`+closed+`">`+esc(item.status)+` · `+item.currentPeople+`/`+item.maxPeople+`명</span>
+				</div>
+				<p class="map-card-title">`+esc(item.title)+`</p>
+				<p class="map-card-meta">`+FormatDate(item.matchDate, item.startTime)+(item.region ? ` · `+esc(item.region) : ``)+`</p>
+				<p class="map-card-price">`+Number(item.participationFee).toLocaleString('ko-KR')+`원</p>
+			</div>
+		</div>
 	    `;
 	    const overlay = new kakao.maps.CustomOverlay({
 	        content: content,
 	        position: position,
-	        yAnchor: 1.35
+	        yAnchor: 1.5
 	    });
 	    overlays.push(overlay);
+	    
+	    
+	    markerMap[item.personalMatchId] = { marker: marker, overlay: overlay };
 	    kakao.maps.event.addListener(marker, "mouseover", function() {
 	        overlay.setMap(map);
+	        highlightCard(item.personalMatchId, true);
 	    });
-
 	    kakao.maps.event.addListener(marker, "mouseout", function() {
 	        overlay.setMap(null);
+	        highlightCard(item.personalMatchId, false);
 	    });
 	    kakao.maps.event.addListener(marker, "click", function() {
 	        location.href =
@@ -599,6 +704,20 @@
 	    });
 
 	    return marker;
+	}
+	
+	function highlightCard(id, on) {
+	    var $card = $('.map-card[data-pin="' + id + '"]');
+	    $card.toggleClass('is-selected', on);
+	    if (!on || !$card.length) return;
+
+	    // 리스트 영역 안에서만 스크롤 (페이지 전체는 움직이지 않음)
+	    var list = document.getElementById('mapMatchListDiv');
+	    var r = $card[0].getBoundingClientRect();
+	    var lr = list.getBoundingClientRect();
+	    if (r.top < lr.top || r.bottom > lr.bottom) {
+	        list.scrollTo({ top: list.scrollTop + (r.top - lr.top) - 8, behavior: 'smooth' });
+	    }
 	}
 	
 
@@ -612,6 +731,7 @@
 	        overlay.setMap(null);
 	    });
 	    overlays = [];
+	    markerMap = {};
 	}
 
 	function searchMapMatch() {
@@ -651,31 +771,47 @@
 	        success: function(data) {
 	            removeMarkers();
 				let html = "<h3>지도 주변 경기</h3>";
-	            data.forEach(function(item) {	
-	            	html += `
-	            		<a href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`"
-	            		   class="`+getSportType(item.sport)+` is-active" data-pin="`+item.personalMatchId+`">
-	            			<small>`+esc(item.sport)+`</small>
-	            			<div class="map-title-row">
-	            				<strong>`+esc(item.title)+`</strong>
-	            				`+favBtn(item, "bare")+`
-	            			</div>
-	            			<span>`+FormatDate(item.matchDate, item.startTime)+`</span>
-	            			<span>`+Number(item.participationFee + item.fee).toLocaleString('ko-KR')+`원</span>
-	            			
-	            		</a>
-	            	`;
-	            	//마커찍기
-	                const marker = createMarker(item);
-	                markers.push(marker);
+				data.forEach(function(item) {
+					var type = getSportType(item.sport);
+					var closed = item.status === '모집중' ? '' : ' is-closed';
 
-	            });
-			 	$("#mapMatchListDiv").html(html);		
+					html += `
+						<div class="map-card `+type+`" data-pin="`+item.personalMatchId+`"
+						     data-href="${ctx}/match/detail/view?personalMatchId=`+item.personalMatchId+`">
+							<div class="map-card-ic">
+								<img src="${ctx}/img/art-`+type+`.png" alt="`+esc(item.sport)+`">
+							</div>
+							<div class="map-card-body">
+								<div class="map-card-top">
+									<span class="map-card-status`+closed+`">`+esc(item.status)+` · `+item.currentPeople+`/`+item.maxPeople+`명</span>
+									`+favBtn(item, "bare")+`
+								</div>
+								<p class="map-card-title">`+esc(item.title)+`</p>
+								<p class="map-card-meta">`+FormatDate(item.matchDate, item.startTime)+(item.region ? ` · `+esc(item.region) : ``)+`</p>
+								<p class="map-card-price">`+Number(item.participationFee).toLocaleString('ko-KR')+`원</p>
+							</div>
+						</div>
+					`;
+					markers.push(createMarker(item));
+				});
+				$("#mapMatchListDiv").html(html);	
 
 	        }
 	    }); 
 	    
 	}
+	
+	$(document).on('mouseenter', '.map-card', function () {
+	    var m = markerMap[$(this).data('pin')];
+	    if (!m) return;
+	    m.overlay.setMap(map);
+	    m.marker.setZIndex(10);   // 겹친 마커 위로
+	}).on('mouseleave', '.map-card', function () {
+	    var m = markerMap[$(this).data('pin')];
+	    if (!m) return;
+	    m.overlay.setMap(null);
+	    m.marker.setZIndex(0);
+	});
 	
 
 

@@ -14,6 +14,7 @@
     var m = document.getElementById(id);
     if (!m) return;
     m.classList.add('is-open');
+    if (m.hasAttribute('data-no-autofocus')) return;
     var focusEl = m.querySelector('textarea, input, button');
     if (focusEl) setTimeout(function () { focusEl.focus(); }, 30);
   }
@@ -323,7 +324,7 @@ document.addEventListener('click', function (e) {
 
 /* 폼 AJAX 제출 공통 함수 */
 function submitAjaxForm(e) {
-    var redirectDelay = 500;
+    var redirectDelay = 0;
     var errorMsg = '경기 등록 중 오류가 발생했습니다.';
 
     e.preventDefault();

@@ -165,7 +165,6 @@
           <label class="photo-add"><span class="plus">+</span>사진 추가
             <input type="file" name="photos" accept="image/png,image/jpeg" multiple data-max="5">
           </label>
-          <div class="photo-preview">미리보기</div><div class="photo-preview">미리보기</div>
         </div>
         <p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
       </div>
@@ -209,10 +208,10 @@
 			if (el) {
 				el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 				if (typeof el.focus === 'function') el.focus();
-			}Z
+			}
 		}
 		
-		$('#writeForm').on('submit', function (e) {
+		$('#writeForm').on('submit', function (e) { 
 			e.preventDefault();
 
 			/* if (submitting) {

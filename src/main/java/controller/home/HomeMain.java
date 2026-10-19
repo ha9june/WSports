@@ -84,10 +84,6 @@ public class HomeMain extends HttpServlet {
 			List<PersonalMatch> nowMatchList = matchService.getNowMatchList(searchInfo);
 			List<Team> nowTeamList = teamService.getNowTeamList(condition);
 			List<Review> nowReviewList = reviewService.getNowReviewList();
-
-			System.out.println(nowMatchList);
-			System.out.println(nowTeamList);
-			System.out.println(nowReviewList);
 			
 			request.setAttribute("nMList", nowMatchList);
 			request.setAttribute("nTList", nowTeamList);

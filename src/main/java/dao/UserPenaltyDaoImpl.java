@@ -138,5 +138,12 @@ public class UserPenaltyDaoImpl implements UserPenaltyDao {
 			return sqlSession.selectList("mapper.userpenalty.selectAdminUserIds");
 		}
 	}
+	
+	@Override
+	public Map<String, Object> selectUserSuspension(Long userId) throws Exception {
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sqlSession.selectOne("mapper.userpenalty.selectUserSuspension", userId);
+		}
+	}
 
 }
