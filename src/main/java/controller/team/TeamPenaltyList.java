@@ -39,31 +39,45 @@ public class TeamPenaltyList extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		User user = (session == null) ? null : (User) session.getAttribute("user");
-		if (user == null) {
-			response.sendRedirect(request.getContextPath() + "/auth/login");
-			return;
-		}
 
-		String teamIdParam = request.getParameter("teamId");
-		if (teamIdParam == null || !teamIdParam.matches("\\d+")) {
-		    response.sendError(HttpServletResponse.SC_BAD_REQUEST);  
-		    return;
+		 HttpSession session = request.getSession(false);
+		    User user = (session == null) ? null : (User) session.getAttribute("user");
+		    if (user == null) {
+		        response.sendRedirect(request.getContextPath() + "/auth/login");
+		        return;
+		    }
+
+		    String teamIdParam = request.getParameter("teamId");
+		    if (teamIdParam == null || !teamIdParam.matches("\\d+")) {
+		        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		        return;
+		    }
+		    long teamId = Long.parseLong(teamIdParam);
+		    TeamPenaltyService service = new TeamPenaltyServiceImpl();
+		    try {
+		        // 1) 역할 확인: 주장/부주장만 접근 가능
+		        String role = service.getMyTeamRole(user.getUserId(), teamId);
+		        boolean isManager = "CAPTAIN".equals(role) || "VICE_CAPTAIN".equals(role);
+		        if (!isManager) {
+		            response.sendRedirect(request.getContextPath() + "/team/detail/view?teamId=" + teamId);
+		            return;
+		        }
+		        request.setAttribute("isManager", true);
+
+		        // 2) 패널티 데이터 조회
+		        Map<String, Object> result =
+		                service.getMypageMyTeamPenalty(user.getUserId(), teamId);
+		        if (result == null) {
+		            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+		            return;
+		        }
+		        for (Map.Entry<String, Object> e : result.entrySet()) {
+		            request.setAttribute(e.getKey(), e.getValue());
+		        }
+		    } catch (Exception e) {
+		        throw new ServletException(e);
+		    }
+
+		    request.getRequestDispatcher("/jsp/team/teamPenaltyList.jsp").forward(request, response);
 		}
-				TeamPenaltyService service = new TeamPenaltyServiceImpl();
-		try {
-			Map<String, Object> result = service.getMypageMyTeamPenalty(user.getUserId(), Long.parseLong(teamIdParam));
-			if (result == null) { // 내가 속한 팀이 아님
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
-			for (Map.Entry<String, Object> e : result.entrySet()) {
-				request.setAttribute(e.getKey(), e.getValue());
-			}
-		} catch (Exception e) {
-			throw new ServletException(e);
-		}
-		request.getRequestDispatcher("/jsp/team/teamPenaltyList.jsp").forward(request, response);
-	}
 }

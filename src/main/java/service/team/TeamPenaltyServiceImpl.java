@@ -105,4 +105,9 @@ public class TeamPenaltyServiceImpl implements TeamPenaltyService {
 			return "minus";
 		return "";
 	}
+
+	@Override
+	public String getMyTeamRole(long userId, long teamId) throws Exception {
+		 return teamPenaltyDao.selectMyTeamRole(userId, teamId);
+	}
 }

@@ -191,6 +191,23 @@
 	color: #9ca3af;
 }
 
+.page-head {
+	margin-top: 16px;
+}
+
+.page-head h1 {
+	margin: 0 0 8px;
+	font-size: 2px;
+	font-weight: 800;
+	color: #111827;
+}
+
+.page-head p {
+	margin: 0;
+	font-size: 13px;
+	color: #6b7280;
+}
+
 .pen-reason {
 	max-width: 300px;
 	color: #374151;
@@ -278,14 +295,25 @@
 <main class="page">
 	<div class="container">
 		<nav class="breadcrumb">
-			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><a
-				href="${detailUrl}"><c:out value="${teamName}" /></a>
+			<a href="${ctx}/team/list">팀</a><span class="sep">›</span>
+			<a href="${detailUrl}"><c:out value="${teamName}" /></a>
+				<span class="sep">›</span>
+				<a href="${ctx}/team/manage/applications?teamId=${param.teamId}">관리</a>
 		</nav>
-
+		
+		<div class="page-head" style="margin-bottom: 24px">
+			<h1 class="page-title">팀 관리</h1>
+			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리,팀 패널티 내역을 한 화면에서 전환합니다.</p>
+		</div>
+		<c:set var="lockCls" value="${isManager ? '' : 'locked'}" />
 		<nav class="tabs team-tabs" style="margin-top: 16px">
-			<a class="tab" href="${detailUrl}&tab=intro">소개글</a> <a class="tab"
-				href="${detailUrl}&tab=members">팀원</a> <a class="tab"
-				href="${detailUrl}&tab=posts">팀 작성글</a> <a class="tab is-active"
+			<a class="tab ${lockCls}"
+				href="${ctx}/team/manage/applications?teamId=${param.teamId}">가입
+				신청</a> <a class="tab ${lockCls}"
+				href="${ctx}/team/manage/members?teamId=${param.teamId}">팀원 관리</a> <a
+				class="tab ${lockCls}"
+				href="${ctx}/team/manage/posts?teamId=${param.teamId}">팀 작성글 관리</a>
+			<a class="tab is-active"
 				href="${ctx}/team/penalty?teamId=${param.teamId}">팀 패널티 내역</a>
 		</nav>
 
