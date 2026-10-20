@@ -200,9 +200,8 @@ $(function(){
 			<p class="page-desc">가입할 팀을 찾거나 다른 팀과 매칭해보세요.</p>
 		</div>
 		<nav class="tabs big">
-			<a class="tab" href="${ctx}/team/list">팀 찾기</a><a
-				class="tab is-active" href="${ctx}/team-match/list">팀
-				경기</a>
+			<a class="tab is-active" href="${ctx}/team-match/list">팀 대결</a>
+			<a class="tab" href="${ctx}/team/list">팀 합류</a>
 		</nav>
 		<form class="search-shell" id="teamSearchForm" method="get"
 			action="${ctx}/team-match/list">
