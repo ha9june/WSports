@@ -378,11 +378,11 @@ window.addEventListener("fcmMessageReceived", function(e) {
 				<a href="${ctx}/match/list"
 					class="${activeNav eq 'match' ? 'is-active' : ''}">경기 찾기</a> <a
 					href="${ctx}/team-match/list"
-					class="${activeNav eq 'teamMatch' ? 'is-active' : ''}">상대팀 찾기</a> <a
+					class="${activeNav eq 'teamMatch' ? 'is-active' : ''}">팀 대결</a> <a
 					href="${ctx}/review/list"
 					class="${activeNav eq 'review' ? 'is-active' : ''}">후기</a> <a
 					href="${ctx}/team/list"
-					class="${activeNav eq 'team' ? 'is-active' : ''}">팀 찾기</a> <a
+					class="${activeNav eq 'team' ? 'is-active' : ''}">팀 합류</a> <a
 					href="${ctx}/support/notice/list"
 					class="${activeNav eq 'notice' ? 'is-active' : ''}">공지사항</a>
 				<c:if test="${sessionScope.user.grade eq 'Admin'}">

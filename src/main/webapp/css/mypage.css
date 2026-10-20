@@ -591,5 +591,46 @@ body .ntd-actions .btn-group { gap: 10px; }
    - 기존: .work 위쪽 72px + .mp-body 위쪽 36px = 108px (중복)
    - 관리자는 .workspace.admin .work 규칙이 우선이라 영향 없음
    ========================================================= */
-.work { padding-top: 36px; }
+.work { padding-top: 16px; }
 body .work-inner.mp-body { margin-top: 0; }
+
+/* =========================================================
+   마이페이지 제목 영역 배경 (배너 대신)
+   - 모든 .mp-body 화면에 자동 적용, JSP 수정 없음
+   - 제목·설명 오른쪽 뒤로 사진을 깔고, 왼쪽으로 갈수록 투명해져 흰 바탕과 섞임
+   - 본문을 아래로 밀지 않음 (제목 영역 높이 안에서만 그려짐)
+   - 이미지: /img/mypage-banner.jpg
+   ========================================================= */
+body .work-inner.mp-body { position: relative; isolation: isolate; padding-top: 24px; }
+.mp-body::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  width: 62%;
+  height: 112px;
+  border-radius: var(--r-16);
+  background: #eef5fd url("../img/mypage-banner.jpg") right 58% / auto 215% no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 45%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 45%);
+  pointer-events: none;
+}
+@media (max-width: 900px) {
+  .mp-body::before { width: 55%; opacity: .7; }
+}
+
+/* 상세·작성 화면(카드 폭 720px): 제목 배경도 카드 오른쪽 끝에 맞춤
+   - 결제 상세(.pay-detail), 신고·문의 작성/상세(.inq-page) */
+.inq-page::before,
+.pay-detail::before {
+  left: 0;
+  right: auto;
+  width: min(720px, 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 60%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 60%);
+}
+
+/* 제목 배경: 사진은 한 단계 흐리게, 아래쪽은 다음 요소와 간격 확보 */
+.mp-body::before { height: 100px; opacity: .75; }
+@media (max-width: 900px) { .mp-body::before { opacity: .55; } }
