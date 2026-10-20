@@ -112,3 +112,9 @@
 .btn-view:hover {
   background-color: #c62828;
 }
+/* 매출 막대 그래프: 아래에서 자라는 애니메이션 (검색 조건으로 다시 그릴 때는 .no-anim) */
+.bar-chart .bars i { transform-origin: bottom; transform: scaleY(0); animation: barGrow .5s ease-out forwards; }
+.bar-chart .bars i.profit { animation-delay: .08s; }
+.bar-chart.no-anim .bars i { animation: none; transform: scaleY(1); }
+@keyframes barGrow { to { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .bar-chart .bars i { animation: none; transform: scaleY(1); } }

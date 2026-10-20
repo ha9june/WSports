@@ -25,7 +25,7 @@
 			<a href="${ctx}/team/detail/view?teamId=${team.teamId}"><c:out value="${team.teamName}" /></a><span class="sep">›</span>
 			<span>관리</span>
 		</nav>
-		<div class="page-head" style="margin-bottom: 24px">
+		<div class="page-head">
 			<h1 class="page-title">팀 관리</h1>
 			<p class="page-desc">가입 신청, 팀원, 팀 작성글 관리,팀 패널티 내역을 한 화면에서 전환합니다.</p>
 		</div>
@@ -35,7 +35,7 @@
 			<a class="tab ${manageTab eq 'posts' ? 'is-active' : ''}" href="${ctx}/team/manage/posts?teamId=${team.teamId}">팀 작성글 관리</a>
 			<a class="tab ${isMember ? '' : 'locked'}" href="${ctx}/team/penalty?teamId=${param.teamId}">팀 패널티 내역</a>
 		</nav> 
-		<h2 class="sub-title" style="margin-bottom: 16px">가입 신청
+		<h2 class="sub-title">가입 신청
 			${applicationCnt }건</h2>
 		<div class="manage-grid">
 			<section>
@@ -94,7 +94,7 @@
 				<c:url var="editUrl" value="/team/edit">
 					<c:param name="teamId" value="${team.teamId }"></c:param>
 				</c:url>
-				<a class="btn btn-outline btn-sm" href="${editUrl }">팀 정보
+				<a class="btn btn-outline btn-block" href="${editUrl }">팀 정보
 					수정</a>
 			</aside>
 		</div>
@@ -122,7 +122,7 @@
 	</div>
 </div>
 <div class="modal" id="approveModal" role="dialog" aria-modal="true">
-	<div class="modal-card sm" style="text-align: center">
+	<div class="modal-card sm">
 		<h2 class="modal-title">가입을 승인할까요?</h2>
 		<p class="modal-desc">
 			<b id="approveNickname"></b>님이 팀원으로 추가되고, 신청자에게 승인 알림이 전송돼요.
@@ -131,7 +131,7 @@
 			action="${ctx}/team/application/approve" method="post">
 			<input type="hidden" name="teamId" value="${team.teamId}"> <input
 				type="hidden" name="applicationId" id="approveApplicationId">
-			<div class="modal-actions" style="justify-content: center">
+			<div class="modal-actions">
 				<button type="button" class="btn btn-outline" data-modal-close>취소</button>
 				<button type="submit" class="btn btn-primary" id="approveBtn">승인하기</button>
 			</div>

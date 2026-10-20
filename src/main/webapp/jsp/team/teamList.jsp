@@ -140,8 +140,8 @@
 		
 </script>
 <main class="page">
-	<div class="rail">
-		<div class="page-head" style="margin-bottom: 18px">
+	<div class="container">
+		<div class="page-head">
 			<h1 class="page-title lg">팀</h1>
 			<p class="page-desc">가입할 팀을 찾거나 다른 팀과 매칭해보세요.</p>
 		</div>
@@ -226,8 +226,7 @@
 					<option value="">시군구</option>
 				</select> <input class="input keyword" name="keyword"
 					placeholder="팀명 또는 팀 소개 검색">
-				<button type="submit" class="btn btn-primary btn-lg"
-					style="width: 108px">검색</button>
+				<button type="submit" class="btn btn-primary btn-lg">검색</button>
 			</div>
 			<p id="maxRegion" class="region-max" style="display: none">최대 3개까지 선택 가능합니다.</p>
 			<div class="picked" id="pickedRegions"></div>

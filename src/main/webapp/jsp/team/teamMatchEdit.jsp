@@ -191,7 +191,7 @@ $(function() {
 });
 </script>
 <main class="page">
-	<form class="form-rail" action="${ctx}/team-match/edit" method="post" enctype="multipart/form-data">
+	<form class="form-rail match-form" action="${ctx}/team-match/edit" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="teamMatchId" value="${t.teamMatchId}">
 		<nav class="breadcrumb">
 			<a href="${ctx}/team/list">팀</a><span class="sep">›</span><a
@@ -362,7 +362,7 @@ $(function() {
 				<h2 class="sub-title">상세 내용</h2>
 				<div class="field">
 					<label class="field-label strong" for="tmDesc">상세 설명</label>
-					<textarea class="textarea soft" id="tmDesc" name="content" rows="5"
+					<textarea class="textarea soft" id="tmDesc" name="content" rows="6"
 						placeholder="경기 방식, 준비물, 팀 유니폼 색상 등을 적어주세요."><c:out value="${t.content}" /></textarea>
 				</div>
 				<div class="field">

@@ -6,52 +6,16 @@
 --%>
 <c:set var="fixedMatch" value="9/19 토요일 저녁 풋살 한 판!" />
 <c:set var="pageTitle" value="후기 수정" />
-<c:set var="pageCss" value="review" />
+<c:set var="pageCss" value="match,team,review" />
 <c:set var="activeNav" value="review" />
 <c:set var="demoRoles" value="member" />
 <%@ include file="/jsp/common/header.jsp"%>
-<style>
-.photo-upload .photo-preview {
-	position: relative;
-	overflow: hidden;
-}
-
-.photo-upload .photo-preview img {
-	display: block;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.photo-upload .photo-remove {
-	position: absolute;
-	top: 8px;
-	right: 8px;
-	width: 24px;
-	height: 24px;
-	padding: 0;
-	border: 0;
-	border-radius: 50%;
-	background: rgba(31, 41, 55, 0.75);
-	color: #fff;
-	font-size: 14px;
-	line-height: 24px;
-	text-align: center;
-	cursor: pointer;
-	z-index: 2;
-}
-
-.photo-upload .photo-remove:hover {
-	background: rgba(31, 41, 55, 0.95);
-}
-</style>
   <c:if test="${param.error eq 'fail'}">
   	<script>$(function(){ showToast("수정에 실패했습니다. 다시 시도해 주세요."); });</script>
   </c:if>
 <main class="page">
-	<form class="rail" id="modifyForm" action="${ctx}/review/edit"
-		method="post" enctype="multipart/form-data"
-		style="display: block; box-sizing: border-box; width: 100%; max-width: 744px; margin: 0 auto !important; padding-left: 0 !important; padding-right: 0 !important;">
+	<form class="form-rail match-form review-form" id="modifyForm" action="${ctx}/review/edit"
+		method="post" enctype="multipart/form-data">
 		<input type="hidden" name="reviewId" value="${review.reviewId}">
 		<nav class="breadcrumb">
 			<a href="${ctx}/review/list">후기</a><span class="sep">›</span><span>수정</span>
@@ -60,52 +24,53 @@
 			<h1 class="page-title">후기 수정</h1>
 			<p class="page-desc">작성한 후기를 수정할 수 있어요.</p>
 		</div>
-		<div style="width: 100%;">
-			<div class="field">
-				<label class="field-label">참여 경기</label> <input class="input"
-					value="<c:out value='${review.matchTitle}'/>" readonly
-					style="width: 100%">
-			</div>
 
-			<div class="field mt-24">
-				<label class="field-label" for="rvTitle">제목</label> <input
-					class="input" id="rvTitle" name="title" style="width: 100%"
-					placeholder="후기 제목을 입력하세요" value="<c:out value='${review.title}'/>"
-					required>
-			</div>
-
-			<div class="field mt-24">
-				<label class="field-label" for="rvBody">내용</label>
-				<textarea class="textarea soft" id="rvBody" name="content" rows="7"
-					placeholder="경기에서 좋았던 점이나 참고할 내용을 적어주세요." required><c:out
-						value="${review.content}" /></textarea>
-			</div>
-
-			<div class="field mt-24">
-				<span class="field-label" style="color: var(--ds-text)">사진 <span
-					class="t-11 t-2">선택 · 최대 5장</span></span>
-				<div class="photo-upload">
-					<label class="photo-add"><span class="plus">+</span>사진 추가 <input
-						type="file" name="photos" id="photoInput"
-						accept="image/png,image/jpeg" multiple> </label>
-
-					<%-- 기존 사진 --%>
-					<c:forTokens items="${review.image}" delims="," var="img">
-						<div class="photo-preview photo-item">
-							<img src="${ctx}/uploads/${img}" alt=""
-								style="width: 100%; height: 100%; object-fit: cover;">
-							<button type="button" class="photo-remove" aria-label="삭제">×</button>
-							<input type="hidden" name="keepImages" value="${img}">
-						</div>
-					</c:forTokens>
+		<div class="team-form-inner">
+			<section class="form-section">
+				<h2 class="sub-title">참여 경기</h2>
+				<div class="field">
+					<label class="sr-only" for="matchTitle">경기</label>
+					<input class="input" id="matchTitle" value="<c:out value='${review.matchTitle}'/>" readonly>
 				</div>
-				<p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
-			</div>
+			</section>
+
+			<section class="form-section">
+				<h2 class="sub-title">후기 내용</h2>
+				<div class="field">
+					<label class="field-label strong" for="rvTitle">제목</label>
+					<input class="input" id="rvTitle" name="title" placeholder="후기 제목을 입력하세요"
+						value="<c:out value='${review.title}'/>" required>
+				</div>
+				<div class="field">
+					<label class="field-label strong" for="rvBody">내용</label>
+					<textarea class="textarea soft" id="rvBody" name="content" rows="7"
+						placeholder="경기에서 좋았던 점이나 참고할 내용을 적어주세요." required><c:out
+							value="${review.content}" /></textarea>
+				</div>
+				<div class="field">
+					<span class="field-label strong">사진 <span class="hint-gray">선택 · 최대 5장</span></span>
+					<div class="photo-upload">
+						<label class="photo-add"><span class="plus">+</span>사진 추가
+							<input type="file" name="photos" id="photoInput" accept="image/png,image/jpeg" multiple>
+						</label>
+
+						<%-- 기존 사진 --%>
+						<c:forTokens items="${review.image}" delims="," var="img">
+							<div class="photo-preview photo-item">
+								<img src="${ctx}/uploads/${img}" alt="">
+								<button type="button" class="photo-remove" aria-label="삭제">×</button>
+								<input type="hidden" name="keepImages" value="${img}">
+							</div>
+						</c:forTokens>
+					</div>
+					<p class="field-help">JPG, PNG 이미지 · 최대 5장까지 첨부할 수 있어요.</p>
+				</div>
+			</section>
 
 			<div class="form-actions">
-				  <a class="btn btn-outline"
-     href="${ctx}/review/detail?reviewId=${review.reviewId}"
-     onclick="return confirm('수정을 취소할까요? 변경한 내용은 저장되지 않아요.');">취소</a>
+				<a class="btn btn-outline"
+					href="${ctx}/review/detail?reviewId=${review.reviewId}"
+					onclick="return confirm('수정을 취소할까요? 변경한 내용은 저장되지 않아요.');">취소</a>
 				<button type="submit" class="btn btn-primary">수정 완료</button>
 			</div>
 		</div>
@@ -150,8 +115,7 @@
 										+ file.lastModified)
 						.append($('<img>', {
 							src : e.target.result,
-							alt : '',
-							style : 'width:100%;height:100%;object-fit:cover;'
+							alt : ''
 						}))
 						.append(
 								'<button type="button" class="photo-remove new-remove" aria-label="삭제">×</button>');

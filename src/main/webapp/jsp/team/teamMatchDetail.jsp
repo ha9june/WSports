@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/jsp/common/init.jsp"%>
+
 <%--
   팀 경기 상세 (teamMatchDetail.jsp) - 담당: 하준수
   서블릿에서 넘기는 값
@@ -58,7 +59,7 @@ $(function() {
 	});
 
 	if (!hasImage) {
-		$('#activePhoto').remove();
+		$('#matchGallery').remove();
 		return;
 	}
 
@@ -159,17 +160,15 @@ $('#thumbs').on('click', '.subImg', function() {
 							<img
 								src="${ctx}/profiles/<c:out value='${t.hostProfileImage}' />"
 								alt=""
-								onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';"
-								style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+								onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
 						</c:when>
 						<c:otherwise>
-							<img src="${ctx}/img/default-profile.svg" alt=""
-								style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+							<img src="${ctx}/img/default-profile.svg" alt="">
 						</c:otherwise>
 					</c:choose>
 				</span>
 				<div>
-					<a class="host-name"
+					<a class="host-name-link"
 						href="${ctx}/member/publicProfile/view?userId=${t.userId}"><strong><c:out
 								value="${t.hostNickname}" /></strong></a> <small>호스트 · <c:out
 							value="${t.teamName}" /> ${t.hostRole eq 'VICE_CAPTAIN' ? '부주장' : '주장'}
@@ -180,12 +179,11 @@ $('#thumbs').on('click', '.subImg', function() {
 
 
 		<div class="detail-grid">
-			<div class="detail-left">
-				<div class="gallery" id="activePhoto">
+			<div class="detail-main">
+				<div class="gallery" id="matchGallery">
 					<div class="main-photo" id="mainPhoto"></div>
 					<div class="thumbs" id="thumbs"></div>
 				</div>
-				<div class="detail-main">
 					<section class="info-card">
 						<h2>경기 정보</h2>
 						<dl class="info-list">
@@ -255,7 +253,7 @@ $('#thumbs').on('click', '.subImg', function() {
 						</dl>
 						<div class="desc">
 							<h3>상세 설명</h3>
-							<p style="white-space: pre-line">
+							<p>
 								<c:out value="${t.content}" />
 							</p>
 						</div>
@@ -265,7 +263,7 @@ $('#thumbs').on('click', '.subImg', function() {
 						<div class="head">
 							<strong>경기 위치</strong><span><c:out value="${t.address}" /></span>
 						</div>
-						<div id="map" style="width: 100%; height: 300px;"></div>
+						<div id="map"></div>
 					</section>
 
 					<div class="detail-actions">
@@ -274,10 +272,8 @@ $('#thumbs').on('click', '.subImg', function() {
 							data-auth aria-label="관심 경기" data-match-type="Team"
 							data-match-id="${t.teamMatchId}">${heart}</button>
 						<a class="btn btn-outline btn-sm"
-							href="${ctx}/support/report/create?targetType=teamMatch&targetNo=${t.teamMatchId}"
-							data-auth style="height: 36px">신고</a>
+							href="${ctx}/support/report/create?targetType=teamMatch&targetNo=${t.teamMatchId}" data-auth>신고</a>
 					</div>
-				</div>
 			</div>
 			<aside class="detail-side">
 				<c:choose>
@@ -355,8 +351,8 @@ $('#thumbs').on('click', '.subImg', function() {
 											<p class="note">팀원이라면 주장이나 부주장에게 이 경기를 공유해 신청을 요청해 보세요.
 												팀이 없다면 팀을 만들거나 가입한 뒤 신청할 수 있어요.</p>
 											<div class="actions row">
-												<a class="btn btn-outline btn-sm" href="${ctx}/team/list">팀
-													찾기</a> <a class="btn btn-primary btn-sm"
+												<a class="btn btn-outline" href="${ctx}/team/list">팀
+													찾기</a> <a class="btn btn-primary"
 													href="${ctx}/team/create">팀 만들기</a>
 											</div>
 										</c:otherwise>

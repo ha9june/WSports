@@ -49,10 +49,10 @@ public class ReviewList extends HttpServlet {
         try {
             if ("grouped".equals(state)) {
                 List<Review> reviewList = service.getReviewList(userId);
-                Map<Long, List<Review>> groupList = new LinkedHashMap<>();
+                Map<String, List<Review>> groupList = new LinkedHashMap<>();
                 for (Review r : reviewList) {
-                	String key = r.getMatchType() + "-" + r.getMatchId();
-                    groupList.computeIfAbsent(r.getMatchId(), k -> new ArrayList<>()).add(r);
+                    String key = r.getMatchType() + "_" + r.getMatchId();   // 예: TEAM_12, SOLO_12
+                    groupList.computeIfAbsent(key, k -> new ArrayList<>()).add(r);
                 }
                 request.setAttribute("groupList", groupList);
             } else {

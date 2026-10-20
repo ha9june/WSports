@@ -18,7 +18,7 @@
 				href="${ctx}/team/detail/view?teamId=${team.teamId}"><c:out value="${team.teamName}" /></a><span
 				class="sep">›</span><span>팀 정보</span>
 		</nav>
-		<div class="page-head" style="margin-bottom: 24px">
+		<div class="page-head">
 			<h1 class="page-title"><c:out value="${team.teamName}" /></h1>
 			<p class="page-desc">팀원과 팀 작성글을 확인할 수 있어요.</p>
 		</div>
@@ -30,7 +30,7 @@
 		</nav>
 
 		<h2 class="sub-title">팀원 ${team.currentPeople}명</h2>
-		<p class="section-desc" style="margin-bottom: 24px">함께 활동 중인 팀원의 역할과 프로필을 확인할 수 있어요.</p>
+		<p class="section-desc">함께 활동 중인 팀원의 역할과 프로필을 확인할 수 있어요.</p>
 
 		<div class="member-grid">
 			<c:forEach var="m" items="${userList}">
@@ -59,7 +59,7 @@
 							</c:choose>
 						</p>
 						<c:if test="${not empty m.joinedAt}">
-							<p class="meta" style="margin-top:2px;">
+							<p class="meta">
 								${fn:substring(m.joinedAt, 0, 10)} 가입
 							</p>
 						</c:if>

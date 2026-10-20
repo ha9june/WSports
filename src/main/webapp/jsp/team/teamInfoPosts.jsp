@@ -24,7 +24,7 @@
 				href="${ctx}/team/detail/veiw?teamId=${teamId}">${team.teamName }</a><span
 				class="sep">›</span><span>팀 정보</span>
 		</nav>
-		<div class="page-head" style="margin-bottom: 24px">
+		<div class="page-head">
 			<h1 class="page-title">서울 풋살 크루</h1>
 			<p class="page-desc">팀원과 팀 작성글을 확인할 수 있어요.</p>
 		</div>
@@ -35,13 +35,13 @@
 				href="${ctx}/team/info/posts?teamId=${teamId}">팀 작성글</a>
 		</nav>
 		<h2 class="sub-title">작성한 팀 매칭 글</h2>
-		<p class="section-desc" style="margin-bottom: 24px">우리 팀이 작성한 상대 팀
+		<p class="section-desc">우리 팀이 작성한 상대 팀
 			모집 글이에요.</p>
 		<div class="post-grid">
 			<c:forEach var="tm" items="${teamMatchList}">
 				<div class="post-card"
 					data-href="${ctx}/team-match/detail/view?teamMatchId=${tm.teamMatchId}">
-					<p class="ttl" style="margin: 0">
+					<p class="ttl">
 						${tm.title}
 						<c:choose>
 							<c:when test="${tm.status eq '모집중' }">

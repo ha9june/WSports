@@ -26,3 +26,137 @@
 .comment b { font-size: 11px; }
 .comment-form { display: flex; gap: 8px; margin-top: 14px; }
 .comment-form .input { flex: 1; }
+
+/* =========================================================
+   후기 화면 : 경기 화면 기준으로 폭·여백·글자 크기 통일
+   - 목록: 경기 찾기와 같은 .container(1128px)
+   - 상세: 경기 후 관리와 같은 .container.narrow-rail(744px 가운데)
+   - 작성/수정: 경기 만들기와 같은 .form-rail.match-form + .team-form-inner(744px)
+   - 페이지 제목 26px / 섹션·카드 제목 17px / 본문 14px / 보조 12px
+   ========================================================= */
+
+/* ---------- 목록 ---------- */
+.review-list > .page-head { margin-bottom: 28px; }
+.review-list > .page-head .page-title { font-size: 30px; }
+
+/* 종목 칩(왼쪽) + 검색(오른쪽) */
+.review-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+.review-toolbar .chip-group { gap: 8px; margin: 0; }
+.review-toolbar .search-box { display: flex; align-items: center; gap: 8px; }
+/* 검색창 · 버튼: 옆 칩(32px)과 어울리게 36px */
+.review-toolbar .search-box .input { width: 260px; height: 36px; padding: 0 14px; font-size: 13px; }
+.review-toolbar .search-box .btn { width: auto; min-width: 80px; height: 36px; padding: 0 20px; font-size: 13px; }
+
+.review-list .section-head { margin-bottom: 16px; }
+.review-list .section-head .sub-title { font-size: 20px; }
+/* 경기별 모아보기 / 전체 후기 보기: 위쪽 종목 칩과 같은 32px 알약 */
+.review-list .section-head .btn { height: 32px; padding: 0 14px; border-radius: var(--r-full); font-size: 12px; font-weight: 500; }
+.review-list .group-title { margin: 0 0 14px; }
+.review-list .group-title strong { font-size: 17px; }
+.review-list .group-title span { font-size: 13px; }
+.review-list .review-grid + .group-title { margin-top: 36px; }
+.review-list .empty { padding: 56px 0; text-align: center; font-size: 14px; color: var(--ds-text-2); }
+
+/* 후기 카드 */
+.review-grid { gap: 24px; }
+.review-card { border-radius: var(--r-16); }
+.review-card .thumb { height: 160px; background: #fff; border-bottom: 1px solid var(--ds-border-subtle); }
+.review-card .thumb img { height: 56px; object-fit: contain; }
+.review-card .thumb img.photo { width: 100%; height: 100%; object-fit: cover; }
+.review-card .body { padding: 16px 18px 18px; }
+.review-card strong { font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.review-card .by { margin-top: 6px; font-size: 12px; }
+.review-card .link { margin-top: 4px; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.review-card .cnt { margin-top: 10px; font-size: 12px; }
+
+/* ---------- 상세 ---------- */
+.review-top .title-row { margin-top: 12px; }
+
+.review-detail { margin-top: 24px; padding: 24px 28px; border-radius: var(--r-12); background: #fff; }
+.review-detail .text { margin-top: 0; font-size: 14px; line-height: 1.7; white-space: pre-line; word-break: break-all; }
+.review-detail .photos + .text { margin-top: 20px; }
+.review-detail .linked { align-items: center; gap: 16px; margin-top: 24px; padding-top: 18px; font-size: 13px; }
+.review-detail .linked a { font-size: 13px; }
+.review-detail .acts { display: flex; align-items: center; gap: 8px; margin-top: 18px; }
+.review-detail .like-wrapper { display: inline-flex; align-items: center; gap: 6px; }
+.review-detail .like-count { font-size: 14px; font-weight: 700; }
+.review-detail .acts-right { display: flex; gap: 8px; margin-left: auto; }
+
+/* 사진: 장수에 따라 배치 (1장 크게 / 2장 반반 / 3·4장 위 크게 + 아래 작게 / 5장 2+3) */
+.review-detail .photos { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 0; }
+.review-detail .photos img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; border-radius: var(--r-8); aspect-ratio: 4 / 3; grid-column: span 2; }
+.review-detail .photos img:only-child { grid-column: span 6; aspect-ratio: 16 / 10; }
+.review-detail .photos img:first-child:nth-last-child(2),
+.review-detail .photos img:first-child:nth-last-child(2) ~ img { grid-column: span 3; aspect-ratio: 1 / 1; }
+.review-detail .photos img:first-child:nth-last-child(3),
+.review-detail .photos img:first-child:nth-last-child(4) { grid-column: span 6; aspect-ratio: 16 / 9; }
+.review-detail .photos img:first-child:nth-last-child(3) ~ img { grid-column: span 3; aspect-ratio: 4 / 3; }
+.review-detail .photos img:first-child:nth-last-child(4) ~ img { grid-column: span 2; aspect-ratio: 1 / 1; }
+.review-detail .photos img:first-child:nth-last-child(5),
+.review-detail .photos img:first-child:nth-last-child(5) + img { grid-column: span 3; aspect-ratio: 4 / 3; }
+.review-detail .photos img:first-child:nth-last-child(5) ~ img:nth-child(n+3) { grid-column: span 2; aspect-ratio: 1 / 1; }
+
+/* 댓글 */
+.review-comments { margin-top: 40px; }
+.cmt-title { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; font-size: 17px; font-weight: 700; }
+.cmt-count { color: var(--ds-brand); }
+.cmt-list { display: flex; flex-direction: column; gap: 8px; }
+.cmt-item { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border: 1px solid var(--ds-border); border-radius: var(--r-12); background: #fff; }
+.cmt-item:hover { background: #fcfcfd; }
+.cmt-item .avatar { width: 36px; height: 36px; }
+.cmt-body { flex: 1; min-width: 0; padding-right: 130px; }   /* 날짜 + 삭제 자리 */
+.cmt-name { display: flex; align-items: center; gap: 6px; line-height: 1.3; }
+.cmt-nick { font-size: 14px; font-weight: 700; color: var(--ds-text); }
+.cmt-nick:hover { text-decoration: underline; }
+.cmt-writer { padding: 1px 8px; border-radius: 999px; background: var(--ds-brand-subtle); color: var(--ds-brand); font-size: 11px; font-weight: 700; }
+.cmt-text { margin-top: 6px; font-size: 14px; line-height: 1.6; word-break: break-all; }
+.cmt-side { position: absolute; top: 14px; right: 16px; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.cmt-time { font-size: 12px; color: var(--ds-text-3); }
+.cmt-del { height: 26px; padding: 0 12px; border-radius: var(--r-8); background: var(--ds-danger-bg); color: var(--ds-danger-fg); font-size: 12px; font-weight: 500; }
+.cmt-del:hover { background: #fbd5d5; }
+.cmt-empty { padding: 28px 0; text-align: center; font-size: 13px; color: var(--ds-text-2); background: var(--ds-bg-subtle); border-radius: var(--r-12); }
+.cmt-form { display: flex; gap: 8px; margin-top: 16px; }
+.cmt-form .input { flex: 1; min-width: 0; font-size: 14px; }
+.cmt-form .btn { flex: none; min-width: 96px; }
+
+/* ---------- 작성 / 수정 ---------- */
+.review-form .input[readonly] { color: var(--ds-text-2); cursor: default; }
+.review-form .photo-upload { align-items: flex-start; gap: 12px; }
+.review-form #photoPreviewList { display: flex; flex-wrap: wrap; gap: 12px; }
+.review-form .photo-item { position: relative; width: 130px; height: 120px; }
+.review-form .photo-item img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: var(--r-8); border: 1px solid var(--ds-border); }
+/* 작성: 새로 고른 사진의 ✕ (모서리 바깥) */
+.review-form .photo-del { position: absolute; top: -9px; right: -9px; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: 2px solid #fff; border-radius: 50%; background: var(--ds-brand); color: #fff; font-size: 16px; font-weight: 700; line-height: 1; box-shadow: 0 2px 6px rgba(0, 0, 0, .3); }
+.review-form .photo-del:hover { background: var(--ds-danger); }
+/* 수정: 기존·새 사진 미리보기 */
+.review-form .photo-preview { position: relative; overflow: hidden; }
+.review-form .photo-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.review-form .photo-remove { position: absolute; top: 8px; right: 8px; z-index: 2; width: 24px; height: 24px; border-radius: 50%; background: rgba(31, 41, 55, .75); color: #fff; font-size: 14px; line-height: 24px; text-align: center; }
+.review-form .photo-remove:hover { background: rgba(31, 41, 55, .95); }
+/* 수정: '참여 경기' 섹션은 라벨 없이 소제목 바로 아래 입력칸 */
+.review-form .match-section > .sub-title { margin-bottom: 12px; }
+.review-form .match-section + .form-section { margin-top: 40px; }
+
+/* ---------- 목록 : 경기별 후기 (경기 블록 3열 + 더보기) ---------- */
+.review-list .group-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 24px; align-items: start; margin-top: 24px; }
+.review-list .review-group { min-width: 0; }
+.review-list .group-reviews { display: flex; flex-direction: column; gap: 16px; }
+.review-list .review-group .group-title { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 0 0 10px; }
+.review-list .review-group .group-title strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; width: 100%; overflow: hidden; font-size: 16px; line-height: 1.35; white-space: normal; word-break: keep-all; }
+.review-list .review-group .group-title span { padding: 2px 10px; border-radius: var(--r-full); background: var(--ds-brand-subtle); color: var(--ds-brand); font-size: 12px; font-weight: 700; }
+.review-list .more-wrap { margin-top: 32px; }
+
+/* 병합 반영 (master 쪽 reviewList.jsp 안 <style> 에서 이동, DS 토큰으로 정리)
+   - 최근 후기 카드 줄 간격 32px
+   - 경기별 '더보기' 버튼: 연파랑 채움 48px 알약 (공통 .btn-more 보다 크게) */
+.review-list .review-grid { gap: 32px 24px; align-items: start; }
+.review-list .btn-more { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; min-width: 180px; height: 48px; padding: 0 28px; background: var(--ds-brand-subtle); font-size: 15px; font-weight: 700; transition: background .2s; }
+.review-list .btn-more:hover { background: #dbe8ff; }
+
+
+@media (max-width: 900px) {
+  .review-list .group-grid, .review-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .review-list .group-grid, .review-grid { grid-template-columns: 1fr; }
+}

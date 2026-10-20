@@ -73,7 +73,7 @@
 			</div>
 
 			<div class="aside">
-				<time>${r.createdAt}</time>
+				<%-- <time>${r.createdAt}</time> --%>
 				<a class="btn btn-primary btn-sm"
 					href="${ctx}/review/edit?reviewId=${r.reviewId}">수정</a>
 				<button type="button"
