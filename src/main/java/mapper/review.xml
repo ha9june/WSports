@@ -340,8 +340,7 @@
 		WHERE
 		m.personal_match_id = #{matchId}
 		AND m.deleted = '0'
-		AND m.status = '경기
-		종료'
+		AND m.status = '경기 종료'
 		AND (m.user_id = #{userId}
 		OR EXISTS (SELECT 1 FROM
 		personal_match_participant p WHERE p.personal_match_id =
