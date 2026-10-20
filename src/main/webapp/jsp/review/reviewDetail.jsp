@@ -5,7 +5,7 @@
 <%--
 후기 상세 (reviewDetail.jsp) - 담당: 강신우
 피그마: Review / Detail / Desktop (+ 댓글)
-role : guest → 좋아요/댓글/신고 시 로그인 안내 | admin → 후기 삭제 버튼
+role : guest → 좋아요/댓글/신고 시 로그인 안내 | admin → 후기 삭제 버튼, 댓글 삭제 버튼
 state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 --%>
 <c:set var="state"
@@ -14,6 +14,15 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 <c:set var="pageTitle" value="후기 상세" />
 <c:set var="pageCss" value="match,review" />
 <c:set var="activeNav" value="review" />
+
+<%-- 관리자 삭제(deleted=2) 댓글은 개수에서 제외 --%>
+<c:set var="visibleCnt" value="0" />
+<c:forEach var="cm" items="${commentList}">
+	<c:if test="${cm.deleted eq 0}">
+		<c:set var="visibleCnt" value="${visibleCnt + 1}" />
+	</c:if>
+</c:forEach>
+
 <%@ include file="/jsp/common/header.jsp"%>
 <main class="page">
 	<div class="container narrow-rail">
@@ -33,10 +42,11 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 				</c:if>
 			</div>
 			<div class="host-inline">
-				<span class="avatar">
-					<c:choose>
+				<span class="avatar"> <c:choose>
 						<c:when test="${not empty review.profileImage}">
-							<img src="${ctx}/profiles/<c:out value='${review.profileImage}' />" alt=""
+							<img
+								src="${ctx}/profiles/<c:out value='${review.profileImage}' />"
+								alt=""
 								onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
 						</c:when>
 						<c:otherwise>
@@ -45,8 +55,9 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 					</c:choose>
 				</span>
 				<div>
-					<a href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong><c:out value="${review.nickname}" /></strong></a>
-					<small>작성자 · ${review.createdAtStr}</small>
+					<a href="${ctx}/member/publicProfile/view?userId=${review.userId}"><strong><c:out
+								value="${review.nickname}" /></strong></a> <small>작성자 ·
+						${review.createdAtStr}</small>
 				</div>
 			</div>
 		</section>
@@ -59,16 +70,20 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 					</c:forEach>
 				</div>
 			</c:if>
-			<p class="text"><c:out value="${review.content}" /></p>
+			<p class="text">
+				<c:out value="${review.content}" />
+			</p>
 			<div class="linked">
 				<span class="t-2">참여 경기</span>
 				<c:choose>
 					<c:when test="${review.matchType eq 'TEAM'}">
-						<a href="${ctx}/team-match/detail/view?teamMatchId=${review.matchId}"><c:out
+						<a
+							href="${ctx}/team-match/detail/view?teamMatchId=${review.matchId}"><c:out
 								value="${review.matchTitle}" /></a>
 					</c:when>
 					<c:otherwise>
-						<a href="${ctx}/match/detail/view?personalMatchId=${review.matchId}"><c:out
+						<a
+							href="${ctx}/match/detail/view?personalMatchId=${review.matchId}"><c:out
 								value="${review.matchTitle}" /></a>
 					</c:otherwise>
 				</c:choose>
@@ -81,7 +96,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 					<span id="likeCountDisplay" class="like-count">${likeCount}</span>
 				</div>
 
-				<span class="btn btn-outline btn-sm">댓글 ${fn:length(commentList)}</span>
+				<span class="btn btn-outline btn-sm">댓글 ${visibleCnt}</span>
 
 				<div class="acts-right">
 					<c:choose>
@@ -104,44 +119,60 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 		<%-- ===== 댓글 ===== --%>
 		<section class="review-comments">
 			<h2 class="cmt-title">
-				댓글 <span class="cmt-count">${fn:length(commentList)}</span>
+				댓글 <span class="cmt-count">${visibleCnt}</span>
 			</h2>
 
 			<div class="cmt-list">
 				<c:forEach var="cm" items="${commentList}">
-					<div class="cmt-item">
-						<span class="avatar">
-							<c:choose>
-								<c:when test="${not empty cm.profileImage}">
-									<img src="${ctx}/profiles/<c:out value='${cm.profileImage}' />" alt=""
-										onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
-								</c:when>
-								<c:otherwise>
-									<img src="${ctx}/img/default-profile.svg" alt="">
-								</c:otherwise>
-							</c:choose>
-						</span>
-
-						<div class="cmt-body">
-							<div class="cmt-name">
-								<a class="cmt-nick" href="${ctx}/member/publicProfile/view?userId=${cm.userId}"><c:out value="${cm.nickname}" /></a>
-								<c:if test="${review.userId eq cm.userId}">
-									<span class="cmt-writer">작성자</span>
-								</c:if>
+					<c:choose>
+						<%-- 관리자가 삭제한 댓글 --%>
+						<c:when test="${cm.deleted eq 2}">
+							<div class="cmt-item cmt-deleted">
+								<p class="cmt-text">관리자에 의하여 댓글이 삭제되었습니다.</p>
 							</div>
-							<p class="cmt-text">
-								<c:out value="${cm.content}" />
-							</p>
-						</div>
+						</c:when>
 
-						<div class="cmt-side">
-							<span class="cmt-time">${cm.createdAtStr}</span>
-							<c:if test="${sessionScope.user.userId eq cm.userId}">
-								<button type="button" class="cmt-del btn-del-comment"
-									data-comment-id="${cm.commentId}">삭제</button>
-							</c:if>
-						</div>
-					</div>
+						<%-- 정상 댓글 --%>
+						<c:otherwise>
+							<div class="cmt-item">
+								<span class="avatar"> <c:choose>
+										<c:when test="${not empty cm.profileImage}">
+											<img
+												src="${ctx}/profiles/<c:out value='${cm.profileImage}' />"
+												alt=""
+												onerror="this.onerror=null;this.src='${ctx}/img/default-profile.svg';">
+										</c:when>
+										<c:otherwise>
+											<img src="${ctx}/img/default-profile.svg" alt="">
+										</c:otherwise>
+									</c:choose>
+								</span>
+
+								<div class="cmt-body">
+									<div class="cmt-name">
+										<a class="cmt-nick"
+											href="${ctx}/member/publicProfile/view?userId=${cm.userId}"><c:out
+												value="${cm.nickname}" /></a>
+										<c:if test="${review.userId eq cm.userId}">
+											<span class="cmt-writer">작성자</span>
+										</c:if>
+									</div>
+									<p class="cmt-text">
+										<c:out value="${cm.content}" />
+									</p>
+								</div>
+
+								<div class="cmt-side">
+									<span class="cmt-time">${cm.createdAtStr}</span>
+									<c:if
+										test="${sessionScope.user.userId eq cm.userId or isAdmin}">
+										<button type="button" class="cmt-del btn-del-comment"
+											data-comment-id="${cm.commentId}">삭제</button>
+									</c:if>
+								</div>
+							</div>
+						</c:otherwise>
+					</c:choose>
 				</c:forEach>
 			</div>
 
@@ -175,19 +206,20 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 
 <script>
 	$(function() {
-		$("#confirmReviewDelete").on("click",function() {
-					var isAdmin = ${isAdmin};
-					var url = isAdmin ? '${ctx}/admin/content/review-delete': '${ctx}/mypage/reviews';
-					var data = isAdmin ? {reviewId : $("#reviewId").val()} : {action : 'delete',reviewId : $("#reviewId").val()};
-					$.post(url, data, function(result) {
-						result = result.trim();
-						if (result === 'true' || result === 'ok') {
-							location.href = '${ctx}/review/list';
-						} else {
-							showToast("삭제에 실패했습니다.");
-						}
-					}, 'text');
-				});
+		$("#confirmReviewDelete").on("click", function() {
+			var isAdmin = '${isAdmin}' === 'true';
+			var url = isAdmin ? '${ctx}/admin/content/review-delete' : '${ctx}/mypage/reviews';
+			var data = isAdmin ? {reviewId : $("#reviewId").val()} : {action : 'delete', reviewId : $("#reviewId").val()};
+			$.post(url, data, function(result) {
+				result = result.trim();
+				if (result === 'true' || result === 'ok') {
+					location.href = '${ctx}/review/list';
+				} else {
+					showToast("삭제에 실패했습니다.");
+				}
+			}, 'text');
+		});
+
 		$(".review-detail .fav-btn").off("click").click(function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -229,6 +261,7 @@ state : default(다른 사람 후기) | mine(내가 쓴 후기 - 수정/삭제)
 			});
 		});
 	});
+
 	$(document).on("click", ".btn-del-comment", function() {
 		if (!confirm("댓글을 삭제할까요?"))
 			return;

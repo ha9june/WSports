@@ -9,6 +9,9 @@ import java.util.UUID;
 
 import javax.servlet.http.Part;
 
+import org.apache.ibatis.session.SqlSession;
+
+import config.MybatisSqlSessionFactory;
 import dao.CommentDao;
 import dao.CommentDaoImpl;
 import dao.ReviewDao;
@@ -24,13 +27,13 @@ import util.PageInfo;
 
 public class ReviewServiceImpl implements ReviewService {
 	private ReviewDao reviewDao;
-	private UserDao user;
+	private UserDao userDao;
 	private ReviewLikeDao reviewlikeDao;
 	private CommentDao commentDao;
 
 	public ReviewServiceImpl() {
 		reviewDao = new ReviewDaoImpl();
-		user = new UserDaoImpl();
+		userDao = new UserDaoImpl();
 		reviewlikeDao = new ReviewLikeDaoImpl();
 		commentDao = new CommentDaoImpl();
 	}
@@ -302,5 +305,10 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public int deleteReviewByAdmin(Long reviewId) throws Exception {
 		  return reviewDao.deleteReviewByAdmin(reviewId);
+	}
+
+	@Override
+	public boolean removeCommentByAdmin(Long commentId) throws Exception {
+		return commentDao.deleteCommentAdmin(commentId) > 0;
 	}
 }

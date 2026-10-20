@@ -32,16 +32,29 @@ public class ReviewCommentDelete extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/plain;charset=UTF-8");
+
 		dto.User user = (dto.User) request.getSession().getAttribute("user");
-		if (user == null) { response.getWriter().write("login"); return; }
+		if (user == null) {
+			response.getWriter().write("login");
+			return;
+		}
 
 		String idParam = request.getParameter("commentId");
 		if (idParam == null || !idParam.matches("\\d+")) {
-			response.getWriter().write("fail"); return;
+			response.getWriter().write("fail");
+			return;
 		}
+		Long commentId = Long.valueOf(idParam);
+
+		boolean isAdmin = "Admin".equals(user.getGrade());
+		System.out.println("[댓글삭제] commentId=" + commentId + ", grade=" + user.getGrade() + ", isAdmin=" + isAdmin);
+
 		ReviewService service = new ReviewServiceImpl();
 		try {
-			boolean ok = service.removeComment(Long.parseLong(idParam), user.getUserId());
+			boolean ok = isAdmin
+					? service.removeCommentByAdmin(commentId)
+					: service.removeComment(commentId, user.getUserId());
+			System.out.println("[댓글삭제] 결과=" + ok);
 			response.getWriter().write(ok ? "ok" : "fail");
 		} catch (Exception e) {
 			e.printStackTrace();

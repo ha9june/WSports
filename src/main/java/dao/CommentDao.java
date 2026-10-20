@@ -10,4 +10,6 @@ public interface CommentDao {
 	List<Comment> selectReviewComments(Long reviewId);
 	int insertComment(Map<String, Object> param) throws Exception;
 	int deleteComment(Map<String, Object> param) throws Exception;
+	int deleteCommentAdmin(Long commentId)throws Exception;
 }
+

@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class CommentDaoImpl implements CommentDao {
 	@Override
 	public List<Comment> selectReviewComments(Long reviewId) {
 		try (SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			return session.selectList("mapper.comment.selectReviewComments",reviewId);
+			return session.selectList("mapper.comment.selectReviewComments", reviewId);
 		}
 	}
 
@@ -45,6 +46,23 @@ public class CommentDaoImpl implements CommentDao {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			int cnt = sqlSession.update("mapper.comment.deleteComment", param);
+			sqlSession.commit();
+			return cnt;
+		} catch (Exception e) {
+			sqlSession.rollback();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	@Override
+	public int deleteCommentAdmin(Long commentId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("commentId", commentId);
+			int cnt = sqlSession.update("mapper.comment.deleteCommentAdmin", param);
 			sqlSession.commit();
 			return cnt;
 		} catch (Exception e) {
