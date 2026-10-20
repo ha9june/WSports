@@ -312,7 +312,7 @@
 						</section>
 					</c:when>
 					<c:otherwise>
-						<section class="team-section" id="members">
+						<section class="team-section" id="members"> 
 							<h2>팀원</h2>
 							<p class="section-desc">가입한 팀원만 확인할 수 있는 정보입니다.</p>
 							<div class="locked-wrap">
