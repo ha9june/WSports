@@ -312,27 +312,27 @@
 						</section>
 					</c:when>
 					<c:otherwise>
-						<section class="team-section" id="members">
+						<section class="team-section" id="members"> 
 							<h2>팀원</h2>
 							<p class="section-desc">가입한 팀원만 확인할 수 있는 정보입니다.</p>
 							<div class="locked-wrap">
 								<div class="member-grid blur" aria-hidden="true" id="teamUserList">
 									<div class="member-card">
-										<span class="avatar default"></span>
+										<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""></span>
 										<div class="info">
 											<strong>팀원</strong>
 											<p class="meta">서울 · 초급</p>
 										</div>
 									</div>
 									<div class="member-card">
-										<span class="avatar default"></span>
+										<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""></span>
 										<div class="info">
 											<strong>팀원</strong>
 											<p class="meta">서울 · 중급</p>
 										</div>
 									</div>
 									<div class="member-card">
-										<span class="avatar default"></span>
+										<span class="avatar"><img src="${ctx}/img/default-profile.svg" alt=""></span>
 										<div class="info">
 											<strong>팀원</strong>
 											<p class="meta">서울 · 초급</p>
@@ -340,7 +340,7 @@
 									</div>
 								</div>
 								<div class="lock-msg">
-									<strong>🔒 가입 후 확인할 수 있어요</strong>
+									<strong>🔒 가입 후 확인할 수 있어요</strong> 
 									<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
 								</div>
 							</div>

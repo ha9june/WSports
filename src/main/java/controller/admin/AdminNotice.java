@@ -70,7 +70,7 @@ public class AdminNotice extends HttpServlet {
 			String action = request.getParameter("action");
 			Long noticeId = Long.parseLong(request.getParameter("noticeId"));
 
-			if ("delete".equals(action)) {
+			if ("delete".equals(action)) {//
 				service.AdminNoticeDelete(noticeId);   // 삭제
 			} else {
 				service.AdminNoticePin(noticeId);      // 핀 고정/해제
