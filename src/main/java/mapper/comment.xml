@@ -14,35 +14,52 @@
 		resultType="Comment">
 		SELECT
 		c.comment_id AS commentId,
-		c.parent_comment_id AS parentCommentId,
+		c.parent_comment_id AS
+		parentCommentId,
 		c.review_id AS reviewId,
 		c.user_id AS userId,
-		c.content AS content,
+		c.content
+		AS content,
 		c.created_at AS createdAt,
-		DATE_FORMAT(c.created_at, '%m/%d %H:%i') AS createdAtStr,
+		DATE_FORMAT(c.created_at, '%m/%d
+		%H:%i') AS createdAtStr,
 		c.updated_at AS updatedAt,
-		c.deleted AS deleted,
+		c.deleted AS
+		deleted,
 		u.nickname AS nickname,
 		u.profile_image AS profileImage
-		FROM comment c
+		FROM
+		comment c
 		LEFT JOIN user u ON c.user_id = u.user_id
-		WHERE c.review_id = #{reviewId}
-		AND c.deleted = 0
+		WHERE c.review_id =
+		#{reviewId}
+		AND c.deleted IN (0, 2)
 		ORDER BY c.comment_id ASC
 	</select>
 	<insert id="insertComment" parameterType="map"
-	useGeneratedKeys="true" keyProperty="commentId">
-	INSERT INTO `comment`
-	(parent_comment_id, review_id, user_id, content, created_at, updated_at, deleted)
-	VALUES
-	(#{parentCommentId}, #{reviewId}, #{userId}, #{content}, NOW(), NOW(), 0)
-</insert>
-<update id="deleteComment" parameterType="map">
-	UPDATE `comment`
-	SET deleted = 1, updated_at = NOW()
-	WHERE comment_id = #{commentId}
-	  AND user_id = #{userId}
-	  AND deleted = 0
-</update>
+		useGeneratedKeys="true" keyProperty="commentId">
+		INSERT INTO `comment`
+		(parent_comment_id, review_id, user_id, content, created_at,
+		updated_at, deleted)
+		VALUES
+		(#{parentCommentId}, #{reviewId}, #{userId},
+		#{content}, NOW(), NOW(), 0)
+	</insert>
+	<update id="deleteComment" parameterType="map">
+		UPDATE `comment`
+		SET
+		deleted = 1, updated_at = NOW()
+		WHERE comment_id = #{commentId}
+		AND
+		user_id = #{userId}
+		AND deleted = 0
+	</update>
+	<update id="deleteCommentAdmin" parameterType="map">
+		UPDATE `comment`
+		SET deleted = 2, updated_at = NOW()
+		WHERE comment_id = #{commentId}
+		AND deleted = 0
+	</update>
+
 
 </mapper>
