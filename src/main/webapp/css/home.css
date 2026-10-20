@@ -215,3 +215,46 @@
 	margin: 0; padding: 4px 0 8px; background: #fff;
 }
 
+
+/* =========================================================
+   메인 히어로 슬라이드 (main.jsp #heroSlider)
+   - 글자는 고정, 배경 사진만 종목별로 페이드 전환 (5초)
+   - 사진(1376 x 360)을 히어로 높이에 맞춰 오른쪽에 붙이고, 왼쪽은 회색 바탕으로 서서히 녹임
+   - 이미지: /img/hero-{football|basketball|tennis|badminton}.webp (+ .jpg 대체)
+   ========================================================= */
+.hero { position: relative; overflow: hidden; isolation: isolate; padding-bottom: 44px; }
+.hero > .container { position: relative; z-index: 1; }
+
+.hero-slides { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease;
+  background-repeat: no-repeat; background-position: right center;
+  background-size: auto 100%;   /* 높이에 맞춤 → 넓은 화면에서도 공이 잘리지 않음, 남는 왼쪽은 회색 바탕 */ }
+.hero-slide.is-active { opacity: 1; }
+/* 글자 쪽(왼쪽)은 회색 바탕, 오른쪽으로 갈수록 사진이 드러남 */
+.hero-slides::after { content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(90deg, var(--ds-bg-subtle) 30%, rgba(248,249,250,.75) 42%, rgba(248,249,250,0) 58%); }
+
+.hero-slide.football   { background-image: url("../img/hero-football.jpg");
+  background-image: image-set(url("../img/hero-football.webp") type("image/webp"), url("../img/hero-football.jpg") type("image/jpeg")); }
+.hero-slide.basketball { background-image: url("../img/hero-basketball.jpg");
+  background-image: image-set(url("../img/hero-basketball.webp") type("image/webp"), url("../img/hero-basketball.jpg") type("image/jpeg")); }
+.hero-slide.tennis     { background-image: url("../img/hero-tennis.jpg");
+  background-image: image-set(url("../img/hero-tennis.webp") type("image/webp"), url("../img/hero-tennis.jpg") type("image/jpeg")); }
+.hero-slide.badminton  { background-image: url("../img/hero-badminton.jpg");
+  background-image: image-set(url("../img/hero-badminton.webp") type("image/webp"), url("../img/hero-badminton.jpg") type("image/jpeg")); }
+
+/* 종목 칩: '경기 찾아보기' 버튼 아래 (사진 위에 겹치지 않게 글자 쪽에 둠) */
+.hero-dots { display: flex; gap: 8px; margin-top: 24px; }
+.hero-dot { height: 30px; padding: 0 14px; border-radius: var(--r-full); border: 1px solid var(--ds-border);
+  background: #fff; font-size: 12px; font-weight: 500; color: var(--ds-text-2); transition: background .2s, color .2s, border-color .2s; }
+.hero-dot:hover { color: var(--ds-text); border-color: #c8ced3; }
+.hero-dot.is-active { font-weight: 700; }
+.hero-dot.football.is-active   { color: var(--sport-football-fg);   border-color: var(--sport-football-fg);   background: var(--sport-football-bg); }
+.hero-dot.basketball.is-active { color: var(--sport-basketball-fg); border-color: var(--sport-basketball-fg); background: var(--sport-basketball-bg); }
+.hero-dot.tennis.is-active     { color: var(--sport-tennis-fg);     border-color: var(--sport-tennis-fg);     background: var(--sport-tennis-bg); }
+.hero-dot.badminton.is-active  { color: var(--sport-badminton-fg);  border-color: var(--sport-badminton-fg);  background: var(--sport-badminton-bg); }
+
+@media (max-width: 900px) {
+  .hero-slide.is-active { opacity: .5; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-slide { transition: none; } }

@@ -101,6 +101,31 @@
 <script>
 	$(function() {
 
+		/* ---------- 메인 히어로 : 종목별 배경 슬라이드 ---------- */
+		(function() {
+			const $hero = $("#heroSlider");
+			const $slides = $hero.find(".hero-slide");
+			const $dots = $hero.find(".hero-dot");
+			const DELAY = 5000;                       // 넘어가는 간격(ms)
+			const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+			let idx = 0, timer = null;
+
+			function show(n) {
+				idx = (n + $slides.length) % $slides.length;
+				$slides.removeClass("is-active").eq(idx).addClass("is-active");
+				$dots.removeClass("is-active").attr("aria-selected", "false")
+					.eq(idx).addClass("is-active").attr("aria-selected", "true");
+			}
+			function start() { if (!reduce && !timer) timer = setInterval(function() { show(idx + 1); }, DELAY); }
+			function stop() { clearInterval(timer); timer = null; }
+
+			$dots.on("click", function() { show($(this).data("index")); });          // 마우스가 위에 있으므로 떠날 때 다시 시작
+			$hero.on("mouseenter focusin", stop).on("mouseleave focusout", start);   // 마우스 올리면 멈춤
+			$(document).on("visibilitychange", function() { document.hidden ? stop() : start(); });
+
+			start();
+		})();
+
 		$(document).on("click", ".fav-btn", function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -131,7 +156,14 @@
 
 	});
 </script>
-<section class="hero">
+<section class="hero" id="heroSlider" aria-roledescription="carousel" aria-label="종목 배너">
+	<%-- 종목별 배경 슬라이드 (이미지: /img/hero-*.jpg|webp, 스타일: home.css '메인 히어로 슬라이드') --%>
+	<div class="hero-slides" aria-hidden="true">
+		<div class="hero-slide football is-active"></div>
+		<div class="hero-slide basketball"></div>
+		<div class="hero-slide tennis"></div>
+		<div class="hero-slide badminton"></div>
+	</div>
 	<div class="container">
 		<p class="eyebrow">혼자여도, 팀이어도, WSports에서</p>
 		<h1>
@@ -139,6 +171,13 @@
 		</h1>
 		<p>경기 찾기, 팀, 후기까지 · WSports 하나로 축구·농구·테니스·배드민턴을 즐겨보세요.</p>
 		<a class="btn btn-primary" href="${ctx}/match/list">경기 찾아보기</a>
+
+		<div class="hero-dots" role="tablist" aria-label="종목 선택">
+			<button type="button" class="hero-dot football is-active" role="tab" aria-selected="true" data-index="0">축구</button>
+			<button type="button" class="hero-dot basketball" role="tab" aria-selected="false" data-index="1">농구</button>
+			<button type="button" class="hero-dot tennis" role="tab" aria-selected="false" data-index="2">테니스</button>
+			<button type="button" class="hero-dot badminton" role="tab" aria-selected="false" data-index="3">배드민턴</button>
+		</div>
 	</div>
 </section>
 
