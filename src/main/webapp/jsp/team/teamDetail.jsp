@@ -340,7 +340,7 @@
 									</div>
 								</div>
 								<div class="lock-msg">
-									<strong>🔒 가입 후 확인할 수 있어요</strong>
+									<strong>🔒 가입 후 확인할 수 있어요</strong> 
 									<p>이 팀에 가입하면 팀원 프로필과 역할 정보를 확인할 수 있습니다.</p>
 								</div>
 							</div>
