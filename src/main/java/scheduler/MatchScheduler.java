@@ -7,7 +7,7 @@ public class MatchScheduler {
     private PenaltyJob userpenaltyJob = new PenaltyJob();
      
     public void run() {
-        System.out.println("[스케줄러] 실행 " + java.time.LocalDateTime.now());
+        System.out.println("[스케줄러] 실행 " + java.time.LocalDateTime.now());//
         try {
             job.run();
             pmJob.run();
